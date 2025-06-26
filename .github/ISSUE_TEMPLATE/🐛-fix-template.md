@@ -2,7 +2,7 @@
 name: "\U0001F41B fix-template"
 about: 버그 발생 시 사용해주세요
 title: ''
-labels: ''
+labels: "\U0001F41B bug"
 assignees: ''
 
 ---
