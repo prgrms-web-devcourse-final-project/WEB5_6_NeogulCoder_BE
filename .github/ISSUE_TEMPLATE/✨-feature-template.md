@@ -2,7 +2,7 @@
 name: "✨ feature-template"
 about: 새로운 기능을 추가하거나 기존 기능을 개선할 때 사용해주세요
 title: ''
-labels: "✨ feature, \U0001F41B fix"
+labels: "✨ feature"
 assignees: ''
 
 ---
