@@ -85,6 +85,7 @@ replay_pid*
 # === Spring Boot 환경설정 파일 ===
 application.properties
 application-*.properties
+*.yml
 
 # === 기타 ===
 HELP.md
