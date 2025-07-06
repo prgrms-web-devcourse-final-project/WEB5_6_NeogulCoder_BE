@@ -1,0 +1,72 @@
+name: '✨ issue-form'
+description: 'Repo에 이슈를 생성하며, 생성된 이슈는 Jira와 연동됩니다.'
+labels: []
+body:
+  - type: dropdown
+    id: assignee
+    attributes:
+      label: '🧑‍💻 담당자'
+      description: '담당할 팀원의 GitHub 계정을 선택해주세요'
+      multiple: false
+      options:
+        - endorsement0912
+        - dbrkdgus00
+        - hyeunS-P
+        - pia01190
+        - Tokwasp
+    validations:
+      required: true
+
+  - type: input
+    id: parentKey
+    attributes:
+      label: '🎟️ 상위 작업 (Epic Number)'
+      description: '상위 작업을 기입해주세요(ex. EA3-1)'
+      placeholder: 'Epic Number'
+    validations:
+      required: true
+
+  - type: input
+    id: branch
+    attributes:
+      label: '🌿 기능명 (Feature Name)'
+      description: '기능명을 입력해주세요 (ex. login, dashboard)'
+      placeholder: '기능명 ex) login'
+    validations:
+      required: true
+
+  - type: dropdown
+    id: label-selection
+    attributes:
+      label: '🏷️ 라벨 (Label)'
+      description: '이슈의 성격에 맞는 라벨을 선택해주세요'
+      multiple: false
+      options:
+        - feat
+        - fix
+        - docs
+        - style
+        - refactor
+        - test
+        - chore
+    validations:
+      required: true
+
+  - type: input
+    id: description
+    attributes:
+      label: '📌 이슈 설명 (Description)'
+      description: '이슈에 대해서 간략히 설명해주세요'
+    validations:
+      required: true
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: '📋 작업 목록 (Tasks)'
+      description: '해당 이슈에 대해 필요한 작업목록을 작성해주세요'
+      value: |
+        - [ ] Task1
+        - [ ] Task2
+    validations:
+      required: true
