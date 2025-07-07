@@ -54,7 +54,7 @@ jobs:
           LABEL="${{ steps.issue-parser.outputs.issueparser_label-selection }}"
           case "$LABEL" in
             fix) JIRA_ISSUETYPE="버그" ;;
-            feat|docs|style|refactor|test|chore) JIRA_ISSUETYPE="Task" ;;
+            feature|docs|style|refactor|test|chore) JIRA_ISSUETYPE="Task" ;;
             *) JIRA_ISSUETYPE="Task" ;;
           esac
           echo "JIRA_ISSUETYPE=$JIRA_ISSUETYPE" >> $GITHUB_ENV
@@ -87,7 +87,7 @@ jobs:
         run: |
           LABEL="${{ steps.issue-parser.outputs.issueparser_label-selection }}"
           case "$LABEL" in
-            feat) TYPE="Feature" ;;
+            feature) TYPE="Feature" ;;
             fix) TYPE="Fix" ;;
             docs) TYPE="Docs" ;;
             style) TYPE="Style" ;;
@@ -97,6 +97,21 @@ jobs:
             *) TYPE="$LABEL" ;;
           esac
           echo "TYPE=$TYPE" >> $GITHUB_ENV
+
+      - name: Map label to custom GitHub label
+        run: |
+          RAW_LABEL="${{ steps.issue-parser.outputs.issueparser_label-selection }}"
+          case "$RAW_LABEL" in
+            feature) CUSTOM_LABEL="✨ feature" ;;
+            fix) CUSTOM_LABEL="🐛 fix" ;;
+            docs) CUSTOM_LABEL="📝 docs" ;;
+            style) CUSTOM_LABEL="💄 style" ;;
+            refactor) CUSTOM_LABEL="♻️ refactor" ;;
+            test) CUSTOM_LABEL="🚨 test" ;;
+            chore) CUSTOM_LABEL="🔧 chore" ;;
+            *) CUSTOM_LABEL="$RAW_LABEL" ;;
+          esac
+          echo "CUSTOM_LABEL=$CUSTOM_LABEL" >> $GITHUB_ENV
 
       - name: Update issue title
         uses: actions-cool/issues-helper@v3
@@ -122,7 +137,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ github.event.issue.number }}
           labels: |
-            ${{ steps.issue-parser.outputs.issueparser_label-selection }}
+            ${{ env.CUSTOM_LABEL }}
 
       - name: Create branch with Epic number
         if: steps.issue-parser.outputs.issueparser_label-selection != 'fix'

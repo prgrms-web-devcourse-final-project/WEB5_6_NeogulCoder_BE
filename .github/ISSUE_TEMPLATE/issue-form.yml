@@ -42,7 +42,7 @@ body:
       description: '이슈의 성격에 맞는 라벨을 선택해주세요'
       multiple: false
       options:
-        - feat
+        - feature
         - fix
         - docs
         - style
