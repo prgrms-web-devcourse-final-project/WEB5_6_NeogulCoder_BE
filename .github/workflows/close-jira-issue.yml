@@ -1,0 +1,63 @@
+name: Close Jira issue
+
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  close-issue:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Login to Jira
+        uses: atlassian/gajira-login@v3
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+
+      - name: Extract Jira issue key from GitHub issue title
+        id: extract-key
+        run: |
+          ISSUE_TITLE="${{ github.event.issue.title }}"
+          echo "📌 ISSUE_TITLE=$ISSUE_TITLE"
+          JIRA_KEY=$(echo "$ISSUE_TITLE" | grep -oE '[A-Z0-9]+-[0-9]+')
+
+          if [ -z "$JIRA_KEY" ]; then
+            echo "❌ JIRA 키 추출 실패"
+            echo "skip=true" >> $GITHUB_ENV
+          else
+            echo "✅ JIRA 키: $JIRA_KEY"
+            echo "JIRA_KEY=$JIRA_KEY" >> $GITHUB_ENV
+            echo "skip=false" >> $GITHUB_ENV
+          fi
+
+      - name: Get transition ID for Done
+        if: env.skip == 'false'
+        id: get-transition
+        run: |
+          response=$(curl -s -u "${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}" \
+            -H "Accept: application/json" \
+            "${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${JIRA_KEY}/transitions")
+
+          echo "📦 Response: $response"
+
+          TRANSITION_ID=$(echo "$response" | jq -r '.transitions[] | select(.name | test("완료|Done|업무 완료")) | .id')
+
+          if [ -z "$TRANSITION_ID" ]; then
+            echo "❌ 전이 ID 찾기 실패"
+            echo "skip=true" >> $GITHUB_ENV
+          else
+            echo "✅ 전이 ID: $TRANSITION_ID"
+            echo "TRANSITION_ID=$TRANSITION_ID" >> $GITHUB_ENV
+            echo "skip=false" >> $GITHUB_ENV
+          fi
+
+      - name: Close Jira issue with curl
+        if: env.skip == 'false'
+        run: |
+          curl -X POST \
+            -u "${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}" \
+            -H "Accept: application/json" -H "Content-Type: application/json" \
+            --data "{ \"transition\": { \"id\": \"${{ env.TRANSITION_ID }}\" } }" \
+            "${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ env.JIRA_KEY }}/transitions"

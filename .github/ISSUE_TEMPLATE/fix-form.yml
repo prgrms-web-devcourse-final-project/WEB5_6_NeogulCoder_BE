@@ -1,0 +1,100 @@
+name: '🐛 fix-template'
+description: '버그 발생 시 사용해주세요'
+labels: []
+body:
+  - type: dropdown
+    id: assignee
+    attributes:
+      label: '🧑‍💻 담당자'
+      description: '담당할 팀원의 GitHub 계정을 선택해주세요'
+      multiple: false
+      options:
+        - endorsement0912
+        - dbrkdgus00
+        - hyeunS-P
+        - pia01190
+        - Tokwasp
+    validations:
+      required: true
+
+  - type: input
+    id: parentKey
+    attributes:
+      label: '🎟️ 상위 작업 (Epic Number)'
+      description: '상위 작업을 기입해주세요 (ex. EA3-1)'
+      placeholder: 'Epic Number'
+    validations:
+      required: true
+
+  - type: input
+    id: branch
+    attributes:
+      label: '🔠 기능명 (Bug Name)'
+      description: '기능명을 입력해주세요 (ex. login, dashboard)'
+      placeholder: '기능명 ex) login'
+    validations:
+      required: true
+
+  - type: dropdown
+    id: label-selection
+    attributes:
+      label: '🏷️ 라벨 (Label)'
+      description: '자동으로 라벨이 fix로 지정됩니다.'
+      multiple: false
+      options:
+        - fix
+    validations:
+      required: true
+
+  - type: input
+    id: bug-title
+    attributes:
+      label: '🐛 버그 설명'
+      description: '어떤 버그인지 간결하게 요약해주세요 (예: 로그인 버튼이 작동하지 않음)'
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug-scenario
+    attributes:
+      label: '🚨 버그 발생 상황'
+      description: '어떤 상황에서 발생했는지 설명해주세요 (Given-When-Then 형식)'
+      placeholder: |
+        예시:
+        - Given: 사용자가 로그인 페이지에 접근했을 때
+        - When: 이메일과 비밀번호를 입력하고 로그인 버튼을 클릭했을 때
+        - Then: "로그인 실패" 메시지가 나타나야 함
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: '💡 예상 결과'
+      description: '예상했던 정상적인 결과가 어떤 것이었는지 설명해주세요'
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: '🚩 실제 동작'
+      description: '현재 어떻게 동작하는지 설명해주세요'
+    validations:
+      required: true
+
+  - type: textarea
+    id: possible-solution
+    attributes:
+      label: '🛠️ 가능한 해결 방법'
+      description: '문제를 해결하기 위한 아이디어가 있다면 간단히 작성해주세요'
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: '📎 추가 정보'
+      description: '문제와 관련된 스크린샷이나 에러 로그 또는 기타 참고 자료를 첨부해주세요'
+    validations:
+      required: false
