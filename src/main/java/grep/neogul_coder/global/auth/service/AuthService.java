@@ -40,7 +40,7 @@ public class AuthService {
         return processTokenSignin(authentication.getName(), roles);
     }
 
-    private TokenDto processTokenSignin(String email, String roles) {
+    public TokenDto processTokenSignin(String email, String roles) {
 
         userBlackListRepository.deleteByEmail(email);
 

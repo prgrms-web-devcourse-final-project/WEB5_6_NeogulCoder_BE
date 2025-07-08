@@ -24,13 +24,13 @@ repositories {
 }
 
 dependencies {
-	// 데이터 베이스 의존성
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//	runtimeOnly 'com.h2database:h2'
-//	runtimeOnly 'org.postgresql:postgresql'
+//	 데이터 베이스 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'org.postgresql:postgresql'
 
-	// Sql 쿼리 파라미터 보는 라이브러리
-//	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+//	 Sql 쿼리 파라미터 보는 라이브러리
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 
 	// 테스트 데이터베이스 의존성
 //	testImplementation 'com.h2database:h2:1.4.200'

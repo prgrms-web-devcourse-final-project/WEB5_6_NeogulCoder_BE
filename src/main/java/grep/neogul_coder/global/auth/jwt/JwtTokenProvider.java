@@ -40,11 +40,11 @@ public class JwtTokenProvider {
     private String key;
 
     @Getter
-    @Value("{jwt.expiration}")
+    @Value("${jwt.expiration}")
     private long accessTokenExpiration;
 
     @Getter
-    @Value("{jwt.refresh-expiration}")
+    @Value("${jwt.refresh-expiration}")
     private long refreshTokenExpiration;
 
     private SecretKey secretKey;
