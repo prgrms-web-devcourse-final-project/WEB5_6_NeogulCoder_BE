@@ -65,6 +65,9 @@ dependencies {
 	// GCP 관련 의존성
 	implementation 'com.google.cloud:spring-cloud-gcp-starter-secretmanager'
 	implementation 'com.google.cloud:google-cloud-storage'
+
+	// swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 }
 
 dependencyManagement {
