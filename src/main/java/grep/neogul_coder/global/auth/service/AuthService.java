@@ -1,11 +1,15 @@
 package grep.neogul_coder.global.auth.service;
 
+import grep.neogul_coder.global.auth.code.Role;
 import grep.neogul_coder.global.auth.entity.RefreshToken;
 import grep.neogul_coder.global.auth.jwt.JwtTokenProvider;
 import grep.neogul_coder.global.auth.jwt.dto.AccessTokenDto;
 import grep.neogul_coder.global.auth.jwt.dto.TokenDto;
+import grep.neogul_coder.global.auth.oauth.user.OAuth2UserInfo;
 import grep.neogul_coder.global.auth.payload.LoginRequest;
 import grep.neogul_coder.global.auth.repository.UserBlackListRepository;
+import grep.neogul_coder.users.entity.Users;
+import grep.neogul_coder.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +30,7 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService refreshTokenService;
     private final UserBlackListRepository userBlackListRepository;
+    private final UsersRepository usersRepository;
 
     public TokenDto signin(LoginRequest loginRequest) {
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -49,11 +54,33 @@ public class AuthService {
 
         return TokenDto.builder()
             .atId(accessToken.getJti())
+            .accessToken(accessToken.getToken())
             .refreshToken(refreshToken.getToken())
             .grantType("Bearer")
             .refreshExpiresIn(jwtTokenProvider.getRefreshTokenExpiration())
             .expiresIn(jwtTokenProvider.getAccessTokenExpiration())
             .build();
+    }
+
+    @Transactional
+    public TokenDto processOAuthSignin(OAuth2UserInfo userInfo, String roles) {
+        String email = userInfo.getEmail();
+
+        Users user = usersRepository.findByEmail(email)
+            .orElseGet(() -> {
+                Users newUser = Users.builder()
+                    .email(email)
+                    .nickname(userInfo.getName())
+                    .oauthProvider(userInfo.getProvider())
+                    .oauthId(userInfo.getProviderId())
+                    .password("OAUTH")
+                    .role(Role.ROLE_USER)
+                    .isDeleted(false)
+                    .build();
+                return usersRepository.save(newUser);
+            });
+
+        return processTokenSignin(user.getEmail(), user.getRole().name());
     }
 
 }

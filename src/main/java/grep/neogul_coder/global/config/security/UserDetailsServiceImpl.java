@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        Users user = usersRepository.findById(email)
+        Users user = usersRepository.findByEmail(email)
             .orElseThrow(() -> new UsernameNotFoundException(email));
         List<SimpleGrantedAuthority> authorities = findUserAuthorities(email);
         return Principal.createPrincipal(user, authorities);
@@ -33,7 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Cacheable(cacheNames="authority")
     public List<SimpleGrantedAuthority> findUserAuthorities(String email){
-        Users user = usersRepository.findById(email)
+        Users user = usersRepository.findByEmail(email)
             .orElseThrow(() -> new UsernameNotFoundException(email));
 
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();

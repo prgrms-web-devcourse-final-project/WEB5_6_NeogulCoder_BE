@@ -35,7 +35,7 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String roles = String.join(",", authentication.getAuthorities().stream().map(
             GrantedAuthority::getAuthority).toList());
 
-        TokenDto tokenDto = authService.processTokenSignin(userInfo.getName(), roles);
+        TokenDto tokenDto = authService.processOAuthSignin(userInfo, roles);
         ResponseCookie accessTokenCookie = TokenCookieFactory.create(AuthToken.ACCESS_TOKEN.name(),
             tokenDto.getAccessToken(), jwtTokenProvider.getAccessTokenExpiration());
 

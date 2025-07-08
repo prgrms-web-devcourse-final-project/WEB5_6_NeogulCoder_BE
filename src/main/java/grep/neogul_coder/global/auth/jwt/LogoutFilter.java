@@ -28,15 +28,16 @@ public class LogoutFilter extends OncePerRequestFilter {
 
         String accessToken = jwtTokenProvider.resolveToken(request, AuthToken.ACCESS_TOKEN);
 
-        if(accessToken == null) {
+        if(accessToken == null || accessToken.isEmpty()) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String path = request.getRequestURI();
-        Claims claims = jwtTokenProvider.getClaims(accessToken);
+
 
         if(path.equals("/logout")) {
+            Claims claims = jwtTokenProvider.getClaims(accessToken);
             refreshTokenService.deleteByAccessTokenId(claims.getId());
             SecurityContextHolder.clearContext();
             ResponseCookie expiredAccessToken = TokenCookieFactory.createExpiredToken(AuthToken.ACCESS_TOKEN.name());

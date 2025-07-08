@@ -7,6 +7,7 @@ public interface OAuth2UserInfo {
 
     String getProviderId();
     String getProvider();
+    String getEmail();
     String getName();
 
     static OAuth2UserInfo createUserInfo(String path, OAuth2User user){

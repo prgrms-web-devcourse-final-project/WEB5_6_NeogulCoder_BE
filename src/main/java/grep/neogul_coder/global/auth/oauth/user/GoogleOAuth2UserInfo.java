@@ -12,7 +12,7 @@ public class GoogleOAuth2UserInfo implements OAuth2UserInfo{
 
     @Override
     public String getProviderId() {
-        return attributes.get("id").toString();
+        return attributes.get("sub").toString();
     }
 
     @Override
@@ -21,8 +21,13 @@ public class GoogleOAuth2UserInfo implements OAuth2UserInfo{
     }
 
     @Override
+    public String getEmail() {
+        return attributes.get("email").toString();
+    }
+
+    @Override
     public String getName() {
-        return attributes.get("login").toString();
+        return attributes.get("name").toString();
     }
 
 }

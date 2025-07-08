@@ -3,6 +3,7 @@ package grep.neogul_coder.global.config.security;
 import grep.neogul_coder.global.auth.jwt.JwtAuthenticationFilter;
 import grep.neogul_coder.global.auth.jwt.JwtExceptionFilter;
 import grep.neogul_coder.global.auth.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
+import grep.neogul_coder.global.auth.oauth.OAuthFailureHandler;
 import grep.neogul_coder.global.auth.oauth.OAuthSuccessHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +38,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtExceptionFilter jwtExceptionFilter;
     private final OAuthSuccessHandler oAuthSuccessHandler;
+    private final OAuthFailureHandler oAuthFailureHandler;
 
     @Bean
     public AuthenticationSuccessHandler successHandler(){
@@ -74,6 +76,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(
                 (requests) -> requests
                     .requestMatchers("/auth/**", "/",
+                        "/api/users/signup",
                         "/oauth2/**",
                         "/login/**",
                         "/signup",
@@ -84,9 +87,8 @@ public class SecurityConfig {
                     .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
-                .authorizationEndpoint(authorization -> authorization
-                    .authorizationRequestRepository(authorizationRequestRepository()))
                 .successHandler(oAuthSuccessHandler)
+                .failureHandler(oAuthFailureHandler)
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
@@ -106,11 +108,11 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-    @Bean
-    public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
-        return new HttpCookieOAuth2AuthorizationRequestRepository();
-    }
+//
+//    @Bean
+//    public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
+//        return new HttpCookieOAuth2AuthorizationRequestRepository();
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
