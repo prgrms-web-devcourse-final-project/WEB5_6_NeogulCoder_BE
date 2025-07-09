@@ -22,15 +22,14 @@ public class PersonalCalenderController implements PersonalCalenderSpecification
     @GetMapping
     public ApiResponse<List<PersonalCalenderResponse>> findAll() {
         return ApiResponse.success(List.of(
-            new PersonalCalenderResponse(1L, 1L, "코테", LocalDateTime.now(), LocalDateTime.now())
+            PersonalCalenderResponse.builder().build()
         ));
     }
 
     @GetMapping("/{scheduleId}")
     public ApiResponse<PersonalCalenderResponse> findOne(@PathVariable Long scheduleId) {
         return ApiResponse.success(
-            new PersonalCalenderResponse(scheduleId, 1L, "코테", "알고리즘 공부 좀 하자", LocalDateTime.now(), LocalDateTime.now())
-        );
+            PersonalCalenderResponse.builder().build());
     }
 
     @PutMapping("/{scheduleId}")

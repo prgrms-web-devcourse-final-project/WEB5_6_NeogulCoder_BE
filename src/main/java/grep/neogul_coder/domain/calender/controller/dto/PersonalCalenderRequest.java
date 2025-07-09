@@ -2,8 +2,11 @@ package grep.neogul_coder.domain.calender.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+import lombok.Getter;
+
 
 @Schema(description = "개인 캘린더 요청 DTO")
+@Getter
 public class PersonalCalenderRequest {
 
     @Schema(description = "일정 제목", example = "면접 준비")
@@ -18,19 +21,4 @@ public class PersonalCalenderRequest {
     @Schema(description = "종료 시간", example = "2025-07-10T10:00:00")
     private LocalDateTime endTime;
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
 }

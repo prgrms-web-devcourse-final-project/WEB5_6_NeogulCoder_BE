@@ -2,7 +2,10 @@ package grep.neogul_coder.domain.calender.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Schema(description = "팀 캘린더 응답 DTO")
 public class TeamCalenderResponse {
 
@@ -24,7 +27,8 @@ public class TeamCalenderResponse {
     @Schema(description = "종료 시간", example = "2025-07-12T15:00:00")
     private LocalDateTime endTime;
 
-    public TeamCalenderResponse(Long scheduleId, Long teamId, String title, String description, LocalDateTime startTime, LocalDateTime endTime) {
+    @Builder
+    private TeamCalenderResponse(Long scheduleId, Long teamId, String title, String description, LocalDateTime startTime, LocalDateTime endTime) {
         this.scheduleId = scheduleId;
         this.teamId = teamId;
         this.title = title;
@@ -33,36 +37,4 @@ public class TeamCalenderResponse {
         this.endTime = endTime;
     }
 
-    // (전체 조회용 생성자)
-    public TeamCalenderResponse(Long scheduleId, Long teamId, String title, LocalDateTime startTime, LocalDateTime endTime) {
-        this.scheduleId = scheduleId;
-        this.teamId = teamId;
-        this.title = title;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
-
-    public Long getScheduleId() {
-        return scheduleId;
-    }
-
-    public Long getTeamId() {
-        return teamId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
 }
