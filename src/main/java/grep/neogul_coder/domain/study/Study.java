@@ -46,7 +46,7 @@ public class Study {
     @Column(nullable = false)
     private String imageUrl;
 
-    private Boolean isActivated;
+    private boolean isActivated;
 
-    private Boolean isDeleted = false;
+    private boolean isDeleted;
 }
