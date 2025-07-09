@@ -27,6 +27,10 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호 확인이 일치하지 않습니다.");
         }
 
+        if(isDuplicateNickname(request.getNickname())) {
+            throw new IllegalArgumentException("동일한 닉네임이 존재합니다.");
+        }
+
         String encodedPassword = encodingPassword(request.getPassword());
         userRepository.save(User.UserInit(request.getEmail(),encodedPassword, request.getNickname()));
     }
@@ -35,12 +39,16 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    private String encodingPassword(String password) {
-        return passwordEncoder.encode(password);
+    private boolean isDuplicateNickname(String nickname) {
+        return userRepository.findByNickname(nickname).isPresent();
     }
 
     private boolean isNotMatchPassword(String password, String passwordCheck) {
         return !passwordEncoder.matches(password, passwordCheck);
+    }
+
+    private String encodingPassword(String password) {
+        return passwordEncoder.encode(password);
     }
 
 }

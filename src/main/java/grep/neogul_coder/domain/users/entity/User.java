@@ -26,14 +26,11 @@ public class User extends BaseEntity {
 
     String oauthProvider;
 
-    @NotBlank
     @Email
     String email;
 
-    @NotBlank
     String password;
 
-    @NotBlank
     String nickname;
 
     String profileImageUrl;

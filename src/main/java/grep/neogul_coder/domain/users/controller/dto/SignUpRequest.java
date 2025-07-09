@@ -22,7 +22,7 @@ public class SignUpRequest {
     private String passwordCheck;
 
     @NotBlank(message = "닉네임은 필수 입력 사항입니다.")
-    @Size(min = 2, max = 8, message = "닉네임은 최소 2자, 최대 10자까지 입력 가능합니다.")
+    @Size(min = 2, max = 10, message = "닉네임은 최소 2자, 최대 10자까지 입력 가능합니다.")
     @Schema(example = "홍길동")
     private String nickname;
 
