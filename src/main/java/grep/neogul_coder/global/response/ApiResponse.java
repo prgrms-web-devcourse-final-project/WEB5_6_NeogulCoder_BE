@@ -1,43 +1,28 @@
 package grep.neogul_coder.global.response;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import org.springframework.http.HttpStatus;
+public record ApiResponse<T>(
+    String code,
+    String message,
+    T data
+){
 
-@Getter
-public class ApiResponse<T> {
-
-    @Schema(example = "OK")
-    private HttpStatus status;
-
-    @Schema(example = "200")
-    private int code;
-
-    @Schema(example = "성공적으로 저장 되었습니다.")
-    private String message;
-
-    private T data;
-
-    public ApiResponse(HttpStatus status, String message, T data) {
-        this.status = status;
-        this.code = status.value();
-        this.data = data;
-        this.message = message;
+    public static <T> ApiResponse<T> success(T data){
+        return new ApiResponse<>(ResponseCode.OK.getCode(), ResponseCode.OK.getMessage(), data);
     }
 
-    public static <T> ApiResponse<T> of(HttpStatus status, String message, T data){
-        return new ApiResponse<>(status, message, data);
+    public static <T> ApiResponse<T> noContent(){
+        return new ApiResponse<>(ResponseCode.OK.getCode(), ResponseCode.OK.getMessage(), null);
     }
 
-    public static <T> ApiResponse<T> of(HttpStatus status, T data){
-        return ApiResponse.of(status,status.name(), data);
+    public static <T> ApiResponse<T> badRequest(){
+        return new ApiResponse<>(ResponseCode.BAD_REQUEST.getCode(), ResponseCode.BAD_REQUEST.getMessage(), null);
     }
 
-    public static <T> ApiResponse<T> ok(T data){
-        return ApiResponse.of(HttpStatus.OK, data);
+    public static <T> ApiResponse<T> error(ResponseCode code){
+        return new ApiResponse<>(code.getCode(), code.getMessage(), null);
     }
 
-    public static <T> ApiResponse<T> ok(String message){
-        return ApiResponse.of(HttpStatus.OK, message, null);
+    public static <T> ApiResponse<T> error(ResponseCode code, T data){
+        return new ApiResponse<>(code.getCode(), code.getMessage(), data);
     }
 }
