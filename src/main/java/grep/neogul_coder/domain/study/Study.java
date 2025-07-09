@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "study")
 public class Study extends BaseEntity {
 
     @Id

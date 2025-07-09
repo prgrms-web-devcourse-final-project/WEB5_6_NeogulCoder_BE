@@ -5,7 +5,6 @@ import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "study_member")
 public class StudyMember extends BaseEntity {
 
     @Id
