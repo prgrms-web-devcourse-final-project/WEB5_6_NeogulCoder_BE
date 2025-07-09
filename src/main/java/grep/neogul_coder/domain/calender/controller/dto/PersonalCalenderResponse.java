@@ -1,4 +1,4 @@
-package grep.neogul_coder.domain.calender.dto;
+package grep.neogul_coder.domain.calender.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
