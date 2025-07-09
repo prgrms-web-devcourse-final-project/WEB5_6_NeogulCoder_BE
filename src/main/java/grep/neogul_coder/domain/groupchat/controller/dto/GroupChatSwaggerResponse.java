@@ -1,4 +1,4 @@
-package grep.neogul_coder.domain.groupchat.dto;
+package grep.neogul_coder.domain.groupchat.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
