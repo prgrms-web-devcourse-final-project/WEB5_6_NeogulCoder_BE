@@ -1,4 +1,4 @@
-package grep.neogul_coder.users.entity;
+package grep.neogul_coder.domain.users.entity;
 
 import grep.neogul_coder.global.auth.code.Role;
 import grep.neogul_coder.global.entity.BaseEntity;

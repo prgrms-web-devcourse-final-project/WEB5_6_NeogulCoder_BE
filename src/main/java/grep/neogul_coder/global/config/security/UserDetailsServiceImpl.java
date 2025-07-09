@@ -1,8 +1,8 @@
 package grep.neogul_coder.global.config.security;
 
 import grep.neogul_coder.global.auth.Principal;
-import grep.neogul_coder.users.entity.User;
-import grep.neogul_coder.users.repository.UserRepository;
+import grep.neogul_coder.domain.users.entity.User;
+import grep.neogul_coder.domain.users.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

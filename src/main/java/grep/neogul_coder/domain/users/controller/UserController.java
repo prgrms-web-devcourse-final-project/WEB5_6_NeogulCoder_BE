@@ -1,8 +1,8 @@
-package grep.neogul_coder.users.controller;
+package grep.neogul_coder.domain.users.controller;
 
 import grep.neogul_coder.global.response.ApiResponse;
-import grep.neogul_coder.users.dto.SignUpRequest;
-import grep.neogul_coder.users.service.UserService;
+import grep.neogul_coder.domain.users.dto.SignUpRequest;
+import grep.neogul_coder.domain.users.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

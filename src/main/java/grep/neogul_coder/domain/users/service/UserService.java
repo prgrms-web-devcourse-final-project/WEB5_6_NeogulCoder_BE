@@ -1,9 +1,9 @@
-package grep.neogul_coder.users.service;
+package grep.neogul_coder.domain.users.service;
 
 import grep.neogul_coder.global.auth.code.Role;
-import grep.neogul_coder.users.dto.SignUpRequest;
-import grep.neogul_coder.users.entity.User;
-import grep.neogul_coder.users.repository.UserRepository;
+import grep.neogul_coder.domain.users.dto.SignUpRequest;
+import grep.neogul_coder.domain.users.entity.User;
+import grep.neogul_coder.domain.users.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

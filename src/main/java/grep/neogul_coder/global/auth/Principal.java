@@ -1,6 +1,6 @@
 package grep.neogul_coder.global.auth;
 
-import grep.neogul_coder.users.entity.User;
+import grep.neogul_coder.domain.users.entity.User;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package grep.neogul_coder.users.dto;
+package grep.neogul_coder.domain.users.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
