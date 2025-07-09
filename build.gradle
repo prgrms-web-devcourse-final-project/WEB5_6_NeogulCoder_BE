@@ -31,8 +31,8 @@ dependencies {
 	// Sql 쿼리 파라미터 보는 라이브러리
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 
-	// 테스트 데이터베이스 의존성
-//	testImplementation 'com.h2database:h2:1.4.200'
+//	 테스트 데이터베이스 의존성
+	testImplementation 'com.h2database:h2:1.4.200'
 
 	//Querydsl 추가
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -56,13 +56,25 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	// lombok 의존성
+	implementation "org.projectlombok:lombok:1.18.38"
+
 	// 시큐리티 의존성
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// Redis DB Cloud 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.session:spring-session-data-redis'
 
 	//JWT 의존성
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+	// OAuth2 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	implementation 'mysql:mysql-connector-java:8.0.32'
 
 	// GCP 관련 의존성
 //	implementation 'com.google.cloud:spring-cloud-gcp-starter-secretmanager'
