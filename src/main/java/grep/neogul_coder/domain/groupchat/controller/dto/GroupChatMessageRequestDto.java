@@ -1,4 +1,4 @@
-//package grep.neogul_coder.domain.groupchat.dto;
+//package grep.neogul_coder.domain.groupchat.controller.dto;
 //
 //public class GroupChatMessageRequestDto {
 //    private Long roomId;
