@@ -2,7 +2,6 @@ package grep.neogul_coder.domain.users.entity;
 
 import grep.neogul_coder.global.auth.code.Role;
 import grep.neogul_coder.global.entity.BaseEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,10 +22,8 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "oauth_id")
     String oauthId;
 
-    @Column(name = "oauth_provider")
     String oauthProvider;
 
     @NotBlank
@@ -39,7 +36,7 @@ public class User extends BaseEntity {
     @NotBlank
     String nickname;
 
-    String profile_image_url;
+    String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
     Role role;
@@ -47,14 +44,14 @@ public class User extends BaseEntity {
     Boolean isDeleted;
 
     protected User(Long id, String oauthId, String oauthProvider, String email, String password,
-        String nickname, String profile_image_url, Role role, Boolean isDeleted) {
+        String nickname, String profileImageUrl, Role role, Boolean isDeleted) {
         this.id = id;
         this.oauthId = oauthId;
         this.oauthProvider = oauthProvider;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.profile_image_url = profile_image_url;
+        this.profileImageUrl = profileImageUrl;
         this.role = role;
         this.isDeleted = isDeleted;
     }
