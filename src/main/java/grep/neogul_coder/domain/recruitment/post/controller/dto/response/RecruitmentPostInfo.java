@@ -1,0 +1,42 @@
+package grep.neogul_coder.domain.recruitment.post.controller.dto.response;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+
+import java.time.LocalDate;
+
+@Getter
+public class RecruitmentPostInfo {
+
+    @Schema(example = "너굴 코더 스터디를 모집 합니다", description = "제목")
+    private String subject;
+
+    @Schema(example = "이펙티브 자바를 정독 하는 것을 목표로 하는 스터디 입니다", description = "내용")
+    private String content;
+
+    @Schema(example = "2025-07-09", description = "생성 날짜")
+    private LocalDate createdDate;
+
+    @Schema(example = "닉네임", description = "회원 닉네임")
+    private String username;
+
+    @Schema(example = "2025-07-09", description = "스터디 시작 날짜")
+    private LocalDate startedDate;
+
+    @Schema(example = "2025-07-10", description = "스터디 종료 날짜")
+    private LocalDate endDate;
+
+    @Schema(example = "8", description = "모집 인원")
+    private int recruitmentCount;
+
+    @Schema(example = "IT", description = "카테고리")
+    private String category;
+
+    @Schema(example = "서울", description = "장소")
+    private String location;
+
+    @Schema(example = "오프라인", description = "진행 방식")
+    private String studyType;
+
+    // TODO 댓글 정보 List 추가 필요
+}
