@@ -25,29 +25,31 @@ repositories {
 
 dependencies {
 	// 데이터 베이스 의존성
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//	runtimeOnly 'com.h2database:h2'
-//	runtimeOnly 'org.postgresql:postgresql'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.mysql:mysql-connector-j:8.4.0'
 
 	// Sql 쿼리 파라미터 보는 라이브러리
-//	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 
 	// 테스트 데이터베이스 의존성
 //	testImplementation 'com.h2database:h2:1.4.200'
 
 	//Querydsl 추가
-//	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-//	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
-//	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-//	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-//
-//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	// 테스트 의존성
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// 롬복
+	compileOnly 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// 웹 관련 의존성
@@ -63,8 +65,11 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
 	// GCP 관련 의존성
-	implementation 'com.google.cloud:spring-cloud-gcp-starter-secretmanager'
-	implementation 'com.google.cloud:google-cloud-storage'
+//	implementation 'com.google.cloud:spring-cloud-gcp-starter-secretmanager'
+//	implementation 'com.google.cloud:google-cloud-storage'
+
+	// swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 }
 
 dependencyManagement {
