@@ -13,6 +13,6 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
     @PostMapping("/studies/{study-id}")
     public ApiResponse<Void> save(@PathVariable("study-id") Long studyId,
                                   @RequestBody RecruitmentPostSaveRequest request) {
-        return ApiResponse.ok("모집글이 생성 되었습니다.");
+        return ApiResponse.noContent("모집글이 생성 되었습니다.");
     }
 }
