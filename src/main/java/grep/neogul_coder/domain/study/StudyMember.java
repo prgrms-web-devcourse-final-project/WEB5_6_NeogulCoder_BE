@@ -1,11 +1,12 @@
 package grep.neogul_coder.domain.study;
 
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
+import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "study_member")
-public class StudyMember {
+public class StudyMember extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

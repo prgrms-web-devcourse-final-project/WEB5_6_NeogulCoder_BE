@@ -2,13 +2,14 @@ package grep.neogul_coder.domain.study;
 
 import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyType;
+import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "study")
-public class Study {
+public class Study extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
