@@ -74,14 +74,12 @@ dependencies {
 	// OAuth2 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-	implementation 'mysql:mysql-connector-java:8.0.32'
-
 	// GCP 관련 의존성
 //	implementation 'com.google.cloud:spring-cloud-gcp-starter-secretmanager'
 //	implementation 'com.google.cloud:google-cloud-storage'
 
 	// swagger
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 }
 
 dependencyManagement {
