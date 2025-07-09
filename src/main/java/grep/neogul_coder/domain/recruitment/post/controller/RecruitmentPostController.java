@@ -1,18 +1,35 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
+import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostEditRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostSaveRequest;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.global.response.ApiResponse;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import static grep.neogul_coder.domain.recruitment.post.controller.dto.RecruitmentPostMessage.*;
 
 @RestController
 public class RecruitmentPostController implements RecruitmentPostSpecification {
 
+    @GetMapping("/recruitment-posts/{recruitment-post-id}")
+    public ApiResponse<RecruitmentPostInfo> get(@PathVariable("recruitment-post-id") long recruitmentPostId) {
+        return ApiResponse.success(new RecruitmentPostInfo());
+    }
+
     @PostMapping("/studies/{study-id}")
     public ApiResponse<Void> save(@PathVariable("study-id") Long studyId,
                                   @RequestBody RecruitmentPostSaveRequest request) {
-        return ApiResponse.noContent("모집글이 생성 되었습니다.");
+        return ApiResponse.noContent(CREATE.getDescription());
+    }
+
+    @PutMapping("/recruitment-posts/{recruitment-post-id}")
+    public ApiResponse<Void> edit(@PathVariable("recruitment-post-id") Long recruitmentPostId,
+                                  RecruitmentPostEditRequest request) {
+        return ApiResponse.noContent(EDIT.getDescription());
+    }
+
+    @DeleteMapping("/recruitment-posts/{recruitment-post-id}")
+    public ApiResponse<Void> delete(@PathVariable("recruitment-post-id") Long recruitmentPostId) {
+        return ApiResponse.noContent(DELETE.getDescription());
     }
 }
