@@ -17,7 +17,7 @@ import lombok.Getter;
 @Entity
 @Getter
 @Builder
-public class Users extends BaseEntity {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,9 +46,7 @@ public class Users extends BaseEntity {
 
     Boolean isDeleted;
 
-
-
-    public Users(Long id, String oauthId, String oauthProvider, String email, String password,
+    protected User(Long id, String oauthId, String oauthProvider, String email, String password,
         String nickname, String profile_image_url, Role role, Boolean isDeleted) {
         this.id = id;
         this.oauthId = oauthId;
@@ -61,7 +59,6 @@ public class Users extends BaseEntity {
         this.isDeleted = isDeleted;
     }
 
-    public Users() {
-
+    protected User() {
     }
 }

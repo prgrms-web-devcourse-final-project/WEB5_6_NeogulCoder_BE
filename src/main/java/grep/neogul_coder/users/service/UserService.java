@@ -2,19 +2,21 @@ package grep.neogul_coder.users.service;
 
 import grep.neogul_coder.global.auth.code.Role;
 import grep.neogul_coder.users.dto.SignUpRequest;
-import grep.neogul_coder.users.entity.Users;
-import grep.neogul_coder.users.repository.UsersRepository;
+import grep.neogul_coder.users.entity.User;
+import grep.neogul_coder.users.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UsersService {
+public class UserService {
 
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public void signUp(SignUpRequest request) {
 
         if (isDuplicateEmail(request.getEmail())) {
@@ -22,7 +24,7 @@ public class UsersService {
         }
 
         String encodedPassword = encodingPassword(request.getPassword());
-        Users newUser = Users.builder()
+        User newUser = User.builder()
             .email(request.getEmail())
             .password(encodedPassword)
             .nickname(request.getNickname())
@@ -30,11 +32,11 @@ public class UsersService {
             .role(Role.ROLE_USER)
             .build();
 
-        usersRepository.save(newUser);
+        userRepository.save(newUser);
     }
 
     private boolean isDuplicateEmail(String email) {
-        return usersRepository.findByEmail(email).isPresent();
+        return userRepository.findByEmail(email).isPresent();
     }
 
     private String encodingPassword(String password) {

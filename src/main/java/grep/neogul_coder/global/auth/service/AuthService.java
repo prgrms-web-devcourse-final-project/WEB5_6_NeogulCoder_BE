@@ -8,8 +8,8 @@ import grep.neogul_coder.global.auth.jwt.dto.TokenDto;
 import grep.neogul_coder.global.auth.oauth.user.OAuth2UserInfo;
 import grep.neogul_coder.global.auth.payload.LoginRequest;
 import grep.neogul_coder.global.auth.repository.UserBlackListRepository;
-import grep.neogul_coder.users.entity.Users;
-import grep.neogul_coder.users.repository.UsersRepository;
+import grep.neogul_coder.users.entity.User;
+import grep.neogul_coder.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,7 +30,7 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService refreshTokenService;
     private final UserBlackListRepository userBlackListRepository;
-    private final UsersRepository usersRepository;
+    private final UserRepository usersRepository;
 
     public TokenDto signin(LoginRequest loginRequest) {
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -66,9 +66,9 @@ public class AuthService {
     public TokenDto processOAuthSignin(OAuth2UserInfo userInfo, String roles) {
         String email = userInfo.getEmail();
 
-        Users user = usersRepository.findByEmail(email)
+        User user = usersRepository.findByEmail(email)
             .orElseGet(() -> {
-                Users newUser = Users.builder()
+                User newUser = User.builder()
                     .email(email)
                     .nickname(userInfo.getName())
                     .oauthProvider(userInfo.getProvider())

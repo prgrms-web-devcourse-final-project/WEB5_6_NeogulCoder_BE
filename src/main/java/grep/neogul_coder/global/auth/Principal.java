@@ -1,14 +1,13 @@
 package grep.neogul_coder.global.auth;
 
-import grep.neogul_coder.users.entity.Users;
+import grep.neogul_coder.users.entity.User;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 
-public class Principal extends User {
+public class Principal extends org.springframework.security.core.userdetails.User {
 
     private String accessToken;
 
@@ -17,7 +16,7 @@ public class Principal extends User {
         super(username, password, authorities);
     }
 
-    public static Principal createPrincipal(Users users, List<SimpleGrantedAuthority> authorities){
+    public static Principal createPrincipal(User users, List<SimpleGrantedAuthority> authorities){
         return new Principal(users.getEmail(), users.getPassword(), authorities);
     }
 

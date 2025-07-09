@@ -2,7 +2,7 @@ package grep.neogul_coder.users.controller;
 
 import grep.neogul_coder.global.response.ApiResponse;
 import grep.neogul_coder.users.dto.SignUpRequest;
-import grep.neogul_coder.users.service.UsersService;
+import grep.neogul_coder.users.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
-public class UsersController {
+public class UserController {
 
-    private final UsersService usersService;
+    private final UserService usersService;
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
