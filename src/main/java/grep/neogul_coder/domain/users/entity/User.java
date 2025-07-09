@@ -24,10 +24,10 @@ public class User extends BaseEntity {
     Long id;
 
     @Column(name = "oauth_id")
-    private String oauthId;
+    String oauthId;
 
     @Column(name = "oauth_provider")
-    private String oauthProvider;
+    String oauthProvider;
 
     @NotBlank
     @Email
@@ -60,5 +60,15 @@ public class User extends BaseEntity {
     }
 
     protected User() {
+    }
+
+    public static User UserInit(String email, String password, String nickname) {
+        return User.builder()
+            .email(email)
+            .password(password)
+            .nickname(nickname)
+            .isDeleted(false)
+            .role(Role.ROLE_USER)
+            .build();
     }
 }
