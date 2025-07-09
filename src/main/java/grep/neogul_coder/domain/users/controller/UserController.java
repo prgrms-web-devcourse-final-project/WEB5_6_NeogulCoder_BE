@@ -23,7 +23,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<Void> signUp(@Valid @RequestBody SignUpRequest request) {
         usersService.signUp(request);
-        return ApiResponse.noContent();
+        return ApiResponse.noContent("회원가입이 완료되었습니다.");
     }
 
 }
