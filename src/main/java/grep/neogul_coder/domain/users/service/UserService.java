@@ -35,6 +35,27 @@ public class UserService {
         userRepository.save(User.UserInit(request.getEmail(),encodedPassword, request.getNickname()));
     }
 
+    public void updateProfile(Long id, String nickname, String profileImageUrl) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+        user.updateProfile(nickname, profileImageUrl);
+    }
+
+    public void updatePassword(Long id, String password, String newPassword, String newPasswordCheck) {
+        User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException("회원이 존재하지 않습니다."));
+
+        if(isNotMatchCurrentPassword(password,user.getPassword())) {
+            throw new RuntimeException("비밀번호를 다시 확인해주세요");
+        }
+
+        if(isNotMatchPasswordCheck(password, newPassword)) {
+            throw new RuntimeException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        }
+
+        String encodedPassword = encodingPassword(newPassword);
+
+        user.updatePassword(encodedPassword);
+    }
+
     private boolean isDuplicateEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
@@ -49,6 +70,14 @@ public class UserService {
 
     private String encodingPassword(String password) {
         return passwordEncoder.encode(password);
+    }
+
+    private boolean isNotMatchCurrentPassword(String currentPassword, String password) {
+        return !passwordEncoder.matches(password, currentPassword);
+    }
+
+    private boolean isNotMatchPasswordCheck(String password, String passwordCheck) {
+        return !passwordEncoder.matches(password, passwordCheck);
     }
 
 }

@@ -41,6 +41,25 @@ public class User extends BaseEntity {
 
     Boolean isDeleted;
 
+    public static User UserInit(String email, String password, String nickname) {
+        return User.builder()
+            .email(email)
+            .password(password)
+            .nickname(nickname)
+            .isDeleted(false)
+            .role(Role.ROLE_USER)
+            .build();
+    }
+
+    public void updateProfile(String nickname, String profileImageUrl) {
+        this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
     protected User(Long id, String oauthId, String oauthProvider, String email, String password,
         String nickname, String profileImageUrl, Role role, Boolean isDeleted) {
         this.id = id;
@@ -55,15 +74,5 @@ public class User extends BaseEntity {
     }
 
     protected User() {
-    }
-
-    public static User UserInit(String email, String password, String nickname) {
-        return User.builder()
-            .email(email)
-            .password(password)
-            .nickname(nickname)
-            .isDeleted(false)
-            .role(Role.ROLE_USER)
-            .build();
     }
 }

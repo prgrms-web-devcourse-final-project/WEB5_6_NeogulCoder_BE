@@ -10,6 +10,10 @@ public record ApiResponse<T>(
         return new ApiResponse<>(ResponseCode.OK.getCode(), ResponseCode.OK.getMessage(), data);
     }
 
+    public static <T> ApiResponse<T> noContent(){
+        return new ApiResponse<>(ResponseCode.OK.getCode(), ResponseCode.OK.getMessage(), null);
+    }
+
     public static <T> ApiResponse<T> noContent(String message){
         return new ApiResponse<>(ResponseCode.OK.getCode(), message, null);
     }
