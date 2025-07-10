@@ -1,6 +1,7 @@
 package grep.neogul_coder.global.exception.advice;
 
 import grep.neogul_coder.global.exception.AuthApiException;
+import grep.neogul_coder.global.exception.GoogleUserLoginException;
 import grep.neogul_coder.global.response.ApiResponse;
 import grep.neogul_coder.global.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,14 @@ public class AuthExceptionAdvice {
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
             .body(ApiResponse.error(ResponseCode.UNAUTHORIZED));
+    }
+
+    @ResponseBody
+    @ExceptionHandler(GoogleUserLoginException.class)
+    public ResponseEntity<ApiResponse<String>> googleUserLoginExHandler(GoogleUserLoginException ex) {
+        return ResponseEntity
+            .status(ex.code().getStatus())
+            .body(ApiResponse.error(ResponseCode.SECURITY_INCIDENT));
     }
 
 }

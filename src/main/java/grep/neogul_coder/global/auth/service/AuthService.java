@@ -10,6 +10,9 @@ import grep.neogul_coder.global.auth.payload.LoginRequest;
 import grep.neogul_coder.global.auth.repository.UserBlackListRepository;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
+import grep.neogul_coder.global.exception.GoogleUserLoginException;
+import grep.neogul_coder.global.response.ResponseCode;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +20,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +37,11 @@ public class AuthService {
     private final UserRepository usersRepository;
 
     public TokenDto signin(LoginRequest loginRequest) {
+
+        if(isGoogleUser(loginRequest.getEmail())){
+            throw new GoogleUserLoginException(ResponseCode.SECURITY_INCIDENT);
+        }
+
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
                 loginRequest.getPassword());
@@ -66,6 +75,8 @@ public class AuthService {
     public TokenDto processOAuthSignin(OAuth2UserInfo userInfo, String roles) {
         String email = userInfo.getEmail();
 
+        String dummyPassword = UUID.randomUUID().toString();
+
         User user = usersRepository.findByEmail(email)
             .orElseGet(() -> {
                 User newUser = User.builder()
@@ -73,7 +84,7 @@ public class AuthService {
                     .nickname(userInfo.getName())
                     .oauthProvider(userInfo.getProvider())
                     .oauthId(userInfo.getProviderId())
-                    .password("OAUTH")
+                    .password(dummyPassword)
                     .role(Role.ROLE_USER)
                     .isDeleted(false)
                     .build();
@@ -81,6 +92,13 @@ public class AuthService {
             });
 
         return processTokenSignin(user.getEmail(), user.getRole().name());
+    }
+
+    private boolean isGoogleUser(String email) {
+        User user = usersRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("해당 이메일의 유저가 없습니다."));
+
+        return "Google".equals(user.getOauthProvider());
     }
 
 }

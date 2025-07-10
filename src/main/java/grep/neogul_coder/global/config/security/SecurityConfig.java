@@ -80,9 +80,12 @@ public class SecurityConfig {
                         "/oauth2/**",
                         "/login/**",
                         "/signup",
+                        "/api/users/**",
                         "/reissue",
                         "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**",
                         "/webjars/**",
+                        "/h2-console/**",
+                        "/favicon.ico",
                         "/error").permitAll()
                     .anyRequest().authenticated()
             )

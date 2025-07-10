@@ -9,14 +9,14 @@ public class PrTemplate extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long templateId;
+    private Long templateId;
 
-    Long userId;
+    private Long userId;
 
-    String introductionContent;
+    private String introductionContent;
 
-    String introductionDetail;
+    private String introductionDetail;
 
-    String location;
+    private String location;
 
 }

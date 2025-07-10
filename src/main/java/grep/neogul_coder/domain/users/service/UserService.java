@@ -1,6 +1,5 @@
 package grep.neogul_coder.domain.users.service;
 
-import grep.neogul_coder.global.auth.code.Role;
 import grep.neogul_coder.domain.users.controller.dto.SignUpRequest;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
@@ -19,30 +18,83 @@ public class UserService {
 
     public void signUp(SignUpRequest request) {
 
-        if (isDuplicateEmail(request.getEmail())) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
-        }
+        duplicationCheck(request.getEmail(), request.getNickname());
 
-        if(isNotMatchPassword(request.getPassword(), request.getPasswordCheck())){
+        if (isNotMatchPasswordCheck(request.getPassword(), request.getPasswordCheck())) {
             throw new IllegalArgumentException("비밀번호 확인이 일치하지 않습니다.");
         }
 
         String encodedPassword = encodingPassword(request.getPassword());
-        userRepository.save(User.UserInit(request.getEmail(),encodedPassword, request.getNickname()));
+        userRepository.save(
+            User.UserInit(request.getEmail(), encodedPassword, request.getNickname()));
+    }
+
+    public void updateProfile(Long id, String nickname, String profileImageUrl) {
+        User user = findUser(id);
+        user.updateProfile(nickname, profileImageUrl);
+    }
+
+    public void updatePassword(Long id, String password, String newPassword,
+        String newPasswordCheck) {
+        User user = findUser(id);
+
+        if (isNotMatchCurrentPassword(password, user.getPassword())) {
+            throw new RuntimeException("비밀번호를 다시 확인해주세요");
+        }
+
+        if (isNotMatchPasswordCheck(newPassword, newPasswordCheck)) {
+            throw new IllegalArgumentException("비밀번호 확인이 일치하지 않습니다.");
+        }
+
+        String encodedPassword = encodingPassword(newPassword);
+        user.updatePassword(encodedPassword);
+    }
+
+    public void deleteUser(Long id, String password) {
+        User user = findUser(id);
+
+        if (isNotMatchCurrentPassword(password, user.getPassword())) {
+            throw new RuntimeException("비밀번호를 다시 확인해주세요");
+        }
+
+        user.delete();
+    }
+
+    private User findUser(Long id) {
+        return userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+    }
+
+    private boolean duplicationCheck(String email, String nickname){
+        if (isDuplicateEmail(email)) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+        }
+
+        if (isDuplicateNickname(nickname)) {
+            throw new IllegalArgumentException("동일한 닉네임이 존재합니다.");
+        }
+        return false;
     }
 
     private boolean isDuplicateEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
 
+    private boolean isDuplicateNickname(String nickname) {
+        return userRepository.findByNickname(nickname).isPresent();
+    }
+
     private String encodingPassword(String password) {
         return passwordEncoder.encode(password);
     }
 
-    private boolean isNotMatchPassword(String password, String passwordCheck) {
-        return !passwordEncoder.matches(password, passwordCheck);
+    private boolean isNotMatchCurrentPassword(String inputPassword, String storedPassword) {
+        return !passwordEncoder.matches(inputPassword, storedPassword);
     }
 
+    private boolean isNotMatchPasswordCheck(String password, String passwordCheck) {
+        return !password.equals(passwordCheck);
+    }
 }
 
 
