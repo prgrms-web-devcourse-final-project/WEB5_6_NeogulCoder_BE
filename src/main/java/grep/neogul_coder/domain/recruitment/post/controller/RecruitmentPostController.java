@@ -7,8 +7,6 @@ import grep.neogul_coder.domain.recruitment.post.controller.dto.response.Recruit
 import grep.neogul_coder.global.response.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
-import static grep.neogul_coder.domain.recruitment.post.controller.dto.RecruitmentPostMessage.*;
-
 @RequestMapping("/recruitment-posts")
 @RestController
 public class RecruitmentPostController implements RecruitmentPostSpecification {

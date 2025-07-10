@@ -41,7 +41,7 @@ public class AuthExceptionAdvice {
     public ResponseEntity<ApiResponse<String>> googleUserLoginExHandler(GoogleUserLoginException ex) {
         return ResponseEntity
             .status(ex.code().getStatus())
-            .body(ApiResponse.error(ResponseCode.SECURITY_INCIDENT));
+            .body(ApiResponse.error(CommonCode.SECURITY_INCIDENT));
     }
 
 }

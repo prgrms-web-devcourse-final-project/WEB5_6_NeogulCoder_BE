@@ -1,5 +1,8 @@
 package grep.neogul_coder.domain.users.controller;
 
+import grep.neogul_coder.domain.users.controller.dto.PasswordRequest;
+import grep.neogul_coder.domain.users.controller.dto.UpdatePasswordRequest;
+import grep.neogul_coder.domain.users.controller.dto.UpdateProfileRequest;
 import grep.neogul_coder.global.response.ApiResponse;
 import grep.neogul_coder.domain.users.controller.dto.SignUpRequest;
 import grep.neogul_coder.domain.users.service.UserService;
