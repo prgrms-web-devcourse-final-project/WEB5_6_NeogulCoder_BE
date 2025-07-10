@@ -10,6 +10,8 @@ import grep.neogul_coder.global.auth.payload.LoginRequest;
 import grep.neogul_coder.global.auth.repository.UserBlackListRepository;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
+import grep.neogul_coder.global.exception.GoogleUserLoginException;
+import grep.neogul_coder.global.response.ResponseCode;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +39,7 @@ public class AuthService {
     public TokenDto signin(LoginRequest loginRequest) {
 
         if(isGoogleUser(loginRequest.getEmail())){
-            throw new IllegalArgumentException("Google 로그인으로 로그인 해주세요.");
+            throw new GoogleUserLoginException(ResponseCode.SECURITY_INCIDENT);
         }
 
         UsernamePasswordAuthenticationToken authenticationToken =

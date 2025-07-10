@@ -25,4 +25,8 @@ public record ApiResponse<T>(
     public static <T> ApiResponse<T> error(ResponseCode code, T data){
         return new ApiResponse<>(code.getCode(), code.getMessage(), data);
     }
+
+    public static <T> ApiResponse<T> error(String message){
+        return new ApiResponse<>(ResponseCode.SECURITY_INCIDENT.getCode(), message, null);
+    }
 }
