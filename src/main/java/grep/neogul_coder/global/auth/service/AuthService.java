@@ -98,7 +98,7 @@ public class AuthService {
         User user = usersRepository.findByEmail(email)
             .orElseThrow(() -> new UsernameNotFoundException("해당 이메일의 유저가 없습니다."));
 
-        return user.getOauthProvider().equals("Google");
+        return "Google".equals(user.getOauthProvider());
     }
 
 }
