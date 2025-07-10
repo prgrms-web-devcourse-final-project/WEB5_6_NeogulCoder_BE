@@ -15,7 +15,7 @@ public interface RecruitmentPostSpecification {
     ApiResponse<RecruitmentPostInfo> get(long id);
 
     @Operation(summary = "모집 글 저장", description = "스터디 모집 글을 저장 합니다.")
-    ApiResponse<Void> save(long studyId, RecruitmentPostSaveRequest request);
+    ApiResponse<Void> save(RecruitmentPostSaveRequest request);
 
     @Operation(summary = "모집 글 수정", description = "모집글을 수정 합니다.")
     ApiResponse<Void> edit(long recruitmentPostId, RecruitmentPostEditRequest request);

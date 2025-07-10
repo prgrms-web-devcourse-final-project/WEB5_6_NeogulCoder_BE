@@ -8,6 +8,9 @@ import java.time.LocalDate;
 @Getter
 public class RecruitmentPostSaveRequest {
 
+    @Schema(example = "2", description = "스터디 ID")
+    private long studyId;
+
     @Schema(example = "모각코 1일 스터디 모집 합니다.", description = "제목")
     private String subject;
 
