@@ -1,9 +1,12 @@
 package grep.neogul_coder.domain.recruitment.post;
 
+import grep.neogul_coder.domain.recruitment.RecruitmentPostStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import java.time.LocalDate;
 
 @Entity
 public class RecruitmentPost {
@@ -16,4 +19,6 @@ public class RecruitmentPost {
     private String subject;
     private String content;
     private int recruitmentCount;
+    private LocalDate expiredDate;
+    private RecruitmentPostStatus status;
 }
