@@ -19,6 +19,4 @@ public class StudyMember extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private StudyMemberRole role;
-
-    private Boolean isDeleted = false;
 }
