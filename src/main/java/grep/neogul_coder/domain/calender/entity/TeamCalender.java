@@ -19,5 +19,7 @@ public class TeamCalender extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Study study;
+
+    private boolean isDeleted = false;
 }
 
