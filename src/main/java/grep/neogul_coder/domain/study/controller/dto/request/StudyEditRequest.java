@@ -10,7 +10,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-public class StudyCreateRequest {
+public class StudyEditRequest {
 
     @NotBlank
     @Schema(description = "스터디 이름", example = "자바 스터디")
@@ -30,13 +30,8 @@ public class StudyCreateRequest {
     @Schema(description = "지역", example = "서울")
     private String location;
 
-    @NotNull
     @Schema(description = "시작일", example = "2025-07-15")
     private LocalDate startDate;
-
-    @NotNull
-    @Schema(description = "종료일", example = "2025-07-28")
-    private LocalDate endDate;
 
     @Schema(description = "스터디 소개", example = "자바 스터디입니다.")
     private String introduction;

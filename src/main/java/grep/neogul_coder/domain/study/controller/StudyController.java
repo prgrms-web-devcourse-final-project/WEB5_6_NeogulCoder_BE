@@ -1,15 +1,85 @@
 package grep.neogul_coder.domain.study.controller;
 
+import grep.neogul_coder.domain.study.controller.dto.request.DelegateLeaderRequest;
+import grep.neogul_coder.domain.study.controller.dto.request.ExtendStudyRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
+import grep.neogul_coder.domain.study.controller.dto.request.StudyEditRequest;
+import grep.neogul_coder.domain.study.controller.dto.response.*;
 import grep.neogul_coder.global.response.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/study")
+import java.util.List;
+
+@RequestMapping("/api/studies")
 @RestController
 public class StudyController implements StudySpecification {
 
-    @PostMapping("/new")
+    @GetMapping
+    public ApiResponse<List<StudyListResponse>> getStudyList() {
+        return ApiResponse.success(List.of(new StudyListResponse()));
+    }
+
+    @GetMapping("/{studyId}/header")
+    public ApiResponse<StudyHeaderResponse> getStudyHeader(@PathVariable("studyId") Long studyId) {
+        return ApiResponse.success(new StudyHeaderResponse());
+    }
+
+    @GetMapping("/{studyId}")
+    public ApiResponse<StudyResponse> getStudy(@PathVariable("studyId") Long studyId) {
+        return ApiResponse.success(new StudyResponse());
+    }
+
+    @GetMapping("/{studyId}/info")
+    public ApiResponse<StudyInfoResponse> getStudyInfo(@PathVariable("studyId") Long studyId) {
+        return ApiResponse.success(new StudyInfoResponse());
+    }
+
+    @GetMapping("/{studyId}/me")
+    public ApiResponse<StudyMyInfoResponse> getStudyMyInfo(@PathVariable("studyId") Long studyId) {
+        return ApiResponse.success(new StudyMyInfoResponse());
+    }
+
+    @PostMapping
     public ApiResponse<Void> createStudy(@RequestBody StudyCreateRequest request) {
-        return ApiResponse.noContent("스터디가 생성되었습니다.");
+        return ApiResponse.noContent();
+    }
+
+    @PutMapping("/{studyId}")
+    public ApiResponse<Void> editStudy(@PathVariable("studyId") Long studyId,
+                                       @RequestBody StudyEditRequest request) {
+        return ApiResponse.noContent("스터디가 수정되었습니다.");
+    }
+
+    @DeleteMapping("/{studyId}")
+    public ApiResponse<Void> deleteStudy(@PathVariable("studyId") Long studyId) {
+        return ApiResponse.noContent("스터디가 삭제되었습니다.");
+    }
+
+    @DeleteMapping("/{studyId}/me")
+    public ApiResponse<Void> leaveStudy(@PathVariable("studyId") Long studyId) {
+        return ApiResponse.noContent("스터디에서 탈퇴되었습니다.");
+    }
+
+    @DeleteMapping("/{studyId}/users/{userId}")
+    public ApiResponse<Void> deleteMember(@PathVariable("studyId") Long studyId,
+                                        @PathVariable("userId") Long userId) {
+        return ApiResponse.noContent("해당 스터디원이 강퇴되었습니다.");
+    }
+
+    @PostMapping("/{studyId}/delegate")
+    public ApiResponse<Void> delegateLeader(@PathVariable("studyId") Long studyId,
+                                            @RequestBody DelegateLeaderRequest request) {
+        return ApiResponse.noContent("스터디장이 위임되었습니다.");
+    }
+
+    @PostMapping("/{studyId}/extend")
+    public ApiResponse<Void> extendStudy(@PathVariable("studyId") Long studyId,
+                                         @RequestBody ExtendStudyRequest request) {
+        return ApiResponse.noContent("스터디가 연장되었습니다.");
+    }
+
+    @PostMapping("/{studyId}/join")
+    public ApiResponse<Void> joinExtendStudy(@PathVariable("studyId") Long studyId) {
+        return ApiResponse.noContent("연장된 스터디에 참여하였습니다.");
     }
 }

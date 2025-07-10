@@ -2,7 +2,6 @@ package grep.neogul_coder.global.auth.jwt;
 
 import grep.neogul_coder.global.auth.code.AuthToken;
 import grep.neogul_coder.global.auth.service.RefreshTokenService;
-import grep.neogul_coder.global.response.ResponseCode;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
