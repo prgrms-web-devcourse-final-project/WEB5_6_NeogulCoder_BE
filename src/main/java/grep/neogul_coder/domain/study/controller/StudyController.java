@@ -27,7 +27,7 @@ public class StudyController implements StudySpecification {
         return ApiResponse.success(new StudyResponse());
     }
 
-    @GetMapping("/me/studyimages")
+    @GetMapping("/me/images")
     public ApiResponse<List<StudyImageResponse>> getStudyImages() {
         return ApiResponse.success(List.of(new StudyImageResponse()));
     }
