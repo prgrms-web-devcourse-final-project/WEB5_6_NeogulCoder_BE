@@ -33,7 +33,7 @@ public class StudyEditRequest {
     @Schema(description = "시작일", example = "2025-07-15")
     private LocalDate startDate;
 
-    @Schema(description = "스터디 소개", example = "자바 스터디")
+    @Schema(description = "스터디 소개", example = "자바 스터디입니다.")
     private String introduction;
 
     @NotBlank

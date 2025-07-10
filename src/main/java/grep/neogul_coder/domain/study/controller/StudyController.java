@@ -2,20 +2,42 @@ package grep.neogul_coder.domain.study.controller;
 
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyEditRequest;
-import grep.neogul_coder.domain.study.controller.dto.response.StudyResponse;
+import grep.neogul_coder.domain.study.controller.dto.response.*;
 import grep.neogul_coder.global.response.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/studies")
+import java.util.List;
+
+@RequestMapping("/api/studies")
 @RestController
 public class StudyController implements StudySpecification {
+
+    @GetMapping
+    public ApiResponse<List<StudyListResponse>> getStudyList() {
+        return ApiResponse.success(List.of(new StudyListResponse()));
+    }
+
+    @GetMapping("/{studyId}/header")
+    public ApiResponse<StudyHeaderResponse> getStudyHeader(@PathVariable("studyId") Long studyId) {
+        return ApiResponse.success(new StudyHeaderResponse());
+    }
 
     @GetMapping("/{studyId}")
     public ApiResponse<StudyResponse> getStudy(@PathVariable("studyId") Long studyId) {
         return ApiResponse.success(new StudyResponse());
     }
 
-    @PostMapping("/create")
+    @GetMapping("/{studyId}/info")
+    public ApiResponse<StudyInfoResponse> getStudyInfo(@PathVariable("studyId") Long studyId) {
+        return ApiResponse.success(new StudyInfoResponse());
+    }
+
+    @GetMapping("/{studyId}/me")
+    public ApiResponse<StudyMyInfoResponse> getStudyMyInfo(@PathVariable("studyId") Long studyId) {
+        return ApiResponse.success(new StudyMyInfoResponse());
+    }
+
+    @PostMapping
     public ApiResponse<Void> createStudy(@RequestBody StudyCreateRequest request) {
         return ApiResponse.noContent("스터디가 생성되었습니다.");
     }
