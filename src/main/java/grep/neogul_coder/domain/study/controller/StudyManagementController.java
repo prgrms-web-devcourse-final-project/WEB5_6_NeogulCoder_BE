@@ -3,6 +3,7 @@ package grep.neogul_coder.domain.study.controller;
 import grep.neogul_coder.domain.study.controller.dto.request.DelegateLeaderRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.ExtendStudyRequest;
 import grep.neogul_coder.global.response.ApiResponse;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,7 +28,7 @@ public class StudyManagementController implements StudyManagementSpecification {
 
     @PostMapping("/{studyId}/extend")
     public ApiResponse<Void> extendStudy(@PathVariable("studyId") Long studyId,
-                                         @RequestBody ExtendStudyRequest request) {
+                                         @RequestBody @Valid ExtendStudyRequest request) {
         return ApiResponse.noContent();
     }
 

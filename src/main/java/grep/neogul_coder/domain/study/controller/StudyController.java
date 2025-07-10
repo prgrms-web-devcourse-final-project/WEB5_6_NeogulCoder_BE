@@ -4,6 +4,7 @@ import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyEditRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.*;
 import grep.neogul_coder.global.response.ApiResponse;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,13 +44,13 @@ public class StudyController implements StudySpecification {
     }
 
     @PostMapping
-    public ApiResponse<Void> createStudy(@RequestBody StudyCreateRequest request) {
+    public ApiResponse<Void> createStudy(@RequestBody @Valid StudyCreateRequest request) {
         return ApiResponse.noContent();
     }
 
     @PutMapping("/{studyId}")
     public ApiResponse<Void> editStudy(@PathVariable("studyId") Long studyId,
-                                       @RequestBody StudyEditRequest request) {
+                                       @RequestBody @Valid StudyEditRequest request) {
         return ApiResponse.noContent();
     }
 
