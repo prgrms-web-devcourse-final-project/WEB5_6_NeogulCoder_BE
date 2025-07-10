@@ -25,4 +25,9 @@ public class StudyController implements StudySpecification {
                                        @RequestBody StudyEditRequest request) {
         return ApiResponse.noContent("스터디가 수정되었습니다.");
     }
+
+    @DeleteMapping("/{studyId}")
+    public ApiResponse<Void> deleteStudy(@PathVariable("studyId") Long studyId) {
+        return ApiResponse.noContent("스터디가 삭제되었습니다.");
+    }
 }

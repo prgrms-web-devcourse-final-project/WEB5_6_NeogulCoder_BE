@@ -3,9 +3,11 @@ package grep.neogul_coder.domain.study.controller.dto.response;
 import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
+@Getter
 public class StudyResponse {
 
     @Schema(description = "스터디 번호", example = "2")
