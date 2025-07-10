@@ -2,6 +2,7 @@ package grep.neogul_coder.domain.recruitment.post.controller;
 
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostEditRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostSaveRequest;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusEditRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.global.response.ApiResponse;
 import org.springframework.web.bind.annotation.*;
@@ -17,19 +18,25 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
     }
 
     @PostMapping("/studies/{study-id}")
-    public ApiResponse<Void> save(@PathVariable("study-id") Long studyId,
+    public ApiResponse<Void> save(@PathVariable("study-id") long studyId,
                                   @RequestBody RecruitmentPostSaveRequest request) {
         return ApiResponse.noContent(CREATE.getDescription());
     }
 
     @PutMapping("/recruitment-posts/{recruitment-post-id}")
-    public ApiResponse<Void> edit(@PathVariable("recruitment-post-id") Long recruitmentPostId,
+    public ApiResponse<Void> edit(@PathVariable("recruitment-post-id") long recruitmentPostId,
                                   RecruitmentPostEditRequest request) {
         return ApiResponse.noContent(EDIT.getDescription());
     }
 
     @DeleteMapping("/recruitment-posts/{recruitment-post-id}")
-    public ApiResponse<Void> delete(@PathVariable("recruitment-post-id") Long recruitmentPostId) {
+    public ApiResponse<Void> delete(@PathVariable("recruitment-post-id") long recruitmentPostId) {
         return ApiResponse.noContent(DELETE.getDescription());
+    }
+
+    @PostMapping("/recruitment-posts/{recruitment-post-id}/status")
+    public ApiResponse<Void> changeStatus(@PathVariable("recruitment-post-id") long recruitmentPostId,
+                                          @RequestBody RecruitmentPostStatusEditRequest request) {
+        return ApiResponse.noContent(EDIT.getDescription());
     }
 }
