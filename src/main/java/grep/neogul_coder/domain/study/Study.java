@@ -47,6 +47,4 @@ public class Study extends BaseEntity {
     private String imageUrl;
 
     private boolean isFinished;
-
-    private boolean isDeleted;
 }
