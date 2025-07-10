@@ -1,28 +1,46 @@
 package grep.neogul_coder.global.response;
 
-public record ApiResponse<T>(
-    String code,
-    String message,
-    T data
-){
+public class ApiResponse<T> {
 
-    public static <T> ApiResponse<T> success(T data){
-        return new ApiResponse<>(ResponseCode.OK.getCode(), ResponseCode.OK.getMessage(), data);
+    private String code;
+    private String message;
+    private T data;
+
+    private ApiResponse(String code, String message, T data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
     }
 
-    public static <T> ApiResponse<T> noContent(String message){
-        return new ApiResponse<>(ResponseCode.OK.getCode(), message, null);
+    private static <T> ApiResponse<T> of(String code, String message, T data){
+        return new ApiResponse<>(code,message,data);
     }
 
-    public static <T> ApiResponse<T> badRequest(){
-        return new ApiResponse<>(ResponseCode.BAD_REQUEST.getCode(), ResponseCode.BAD_REQUEST.getMessage(), null);
+    public static <T> ApiResponse<T> success(T data) {
+        return ApiResponse.of(CommonCode.OK.getCode(), CommonCode.OK.getMessage(), data);
     }
 
-    public static <T> ApiResponse<T> error(ResponseCode code){
-        return new ApiResponse<>(code.getCode(), code.getMessage(), null);
+    public static <T> ApiResponse<T> successWithCode(CommonCode code, T data){
+        return ApiResponse.of(code.getCode(), code.getMessage(), data);
     }
 
-    public static <T> ApiResponse<T> error(ResponseCode code, T data){
-        return new ApiResponse<>(code.getCode(), code.getMessage(), data);
+    public static <T> ApiResponse<T> noContent(){
+        return ApiResponse.of(CommonCode.NO_CONTENT.getCode(), CommonCode.NO_CONTENT.getMessage(), null);
+    }
+
+    public static <T> ApiResponse<T> create(){
+        return ApiResponse.of(CommonCode.CREATED.getCode(), CommonCode.CREATED.getMessage(), null);
+    }
+
+    public static <T> ApiResponse<T> badRequest() {
+        return ApiResponse.of(CommonCode.BAD_REQUEST.getCode(), CommonCode.BAD_REQUEST.getMessage(), null);
+    }
+
+    public static <T> ApiResponse<T> error(CommonCode code) {
+        return ApiResponse.of(code.getCode(), code.getMessage(), null);
+    }
+
+    public static <T> ApiResponse<T> error(CommonCode code, T data) {
+        return ApiResponse.of(code.getCode(), code.getMessage(), data);
     }
 }
