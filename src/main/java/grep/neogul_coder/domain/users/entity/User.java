@@ -21,25 +21,25 @@ public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String oauthId;
+    private String oauthId;
 
-    String oauthProvider;
+    private String oauthProvider;
 
     @Email
-    String email;
+    private String email;
 
-    String password;
+    private String password;
 
-    String nickname;
+    private String nickname;
 
-    String profileImageUrl;
+    private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
-    Role role;
+    private Role role;
 
-    Boolean isDeleted;
+    private Boolean isDeleted;
 
     public static User UserInit(String email, String password, String nickname) {
         return User.builder()
