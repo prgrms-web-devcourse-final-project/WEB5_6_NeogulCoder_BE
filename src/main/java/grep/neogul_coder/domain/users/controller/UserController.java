@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
-public class UserController {
+public class UserController implements UserSpecification {
 
     private final UserService usersService;
 
@@ -30,14 +30,14 @@ public class UserController {
         return ApiResponse.noContent();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/profile/{id}")
     public ApiResponse<Void> updateProfile(@PathVariable Long id,
         @RequestBody UpdateProfileRequest request) {
         usersService.updateProfile(id,request.getNickname(),request.getProfileImgUrl());
         return ApiResponse.noContent();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/password/{id}")
     public ApiResponse<Void> updatePassword(@PathVariable Long id,
         @RequestBody UpdatePasswordRequest request) {
         usersService.updatePassword(id,request.getPassword(),request.getNewPassword(),request.getNewPasswordCheck());
