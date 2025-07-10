@@ -1,7 +1,5 @@
 package grep.neogul_coder.domain.study.controller;
 
-import grep.neogul_coder.domain.study.controller.dto.request.DelegateLeaderRequest;
-import grep.neogul_coder.domain.study.controller.dto.request.ExtendStudyRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyEditRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.*;
@@ -47,11 +45,11 @@ public class StudyController implements StudySpecification {
     @PutMapping("/{studyId}")
     public ApiResponse<Void> editStudy(@PathVariable("studyId") Long studyId,
                                        @RequestBody StudyEditRequest request) {
-        return ApiResponse.noContent("스터디가 수정되었습니다.");
+        return ApiResponse.noContent();
     }
 
     @DeleteMapping("/{studyId}")
     public ApiResponse<Void> deleteStudy(@PathVariable("studyId") Long studyId) {
-        return ApiResponse.noContent("스터디가 삭제되었습니다.");
+        return ApiResponse.noContent();
     }
 }

@@ -1,7 +1,5 @@
 package grep.neogul_coder.domain.study.controller;
 
-import grep.neogul_coder.domain.study.controller.dto.request.DelegateLeaderRequest;
-import grep.neogul_coder.domain.study.controller.dto.request.ExtendStudyRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyEditRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.*;
