@@ -46,7 +46,7 @@ public class Study extends BaseEntity {
     @Column(nullable = false)
     private String imageUrl;
 
-    private boolean isActivated;
+    private boolean isFinished;
 
     private boolean isDeleted;
 }
