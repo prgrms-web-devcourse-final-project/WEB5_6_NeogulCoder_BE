@@ -9,7 +9,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-public class MyStudyApplicationResponse {
+public class MyApplicationResponse {
 
     @Schema(description = "스터디 이름", example = "자바 스터디")
     private String name;

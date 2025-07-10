@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class StudyApplicationResponse {
+public class ApplicationResponse {
 
     @Schema(description = "신청자 닉네임", example = "너굴")
     private String nickname;
