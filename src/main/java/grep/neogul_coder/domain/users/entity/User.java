@@ -15,7 +15,6 @@ import lombok.Getter;
 
 @Entity
 @Getter
-@Builder
 @Table(name = "member")
 public class User extends BaseEntity {
 
@@ -64,7 +63,8 @@ public class User extends BaseEntity {
         this.isDeleted = true;
     }
 
-    protected User(Long id, String oauthId, String oauthProvider, String email, String password,
+    @Builder
+    private User(Long id, String oauthId, String oauthProvider, String email, String password,
         String nickname, String profileImageUrl, Role role, Boolean isDeleted) {
         this.id = id;
         this.oauthId = oauthId;
