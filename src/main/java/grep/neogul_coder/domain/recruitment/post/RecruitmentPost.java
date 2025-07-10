@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.time.LocalDate;
+
 @Entity
 public class RecruitmentPost {
 
@@ -16,4 +18,5 @@ public class RecruitmentPost {
     private String subject;
     private String content;
     private int recruitmentCount;
+    private LocalDate expiredDate;
 }
