@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface RecruitmentPostSpecification {
 
     @Operation(summary = "모집 글 조회", description = "모집 글의 상세 내역을 조회 합니다.")
-    ApiResponse<RecruitmentPostInfo> get(@PathVariable long id);
+    ApiResponse<RecruitmentPostInfo> get(long id);
 
     @Operation(summary = "모집 글 저장", description = "스터디 모집 글을 저장 합니다.")
     ApiResponse<Void> save(Long studyId, RecruitmentPostSaveRequest request);
