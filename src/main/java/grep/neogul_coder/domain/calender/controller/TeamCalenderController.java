@@ -1,15 +1,11 @@
 package grep.neogul_coder.domain.calender.controller;
 
-import grep.neogul_coder.domain.calender.controller.dto.PersonalCalenderResponse;
-import grep.neogul_coder.domain.calender.controller.dto.TeamCalenderRequest;
-import grep.neogul_coder.domain.calender.controller.dto.TeamCalenderResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import grep.neogul_coder.domain.calender.controller.dto.requset.TeamCalenderRequest;
+import grep.neogul_coder.domain.calender.controller.dto.response.TeamCalenderResponse;
 import grep.neogul_coder.global.response.ApiResponse;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController

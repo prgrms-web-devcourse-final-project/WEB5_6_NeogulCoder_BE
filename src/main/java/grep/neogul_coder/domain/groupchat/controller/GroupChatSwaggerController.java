@@ -1,7 +1,7 @@
 package grep.neogul_coder.domain.groupchat.controller;
 
-import grep.neogul_coder.domain.groupchat.controller.dto.GroupChatSwaggerRequest;
-import grep.neogul_coder.domain.groupchat.controller.dto.GroupChatSwaggerResponse;
+import grep.neogul_coder.domain.groupchat.controller.dto.requset.GroupChatSwaggerRequest;
+import grep.neogul_coder.domain.groupchat.controller.dto.response.GroupChatSwaggerResponse;
 import grep.neogul_coder.global.response.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package grep.neogul_coder.domain.groupchat.controller.dto;
+package grep.neogul_coder.domain.groupchat.controller.dto.requset;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
