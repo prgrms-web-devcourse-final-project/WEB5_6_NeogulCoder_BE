@@ -1,8 +1,9 @@
-package grep.neogul_coder.domain.review.tag;
+package grep.neogul_coder.domain.review.entity;
 
 import jakarta.persistence.*;
 
-public class ReviewTagging {
+@Entity
+public class ReviewTaggingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -10,7 +11,7 @@ public class ReviewTagging {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_tag_id")
-    private ReviewTag reviewTag;
+    private ReviewTagEntity reviewTag;
 
     private long reviewId;
 }

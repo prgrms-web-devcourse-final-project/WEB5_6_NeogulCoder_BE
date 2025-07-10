@@ -1,15 +1,19 @@
 package grep.neogul_coder.domain.review;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import lombok.Builder;
 
-@Entity
+import java.util.List;
+
 public class Review {
 
-    @Id
-    private Long id;
-
-    private long writeUserId;
-    private long targetUserId;
+    private ReviewType reviewType;
+    private List<ReviewTag> reviewTags;
     private String content;
+
+    @Builder
+    private Review(ReviewType reviewType, List<ReviewTag> reviewTags, String content) {
+        this.reviewType = reviewType;
+        this.reviewTags = reviewTags;
+        this.content = content;
+    }
 }

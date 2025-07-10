@@ -1,5 +1,8 @@
-package grep.neogul_coder.domain.review.tag;
+package grep.neogul_coder.domain.review;
 
+import lombok.Getter;
+
+@Getter
 public enum ReviewType {
     BAD("별로에요"),
     GOOD("좋아요"),
