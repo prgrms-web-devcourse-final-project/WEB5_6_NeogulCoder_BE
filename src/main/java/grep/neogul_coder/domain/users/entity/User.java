@@ -60,6 +60,10 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
+    public void delete() {
+        this.isDeleted = true;
+    }
+
     protected User(Long id, String oauthId, String oauthProvider, String email, String password,
         String nickname, String profileImageUrl, Role role, Boolean isDeleted) {
         this.id = id;

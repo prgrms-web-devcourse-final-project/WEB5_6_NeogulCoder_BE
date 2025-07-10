@@ -56,6 +56,17 @@ public class UserService {
         user.updatePassword(encodedPassword);
     }
 
+    public void deleteUser(Long id, String password) {
+
+        User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException("회원이 존재하지 않습니다."));
+
+        if(isNotMatchCurrentPassword(password,user.getPassword())) {
+            throw new RuntimeException("비밀번호를 다시 확인해주세요");
+        }
+
+        user.delete();
+    }
+
     private boolean isDuplicateEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
@@ -79,7 +90,6 @@ public class UserService {
     private boolean isNotMatchPasswordCheck(String password, String passwordCheck) {
         return !passwordEncoder.matches(password, passwordCheck);
     }
-
 }
 
 

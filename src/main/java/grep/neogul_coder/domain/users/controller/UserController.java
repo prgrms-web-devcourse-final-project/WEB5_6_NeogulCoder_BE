@@ -2,12 +2,13 @@ package grep.neogul_coder.domain.users.controller;
 
 import grep.neogul_coder.domain.users.controller.dto.UpdatePasswordRequest;
 import grep.neogul_coder.domain.users.controller.dto.UpdateProfileRequest;
+import grep.neogul_coder.domain.users.controller.dto.PasswordRequest;
 import grep.neogul_coder.global.response.ApiResponse;
 import grep.neogul_coder.domain.users.controller.dto.SignUpRequest;
 import grep.neogul_coder.domain.users.service.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,4 +44,12 @@ public class UserController implements UserSpecification {
         usersService.updatePassword(id,request.getPassword(),request.getNewPassword(),request.getNewPasswordCheck());
         return ApiResponse.noContent();
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ApiResponse<Void> delete(@PathVariable Long id,
+        @RequestBody PasswordRequest request) {
+        usersService.deleteUser(id,request.getPassword());
+        return ApiResponse.noContent();
+    }
+
 }
