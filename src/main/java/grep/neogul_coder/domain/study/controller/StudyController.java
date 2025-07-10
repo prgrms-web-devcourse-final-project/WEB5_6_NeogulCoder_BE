@@ -1,6 +1,7 @@
 package grep.neogul_coder.domain.study.controller;
 
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
+import grep.neogul_coder.domain.study.controller.dto.request.StudyEditRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyResponse;
 import grep.neogul_coder.global.response.ApiResponse;
 import org.springframework.web.bind.annotation.*;
@@ -17,5 +18,11 @@ public class StudyController implements StudySpecification {
     @PostMapping("/create")
     public ApiResponse<Void> createStudy(@RequestBody StudyCreateRequest request) {
         return ApiResponse.noContent("스터디가 생성되었습니다.");
+    }
+
+    @PutMapping("/{studyId}")
+    public ApiResponse<Void> editStudy(@PathVariable("studyId") Long studyId,
+                                       @RequestBody StudyEditRequest request) {
+        return ApiResponse.noContent("스터디가 수정되었습니다.");
     }
 }
