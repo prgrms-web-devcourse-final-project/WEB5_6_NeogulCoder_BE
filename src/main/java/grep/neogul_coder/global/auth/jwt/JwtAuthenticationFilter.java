@@ -7,7 +7,7 @@ import grep.neogul_coder.global.auth.jwt.dto.AccessTokenDto;
 import grep.neogul_coder.global.auth.repository.UserBlackListRepository;
 import grep.neogul_coder.global.auth.service.RefreshTokenService;
 import grep.neogul_coder.global.exception.CommonException;
-import grep.neogul_coder.global.response.ResponseCode;
+import grep.neogul_coder.global.response.CommonCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -82,7 +82,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (!rt.getToken().equals(refreshToken)) {
             userBlackListRepository.save(new UserBlackList(claims.getSubject()));
-            throw new CommonException(ResponseCode.SECURITY_INCIDENT);
+            throw new CommonException(CommonCode.SECURITY_INCIDENT);
         }
 
         addToken(response, claims, rt);

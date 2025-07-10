@@ -7,8 +7,6 @@ import grep.neogul_coder.domain.recruitment.post.controller.dto.response.Recruit
 import grep.neogul_coder.global.response.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
-import static grep.neogul_coder.domain.recruitment.post.controller.dto.RecruitmentPostMessage.*;
-
 @RequestMapping("/recruitment-posts")
 @RestController
 public class RecruitmentPostController implements RecruitmentPostSpecification {
@@ -20,23 +18,23 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
 
     @PostMapping
     public ApiResponse<Void> save(@RequestBody RecruitmentPostSaveRequest request) {
-        return ApiResponse.noContent(CREATE.getDescription());
+        return ApiResponse.noContent();
     }
 
     @PutMapping("/{recruitment-post-id}")
     public ApiResponse<Void> edit(@PathVariable("recruitment-post-id") long recruitmentPostId,
                                   RecruitmentPostEditRequest request) {
-        return ApiResponse.noContent(EDIT.getDescription());
+        return ApiResponse.noContent();
     }
 
     @DeleteMapping("/{recruitment-post-id}")
     public ApiResponse<Void> delete(@PathVariable("recruitment-post-id") long recruitmentPostId) {
-        return ApiResponse.noContent(DELETE.getDescription());
+        return ApiResponse.noContent();
     }
 
     @PostMapping("/{recruitment-post-id}/status")
     public ApiResponse<Void> changeStatus(@PathVariable("recruitment-post-id") long recruitmentPostId,
                                           @RequestBody RecruitmentPostStatusEditRequest request) {
-        return ApiResponse.noContent(EDIT.getDescription());
+        return ApiResponse.noContent();
     }
 }
