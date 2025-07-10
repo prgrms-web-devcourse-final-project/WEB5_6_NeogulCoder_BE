@@ -8,42 +8,63 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 
 @Entity
 @Getter
-@Builder
+@Table(name = "member")
 public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String oauthId;
+    private String oauthId;
 
-    String oauthProvider;
+    private String oauthProvider;
 
-    @NotBlank
     @Email
-    String email;
+    private String email;
 
-    @NotBlank
-    String password;
+    private String password;
 
-    @NotBlank
-    String nickname;
+    private String nickname;
 
-    String profileImageUrl;
+    private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
-    Role role;
+    private Role role;
 
-    Boolean isDeleted;
+    private Boolean isDeleted;
 
-    protected User(Long id, String oauthId, String oauthProvider, String email, String password,
+    public static User UserInit(String email, String password, String nickname) {
+        return User.builder()
+            .email(email)
+            .password(password)
+            .nickname(nickname)
+            .isDeleted(false)
+            .role(Role.ROLE_USER)
+            .build();
+    }
+
+    public void updateProfile(String nickname, String profileImageUrl) {
+        this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
+
+    @Builder
+    private User(Long id, String oauthId, String oauthProvider, String email, String password,
         String nickname, String profileImageUrl, Role role, Boolean isDeleted) {
         this.id = id;
         this.oauthId = oauthId;
@@ -57,15 +78,5 @@ public class User extends BaseEntity {
     }
 
     protected User() {
-    }
-
-    public static User UserInit(String email, String password, String nickname) {
-        return User.builder()
-            .email(email)
-            .password(password)
-            .nickname(nickname)
-            .isDeleted(false)
-            .role(Role.ROLE_USER)
-            .build();
     }
 }
