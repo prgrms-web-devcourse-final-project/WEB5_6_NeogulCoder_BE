@@ -17,6 +17,6 @@ public interface ReviewSpecification {
     @Operation(summary = "회원 리뷰 태그 조회", description = "회원이 받은 리뷰 태그의 종류와 수를 조회 합니다.")
     ApiResponse<ReviewTagsInfo> getReviewTags(Principal userDetails);
 
-    @Operation(summary = "회원 주관 리뷰 조회", description = "회원이 받은 주관 리뷰를 페이징 조회 합니다")
+    @Operation(summary = "회원 주관 리뷰 페이징 조회", description = "회원이 받은 주관 리뷰를 페이징 조회 합니다")
     ApiResponse<ReviewPagingContentsInfo> getReviewContents(Principal userDetails);
 }
