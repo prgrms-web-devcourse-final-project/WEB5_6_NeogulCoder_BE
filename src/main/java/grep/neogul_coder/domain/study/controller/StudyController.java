@@ -14,8 +14,8 @@ import java.util.List;
 public class StudyController implements StudySpecification {
 
     @GetMapping
-    public ApiResponse<List<StudyListResponse>> getStudyList() {
-        return ApiResponse.success(List.of(new StudyListResponse()));
+    public ApiResponse<List<StudyItemResponse>> getStudies() {
+        return ApiResponse.success(List.of(new StudyItemResponse()));
     }
 
     @GetMapping("/{studyId}/header")
