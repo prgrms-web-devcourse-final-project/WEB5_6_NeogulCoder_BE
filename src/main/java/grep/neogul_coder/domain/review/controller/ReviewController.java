@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ReviewController implements ReviewSpecification {
 
-    @PostMapping("/new")
+    @PostMapping
     public ApiResponse<Void> save(@RequestBody ReviewSaveRequest request, @AuthenticationPrincipal Principal userDetails) {
         return ApiResponse.noContent("리뷰 생성 성공");
     }
