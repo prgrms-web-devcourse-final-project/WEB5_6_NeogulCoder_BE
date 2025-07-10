@@ -1,7 +1,7 @@
 package grep.neogul_coder.global.auth.jwt;
 
 import grep.neogul_coder.global.exception.AuthApiException;
-import grep.neogul_coder.global.response.ResponseCode;
+import grep.neogul_coder.global.response.CommonCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,31 +31,31 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         log.info("request uri: {}", request.getRequestURI());
 
-        ResponseCode responseCode = switch (authException){
+        CommonCode commonCode = switch (authException){
             case BadCredentialsException bce ->{
                 log.warn("{}", bce.getMessage());
-                yield ResponseCode.BAD_CREDENTIAL;
+                yield CommonCode.BAD_CREDENTIAL;
             }
             case InsufficientAuthenticationException iae -> {
                 log.warn("{}", iae.getMessage());
-                yield ResponseCode.UNAUTHORIZED;
+                yield CommonCode.UNAUTHORIZED;
             }
             case CompromisedPasswordException cpe -> {
                 log.warn("{}", cpe.getMessage());
-                yield ResponseCode.NOT_EXIST_PRE_AUTH_CREDENTIAL;
+                yield CommonCode.NOT_EXIST_PRE_AUTH_CREDENTIAL;
             }
             default -> {
                 log.error(authException.getMessage(), authException);
-                yield ResponseCode.BAD_REQUEST;
+                yield CommonCode.BAD_REQUEST;
             }
         };
 
         if(request.getRequestURI().startsWith("/api")) {
             resolver.resolveException(request, response, null,
-                new AuthApiException(responseCode));
+                new AuthApiException(commonCode));
             return;
         }
 
-        resolver.resolveException(request, response, null, new AuthApiException(responseCode));
+        resolver.resolveException(request, response, null, new AuthApiException(commonCode));
     }
 }

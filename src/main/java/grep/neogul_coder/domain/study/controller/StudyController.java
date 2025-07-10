@@ -10,6 +10,6 @@ public class StudyController implements StudySpecification {
 
     @PostMapping("/new")
     public ApiResponse<Void> createStudy(@RequestBody StudyCreateRequest request) {
-        return ApiResponse.noContent("스터디가 생성되었습니다.");
+        return ApiResponse.noContent();
     }
 }

@@ -16,7 +16,7 @@ public class ReviewController implements ReviewSpecification {
     @PostMapping("/studies/{study-id}/reviews/new")
     public ApiResponse<Void> save(ReviewSaveRequest request,
                                   @PathVariable("study-id") Long studyId, @AuthenticationPrincipal Principal userDetails) {
-        return ApiResponse.noContent("리뷰 생성 성공");
+        return ApiResponse.noContent();
     }
 
     @GetMapping("/review-tags")

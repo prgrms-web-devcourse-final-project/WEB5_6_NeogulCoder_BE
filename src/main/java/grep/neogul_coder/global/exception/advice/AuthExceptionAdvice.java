@@ -2,7 +2,7 @@ package grep.neogul_coder.global.exception.advice;
 
 import grep.neogul_coder.global.exception.AuthApiException;
 import grep.neogul_coder.global.response.ApiResponse;
-import grep.neogul_coder.global.response.ResponseCode;
+import grep.neogul_coder.global.response.CommonCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,7 +32,7 @@ public class AuthExceptionAdvice {
         AuthenticationException ex) {
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
-            .body(ApiResponse.error(ResponseCode.UNAUTHORIZED));
+            .body(ApiResponse.error(CommonCode.UNAUTHORIZED));
     }
 
 }

@@ -6,8 +6,6 @@ import grep.neogul_coder.domain.recruitment.post.controller.dto.response.Recruit
 import grep.neogul_coder.global.response.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
-import static grep.neogul_coder.domain.recruitment.post.controller.dto.RecruitmentPostMessage.*;
-
 @RestController
 public class RecruitmentPostController implements RecruitmentPostSpecification {
 
@@ -19,17 +17,17 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
     @PostMapping("/studies/{study-id}")
     public ApiResponse<Void> save(@PathVariable("study-id") Long studyId,
                                   @RequestBody RecruitmentPostSaveRequest request) {
-        return ApiResponse.noContent(CREATE.getDescription());
+        return ApiResponse.noContent();
     }
 
     @PutMapping("/recruitment-posts/{recruitment-post-id}")
     public ApiResponse<Void> edit(@PathVariable("recruitment-post-id") Long recruitmentPostId,
                                   RecruitmentPostEditRequest request) {
-        return ApiResponse.noContent(EDIT.getDescription());
+        return ApiResponse.noContent();
     }
 
     @DeleteMapping("/recruitment-posts/{recruitment-post-id}")
     public ApiResponse<Void> delete(@PathVariable("recruitment-post-id") Long recruitmentPostId) {
-        return ApiResponse.noContent(DELETE.getDescription());
+        return ApiResponse.noContent();
     }
 }
