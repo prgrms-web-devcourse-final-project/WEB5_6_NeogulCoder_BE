@@ -37,7 +37,4 @@ public class PersonalCalenderResponse {
         this.startTime = startTime;
         this.endTime = endTime;
     }
-
-
-
 }

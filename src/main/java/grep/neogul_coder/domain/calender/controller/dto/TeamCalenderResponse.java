@@ -36,5 +36,4 @@ public class TeamCalenderResponse {
         this.startTime = startTime;
         this.endTime = endTime;
     }
-
 }
