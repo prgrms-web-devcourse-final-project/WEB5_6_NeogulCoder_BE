@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface ReviewSpecification {
 
     @Operation(summary = "리뷰 생성", description = "스터디에 대한 리뷰를 작성 합니다.")
-    ApiResponse<Void> save(ReviewSaveRequest request, Long studyId, Principal userDetails);
+    ApiResponse<Void> save(ReviewSaveRequest request, Principal userDetails);
 
     @Operation(summary = "회원 리뷰 태그 조회", description = "회원이 받은 리뷰 태그의 종류와 수를 조회 합니다.")
     ApiResponse<ReviewTagsInfo> getReviewTags(Principal userDetails);

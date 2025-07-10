@@ -9,6 +9,9 @@ import java.util.List;
 @Getter
 public class ReviewSaveRequest {
 
+    @Schema(example = "3", description = "스터디 ID")
+    private long studyId;
+
     @Schema(example = "EXCELLENT", description = "리뷰 타입")
     private ReviewType reviewType;
 
