@@ -8,7 +8,7 @@ import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "review", description = "리뷰 API")
+@Tag(name = "Review", description = "리뷰 API")
 public interface ReviewSpecification {
 
     @Operation(summary = "리뷰 생성", description = "스터디에 대한 리뷰를 작성 합니다.")
