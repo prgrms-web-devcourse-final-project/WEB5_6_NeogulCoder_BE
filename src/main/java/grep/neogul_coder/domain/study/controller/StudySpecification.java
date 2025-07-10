@@ -46,7 +46,7 @@ public interface StudySpecification {
     @Operation(summary = "스터디원 강퇴", description = "스터디원을 강퇴합니다.")
     ApiResponse<Void> deleteMember(Long studyId, Long userId);
 
-    @Operation(summary = "스터디원 위임", description = "스터디원에게 스터디장을 위임합니다.")
+    @Operation(summary = "스터디장 위임", description = "스터디원에게 스터디장을 위임합니다.")
     ApiResponse<Void> delegateLeader(Long studyId, DelegateLeaderRequest request);
 
     @Operation(summary = "스터디 연장", description = "스터디장이 스터디를 연장합니다.")
