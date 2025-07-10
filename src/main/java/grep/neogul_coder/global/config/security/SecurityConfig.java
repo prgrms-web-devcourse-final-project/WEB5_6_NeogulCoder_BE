@@ -83,6 +83,8 @@ public class SecurityConfig {
                         "/reissue",
                         "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**",
                         "/webjars/**",
+                        "/h2-console/**",
+                        "/favicon.ico",
                         "/error").permitAll()
                     .anyRequest().authenticated()
             )
