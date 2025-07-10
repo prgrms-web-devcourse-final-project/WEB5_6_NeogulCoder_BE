@@ -18,5 +18,7 @@ public class PersonalCalender extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    private boolean isDeleted = false;
 }
 
