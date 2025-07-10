@@ -6,6 +6,7 @@ import grep.neogul_coder.domain.studyapplication.controller.dto.response.Applica
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -20,4 +21,10 @@ public interface ApplicationSpecification {
 
     @Operation(summary = "스터디 신청 생성", description = "스터디를 신청합니다.")
     ApiResponse<Void> createApplication(ApplicationCreateRequest request);
+
+    @Operation(summary = "스터디 신청 승인", description = "스터디장이 스터디 신청을 승인합니다.")
+    ApiResponse<Void> approveApplication(Long applicationId);
+
+    @Operation(summary = "스터디 신청 거절", description = "스터디장이 스터디 신청을 거절합니다.")
+    ApiResponse<Void> rejectApplication(Long applicationId);
 }

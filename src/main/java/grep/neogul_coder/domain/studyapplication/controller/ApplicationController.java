@@ -13,8 +13,8 @@ import java.util.List;
 @RestController
 public class ApplicationController implements ApplicationSpecification {
 
-    @GetMapping("/recruitment-posts/{recruitment-post-id}/applications")
-    public ApiResponse<List<ApplicationResponse>> getApplications(@PathVariable("recruitment-post-id") Long recruitmentPostId) {
+    @GetMapping("/recruitment-posts/{recruitmentPostId}/applications")
+    public ApiResponse<List<ApplicationResponse>> getApplications(@PathVariable("recruitmentPostId") Long recruitmentPostId) {
         return ApiResponse.success(List.of(new ApplicationResponse()));
     }
 
@@ -25,6 +25,16 @@ public class ApplicationController implements ApplicationSpecification {
 
     @PostMapping("/applications")
     public ApiResponse<Void> createApplication(@RequestBody @Valid ApplicationCreateRequest request) {
+        return ApiResponse.noContent();
+    }
+
+    @PostMapping("/applications/{applicationId}/approve")
+    public ApiResponse<Void> approveApplication(@PathVariable("applicationId") Long applicationId) {
+        return ApiResponse.noContent();
+    }
+
+    @PostMapping("/applications/{applicationId}/reject")
+    public ApiResponse<Void> rejectApplication(@PathVariable("applicationId") Long applicationId) {
         return ApiResponse.noContent();
     }
 }
