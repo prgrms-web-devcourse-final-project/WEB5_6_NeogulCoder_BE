@@ -69,7 +69,8 @@ public class UserService {
     }
 
     private User findUser(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+        return userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
     }
 
     private boolean isDuplicateEmail(String email) {
