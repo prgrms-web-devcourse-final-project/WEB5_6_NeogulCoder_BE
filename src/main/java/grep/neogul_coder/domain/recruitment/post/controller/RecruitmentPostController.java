@@ -5,12 +5,15 @@ import grep.neogul_coder.domain.recruitment.post.controller.dto.request.Recruitm
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostService;
+import grep.neogul_coder.domain.studyapplication.controller.dto.response.ApplicationResponse;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/recruitment-posts")
 @RequiredArgsConstructor
@@ -52,5 +55,10 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
                                           @AuthenticationPrincipal Principal userDetails) {
         recruitmentPostService.updateStatus(request.toServiceRequest(), recruitmentPostId, userDetails.getUserId());
         return ApiResponse.noContent();
+    }
+
+    @GetMapping("{recruitment-post-id}/applications")
+    public ApiResponse<List<ApplicationResponse>> getApplications(@PathVariable("recruitment-post-id") long recruitmentPostId) {
+        return ApiResponse.success(List.of(new ApplicationResponse()));
     }
 }
