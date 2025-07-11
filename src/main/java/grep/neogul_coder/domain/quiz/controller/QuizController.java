@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/post/ai")
-public class QuizController {
+public class QuizController implements QuizSpecification{
 
     @GetMapping("/{id}")
-    public ApiResponse<QuizResponse> get(@PathVariable("id") String postId,
+    public ApiResponse<QuizResponse> get(@PathVariable("id") Long postId,
         @RequestBody QuizRequest request) {
         QuizResponse response = null;
         return ApiResponse.success(response);
     }
+
 }
