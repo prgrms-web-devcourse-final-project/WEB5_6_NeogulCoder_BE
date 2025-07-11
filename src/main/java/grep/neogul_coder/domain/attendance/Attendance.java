@@ -1,10 +1,7 @@
 package grep.neogul_coder.domain.attendance;
 
 import grep.neogul_coder.global.entity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -15,11 +12,15 @@ public class Attendance extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long attendanceId;
 
+    @Column(nullable = false)
     private Long studyId;
 
+    @Column(nullable = false)
     private Long userId;
 
+    @Column(nullable = false)
     private LocalDate attendanceDate;
 
+    @Column(nullable = false)
     private boolean isPresent;
 }
