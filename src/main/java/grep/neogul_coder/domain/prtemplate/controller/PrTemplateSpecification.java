@@ -19,7 +19,7 @@ public interface PrTemplateSpecification {
     @Operation(summary = "PR 정보 수정", description = "PR 정보를 수정합니다.")
     ApiResponse<Void> update(@PathVariable("id") Long id, @RequestBody PrUpdateRequest request);
 
-    @Operation(summary = "PR 소개글 수정", description = "PR 소개글을 수젖합니다.")
+    @Operation(summary = "PR 소개글 수정", description = "PR 소개글을 수정합니다.")
     ApiResponse<Void> updateIntroduction(@PathVariable("id") Long id, @RequestBody IntroductionUpdateRequest request);
 
 }
