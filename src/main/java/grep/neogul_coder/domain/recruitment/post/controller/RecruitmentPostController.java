@@ -4,8 +4,11 @@ import grep.neogul_coder.domain.recruitment.post.controller.dto.request.Recruitm
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostSaveRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusEditRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
+import grep.neogul_coder.domain.studyapplication.controller.dto.response.ApplicationResponse;
 import grep.neogul_coder.global.response.ApiResponse;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/recruitment-posts")
 @RestController
@@ -36,5 +39,10 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
     public ApiResponse<Void> changeStatus(@PathVariable("recruitment-post-id") long recruitmentPostId,
                                           @RequestBody RecruitmentPostStatusEditRequest request) {
         return ApiResponse.noContent();
+    }
+
+    @GetMapping("{recruitment-post-id}/applications")
+    public ApiResponse<List<ApplicationResponse>> getApplications(@PathVariable("recruitment-post-id") long recruitmentPostId) {
+        return ApiResponse.success(List.of(new ApplicationResponse()));
     }
 }
