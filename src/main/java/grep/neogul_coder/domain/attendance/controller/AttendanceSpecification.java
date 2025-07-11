@@ -12,4 +12,7 @@ public interface AttendanceSpecification {
 
     @Operation(summary = "출석 조회", description = "일주일 단위로 출석을 조회합니다.")
     ApiResponse<List<AttendanceResponse>> getAttendances();
+
+    @Operation(summary = "출석 체크", description = "스터디에 출석을 합니다.")
+    ApiResponse<Void> createAttendance();
 }
