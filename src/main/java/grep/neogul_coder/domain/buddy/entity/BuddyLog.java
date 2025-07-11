@@ -20,15 +20,10 @@ public class BuddyLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long buddyLogId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @Column(nullable = false)
-    private int level;
-
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
     private BuddyEnergyReason reason;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private BuddyEnergy buddyEnergy;
 
 }

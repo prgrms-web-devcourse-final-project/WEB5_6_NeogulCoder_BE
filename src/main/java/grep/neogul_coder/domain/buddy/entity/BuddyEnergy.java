@@ -17,9 +17,8 @@ public class BuddyEnergy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long buddyEnergyId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Column(nullable = false)
     private int level;
