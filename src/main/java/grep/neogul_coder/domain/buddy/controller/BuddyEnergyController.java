@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.*;
 public class BuddyEnergyController implements BuddyEnergySpecification {
 
     @GetMapping("/{userId}")
-    public ApiResponse<BuddyEnergyResponse> get(@PathVariable Long userId) {
-        return ApiResponse.success(
-            BuddyEnergyResponse.builder().build()
-        );
+    public ApiResponse<BuddyEnergyResponse> get(@PathVariable("userId") Long userId) {
+        return ApiResponse.success(new BuddyEnergyResponse());
     }
 }

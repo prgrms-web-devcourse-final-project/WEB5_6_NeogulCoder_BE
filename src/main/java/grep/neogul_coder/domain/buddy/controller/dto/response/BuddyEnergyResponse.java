@@ -14,9 +14,5 @@ public class BuddyEnergyResponse {
     @Schema(description = "현재 버디에너지 수치", example = "61")
     private int level;
 
-    @Builder
-    private BuddyEnergyResponse(Long userId, int level) {
-        this.userId = userId;
-        this.level = level;
-    }
+
 }
