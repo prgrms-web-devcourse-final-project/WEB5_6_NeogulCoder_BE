@@ -8,7 +8,10 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-public class StudyListResponse {
+public class StudyItemResponse {
+
+    @Schema(description = "스터디 번호", example = "3")
+    private Long studyId;
 
     @Schema(description = "스터디 이름", example = "자바 스터디")
     private String name;

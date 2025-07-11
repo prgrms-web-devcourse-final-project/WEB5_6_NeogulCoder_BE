@@ -1,5 +1,8 @@
 package grep.neogul_coder.global.response;
 
+import lombok.Getter;
+
+@Getter
 public class ApiResponse<T> {
 
     private String code;
