@@ -18,5 +18,5 @@ public class StudyApplication extends BaseEntity {
 
     private boolean isRead;
 
-    private boolean isApproved;
+    private ApplicationStatus status;
 }
