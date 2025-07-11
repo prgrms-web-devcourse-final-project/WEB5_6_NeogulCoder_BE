@@ -1,11 +1,10 @@
 package grep.neogul_coder.domain.study.controller;
 
-import grep.neogul_coder.domain.study.controller.dto.request.DelegateLeaderRequest;
-import grep.neogul_coder.domain.study.controller.dto.request.ExtendStudyRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyEditRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.*;
 import grep.neogul_coder.global.response.ApiResponse;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,8 +14,8 @@ import java.util.List;
 public class StudyController implements StudySpecification {
 
     @GetMapping
-    public ApiResponse<List<StudyListResponse>> getStudyList() {
-        return ApiResponse.success(List.of(new StudyListResponse()));
+    public ApiResponse<List<StudyItemResponse>> getStudies() {
+        return ApiResponse.success(List.of(new StudyItemResponse()));
     }
 
     @GetMapping("/{studyId}/header")
@@ -27,6 +26,11 @@ public class StudyController implements StudySpecification {
     @GetMapping("/{studyId}")
     public ApiResponse<StudyResponse> getStudy(@PathVariable("studyId") Long studyId) {
         return ApiResponse.success(new StudyResponse());
+    }
+
+    @GetMapping("/me/images")
+    public ApiResponse<List<StudyImageResponse>> getStudyImages() {
+        return ApiResponse.success(List.of(new StudyImageResponse()));
     }
 
     @GetMapping("/{studyId}/info")
@@ -40,46 +44,18 @@ public class StudyController implements StudySpecification {
     }
 
     @PostMapping
-    public ApiResponse<Void> createStudy(@RequestBody StudyCreateRequest request) {
+    public ApiResponse<Void> createStudy(@RequestBody @Valid StudyCreateRequest request) {
         return ApiResponse.noContent();
     }
 
     @PutMapping("/{studyId}")
     public ApiResponse<Void> editStudy(@PathVariable("studyId") Long studyId,
-                                       @RequestBody StudyEditRequest request) {
+                                       @RequestBody @Valid StudyEditRequest request) {
         return ApiResponse.noContent();
     }
 
     @DeleteMapping("/{studyId}")
     public ApiResponse<Void> deleteStudy(@PathVariable("studyId") Long studyId) {
-        return ApiResponse.noContent();
-    }
-
-    @DeleteMapping("/{studyId}/me")
-    public ApiResponse<Void> leaveStudy(@PathVariable("studyId") Long studyId) {
-        return ApiResponse.noContent();
-    }
-
-    @DeleteMapping("/{studyId}/users/{userId}")
-    public ApiResponse<Void> deleteMember(@PathVariable("studyId") Long studyId,
-                                        @PathVariable("userId") Long userId) {
-        return ApiResponse.noContent();
-    }
-
-    @PostMapping("/{studyId}/delegate")
-    public ApiResponse<Void> delegateLeader(@PathVariable("studyId") Long studyId,
-                                            @RequestBody DelegateLeaderRequest request) {
-        return ApiResponse.noContent();
-    }
-
-    @PostMapping("/{studyId}/extend")
-    public ApiResponse<Void> extendStudy(@PathVariable("studyId") Long studyId,
-                                         @RequestBody ExtendStudyRequest request) {
-        return ApiResponse.noContent();
-    }
-
-    @PostMapping("/{studyId}/join")
-    public ApiResponse<Void> joinExtendStudy(@PathVariable("studyId") Long studyId) {
         return ApiResponse.noContent();
     }
 }
