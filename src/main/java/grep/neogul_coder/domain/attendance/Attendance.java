@@ -20,7 +20,4 @@ public class Attendance extends BaseEntity {
 
     @Column(nullable = false)
     private LocalDate attendanceDate;
-
-    @Column(nullable = false)
-    private boolean isPresent;
 }
