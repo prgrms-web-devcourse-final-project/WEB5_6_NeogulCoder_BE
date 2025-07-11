@@ -1,6 +1,5 @@
 package grep.neogul_coder.global.auth.controller;
 
-
 import grep.neogul_coder.global.auth.code.AuthToken;
 import grep.neogul_coder.global.auth.jwt.TokenCookieFactory;
 import grep.neogul_coder.global.auth.jwt.dto.TokenDto;
