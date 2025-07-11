@@ -27,13 +27,5 @@ public class GroupChatSwaggerResponse {
     @Schema(description = "보낸 시간", example = "2025-07-07T17:45:00")
     private LocalDateTime sentAt;
 
-    @Builder
-    private GroupChatSwaggerResponse(Long senderId, String senderNickname, String profileImageUrl, Long roomId, String message, LocalDateTime sentAt) {
-        this.senderId = senderId;
-        this.senderNickname = senderNickname;
-        this.profileImageUrl = profileImageUrl;
-        this.roomId = roomId;
-        this.message = message;
-        this.sentAt = sentAt;
-    }
+
 }
