@@ -1,9 +1,10 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
-import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostEditRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostSaveRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusEditRequest;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
+import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,14 +16,14 @@ public interface RecruitmentPostSpecification {
     ApiResponse<RecruitmentPostInfo> get(long id);
 
     @Operation(summary = "모집 글 저장", description = "스터디 모집 글을 저장 합니다.")
-    ApiResponse<Void> save(RecruitmentPostSaveRequest request);
+    ApiResponse<Void> save(RecruitmentPostCreateRequest request, Principal userDetails);
 
     @Operation(summary = "모집 글 수정", description = "모집글을 수정 합니다.")
-    ApiResponse<Void> edit(long recruitmentPostId, RecruitmentPostEditRequest request);
+    ApiResponse<Void> update(long recruitmentPostId, RecruitmentPostUpdateRequest request, Principal userDetails);
 
     @Operation(summary = "모집 글 삭제", description = "모집글을 삭제 합니다.")
-    ApiResponse<Void> delete(long recruitmentPostId);
+    ApiResponse<Void> delete(long recruitmentPostId, Principal userDetails);
 
     @Operation(summary = "모집 상태 변경", description = "모집글의 상태를 변경 합니다.")
-    ApiResponse<Void> changeStatus(long recruitmentPostId, RecruitmentPostStatusEditRequest request);
+    ApiResponse<Void> changeStatus(long recruitmentPostId, RecruitmentPostStatusUpdateRequest request, Principal userDetails);
 }
