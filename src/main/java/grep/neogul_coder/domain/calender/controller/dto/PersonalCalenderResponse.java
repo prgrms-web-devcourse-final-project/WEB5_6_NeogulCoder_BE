@@ -28,13 +28,4 @@ public class PersonalCalenderResponse {
     @Schema(description = "종료 시간", example = "2025-07-10T10:00:00")
     private LocalDateTime endTime;
 
-    @Builder
-    private PersonalCalenderResponse(Long scheduleId, Long userId, String title, String description, LocalDateTime startTime, LocalDateTime endTime) {
-        this.scheduleId = scheduleId;
-        this.userId = userId;
-        this.title = title;
-        this.description = description;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
 }
