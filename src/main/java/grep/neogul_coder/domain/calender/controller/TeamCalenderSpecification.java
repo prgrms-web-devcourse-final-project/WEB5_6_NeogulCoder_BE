@@ -1,7 +1,7 @@
 package grep.neogul_coder.domain.calender.controller;
 
-import grep.neogul_coder.domain.calender.controller.dto.TeamCalenderRequest;
-import grep.neogul_coder.domain.calender.controller.dto.TeamCalenderResponse;
+import grep.neogul_coder.domain.calender.controller.dto.requset.TeamCalenderRequest;
+import grep.neogul_coder.domain.calender.controller.dto.response.TeamCalenderResponse;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
