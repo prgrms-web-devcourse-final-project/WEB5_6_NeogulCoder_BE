@@ -1,10 +1,11 @@
-package grep.neogul_coder.domain.users.controller.dto;
+package grep.neogul_coder.domain.users.controller.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Schema(description = "회원가입")

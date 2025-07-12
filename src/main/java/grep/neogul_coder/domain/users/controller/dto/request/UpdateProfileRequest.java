@@ -1,4 +1,4 @@
-package grep.neogul_coder.domain.users.controller.dto;
+package grep.neogul_coder.domain.users.controller.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -8,9 +8,9 @@ import lombok.Data;
 public class UpdateProfileRequest {
 
     @Schema(description = "닉네임", example = "example")
-    String nickname;
+    private String nickname;
 
     @Schema(description = "프로필 이미지")
-    String profileImgUrl;
+    private String profileImgUrl;
 
 }

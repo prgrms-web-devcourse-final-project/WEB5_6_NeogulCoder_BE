@@ -1,6 +1,7 @@
 package grep.neogul_coder.domain.users.service;
 
-import grep.neogul_coder.domain.users.controller.dto.SignUpRequest;
+import grep.neogul_coder.domain.users.controller.dto.request.SignUpRequest;
+import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -15,6 +16,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    public User get(Long id) {
+        User user = findUser(id);
+        return user;
+    }
 
     public void signUp(SignUpRequest request) {
 
