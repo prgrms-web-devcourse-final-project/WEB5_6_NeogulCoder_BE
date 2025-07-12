@@ -17,8 +17,8 @@ public class TeamCalender extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Calender calendar;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Study study;
+    @Column(name = "study_id" ,nullable = false)
+    private Long studyId;
 
     private boolean isDeleted = false;
 }
