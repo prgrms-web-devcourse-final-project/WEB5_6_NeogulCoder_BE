@@ -17,8 +17,7 @@ public class GroupChatSwaggerController implements GroupChatSwaggerSpecification
     @Override
     public ApiResponse<GroupChatSwaggerResponse> sendMessage(
         @RequestBody GroupChatSwaggerRequest request) {
-        GroupChatSwaggerResponse response = GroupChatSwaggerResponse.builder().build();
-        return ApiResponse.success(response);
+        return ApiResponse.success(new GroupChatSwaggerResponse());
     }
 
 
@@ -26,8 +25,8 @@ public class GroupChatSwaggerController implements GroupChatSwaggerSpecification
     @Override
     public ApiResponse<List<GroupChatSwaggerResponse>> getMessages(@PathVariable Long roomId) {
         List<GroupChatSwaggerResponse> messages = List.of(
-            GroupChatSwaggerResponse.builder().build(),
-            GroupChatSwaggerResponse.builder().build()
+            new GroupChatSwaggerResponse(),
+            new GroupChatSwaggerResponse()
         );
         return ApiResponse.success(messages);
     }

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
 public class GroupChatMessage extends BaseEntity {
 
     @Id
@@ -19,9 +18,8 @@ public class GroupChatMessage extends BaseEntity {
     @JoinColumn(name = "room_id")
     private GroupChatRoom groupChatRoom;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User sender;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Column(nullable = false)
     private String content;
