@@ -3,10 +3,7 @@ package grep.neogul_coder.domain.recruitment.post.controller;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyNamesInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.*;
 import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
@@ -74,5 +71,11 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
     public ApiResponse<RecruitmentApplicationPagingInfo> getApplications(@PageableDefault(size = 5) Pageable pageable,
                                                                          @PathVariable("recruitment-post-id") long recruitmentPostId) {
         return ApiResponse.success(new RecruitmentApplicationPagingInfo());
+    }
+
+    @GetMapping("{recruitment-post-id}/comments")
+    public ApiResponse<RecruitmentPostCommentPagingInfo> getComments(@PageableDefault(size = 5) Pageable pageable,
+                                                                     @PathVariable("recruitment-post-id") long recruitmentPostId) {
+        return ApiResponse.success(new RecruitmentPostCommentPagingInfo());
     }
 }

@@ -12,6 +12,12 @@ public class RecruitmentApplicationPagingInfo {
     @Schema(example = "[ {nickname: 테스터, buddyEnergy: 30, createdDate: 2025-07-13, applicationReason: 자바를 더 공부 하고싶어요!} ]")
     private List<ApplicationInfo> applicationInfos;
 
+    @Schema(example = "3", description = "총 페이지 수")
+    private int totalPage;
+
+    @Schema(example = "20", description = "총 요소 개수")
+    private int totalElementCount;
+
     @Getter
     static class ApplicationInfo{
 

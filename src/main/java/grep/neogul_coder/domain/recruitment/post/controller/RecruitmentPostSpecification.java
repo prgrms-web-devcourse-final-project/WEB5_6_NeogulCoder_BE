@@ -3,10 +3,7 @@ package grep.neogul_coder.domain.recruitment.post.controller;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyNamesInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.*;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,4 +39,7 @@ public interface RecruitmentPostSpecification {
                     "사용법 : /recruitment-post/{id}/applications?page=0&size=5")
     ApiResponse<RecruitmentApplicationPagingInfo> getApplications(Pageable pageable, long recruitmentPostId);
 
+    @Operation(summary = "모집글 댓글 페이징 조회", description = "모집글의 댓글들을 페이징 조회 합니다. <br>" +
+            "사용법 : /recruitment-post/{id}/comments?page=0&size=5")
+    ApiResponse<RecruitmentPostCommentPagingInfo> getComments(Pageable pageable, long recruitmentPostId);
 }
