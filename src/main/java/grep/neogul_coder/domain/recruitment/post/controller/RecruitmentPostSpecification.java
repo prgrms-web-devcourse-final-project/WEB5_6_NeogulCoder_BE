@@ -3,6 +3,8 @@ package grep.neogul_coder.domain.recruitment.post.controller;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyNamesInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.domain.studyapplication.controller.dto.response.ApplicationResponse;
@@ -20,6 +22,12 @@ public interface RecruitmentPostSpecification {
 
     @Operation(summary = "모집 글 저장", description = "스터디 모집 글을 저장 합니다.")
     ApiResponse<Void> save(RecruitmentPostCreateRequest request, Principal userDetails);
+
+    @Operation(summary = "참여 중인 스터디 이름들 조회", description = "스터디 모집글 작성시 내가 참여한 스터디 이름들을 가져올수 있습니다.")
+    ApiResponse<ParticipatedStudyNamesInfo> getParticipatedStudyNames(Principal userDetails);
+
+    @Operation(summary = "스터디 불러오기", description = "스터디 모집글 작성시 스터디 불러오기를 통해 스터디 정보를 조회할 수 있습니다.")
+    ApiResponse<ParticipatedStudyInfo> getParticipatedStudy(long studyId, Principal userDetails);
 
     @Operation(summary = "모집 글 수정", description = "모집글을 수정 합니다.")
     ApiResponse<Void> update(long recruitmentPostId, RecruitmentPostUpdateRequest request, Principal userDetails);
