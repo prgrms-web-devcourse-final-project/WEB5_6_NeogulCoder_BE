@@ -22,10 +22,12 @@ public class RecruitmentPostService {
     private final RecruitmentPostRepository recruitmentPostRepository;
 
     //TODO 스터디장만 스터디 모집글 생성 가능 하도록 변경 필요
+    @Transactional
     public void create(RecruitmentPostCreateServiceRequest request, long userId) {
         recruitmentPostRepository.save(request.toEntity(userId));
     }
 
+    @Transactional
     public void update(RecruitmentPostUpdateServiceRequest request, long recruitmentPostId, long userId) {
         RecruitmentPost recruitmentPost = findRecruitmentPost(recruitmentPostId, userId);
 
@@ -36,11 +38,13 @@ public class RecruitmentPostService {
         );
     }
 
+    @Transactional
     public void updateStatus(RecruitmentPostStatusUpdateServiceRequest request, long recruitmentPostId, long userId) {
         RecruitmentPost recruitmentPost = findRecruitmentPost(recruitmentPostId, userId);
         recruitmentPost.updateStatus(request.getStatus());
     }
 
+    @Transactional
     public void delete(long recruitmentPostId, long userId) {
         RecruitmentPost recruitmentPost = findRecruitmentPost(recruitmentPostId, userId);
         recruitmentPost.delete();
