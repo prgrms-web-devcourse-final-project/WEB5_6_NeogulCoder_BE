@@ -27,13 +27,4 @@ public class TeamCalenderResponse {
     @Schema(description = "종료 시간", example = "2025-07-12T15:00:00")
     private LocalDateTime endTime;
 
-    @Builder
-    private TeamCalenderResponse(Long scheduleId, Long teamId, String title, String description, LocalDateTime startTime, LocalDateTime endTime) {
-        this.scheduleId = scheduleId;
-        this.teamId = teamId;
-        this.title = title;
-        this.description = description;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
 }

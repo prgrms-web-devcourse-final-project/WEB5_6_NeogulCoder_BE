@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
 public class GroupChatRoom extends BaseEntity {
 
     @Id
