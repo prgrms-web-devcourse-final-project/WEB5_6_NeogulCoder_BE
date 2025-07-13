@@ -1,7 +1,8 @@
 package grep.neogul_coder;
 
 import java.util.TimeZone;
-import javax.annotation.PostConstruct;
+
+import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

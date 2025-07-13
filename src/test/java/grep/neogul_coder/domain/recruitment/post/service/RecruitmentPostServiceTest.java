@@ -1,0 +1,131 @@
+package grep.neogul_coder.domain.recruitment.post.service;
+
+import grep.neogul_coder.domain.recruitment.RecruitmentPostStatus;
+import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
+import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
+import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostStatusUpdateServiceRequest;
+import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostUpdateServiceRequest;
+import grep.neogul_coder.domain.users.entity.User;
+import grep.neogul_coder.domain.users.repository.UserRepository;
+import grep.neogul_coder.global.exception.business.BusinessException;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+@ActiveProfiles("test")
+@Transactional
+@SpringBootTest
+class RecruitmentPostServiceTest {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RecruitmentPostService recruitmentPostService;
+
+    @Autowired
+    private RecruitmentPostRepository recruitmentPostRepository;
+
+    private long userId;
+    private long recruitmentPostId;
+
+    @BeforeEach
+    void init() {
+        User user = userRepository.save(createUser("테스터"));
+        userId = user.getId();
+
+        RecruitmentPost recruitmentPost = createRecruitmentPost("제목", "내용", 1, userId);
+        recruitmentPostRepository.save(recruitmentPost);
+        recruitmentPostId = recruitmentPost.getId();
+    }
+
+    @TestFactory
+    @DisplayName("모집글을 수정 합니다.")
+    Collection<DynamicTest> update() {
+        //given
+        RecruitmentPostUpdateServiceRequest request = createUpdateRequest("수정된 제목", "수정된 내용", 2);
+
+        return List.of(
+                DynamicTest.dynamicTest("모집글 작성자 본인일 경우 수정 성공", () -> {
+                    //when
+                    recruitmentPostService.update(request, recruitmentPostId, userId);
+
+                    //then
+                    RecruitmentPost findRecruitmentPost = recruitmentPostRepository.findById(recruitmentPostId).orElseThrow();
+                    assertThat(findRecruitmentPost)
+                            .extracting("subject", "content", "recruitmentCount")
+                            .containsExactly("수정된 제목", "수정된 내용", 2);
+                }),
+
+                DynamicTest.dynamicTest("모집글 작성자가 본인이 아닐 경우 예외 발생", () -> {
+                    //given
+                    Long otherUserId = -1L;
+
+                    //when then
+                    assertThatThrownBy(() ->
+                            recruitmentPostService.update(request, recruitmentPostId, otherUserId))
+                            .isInstanceOf(BusinessException.class).hasMessage("모집글을 등록한 당사자가 아닙니다.");
+                })
+        );
+    }
+
+    @DisplayName("모집글의 모집 상태를 변경 합니다.")
+    @Test
+    void updateStatus() {
+        //given
+        RecruitmentPostStatusUpdateServiceRequest request = new RecruitmentPostStatusUpdateServiceRequest(RecruitmentPostStatus.COMPLETE);
+
+        //when
+        recruitmentPostService.updateStatus(request, recruitmentPostId, userId);
+
+        //then
+        RecruitmentPost findRecruitmentPost = recruitmentPostRepository.findById(recruitmentPostId).orElseThrow();
+        assertThat(findRecruitmentPost.getStatus()).isEqualTo(RecruitmentPostStatus.COMPLETE);
+    }
+
+    @DisplayName("모집글을 삭제 합니다.")
+    @Test
+    void delete() {
+        //given
+        RecruitmentPost savedRecruitmentPost = recruitmentPostRepository.findById(recruitmentPostId).orElseThrow();
+
+        //when
+        recruitmentPostService.delete(savedRecruitmentPost.getId(), userId);
+
+        //then
+        RecruitmentPost findRecruitmentPost = recruitmentPostRepository.findById(savedRecruitmentPost.getId()).orElseThrow();
+        Assertions.assertThat(findRecruitmentPost.isDeleted()).isTrue();
+    }
+
+    private static User createUser(String nickname) {
+        return User.builder()
+                .nickname(nickname)
+                .build();
+    }
+
+    private static RecruitmentPost createRecruitmentPost(String subject, String content, int count, long userId) {
+        return RecruitmentPost.builder()
+                .subject(subject)
+                .content(content)
+                .recruitmentCount(count)
+                .userId(userId)
+                .build();
+    }
+
+    private static RecruitmentPostUpdateServiceRequest createUpdateRequest(String subject, String content, int count) {
+        return RecruitmentPostUpdateServiceRequest.builder()
+                .subject(subject)
+                .content(content)
+                .recruitmentCount(count)
+                .build();
+    }
+}
