@@ -1,18 +1,17 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
-import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyNamesInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.global.auth.Principal;
-import grep.neogul_coder.domain.studyapplication.controller.dto.response.ApplicationResponse;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 @Tag(name = "Recruitment-Post", description = "모집 글 API")
 public interface RecruitmentPostSpecification {
@@ -38,6 +37,9 @@ public interface RecruitmentPostSpecification {
     @Operation(summary = "모집 상태 변경", description = "모집글의 상태를 변경 합니다.")
     ApiResponse<Void> changeStatus(long recruitmentPostId, RecruitmentPostStatusUpdateRequest request, Principal userDetails);
 
-    @Operation(summary = "스터디 신청 목록 조회", description = "스터디장이 스터디 신청 목록을 조회합니다.")
-    ApiResponse<List<ApplicationResponse>> getApplications(long recruitmentPostId);
+    @Operation(summary = "스터디 신청 목록 페이징 조회", description =
+            "스터디 신청 목록들을 페이징 조회합니다. <br>" +
+                    "사용법 : /recruitment-post/{id}/applications?page=0&size=5")
+    ApiResponse<RecruitmentApplicationPagingInfo> getApplications(Pageable pageable, long recruitmentPostId);
+
 }
