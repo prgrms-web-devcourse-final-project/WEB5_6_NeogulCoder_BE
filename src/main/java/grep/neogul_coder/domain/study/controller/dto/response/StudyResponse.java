@@ -30,5 +30,5 @@ public class StudyResponse {
     private List<TeamCalenderResponse> teamCalenders;
 
     @Schema(description = "게시글 리스트")
-    private StudyPostListResponse studyPosts;
+    private List<StudyPostListResponse> studyPosts;
 }
