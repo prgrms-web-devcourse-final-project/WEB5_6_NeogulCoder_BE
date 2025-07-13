@@ -51,7 +51,7 @@ public class TimeVoteController implements TimeVoteSpecification {
     return ApiResponse.success(new TimeVoteResponse());
   }
 
-  @PutMapping("bulk")
+  @PutMapping("/bulk")
   public ApiResponse<List<TimeVoteResponse>> updateVotes(
       @PathVariable("studyId") Long studyId,
       @RequestBody @Valid TimeVoteBulkUpdateRequest request
