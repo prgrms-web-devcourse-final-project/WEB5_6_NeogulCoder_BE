@@ -1,15 +1,18 @@
 package grep.neogul_coder.domain.users.controller;
 
-import grep.neogul_coder.domain.users.controller.dto.PasswordRequest;
-import grep.neogul_coder.domain.users.controller.dto.UpdatePasswordRequest;
-import grep.neogul_coder.domain.users.controller.dto.UpdateProfileRequest;
+import grep.neogul_coder.domain.users.controller.dto.request.PasswordRequest;
+import grep.neogul_coder.domain.users.controller.dto.request.UpdatePasswordRequest;
+import grep.neogul_coder.domain.users.controller.dto.request.UpdateProfileRequest;
+import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
+import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.global.response.ApiResponse;
-import grep.neogul_coder.domain.users.controller.dto.SignUpRequest;
+import grep.neogul_coder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogul_coder.domain.users.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,6 +28,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController implements UserSpecification {
 
     private final UserService usersService;
+
+    @GetMapping("/{id}")
+    public ApiResponse<UserResponse> get(@PathVariable("id")Long id) {
+        User user = usersService.get(id);
+        UserResponse userResponse =
+            UserResponse.toUserResponse(
+                user.getId(),
+                user.getEmail(),
+                user.getNickname(),
+                user.getProfileImageUrl());
+        return ApiResponse.success(userResponse);
+    }
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
