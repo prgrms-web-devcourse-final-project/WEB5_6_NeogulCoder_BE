@@ -1,6 +1,7 @@
 package grep.neogul_coder.domain.timevote.entity;
 
 import grep.neogul_coder.domain.study.StudyMember;
+import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,7 +13,7 @@ import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Entity
-public class TimeVote {
+public class TimeVote extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.timevote.entity;
 
+import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,7 +9,7 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
-public class TimeVotePeriod {
+public class TimeVotePeriod extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
