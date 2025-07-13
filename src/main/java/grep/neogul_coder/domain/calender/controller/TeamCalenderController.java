@@ -14,30 +14,27 @@ public class TeamCalenderController implements TeamCalenderSpecification {
 
     @PostMapping
     public ApiResponse<Void> create(@RequestBody TeamCalenderRequest request) {
-        return ApiResponse.success(null);
+        return ApiResponse.noContent();
     }
 
     @GetMapping
     public ApiResponse<List<TeamCalenderResponse>> findAll() {
-        return ApiResponse.success(List.of(
-            TeamCalenderResponse.builder().build()
-        ));
+        return ApiResponse.success(List.of(new TeamCalenderResponse()));
     }
 
     @GetMapping("/{scheduleId}")
     public ApiResponse<TeamCalenderResponse> findOne(@PathVariable Long scheduleId) {
-        return ApiResponse.success(
-            TeamCalenderResponse.builder().build());
+        return ApiResponse.success(new TeamCalenderResponse());
     }
 
     @PutMapping("/{scheduleId}")
     public ApiResponse<Void> update(@PathVariable Long scheduleId, @RequestBody TeamCalenderRequest request) {
-        return ApiResponse.success(null);
+        return ApiResponse.noContent();
     }
 
     @DeleteMapping("/{scheduleId}")
     public ApiResponse<Void> delete(@PathVariable Long scheduleId) {
-        return ApiResponse.success(null);
+        return ApiResponse.noContent();
     }
 }
 
