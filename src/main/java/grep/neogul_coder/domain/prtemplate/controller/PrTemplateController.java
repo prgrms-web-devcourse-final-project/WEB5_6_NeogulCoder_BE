@@ -5,12 +5,7 @@ import grep.neogul_coder.domain.prtemplate.controller.dto.request.PrUpdateReques
 import grep.neogul_coder.domain.prtemplate.controller.dto.response.PrPageResponse;
 import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
 import grep.neogul_coder.global.response.ApiResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/prtemplate")

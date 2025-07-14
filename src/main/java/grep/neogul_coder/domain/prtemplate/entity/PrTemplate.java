@@ -22,12 +22,15 @@ public class PrTemplate extends BaseEntity {
 
     private String location;
 
+    private Boolean isDeleted;
+
     @Builder
-    private PrTemplate(Long templateId, Long userId, String introduction, String location) {
+    private PrTemplate(Long templateId, Long userId, String introduction, String location, Boolean isDeleted) {
         this.id = templateId;
         this.userId = userId;
         this.introduction = introduction;
         this.location = location;
+        this.isDeleted = isDeleted;
     }
 
     public static PrTemplate PrTemplateInit(Long userId, String introduction, String location) {
@@ -36,6 +39,10 @@ public class PrTemplate extends BaseEntity {
             .introduction(introduction != null ? introduction : "안녕하세요! 저는 oo입니다.")
             .location(location)
             .build();
+    }
+
+    public void delete() {
+        this.isDeleted = true;
     }
 
     protected PrTemplate() {}

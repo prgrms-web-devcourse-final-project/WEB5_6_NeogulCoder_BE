@@ -20,12 +20,15 @@ public class Link extends BaseEntity {
 
     private String urlName;
 
+    private Boolean isDeleted;
+
     @Builder
-    private Link(Long id, Long prId, String prUrl, String urlName) {
+    private Link(Long id, Long prId, String prUrl, String urlName, Boolean isDeleted) {
         this.id = id;
         this.prId = prId;
         this.prUrl = prUrl;
         this.urlName = urlName;
+        this.isDeleted = isDeleted;
     }
 
     public static Link LinkInit(Long prId, String prUrl, String urlName){
@@ -33,7 +36,12 @@ public class Link extends BaseEntity {
                 .prId(prId)
                 .prUrl(prUrl)
                 .urlName(urlName)
+                .isDeleted(false)
                 .build();
+    }
+
+    public void delete(){
+        this.isDeleted = true;
     }
 
     protected Link() {}
