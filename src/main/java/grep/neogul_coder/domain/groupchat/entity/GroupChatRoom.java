@@ -14,6 +14,6 @@ public class GroupChatRoom extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
 
-    @JoinColumn(name = "study_id", nullable = false)
+    @JoinColumn(name = "study_id")
     private Long studyId;
 }

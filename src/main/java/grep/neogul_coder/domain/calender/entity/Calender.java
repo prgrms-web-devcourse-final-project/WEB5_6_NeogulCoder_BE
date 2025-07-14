@@ -13,13 +13,10 @@ public class Calender extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private LocalDateTime scheduledStart;
 
-    @Column(nullable = false)
     private LocalDateTime scheduledEnd;
 
-    @Column(nullable = false)
     private String title;
 
     private String content;
