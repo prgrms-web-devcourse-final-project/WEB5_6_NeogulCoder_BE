@@ -3,6 +3,7 @@ package grep.neogul_coder.domain.groupchat.entity;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +23,9 @@ public class GroupChatMessage extends BaseEntity {
     private Long userId;
 
     @Column(nullable = false)
-    private String content;
+    private String message;
+
+    private LocalDateTime sentAt;
 
     public void setMessageId(Long messageId) {
         this.messageId = messageId;
@@ -36,7 +39,11 @@ public class GroupChatMessage extends BaseEntity {
         this.userId = userId;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setSentAt(LocalDateTime sentAt) {
+        this.sentAt = sentAt;
     }
 }
