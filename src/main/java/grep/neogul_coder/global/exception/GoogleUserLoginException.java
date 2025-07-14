@@ -1,6 +1,6 @@
 package grep.neogul_coder.global.exception;
 
-import grep.neogul_coder.global.code.CommonCode;
+import grep.neogul_coder.global.response.code.CommonCode;
 
 public class GoogleUserLoginException extends CommonException {
 

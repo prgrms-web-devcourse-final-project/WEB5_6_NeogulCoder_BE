@@ -1,7 +1,7 @@
 package grep.neogul_coder.global.auth.jwt;
 
 import grep.neogul_coder.global.exception.AuthApiException;
-import grep.neogul_coder.global.code.CommonCode;
+import grep.neogul_coder.global.response.code.CommonCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
