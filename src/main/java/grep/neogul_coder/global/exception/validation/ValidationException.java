@@ -1,6 +1,6 @@
 package grep.neogul_coder.global.exception.validation;
 
-import grep.neogul_coder.global.response.ErrorCode;
+import grep.neogul_coder.global.code.ErrorCode;
 
 public class ValidationException extends RuntimeException{
     private ErrorCode errorCode;
