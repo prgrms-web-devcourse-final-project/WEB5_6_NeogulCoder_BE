@@ -19,9 +19,9 @@ public class ReviewTags {
         return new ReviewTags(reviewTags);
     }
 
-    public ReviewType getReviewType() {
+    public ReviewType ensureSingleReviewType() {
         List<ReviewTag> reviewTagList = new ArrayList<>(reviewTags);
-        ReviewType firstReviewType = reviewTagList.get(0).getReviewType();
+        ReviewType firstReviewType = reviewTagList.getFirst().getReviewType();
 
         boolean hasNotSingleType = reviewTagList.stream()
                 .anyMatch(tag -> firstReviewType.isNotSameType(tag.getReviewType()));

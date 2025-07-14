@@ -42,7 +42,7 @@ public class ReviewService {
     @Transactional
     public void save(ReviewSaveServiceRequest request, long userId) {
         ReviewTags reviewTags = ReviewTags.from(convertStringToReviewTag(request.getReviewTag()));
-        ReviewType reviewType = reviewTags.getReviewType();
+        ReviewType reviewType = reviewTags.ensureSingleReviewType();
 
         Review review = request.toReview(reviewTags.getReviewTags(), reviewType, userId);
         reviewRepository.save(ReviewEntity.from(review));
