@@ -12,7 +12,7 @@ public class Study extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long studyId;
+    private Long id;
 
     private Long originStudyId;
 
