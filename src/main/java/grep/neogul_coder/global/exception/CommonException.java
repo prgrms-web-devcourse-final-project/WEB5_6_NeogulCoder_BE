@@ -1,23 +1,23 @@
 package grep.neogul_coder.global.exception;
 
-import grep.neogul_coder.global.response.CommonCode;
+import grep.neogul_coder.global.code.Code;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CommonException extends RuntimeException {
 
-    private final CommonCode code;
+    private final Code code;
 
-    public CommonException(CommonCode code) {
+    public CommonException(Code code) {
         this.code = code;
     }
 
-    public CommonException(CommonCode code, Exception e) {
+    public CommonException(Code code, Exception e) {
         this.code = code;
         log.error(e.getMessage(), e);
     }
 
-    public CommonCode code() {
+    public Code code() {
         return code;
     }
 }
