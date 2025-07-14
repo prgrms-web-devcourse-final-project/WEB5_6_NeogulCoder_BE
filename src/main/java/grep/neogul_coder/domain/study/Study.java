@@ -4,9 +4,11 @@ import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyType;
 import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
+@Getter
 @Entity
 public class Study extends BaseEntity {
 
