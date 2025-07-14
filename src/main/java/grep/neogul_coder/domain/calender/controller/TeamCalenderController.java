@@ -23,17 +23,36 @@ public class TeamCalenderController implements TeamCalenderSpecification {
     }
 
     @GetMapping("/{scheduleId}")
-    public ApiResponse<TeamCalenderResponse> findOne(@PathVariable Long scheduleId) {
+    public ApiResponse<TeamCalenderResponse> findOne(
+        @PathVariable Long scheduleId,
+        @RequestParam Long teamId
+    ) {
         return ApiResponse.success(new TeamCalenderResponse());
     }
 
+
+    @GetMapping("/day")
+    public ApiResponse<List<TeamCalenderResponse>> findByDate(
+        @RequestParam Long teamId,
+        @RequestParam String date
+    ) {
+        return ApiResponse.success(List.of(new TeamCalenderResponse()));
+    }
+
     @PutMapping("/{scheduleId}")
-    public ApiResponse<Void> update(@PathVariable Long scheduleId, @RequestBody TeamCalenderRequest request) {
+    public ApiResponse<Void> update(
+        @PathVariable Long scheduleId,
+        @RequestParam Long teamId,
+        @RequestBody TeamCalenderRequest request
+    ) {
         return ApiResponse.noContent();
     }
 
     @DeleteMapping("/{scheduleId}")
-    public ApiResponse<Void> delete(@PathVariable Long scheduleId) {
+    public ApiResponse<Void> delete(
+        @PathVariable Long scheduleId,
+        @RequestParam Long teamId
+    ) {
         return ApiResponse.noContent();
     }
 }
