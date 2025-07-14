@@ -21,8 +21,10 @@ public class StudyController implements StudySpecification {
     private final StudyService studyService;
 
     @GetMapping
-    public ApiResponse<List<StudyItemResponse>> getStudies() {
-        return ApiResponse.success(List.of(new StudyItemResponse()));
+    public ApiResponse<List<StudyItemResponse>> getStudies(@AuthenticationPrincipal Principal userDetails) {
+        Long userId = userDetails.getUserId();
+        List<StudyItemResponse> studies = studyService.getMyStudies(userId);
+        return ApiResponse.success(studies);
     }
 
     @GetMapping("/{studyId}/header")
@@ -51,7 +53,8 @@ public class StudyController implements StudySpecification {
     }
 
     @PostMapping
-    public ApiResponse<Void> createStudy(@RequestBody @Valid StudyCreateRequest request, @AuthenticationPrincipal Principal userDetails) {
+    public ApiResponse<Void> createStudy(@RequestBody @Valid StudyCreateRequest request,
+                                         @AuthenticationPrincipal Principal userDetails) {
         studyService.createStudy(request, userDetails.getUserId());
         return ApiResponse.noContent();
     }

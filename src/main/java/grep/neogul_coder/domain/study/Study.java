@@ -1,7 +1,6 @@
 package grep.neogul_coder.domain.study;
 
 import grep.neogul_coder.domain.study.enums.Category;
-import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import grep.neogul_coder.domain.study.enums.StudyType;
 import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -10,8 +9,8 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 
-@Entity
 @Getter
+@Entity
 public class Study extends BaseEntity {
 
     @Id
