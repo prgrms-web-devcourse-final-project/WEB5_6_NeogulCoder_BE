@@ -35,9 +35,9 @@ public class GroupChatService {
 
         // 메시지 생성 및 저장
         GroupChatMessage message = new GroupChatMessage();
-        message.setRoom(room);
-        message.setSender(sender);
-        message.setContent(requestDto.getContent());
+        message.setGroupChatRoom(room);                      // 엔티티에 있는 필드명 맞게 사용
+        message.setUserId(sender.getId());                   // 연관관계 없이 userId만 저장
+        message.setMessage(requestDto.getMessage());
         message.setSentAt(LocalDateTime.now());
 
         messageRepository.save(message);
@@ -45,9 +45,11 @@ public class GroupChatService {
         // 응답 DTO 구성
         return new GroupChatMessageResponseDto(
             message.getMessageId(),
-            message.getContent(),
+            message.getGroupChatRoom().getRoomId(),   // ← roomId 필드가 필요하면 여기서 꺼내야 함
+            sender.getId(),
             sender.getNickname(),
-            sender.getProfileImageUrl(), // 프론트에서 필요
+            sender.getProfileImageUrl(),
+            message.getMessage(),
             message.getSentAt()
         );
     }
