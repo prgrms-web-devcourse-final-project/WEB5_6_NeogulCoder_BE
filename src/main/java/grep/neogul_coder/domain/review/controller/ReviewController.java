@@ -22,19 +22,19 @@ public class ReviewController implements ReviewSpecification {
     @GetMapping("/studies/{study-id}/targets")
     public ApiResponse<ReviewTargetUsersInfo> getTargetUsersInfo(@PathVariable("study-id") long studyId,
                                                                  @AuthenticationPrincipal Principal userDetails) {
-//        ReviewTargetUsersInfo response = reviewService.getTargetUsersInfo(studyId, userDetails.getUsername());
-        return ApiResponse.success(new ReviewTargetUsersInfo());
+        ReviewTargetUsersInfo response = reviewService.getTargetUsersInfo(studyId, userDetails.getUsername());
+        return ApiResponse.success(response);
     }
 
     @PostMapping
     public ApiResponse<Void> save(@Valid @RequestBody ReviewSaveRequest request, @AuthenticationPrincipal Principal userDetails) {
-//        reviewService.save(request.toServiceRequest(), userDetails.getUserId());
+        reviewService.save(request.toServiceRequest(), userDetails.getUserId());
         return ApiResponse.noContent();
     }
 
     @GetMapping("/me/tags")
     public ApiResponse<ReviewTagsInfo> getMyReviewTags(@AuthenticationPrincipal Principal userDetails) {
-//        reviewService.getMyReviewTags(userDetails.getUserId());
+        reviewService.getMyReviewTags(userDetails.getUserId());
         return ApiResponse.success(new ReviewTagsInfo());
     }
 
