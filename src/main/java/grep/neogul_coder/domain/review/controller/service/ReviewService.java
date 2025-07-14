@@ -6,15 +6,19 @@ import grep.neogul_coder.domain.review.controller.service.request.ReviewSaveServ
 import grep.neogul_coder.domain.review.entity.ReviewEntity;
 import grep.neogul_coder.domain.review.repository.ReviewQueryRepository;
 import grep.neogul_coder.domain.review.repository.ReviewRepository;
+import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
+import grep.neogul_coder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static grep.neogul_coder.domain.review.ReviewErrorCode.*;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -28,15 +32,17 @@ public class ReviewService {
     private final ReviewQueryRepository reviewQueryRepository;
 
     public ReviewTargetUsersInfo getTargetUsersInfo(long studyId, String myNickname) {
-        List<StudyMember> studyMembers = studyMemberRepository.findByStudyId(studyId);
-        List<User> targetUserInfos = getTargetUserInfos(studyMembers, myNickname);
-        return ReviewTargetUsersInfo.of(targetUserInfos);
+        List<StudyMember> studyMembers = studyMemberRepository.findByStudyIdFetchStudy(studyId);
+        List<User> targetUsers = findReviewTargetUsers(studyMembers, myNickname);
+        Study study = extractStudyFrom(studyMembers);
+
+        return ReviewTargetUsersInfo.of(study, targetUsers);
     }
 
     @Transactional
     public void save(ReviewSaveServiceRequest request, long userId) {
-        ReviewTags reviewTags = ReviewTags.from(convertReviewTag(request));
-        ReviewType reviewType = reviewTags.getReviewType();
+        ReviewTags reviewTags = ReviewTags.from(convertStringToReviewTag(request.getReviewTag()));
+        ReviewType reviewType = reviewTags.ensureSingleReviewType();
 
         Review review = request.toReview(reviewTags.getReviewTags(), reviewType, userId);
         reviewRepository.save(ReviewEntity.from(review));
@@ -51,13 +57,7 @@ public class ReviewService {
         reviewQueryRepository.findMyReviewTagFetchAll(reviewIds);
     }
 
-    private List<ReviewTag> convertReviewTag(ReviewSaveServiceRequest request) {
-        return request.getReviewTag().stream()
-                .map(reviewTagFinder::findBy)
-                .toList();
-    }
-
-    private List<User> getTargetUserInfos(List<StudyMember> studyMembers, String myNickname) {
+    private List<User> findReviewTargetUsers(List<StudyMember> studyMembers, String myNickname) {
         List<Long> userIds = studyMembers.stream()
                 .map(StudyMember::getUserId)
                 .toList();
@@ -65,6 +65,19 @@ public class ReviewService {
         List<User> users = userRepository.findByIdIn(userIds);
         return users.stream()
                 .filter(user -> user.isNotEqualsNickname(myNickname))
+                .toList();
+    }
+
+    private Study extractStudyFrom(List<StudyMember> studyMembers) {
+        if(studyMembers.isEmpty()){
+            throw new NotFoundException(STUDY_MEMBER_EMPTY, STUDY_MEMBER_EMPTY.getMessage());
+        }
+        return studyMembers.getFirst().getStudy();
+    }
+
+    private List<ReviewTag> convertStringToReviewTag(List<String> reviewTags) {
+        return reviewTags.stream()
+                .map(reviewTagFinder::findBy)
                 .toList();
     }
 }
