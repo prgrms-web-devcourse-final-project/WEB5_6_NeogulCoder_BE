@@ -1,10 +1,14 @@
 package grep.neogul_coder.domain.prtemplate.entity;
 
 import grep.neogul_coder.global.entity.BaseEntity;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Id;
+import lombok.Getter;
 
+@Entity
+@Getter
 public class PrTemplate extends BaseEntity {
 
     @Id
@@ -13,9 +17,7 @@ public class PrTemplate extends BaseEntity {
 
     private Long userId;
 
-    private String introductionContent;
-
-    private String introductionDetail;
+    private String introduction;
 
     private String location;
 

@@ -78,10 +78,10 @@ jobs:
       - name: Log created issue
         run: echo "Jira Issue ${{ steps.issue-parser.outputs.parentKey }}/${{ steps.create.outputs.issue }} was created"
 
-      - name: Checkout main code
+      - name: Checkout develop code
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: develop
 
       - name: Convert label-selection to Capitalized TYPE
         run: |
