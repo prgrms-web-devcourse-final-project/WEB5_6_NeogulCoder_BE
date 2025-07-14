@@ -9,15 +9,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public class Principal extends org.springframework.security.core.userdetails.User {
 
+    private final long userId;
     private String accessToken;
 
-    public Principal(String username, String password,
-        Collection<? extends GrantedAuthority> authorities) {
+    public Principal(long userId, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
+        this.userId = userId;
     }
 
     public static Principal createPrincipal(User users, List<SimpleGrantedAuthority> authorities){
-        return new Principal(users.getEmail(), users.getPassword(), authorities);
+        return new Principal(users.getId(), users.getEmail(), users.getPassword(), authorities);
     }
 
     public Optional<String> getAccessToken() {
@@ -26,5 +27,9 @@ public class Principal extends org.springframework.security.core.userdetails.Use
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public long getUserId() {
+        return userId;
     }
 }

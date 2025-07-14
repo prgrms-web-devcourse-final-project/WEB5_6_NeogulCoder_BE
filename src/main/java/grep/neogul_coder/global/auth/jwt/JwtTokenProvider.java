@@ -83,7 +83,7 @@ public class JwtTokenProvider {
         Collection<? extends GrantedAuthority> authorities =
             userDetailsService.findUserAuthorities(claims.getSubject());
 
-        Principal principal = new Principal(claims.getSubject(), "", authorities);
+        Principal principal = new Principal(Long.valueOf(claims.getId()), claims.getSubject(), "", authorities);
         principal.setAccessToken(accessToken);
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }

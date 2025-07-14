@@ -116,7 +116,7 @@ public class SecurityConfig {
 //    public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
 //        return new HttpCookieOAuth2AuthorizationRequestRepository();
 //    }
-
+//
     @Bean
     public PasswordEncoder passwordEncoder(){
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();

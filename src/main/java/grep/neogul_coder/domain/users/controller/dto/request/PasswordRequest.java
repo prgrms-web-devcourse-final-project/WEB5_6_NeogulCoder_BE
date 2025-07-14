@@ -1,4 +1,4 @@
-package grep.neogul_coder.domain.users.controller.dto;
+package grep.neogul_coder.domain.users.controller.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -7,6 +7,6 @@ import lombok.Data;
 public class PasswordRequest {
 
     @NotBlank(message = "비밀번호를 입력하세요")
-    String password;
+    private String password;
 
 }

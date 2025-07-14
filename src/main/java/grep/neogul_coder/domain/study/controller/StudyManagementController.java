@@ -6,6 +6,7 @@ import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
+@RequestMapping("/api/studies")
 @RestController
 public class StudyManagementController implements StudyManagementSpecification {
 
