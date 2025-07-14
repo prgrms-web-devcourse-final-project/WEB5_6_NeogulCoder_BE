@@ -10,7 +10,7 @@ public class TokenCookieFactory {
             .path("/")
             .httpOnly(true)
             .secure(true)
-            .sameSite("Lax")
+            .sameSite("None")
             .build();
     }
 
@@ -19,8 +19,8 @@ public class TokenCookieFactory {
             .maxAge(0)
             .path("/")
             .httpOnly(true)
-            .secure(false)
-            .sameSite("Lax")
+            .secure(true)
+            .sameSite("None")
             .build();
     }
 

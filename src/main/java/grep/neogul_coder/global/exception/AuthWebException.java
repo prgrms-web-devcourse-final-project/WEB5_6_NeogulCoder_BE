@@ -1,14 +1,14 @@
 package grep.neogul_coder.global.exception;
 
-import grep.neogul_coder.global.response.CommonCode;
+import grep.neogul_coder.global.response.code.Code;
 
 public class AuthWebException extends CommonException {
 
-    public AuthWebException(CommonCode code) {
+    public AuthWebException(Code code) {
         super(code);
     }
 
-    public AuthWebException(CommonCode code, Exception e) {
+    public AuthWebException(Code code, Exception e) {
         super(code, e);
     }
 }

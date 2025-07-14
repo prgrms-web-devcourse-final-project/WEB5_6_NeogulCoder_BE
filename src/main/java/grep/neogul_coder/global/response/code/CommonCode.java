@@ -1,4 +1,4 @@
-package grep.neogul_coder.global.response;
+package grep.neogul_coder.global.response.code;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
