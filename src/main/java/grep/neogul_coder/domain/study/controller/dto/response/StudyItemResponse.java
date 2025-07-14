@@ -1,8 +1,10 @@
 package grep.neogul_coder.domain.study.controller.dto.response;
 
+import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -41,5 +43,37 @@ public class StudyItemResponse {
     private StudyType studyType;
 
     @Schema(description = "종료 여부", example = "false")
-    private boolean isActivated;
+    private boolean isFinished;
+
+    @Builder
+    private StudyItemResponse(Long studyId, String name, String leaderNickname, int capacity, int currentCount, LocalDate startDate,
+                             String imageUrl, String introduction, Category category, StudyType studyType, boolean isFinished) {
+        this.studyId = studyId;
+        this.name = name;
+        this.leaderNickname = leaderNickname;
+        this.capacity = capacity;
+        this.currentCount = currentCount;
+        this.startDate = startDate;
+        this.imageUrl = imageUrl;
+        this.introduction = introduction;
+        this.category = category;
+        this.studyType = studyType;
+        this.isFinished = isFinished;
+    }
+
+    public static StudyItemResponse from(Study study, String leaderNickname) {
+        return StudyItemResponse.builder()
+            .studyId(study.getId())
+            .name(study.getName())
+            .leaderNickname(leaderNickname)
+            .capacity(study.getCapacity())
+            .currentCount(study.getCurrentCount())
+            .startDate(study.getStartDate())
+            .imageUrl(study.getImageUrl())
+            .introduction(study.getIntroduction())
+            .category(study.getCategory())
+            .studyType(study.getStudyType())
+            .isFinished(study.isFinished())
+            .build();
+    }
 }
