@@ -11,7 +11,7 @@ import grep.neogul_coder.global.auth.oauth.user.OAuth2UserInfo;
 import grep.neogul_coder.global.auth.payload.LoginRequest;
 import grep.neogul_coder.global.auth.repository.UserBlackListRepository;
 import grep.neogul_coder.global.exception.GoogleUserLoginException;
-import grep.neogul_coder.global.code.CommonCode;
+import grep.neogul_coder.global.response.code.CommonCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
