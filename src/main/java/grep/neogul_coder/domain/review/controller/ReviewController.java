@@ -2,7 +2,7 @@ package grep.neogul_coder.domain.review.controller;
 
 import grep.neogul_coder.domain.review.controller.dto.request.ReviewSaveRequest;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewPagingContentsInfo;
-import grep.neogul_coder.domain.review.controller.dto.response.ReviewTagsInfo;
+import grep.neogul_coder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
 import grep.neogul_coder.domain.review.controller.service.ReviewService;
 import grep.neogul_coder.global.auth.Principal;
@@ -33,9 +33,9 @@ public class ReviewController implements ReviewSpecification {
     }
 
     @GetMapping("/me/tags")
-    public ApiResponse<ReviewTagsInfo> getMyReviewTags(@AuthenticationPrincipal Principal userDetails) {
-        reviewService.getMyReviewTags(userDetails.getUserId());
-        return ApiResponse.success(new ReviewTagsInfo());
+    public ApiResponse<MyReviewTagsInfo> getMyReviewTags(@AuthenticationPrincipal Principal userDetails) {
+        MyReviewTagsInfo response = reviewService.getMyReviewTags(userDetails.getUserId());
+        return ApiResponse.success(response);
     }
 
     @GetMapping("/me/contents")
