@@ -6,6 +6,8 @@ import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.exception.PasswordNotMatchException;
 import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
 import grep.neogul_coder.domain.users.repository.UserRepository;
+import grep.neogul_coder.global.exception.business.NotFoundException;
+import grep.neogul_coder.global.exception.validation.DuplicatedException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,11 +49,11 @@ public class UserService {
         User user = findUser(id);
 
         if (isNotMatchCurrentPassword(password, user.getPassword())) {
-            throw new RuntimeException("비밀번호를 다시 확인해주세요");
+            throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
 
         if (isNotMatchPasswordCheck(newPassword, newPasswordCheck)) {
-            throw new IllegalArgumentException("비밀번호 확인이 일치하지 않습니다.");
+            throw new PasswordNotMatchException(UserErrorCode.PASSWORD_UNCHECKED);
         }
 
         String encodedPassword = encodingPassword(newPassword);
@@ -62,7 +64,7 @@ public class UserService {
         User user = findUser(id);
 
         if (isNotMatchCurrentPassword(password, user.getPassword())) {
-            throw new RuntimeException("비밀번호를 다시 확인해주세요");
+            throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
 
         user.delete();
@@ -70,16 +72,16 @@ public class UserService {
 
     private User findUser(Long id) {
         return userRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+            .orElseThrow(() -> new NotFoundException(UserErrorCode.USER_NOT_FOUND,"회원이 존재하지 않습니다."));
     }
 
     private boolean duplicationCheck(String email, String nickname){
         if (isDuplicateEmail(email)) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+            throw new DuplicatedException(UserErrorCode.IS_DUPLICATED);
         }
 
         if (isDuplicateNickname(nickname)) {
-            throw new IllegalArgumentException("동일한 닉네임이 존재합니다.");
+            throw new DuplicatedException(UserErrorCode.IS_DUPLICATED);
         }
         return false;
     }

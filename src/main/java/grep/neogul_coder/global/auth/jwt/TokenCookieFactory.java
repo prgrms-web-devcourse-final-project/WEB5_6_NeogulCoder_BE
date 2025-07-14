@@ -9,7 +9,7 @@ public class TokenCookieFactory {
             .maxAge(expires)
             .path("/")
             .httpOnly(true)
-            .secure(false)
+            .secure(true)
             .sameSite("None")
             .build();
     }
@@ -19,7 +19,7 @@ public class TokenCookieFactory {
             .maxAge(0)
             .path("/")
             .httpOnly(true)
-            .secure(false)
+            .secure(true)
             .sameSite("None")
             .build();
     }
