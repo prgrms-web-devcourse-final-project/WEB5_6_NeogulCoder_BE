@@ -68,12 +68,4 @@ public class Study extends BaseEntity {
         this.imageUrl = imageUrl;
         this.isFinished = false;
     }
-
-    public StudyMember createLeader(Long userId) {
-        return StudyMember.builder()
-            .study(this)
-            .userId(userId)
-            .role(StudyMemberRole.LEADER)
-            .build();
-    }
 }

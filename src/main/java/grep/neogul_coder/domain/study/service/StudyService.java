@@ -18,7 +18,11 @@ public class StudyService {
 
     public void createStudy(StudyCreateRequest request, Long userId) {
         Study study = studyRepository.save(request.toEntity());
-        StudyMember leader = study.createLeader(userId);
+        StudyMember leader = StudyMember.builder()
+            .study(study)
+            .userId(userId)
+            .role(StudyMemberRole.LEADER)
+            .build();
         studyMemberRepository.save(leader);
     }
 }
