@@ -7,7 +7,7 @@ import grep.neogul_coder.global.auth.jwt.dto.AccessTokenDto;
 import grep.neogul_coder.global.auth.repository.UserBlackListRepository;
 import grep.neogul_coder.global.auth.service.RefreshTokenService;
 import grep.neogul_coder.global.exception.CommonException;
-import grep.neogul_coder.global.response.CommonCode;
+import grep.neogul_coder.global.code.CommonCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
