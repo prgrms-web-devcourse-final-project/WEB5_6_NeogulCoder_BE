@@ -1,7 +1,8 @@
 package grep.neogul_coder.domain.users.service;
 
+import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
+import grep.neogul_coder.domain.prtemplate.repository.PrTemplateRepository;
 import grep.neogul_coder.domain.users.controller.dto.request.SignUpRequest;
-import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.exception.PasswordNotMatchException;
 import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
@@ -20,15 +21,23 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PrTemplateRepository prTemplateRepository;
 
     public User get(Long id) {
         User user = findUser(id);
         return user;
     }
 
+    public User getByEmail(String email) {
+        User user = findUser(email);
+        return user;
+    }
+
     public void signUp(SignUpRequest request) {
 
         duplicationCheck(request.getEmail(), request.getNickname());
+
+        User user = findUser(request.getEmail());
 
         if (isNotMatchPasswordCheck(request.getPassword(), request.getPasswordCheck())) {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
@@ -37,6 +46,8 @@ public class UserService {
         String encodedPassword = encodingPassword(request.getPassword());
         userRepository.save(
             User.UserInit(request.getEmail(), encodedPassword, request.getNickname()));
+            PrTemplate.PrTemplateInit(user.getId(),)
+
     }
 
     public void updateProfile(Long id, String nickname, String profileImageUrl) {
@@ -72,6 +83,11 @@ public class UserService {
 
     private User findUser(Long id) {
         return userRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException(UserErrorCode.USER_NOT_FOUND,"회원이 존재하지 않습니다."));
+    }
+
+    private User findUser(String email) {
+        return userRepository.findByEmail(email)
             .orElseThrow(() -> new NotFoundException(UserErrorCode.USER_NOT_FOUND,"회원이 존재하지 않습니다."));
     }
 

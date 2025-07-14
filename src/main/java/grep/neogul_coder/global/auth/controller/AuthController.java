@@ -1,9 +1,14 @@
 package grep.neogul_coder.global.auth.controller;
 
+import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
+import grep.neogul_coder.domain.users.entity.User;
+import grep.neogul_coder.domain.users.service.UserService;
 import grep.neogul_coder.global.auth.code.AuthToken;
 import grep.neogul_coder.global.auth.jwt.TokenCookieFactory;
 import grep.neogul_coder.global.auth.jwt.dto.TokenDto;
 import grep.neogul_coder.global.auth.payload.LoginRequest;
+import grep.neogul_coder.global.auth.payload.LoginResponse;
+import grep.neogul_coder.global.auth.payload.LoginUserResponse;
 import grep.neogul_coder.global.auth.payload.TokenResponse;
 import grep.neogul_coder.global.auth.service.AuthService;
 import grep.neogul_coder.global.response.ApiResponse;
@@ -23,13 +28,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserService userService;
 
     @PostMapping("/login")
-    public ApiResponse<TokenResponse> login(
+    public ApiResponse<LoginResponse> login(
         @RequestBody LoginRequest loginRequest,
         HttpServletResponse response
     ) {
         TokenDto tokenDto = authService.signin(loginRequest);
+        User user = userService.getByEmail(loginRequest.getEmail());
 
         ResponseCookie accessToken = TokenCookieFactory.create(AuthToken.ACCESS_TOKEN.name(),
             tokenDto.getAccessToken(), tokenDto.getExpiresIn());
@@ -39,10 +46,19 @@ public class AuthController {
         response.addHeader("Set-Cookie", accessToken.toString());
         response.addHeader("Set-Cookie", refreshToken.toString());
 
-        return ApiResponse.success(TokenResponse.builder()
-            .accessToken(tokenDto.getAccessToken())
-            .grantType(tokenDto.getGrantType())
-            .expiresIn(tokenDto.getExpiresIn())
+        return ApiResponse.success(LoginResponse.builder()
+            .token(TokenResponse.builder()
+                .accessToken(tokenDto.getAccessToken())
+                .grantType(tokenDto.getGrantType())
+                .expiresIn(tokenDto.getExpiresIn())
+                .build())
+            .user(LoginUserResponse.builder()
+                .userId(user.getId())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .profileImage(user.getProfileImageUrl())
+                .role(user.getRole())
+                .build())
             .build());
     }
 
