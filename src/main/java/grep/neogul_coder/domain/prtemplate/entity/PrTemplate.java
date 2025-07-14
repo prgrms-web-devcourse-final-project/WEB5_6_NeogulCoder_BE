@@ -14,7 +14,7 @@ public class PrTemplate extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long templateId;
+    private Long id;
 
     private Long userId;
 
@@ -24,7 +24,7 @@ public class PrTemplate extends BaseEntity {
 
     @Builder
     private PrTemplate(Long templateId, Long userId, String introduction, String location) {
-        this.templateId = templateId;
+        this.id = templateId;
         this.userId = userId;
         this.introduction = introduction;
         this.location = location;

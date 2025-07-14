@@ -1,6 +1,8 @@
 package grep.neogul_coder.domain.users.service;
 
+import grep.neogul_coder.domain.prtemplate.entity.Link;
 import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
+import grep.neogul_coder.domain.prtemplate.repository.LinkRepository;
 import grep.neogul_coder.domain.prtemplate.repository.PrTemplateRepository;
 import grep.neogul_coder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogul_coder.domain.users.entity.User;
@@ -22,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final PrTemplateRepository prTemplateRepository;
+    private final LinkRepository linkRepository;
 
     public User get(Long id) {
         User user = findUser(id);
@@ -46,7 +49,12 @@ public class UserService {
         String encodedPassword = encodingPassword(request.getPassword());
         userRepository.save(
             User.UserInit(request.getEmail(), encodedPassword, request.getNickname()));
-
+        prTemplateRepository.save(
+                PrTemplate.PrTemplateInit(user.getId(),null, null));
+        linkRepository.save(
+                Link.LinkInit(prTemplateRepository.findByUserId(user.getId()).getId()
+                        ,null
+                        ,null));
     }
 
     public void updateProfile(Long id, String nickname, String profileImageUrl) {

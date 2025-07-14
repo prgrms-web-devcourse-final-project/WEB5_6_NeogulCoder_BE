@@ -28,5 +28,13 @@ public class Link extends BaseEntity {
         this.urlName = urlName;
     }
 
+    public static Link LinkInit(Long prId, String prUrl, String urlName){
+        return Link.builder()
+                .prId(prId)
+                .prUrl(prUrl)
+                .urlName(urlName)
+                .build();
+    }
+
     protected Link() {}
 }
