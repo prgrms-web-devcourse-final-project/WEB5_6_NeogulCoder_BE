@@ -4,6 +4,7 @@ import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,10 +20,9 @@ public class GroupChatMessage extends BaseEntity {
     @JoinColumn(name = "room_id")
     private GroupChatRoom groupChatRoom;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     private Long userId;
 
-    @Column(nullable = false)
     private String message;
 
     private LocalDateTime sentAt;

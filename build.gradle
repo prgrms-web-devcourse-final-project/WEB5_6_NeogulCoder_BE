@@ -28,8 +28,6 @@ dependencies {
 	// 데이터 베이스 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'com.mysql:mysql-connector-j:8.4.0'
-	//implementation 'com.h2database:h2:2.3.232'
-	//implementation 'org.springframework.boot:spring-boot-devtools'
 
 	// Sql 쿼리 파라미터 보는 라이브러리
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
@@ -77,28 +75,32 @@ dependencies {
 	// OAuth2 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-	// GCP 관련 의존성
-	// implementation 'com.google.cloud:spring-cloud-gcp-starter-secretmanager:4.9.1'
-	// implementation 'com.google.cloud:google-cloud-storage:2.38.0'
-
 	// swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 
-	// WebSocket + STOMP 통신용
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	// 배포 관련 의존성
+	// implementation 'com.h2database:h2:2.3.232'
+	// implementation 'org.springframework.boot:spring-boot-devtools'
+
+	// implementation 'com.google.cloud:spring-cloud-gcp-starter-secretmanager:4.9.1'
+	// implementation 'com.google.cloud:google-cloud-storage:2.38.0'
+
+    // WebSocket + STOMP 통신용
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
 }
 
 dependencyManagement {
 	imports {
 		// Spring Cloud 전반 (Feign, Gateway 등) 의존성 버전 관리
-		// mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+
 		// GCP 관련 스타터(BOM) 관리 - Secret Manager, GCS 등
 		// mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
 	}
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
 }
 
 // 환경별 application.properties 포함/제외 설정
