@@ -4,11 +4,13 @@ import grep.neogul_coder.domain.review.ReviewTag;
 import grep.neogul_coder.domain.review.ReviewType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@ToString
 @Getter
 public class MyReviewTagsInfo {
 
@@ -36,6 +38,7 @@ public class MyReviewTagsInfo {
                 .toList();
     }
 
+    @ToString
     @Getter
     private static class ReviewTagCountInfo {
 

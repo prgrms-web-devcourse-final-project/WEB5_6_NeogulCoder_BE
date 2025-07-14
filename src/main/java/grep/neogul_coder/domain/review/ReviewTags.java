@@ -50,6 +50,14 @@ public class ReviewTags {
                 ));
     }
 
+    public List<String> extractDescription(){
+        List<ReviewTag> reviewTagList = new ArrayList<>(reviewTags);
+
+        return reviewTagList.stream()
+                .map(ReviewTag::getDescription)
+                .toList();
+    }
+
     public List<ReviewTag> getReviewTags() {
         return new ArrayList<>(reviewTags);
     }

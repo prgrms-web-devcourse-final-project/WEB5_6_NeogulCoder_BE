@@ -9,6 +9,7 @@ import grep.neogul_coder.domain.review.entity.ReviewEntity;
 import grep.neogul_coder.domain.review.entity.ReviewTagEntity;
 import grep.neogul_coder.domain.review.repository.MyReviewTagRepository;
 import grep.neogul_coder.domain.review.repository.ReviewRepository;
+import grep.neogul_coder.domain.review.repository.ReviewTagRepository;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
@@ -34,6 +35,7 @@ public class ReviewService {
     private final StudyMemberRepository studyMemberRepository;
     private final ReviewRepository reviewRepository;
     private final MyReviewTagRepository myReviewTagRepository;
+    private final ReviewTagRepository reviewTagRepository;
 
     public ReviewTargetUsersInfo getReviewTargetUsersInfo(long studyId, String myNickname) {
         List<StudyMember> studyMembers = studyMemberRepository.findByStudyIdFetchStudy(studyId);
@@ -49,7 +51,8 @@ public class ReviewService {
         ReviewType reviewType = reviewTags.ensureSingleReviewType();
 
         Review review = request.toReview(reviewTags.getReviewTags(), reviewType, userId);
-        reviewRepository.save(ReviewEntity.from(review));
+        List<ReviewTagEntity> reviewTagEntities = mapToReviewTagEntities(reviewTags);
+        reviewRepository.save(ReviewEntity.from(review, reviewTagEntities));
     }
 
     public MyReviewTagsInfo getMyReviewTags(long userId) {
@@ -85,8 +88,14 @@ public class ReviewService {
                 .toList();
     }
 
+    private List<ReviewTagEntity> mapToReviewTagEntities(ReviewTags reviewTags) {
+        List<String> reviewTagDescriptions = reviewTags.extractDescription();
+        return reviewTagRepository.findByReviewTagIn(reviewTagDescriptions);
+    }
+
     private List<ReviewTag> extractReviewTags(List<ReviewEntity> myReviews) {
-        return getReviewTagEntities(myReviews).stream()
+        List<ReviewTagEntity> reviewTagEntities = getReviewTagEntities(myReviews);
+        return reviewTagEntities.stream()
                 .map(ReviewTagEntity::getReviewTag)
                 .map(reviewTagFinder::findBy)
                 .toList();
