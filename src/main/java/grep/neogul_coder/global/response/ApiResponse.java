@@ -23,8 +23,8 @@ public class ApiResponse<T> {
         return ApiResponse.of(CommonCode.OK.getCode(), CommonCode.OK.getMessage(), data);
     }
 
-    public static <T> ApiResponse<T> successWithCode(CommonCode code, T data){
-        return ApiResponse.of(code.getCode(), code.getMessage(), data);
+    public static <T> ApiResponse<T> successWithCode(T data){
+        return ApiResponse.of(CommonCode.OK.getCode(), CommonCode.OK.getMessage(), data);
     }
 
     public static <T> ApiResponse<T> noContent(){
@@ -39,11 +39,11 @@ public class ApiResponse<T> {
         return ApiResponse.of(CommonCode.BAD_REQUEST.getCode(), CommonCode.BAD_REQUEST.getMessage(), null);
     }
 
-    public static <T> ApiResponse<T> error(CommonCode code) {
+    public static <T> ApiResponse<T> errorWithoutData(Code code) {
         return ApiResponse.of(code.getCode(), code.getMessage(), null);
     }
 
-    public static <T> ApiResponse<T> error(CommonCode code, T data) {
+    public static <T> ApiResponse<T> error(Code code, T data) {
         return ApiResponse.of(code.getCode(), code.getMessage(), data);
     }
 }

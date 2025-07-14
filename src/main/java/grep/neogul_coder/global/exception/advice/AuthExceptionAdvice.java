@@ -24,7 +24,7 @@ public class AuthExceptionAdvice {
         AuthApiException ex) {
         return ResponseEntity
             .status(ex.code().getStatus())
-            .body(ApiResponse.error(ex.code()));
+            .body(ApiResponse.errorWithoutData(ex.code()));
     }
 
     @ResponseBody
@@ -33,7 +33,7 @@ public class AuthExceptionAdvice {
         AuthenticationException ex) {
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
-            .body(ApiResponse.error(CommonCode.UNAUTHORIZED));
+            .body(ApiResponse.errorWithoutData(CommonCode.UNAUTHORIZED));
     }
 
     @ResponseBody
@@ -41,7 +41,7 @@ public class AuthExceptionAdvice {
     public ResponseEntity<ApiResponse<String>> googleUserLoginExHandler(GoogleUserLoginException ex) {
         return ResponseEntity
             .status(ex.code().getStatus())
-            .body(ApiResponse.error(CommonCode.SECURITY_INCIDENT));
+            .body(ApiResponse.errorWithoutData(CommonCode.SECURITY_INCIDENT));
     }
 
 }
