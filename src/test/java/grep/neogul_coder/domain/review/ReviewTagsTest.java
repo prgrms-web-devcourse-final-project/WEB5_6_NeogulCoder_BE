@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.review;
 
+import grep.neogul_coder.global.exception.business.BusinessException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
@@ -12,30 +13,41 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReviewTagsTest {
 
-    @DisplayName("사용자에게 값을 받아 해당하는 리뷰 태그를 찾습니다.")
+    @DisplayName("리뷰 태그들의 리뷰 타입을 확인 합니다.")
     @TestFactory
-    Collection<DynamicTest> findBy() {
+    Collection<DynamicTest> getReviewType() {
+
         return List.of(
-                DynamicTest.dynamicTest("일치 하는 리뷰 태그가 있다면 리뷰태그를 반환 합니다.", () -> {
+                DynamicTest.dynamicTest("리뷰 태그가 하나의 리뷰 타입을 가진 경우 리뷰 타입을 반환 합니다.", () -> {
                     //given
-                    ReviewTagFinder reviewTagFinder = new ReviewTagFinder();
-                    String userInput = "약속된 일정에 자주 늦거나 참여율이 낮았어요.";
+                    List<ReviewTag> reviewTagList = List.of(
+                            ExcellentReviewTag.INITIATIVE,
+                            ExcellentReviewTag.EFFICIENT,
+                            ExcellentReviewTag.COMMUNICATOR
+                    );
+
+                    ReviewTags reviewTags = ReviewTags.from(reviewTagList);
 
                     //when
-                    ReviewTag reviewTag = reviewTagFinder.findBy(userInput);
+                    ReviewType reviewType = reviewTags.getReviewType();
 
                     //then
-                    assertThat(reviewTag).isEqualTo(BadReviewTag.LOW_COMMITMENT);
+                    assertThat(reviewType).isEqualTo(ReviewType.EXCELLENT);
                 }),
 
-                DynamicTest.dynamicTest("일치 하는 리뷰 태그가 없다면 예외가 발생 합니다.", () -> {
+                DynamicTest.dynamicTest("리뷰 태그가 여러 리뷰 타입을 가진 경우 예외가 발생 합니다.", () -> {
                     //given
-                    ReviewTagFinder reviewTagFinder = new ReviewTagFinder();
-                    String userInput = "리뷰태그로 등록 되지 않은 값입니다.";
+                    List<ReviewTag> reviewTagList = List.of(
+                            ExcellentReviewTag.INITIATIVE,
+                            ExcellentReviewTag.EFFICIENT,
+                            GoodReviewTag.GOOD_ADAPTATION
+                    );
+
+                    ReviewTags reviewTags = ReviewTags.from(reviewTagList);
 
                     //when //then
-                    assertThatThrownBy(() -> reviewTagFinder.findBy(userInput))
-                            .isInstanceOf(IllegalArgumentException.class).hasMessage("일치 하는 태그가 없습니다.");
+                    assertThatThrownBy(reviewTags::getReviewType)
+                            .isInstanceOf(BusinessException.class).hasMessage("단일 리뷰 타입이 아닙니다. ( ex) GOOD, BAD 혼합 )");
                 })
         );
     }
