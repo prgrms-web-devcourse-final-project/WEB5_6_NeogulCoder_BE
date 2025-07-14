@@ -1,4 +1,4 @@
-package grep.neogul_coder.global.code;
+package grep.neogul_coder.global.response.code;
 
 import org.springframework.http.HttpStatus;
 

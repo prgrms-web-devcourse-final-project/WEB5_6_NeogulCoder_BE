@@ -1,6 +1,6 @@
 package grep.neogul_coder.domain.review;
 
-import grep.neogul_coder.global.response.ErrorCode;
+import grep.neogul_coder.global.response.code.ErrorCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
