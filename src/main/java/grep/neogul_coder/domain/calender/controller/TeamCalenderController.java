@@ -24,7 +24,7 @@ public class TeamCalenderController implements TeamCalenderSpecification {
 
     @GetMapping("/{scheduleId}")
     public ApiResponse<TeamCalenderResponse> findOne(
-        @PathVariable Long scheduleId,
+        @PathVariable("scheduleId") Long scheduleId,
         @RequestParam Long teamId
     ) {
         return ApiResponse.success(new TeamCalenderResponse());
@@ -41,7 +41,7 @@ public class TeamCalenderController implements TeamCalenderSpecification {
 
     @PutMapping("/{scheduleId}")
     public ApiResponse<Void> update(
-        @PathVariable Long scheduleId,
+        @PathVariable("scheduleId") Long scheduleId,
         @RequestParam Long teamId,
         @RequestBody TeamCalenderRequest request
     ) {
@@ -50,7 +50,7 @@ public class TeamCalenderController implements TeamCalenderSpecification {
 
     @DeleteMapping("/{scheduleId}")
     public ApiResponse<Void> delete(
-        @PathVariable Long scheduleId,
+        @PathVariable("scheduleId") Long scheduleId,
         @RequestParam Long teamId
     ) {
         return ApiResponse.noContent();

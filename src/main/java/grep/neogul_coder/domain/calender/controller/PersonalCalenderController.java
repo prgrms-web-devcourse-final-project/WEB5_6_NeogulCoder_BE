@@ -24,7 +24,7 @@ public class PersonalCalenderController implements PersonalCalenderSpecification
 
     @GetMapping("/{scheduleId}")
     public ApiResponse<PersonalCalenderResponse> findOne(
-        @PathVariable Long scheduleId,
+        @PathVariable("scheduleId") Long scheduleId,
         @RequestParam Long userId
     ) {
         return ApiResponse.success(new PersonalCalenderResponse());
@@ -39,7 +39,7 @@ public class PersonalCalenderController implements PersonalCalenderSpecification
 
     @PutMapping("/{scheduleId}")
     public ApiResponse<Void> update(
-        @PathVariable Long scheduleId,
+        @PathVariable("scheduleId") Long scheduleId,
         @RequestParam Long userId,
         @RequestBody PersonalCalenderRequest request
     ) {
@@ -48,7 +48,7 @@ public class PersonalCalenderController implements PersonalCalenderSpecification
 
     @DeleteMapping("/{scheduleId}")
     public ApiResponse<Void> delete(
-        @PathVariable Long scheduleId,
+        @PathVariable("scheduleId") Long scheduleId,
         @RequestParam Long userId
     ) {
         return ApiResponse.noContent();

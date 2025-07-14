@@ -40,7 +40,7 @@ public interface PersonalCalenderSpecification {
         description = "사용자의 특정 일정 상세정보를 조회합니다.\n\n예: `/api/calendar/personal/{scheduleId}?userId=123`"
     )
     ApiResponse<PersonalCalenderResponse> findOne(
-        @PathVariable Long scheduleId,
+        @PathVariable("scheduleId") Long scheduleId,
         @Parameter(name = "userId", description = "사용자 ID", required = true, in = ParameterIn.QUERY)
         @RequestParam Long userId
     );
@@ -64,7 +64,7 @@ public interface PersonalCalenderSpecification {
         description = "사용자의 특정 일정을 수정합니다.\n\n예: `/api/calendar/personal/{scheduleId}?userId=123`"
     )
     ApiResponse<Void> update(
-        @PathVariable Long scheduleId,
+        @PathVariable("scheduleId") Long scheduleId,
         @Parameter(name = "userId", description = "사용자 ID", required = true, in = ParameterIn.QUERY)
         @RequestParam Long userId,
         @RequestBody PersonalCalenderRequest request
@@ -75,7 +75,7 @@ public interface PersonalCalenderSpecification {
         description = "사용자의 특정 일정을 삭제합니다.\n\n예: `/api/calendar/personal/{scheduleId}?userId=123`"
     )
     ApiResponse<Void> delete(
-        @PathVariable Long scheduleId,
+        @PathVariable("scheduleId") Long scheduleId,
         @Parameter(name = "userId", description = "사용자 ID", required = true, in = ParameterIn.QUERY)
         @RequestParam Long userId
     );

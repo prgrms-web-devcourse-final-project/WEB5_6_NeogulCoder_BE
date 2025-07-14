@@ -33,7 +33,7 @@ public interface TeamCalenderSpecification {
             "예: `/api/calendar/team/{scheduleId}?teamId=123`"
     )
     ApiResponse<TeamCalenderResponse> findOne(
-        @PathVariable Long scheduleId,
+        @PathVariable("scheduleId") Long scheduleId,
         @Parameter(name = "teamId", description = "조회할 팀 ID", required = true, in = ParameterIn.QUERY)
         @RequestParam Long teamId
     );
@@ -70,7 +70,7 @@ public interface TeamCalenderSpecification {
             "예: `/api/calendar/team/{scheduleId}?teamId=123`"
     )
     ApiResponse<Void> update(
-        @PathVariable Long scheduleId,
+        @PathVariable("scheduleId") Long scheduleId,
         @Parameter(name = "teamId", description = "수정할 팀 ID", required = true, in = ParameterIn.QUERY)
         @RequestParam Long teamId,
         @RequestBody TeamCalenderRequest request
@@ -82,7 +82,7 @@ public interface TeamCalenderSpecification {
             "예: `/api/calendar/team/{scheduleId}?teamId=123`"
     )
     ApiResponse<Void> delete(
-        @PathVariable Long scheduleId,
+        @PathVariable("scheduleId") Long scheduleId,
         @Parameter(name = "teamId", description = "삭제할 팀 ID", required = true, in = ParameterIn.QUERY)
         @RequestParam Long teamId
     );
