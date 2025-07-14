@@ -35,7 +35,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final MyReviewTagRepository myReviewTagRepository;
 
-    public ReviewTargetUsersInfo getTargetUsersInfo(long studyId, String myNickname) {
+    public ReviewTargetUsersInfo getReviewTargetUsersInfo(long studyId, String myNickname) {
         List<StudyMember> studyMembers = studyMemberRepository.findByStudyIdFetchStudy(studyId);
         List<User> targetUsers = findReviewTargetUsers(studyMembers, myNickname);
         Study study = extractStudyFrom(studyMembers);

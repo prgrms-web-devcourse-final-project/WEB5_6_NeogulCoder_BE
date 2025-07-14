@@ -20,9 +20,9 @@ public class ReviewController implements ReviewSpecification {
     private final ReviewService reviewService;
 
     @GetMapping("/studies/{study-id}/targets")
-    public ApiResponse<ReviewTargetUsersInfo> getTargetUsersInfo(@PathVariable("study-id") long studyId,
-                                                                 @AuthenticationPrincipal Principal userDetails) {
-        ReviewTargetUsersInfo response = reviewService.getTargetUsersInfo(studyId, userDetails.getUsername());
+    public ApiResponse<ReviewTargetUsersInfo> getReviewTargetUsersInfo(@PathVariable("study-id") long studyId,
+                                                                       @AuthenticationPrincipal Principal userDetails) {
+        ReviewTargetUsersInfo response = reviewService.getReviewTargetUsersInfo(studyId, userDetails.getUsername());
         return ApiResponse.success(response);
     }
 
