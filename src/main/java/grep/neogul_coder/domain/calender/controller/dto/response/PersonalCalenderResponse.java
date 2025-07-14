@@ -16,6 +16,12 @@ public class PersonalCalenderResponse {
     @Schema(description = "사용자 ID", example = "1")
     private Long userId;
 
+    @Schema(description = "작성자 닉네임", example = "유강현")
+    private String writerNickname;
+
+    @Schema(description = "작성자 프로필 이미지 URL", example = "https://wibby.com/profile/유강현.jpg")
+    private String writerProfileImageUrl;
+
     @Schema(description = "일정 제목", example = "면접 준비")
     private String title;
 
