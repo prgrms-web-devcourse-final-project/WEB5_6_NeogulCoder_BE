@@ -1,10 +1,14 @@
 package grep.neogul_coder.domain.prtemplate.entity;
 
+import grep.neogul_coder.global.entity.BaseEntity;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
 
-public class Link {
+@Entity
+public class Link extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,4 +20,13 @@ public class Link {
 
     private String urlName;
 
+    @Builder
+    private Link(Long id, Long prId, String prUrl, String urlName) {
+        this.id = id;
+        this.prId = prId;
+        this.prUrl = prUrl;
+        this.urlName = urlName;
+    }
+
+    protected Link() {}
 }
