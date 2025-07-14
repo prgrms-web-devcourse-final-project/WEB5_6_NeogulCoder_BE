@@ -12,7 +12,14 @@ public enum GoodReviewTag implements ReviewTag {
         this.description = description;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
+
+    @Override
+    public ReviewType getReviewType() {
+        return ReviewType.GOOD;
+    }
+
 }

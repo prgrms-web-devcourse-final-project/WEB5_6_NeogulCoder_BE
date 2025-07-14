@@ -3,7 +3,9 @@ package grep.neogul_coder.domain.study;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class StudyMember extends BaseEntity {
 

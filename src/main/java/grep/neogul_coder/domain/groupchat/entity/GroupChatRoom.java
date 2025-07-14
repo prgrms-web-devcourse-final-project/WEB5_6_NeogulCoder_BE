@@ -14,7 +14,6 @@ public class GroupChatRoom extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "study_id")
-    private Study study;
+    @JoinColumn(name = "study_id", nullable = false)
+    private Long studyId;
 }

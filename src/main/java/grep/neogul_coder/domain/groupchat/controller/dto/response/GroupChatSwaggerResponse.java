@@ -9,6 +9,9 @@ import lombok.Getter;
 @Schema(description = "Swagger용 채팅 메시지 응답 DTO")
 public class GroupChatSwaggerResponse {
 
+    @Schema(description = "메시지 고유 ID", example = "101")
+    private Long id;
+
     @Schema(description = "보낸 사람 ID", example = "456")
     private Long senderId;
 

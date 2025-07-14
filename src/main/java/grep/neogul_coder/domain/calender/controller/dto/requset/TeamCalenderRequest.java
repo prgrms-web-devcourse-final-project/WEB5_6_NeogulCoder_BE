@@ -8,6 +8,9 @@ import lombok.Getter;
 @Schema(description = "팀 캘린더 요청 DTO")
 public class TeamCalenderRequest {
 
+    @Schema(description = "팀 ID", example = "101")
+    private Long teamId;
+
     @Schema(description = "일정 제목", example = "주간 회의")
     private String title;
 
