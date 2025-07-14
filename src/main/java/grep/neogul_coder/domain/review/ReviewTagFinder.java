@@ -1,11 +1,14 @@
 package grep.neogul_coder.domain.review;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Component
 public class ReviewTagFinder {
 
     private static final Map<String, ReviewTag> tagMap = Stream.of(
@@ -21,7 +24,7 @@ public class ReviewTagFinder {
             ));
 
     public ReviewTag findBy(String reviewTag) {
-        return Optional.of(tagMap.get(reviewTag))
+        return Optional.ofNullable(tagMap.get(reviewTag))
                 .orElseThrow(() -> new IllegalArgumentException("일치 하는 태그가 없습니다."));
     }
 }

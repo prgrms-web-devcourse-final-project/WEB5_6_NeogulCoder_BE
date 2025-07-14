@@ -1,14 +1,14 @@
 package grep.neogul_coder.global.exception;
 
-import grep.neogul_coder.global.response.CommonCode;
+import grep.neogul_coder.global.code.Code;
 
 public class AuthApiException extends CommonException {
 
-    public AuthApiException(CommonCode code) {
+    public AuthApiException(Code code) {
         super(code);
     }
 
-    public AuthApiException(CommonCode code, Exception e) {
+    public AuthApiException(Code code, Exception e) {
         super(code, e);
     }
 

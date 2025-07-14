@@ -79,4 +79,8 @@ public class User extends BaseEntity {
 
     protected User() {
     }
+
+    public boolean isNotEqualsNickname(String nickname) {
+        return !this.nickname.equals(nickname);
+    }
 }

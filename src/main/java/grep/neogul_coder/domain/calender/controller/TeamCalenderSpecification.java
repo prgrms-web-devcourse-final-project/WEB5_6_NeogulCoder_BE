@@ -4,23 +4,43 @@ import grep.neogul_coder.domain.calender.controller.dto.requset.TeamCalenderRequ
 import grep.neogul_coder.domain.calender.controller.dto.response.TeamCalenderResponse;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "팀 캘린더", description = "팀 캘린더 API (Swagger 인터페이스)")
 public interface TeamCalenderSpecification {
 
-    @Operation(summary = "팀 일정 전체 조회", description = "모든 팀 일정을 조회합니다.")
-    ApiResponse<List<TeamCalenderResponse>> findAll();
+    @Operation(
+        summary = "팀 일정 전체 조회",
+        description = "특정 팀 ID에 해당하는 모든 일정을 조회합니다.\n\n" +
+            "예: `/api/calendar/team?teamId=123`"
+    )
+    ApiResponse<List<TeamCalenderResponse>> findAll(
+        @Parameter(name = "teamId", description = "조회할 팀 ID", required = true, in = ParameterIn.QUERY)
+        @RequestParam Long teamId
+    );
+
 
     @Operation(summary = "팀 일정 상세 조회", description = "특정 팀 일정 상세정보를 조회합니다.")
     ApiResponse<TeamCalenderResponse> findOne(@PathVariable Long scheduleId);
 
-    @Operation(summary = "팀 일정 생성", description = "새로운 팀 일정을 생성합니다.")
-    ApiResponse<Void> create(@RequestBody TeamCalenderRequest request);
+    @Operation(
+        summary = "팀 일정 생성",
+        description = "특정 팀 ID에 새로운 일정을 생성합니다.\n\n" +
+            "예: `/api/calendar/team?teamId=123` "
+    )
+    ApiResponse<Void> create(
+        @Parameter(name = "teamId", description = "일정을 생성할 팀 ID", required = true, in = ParameterIn.QUERY)
+        @RequestParam Long teamId,
+        @RequestBody TeamCalenderRequest request
+    );
+
 
     @Operation(summary = "팀 일정 수정", description = "기존 팀 일정을 수정합니다.")
     ApiResponse<Void> update(@PathVariable Long scheduleId, @RequestBody TeamCalenderRequest request);
