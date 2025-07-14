@@ -15,7 +15,7 @@ class ReviewTagsTest {
 
     @DisplayName("리뷰 태그들의 리뷰 타입을 확인 합니다.")
     @TestFactory
-    Collection<DynamicTest> getReviewType() {
+    Collection<DynamicTest> ensureSingleReviewType() {
 
         return List.of(
                 DynamicTest.dynamicTest("리뷰 태그가 하나의 리뷰 타입을 가진 경우 리뷰 타입을 반환 합니다.", () -> {
@@ -29,7 +29,7 @@ class ReviewTagsTest {
                     ReviewTags reviewTags = ReviewTags.from(reviewTagList);
 
                     //when
-                    ReviewType reviewType = reviewTags.getReviewType();
+                    ReviewType reviewType = reviewTags.ensureSingleReviewType();
 
                     //then
                     assertThat(reviewType).isEqualTo(ReviewType.EXCELLENT);
@@ -46,7 +46,7 @@ class ReviewTagsTest {
                     ReviewTags reviewTags = ReviewTags.from(reviewTagList);
 
                     //when //then
-                    assertThatThrownBy(reviewTags::getReviewType)
+                    assertThatThrownBy(reviewTags::ensureSingleReviewType)
                             .isInstanceOf(BusinessException.class).hasMessage("단일 리뷰 타입이 아닙니다. ( ex) GOOD, BAD 혼합 )");
                 })
         );

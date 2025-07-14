@@ -46,7 +46,7 @@ public class Study extends BaseEntity {
     protected Study() {}
 
     @Builder
-    public Study(String name, Category category, int capacity, StudyType studyType, String location, LocalDate startDate, LocalDate endDate, String introduction, String imageUrl) {
+    private Study(String name, Category category, int capacity, StudyType studyType, String location, LocalDate startDate, LocalDate endDate, String introduction, String imageUrl) {
         this.name = name;
         this.category = category;
         this.capacity = capacity;
