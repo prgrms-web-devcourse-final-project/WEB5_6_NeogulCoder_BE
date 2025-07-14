@@ -21,7 +21,8 @@ public interface TeamCalenderSpecification {
     ApiResponse<TeamCalenderResponse> findOne(@PathVariable Long scheduleId);
 
     @Operation(summary = "팀 일정 생성", description = "새로운 팀 일정을 생성합니다.")
-    ApiResponse<Void> create(@RequestBody TeamCalenderRequest request);
+    ApiResponse<Void> create(@RequestParam Long teamId, @RequestBody TeamCalenderRequest request);
+
 
     @Operation(summary = "팀 일정 수정", description = "기존 팀 일정을 수정합니다.")
     ApiResponse<Void> update(@PathVariable Long scheduleId, @RequestBody TeamCalenderRequest request);

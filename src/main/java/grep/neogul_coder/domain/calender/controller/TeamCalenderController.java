@@ -13,12 +13,12 @@ import java.util.List;
 public class TeamCalenderController implements TeamCalenderSpecification {
 
     @PostMapping
-    public ApiResponse<Void> create(@RequestBody TeamCalenderRequest request) {
+    public ApiResponse<Void> create(@RequestParam Long teamId, @RequestBody TeamCalenderRequest request) {
         return ApiResponse.noContent();
     }
 
     @GetMapping
-    public ApiResponse<List<TeamCalenderResponse>> findAll(Long teamId) {
+    public ApiResponse<List<TeamCalenderResponse>> findAll(@RequestParam Long teamId) {
         return ApiResponse.success(List.of(new TeamCalenderResponse()));
     }
 
