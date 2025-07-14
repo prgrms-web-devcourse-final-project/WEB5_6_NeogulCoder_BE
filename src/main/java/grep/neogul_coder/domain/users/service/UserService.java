@@ -3,6 +3,8 @@ package grep.neogul_coder.domain.users.service;
 import grep.neogul_coder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
 import grep.neogul_coder.domain.users.entity.User;
+import grep.neogul_coder.domain.users.exception.PasswordNotMatchException;
+import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +29,7 @@ public class UserService {
         duplicationCheck(request.getEmail(), request.getNickname());
 
         if (isNotMatchPasswordCheck(request.getPassword(), request.getPasswordCheck())) {
-            throw new IllegalArgumentException("비밀번호 확인이 일치하지 않습니다.");
+            throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
 
         String encodedPassword = encodingPassword(request.getPassword());

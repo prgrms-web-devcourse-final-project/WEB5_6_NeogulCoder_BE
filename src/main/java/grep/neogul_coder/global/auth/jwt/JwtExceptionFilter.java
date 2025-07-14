@@ -3,6 +3,7 @@ package grep.neogul_coder.global.auth.jwt;
 import grep.neogul_coder.global.exception.AuthApiException;
 import grep.neogul_coder.global.exception.AuthWebException;
 import grep.neogul_coder.global.exception.CommonException;
+import grep.neogul_coder.global.response.Code;
 import grep.neogul_coder.global.response.CommonCode;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -39,7 +40,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     }
 
     private void throwAuthEx(HttpServletRequest request, HttpServletResponse response,
-        CommonCode code) {
+        Code code) {
         if (request.getRequestURI().startsWith("/api")) {
             handlerExceptionResolver.resolveException(request, response, null,
                 new AuthApiException(code));
