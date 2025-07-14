@@ -13,4 +13,12 @@ public enum ReviewType {
     ReviewType(String description) {
         this.description = description;
     }
+
+    public boolean isSameType(ReviewType reviewType) {
+        return this == reviewType;
+    }
+
+    public boolean isNotSameType(ReviewType reviewType) {
+        return !isSameType(reviewType);
+    }
 }
