@@ -23,4 +23,20 @@ public class GroupChatMessage extends BaseEntity {
 
     @Column(nullable = false)
     private String content;
+
+    public void setMessageId(Long messageId) {
+        this.messageId = messageId;
+    }
+
+    public void setGroupChatRoom(GroupChatRoom groupChatRoom) {
+        this.groupChatRoom = groupChatRoom;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }
