@@ -1,6 +1,6 @@
 package grep.neogul_coder.domain.users.exception.code;
 
-import grep.neogul_coder.global.response.ErrorCode;
+import grep.neogul_coder.global.code.ErrorCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -11,7 +11,6 @@ public enum UserErrorCode implements ErrorCode {
     PASSWORD_MISMATCH("U002", HttpStatus.BAD_REQUEST, "비밀번호를 다시 확인해주세요."),
     PASSWORD_UNCHECKED("U003", HttpStatus.BAD_REQUEST, "비밀번호와 비밀번호 확인이 다릅니다"),
     IS_DUPLICATED("U004", HttpStatus.BAD_REQUEST,"이미 존재하는 데이터입니다.");
-
 
     private final String code;
     private final HttpStatus status;

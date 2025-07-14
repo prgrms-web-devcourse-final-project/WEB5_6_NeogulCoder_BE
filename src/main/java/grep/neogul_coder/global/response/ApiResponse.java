@@ -1,5 +1,7 @@
 package grep.neogul_coder.global.response;
 
+import grep.neogul_coder.global.code.Code;
+import grep.neogul_coder.global.code.CommonCode;
 import lombok.Getter;
 
 @Getter

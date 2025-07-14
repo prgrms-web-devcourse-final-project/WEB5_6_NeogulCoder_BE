@@ -1,15 +1,11 @@
 package grep.neogul_coder.domain.users.exception;
 
-import grep.neogul_coder.global.exception.CommonException;
-import grep.neogul_coder.global.response.Code;
+import grep.neogul_coder.global.code.ErrorCode;
+import grep.neogul_coder.global.exception.validation.ValidationException;
 
-public class PasswordNotMatchException extends CommonException {
+public class PasswordNotMatchException extends ValidationException {
 
-    public PasswordNotMatchException(Code code, Exception e) {
-        super(code, e);
-    }
-
-    public PasswordNotMatchException(Code code) {
-        super(code);
+    public PasswordNotMatchException(ErrorCode errorCode) {
+        super(errorCode);
     }
 }

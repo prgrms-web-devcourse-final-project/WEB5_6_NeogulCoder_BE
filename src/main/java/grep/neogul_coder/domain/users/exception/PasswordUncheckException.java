@@ -1,15 +1,11 @@
 package grep.neogul_coder.domain.users.exception;
 
-import grep.neogul_coder.global.exception.CommonException;
-import grep.neogul_coder.global.response.Code;
+import grep.neogul_coder.global.code.ErrorCode;
+import grep.neogul_coder.global.exception.validation.ValidationException;
 
-public class PasswordUncheckException extends CommonException {
+public class PasswordUncheckException extends ValidationException {
 
-    public PasswordUncheckException(Code code) {
-        super(code);
-    }
-
-    public PasswordUncheckException(Code code, Exception e) {
-        super(code, e);
+    public PasswordUncheckException(ErrorCode errorCode) {
+        super(errorCode);
     }
 }

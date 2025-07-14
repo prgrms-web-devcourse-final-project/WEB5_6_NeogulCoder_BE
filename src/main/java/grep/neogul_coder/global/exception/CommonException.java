@@ -1,6 +1,6 @@
 package grep.neogul_coder.global.exception;
 
-import grep.neogul_coder.global.response.Code;
+import grep.neogul_coder.global.code.Code;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
