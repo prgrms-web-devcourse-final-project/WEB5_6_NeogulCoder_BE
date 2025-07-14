@@ -12,6 +12,9 @@ public class ReviewTargetUsersInfo {
     @Schema(example = "[ {nickname: 짱구}, {nickname: 철수} ]", description = "회원 이름들")
     private List<TargetUserInfo> userInfos;
 
+    @Schema(example = "자바 스터디", description = "스터디 이름")
+    private String studyName;
+
     private ReviewTargetUsersInfo(List<TargetUserInfo> userInfos) {
         this.userInfos = userInfos;
     }
