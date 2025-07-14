@@ -18,7 +18,7 @@ public class TeamCalenderController implements TeamCalenderSpecification {
     }
 
     @GetMapping
-    public ApiResponse<List<TeamCalenderResponse>> findAll() {
+    public ApiResponse<List<TeamCalenderResponse>> findAll(Long teamId) {
         return ApiResponse.success(List.of(new TeamCalenderResponse()));
     }
 

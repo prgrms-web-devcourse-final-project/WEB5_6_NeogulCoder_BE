@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "팀 캘린더", description = "팀 캘린더 API (Swagger 인터페이스)")
 public interface TeamCalenderSpecification {
 
-    @Operation(summary = "팀 일정 전체 조회", description = "모든 팀 일정을 조회합니다.")
-    ApiResponse<List<TeamCalenderResponse>> findAll();
+    @Operation(summary = "팀 일정 전체 조회", description = "팀 모든 일정을 조회합니다.")
+    ApiResponse<List<TeamCalenderResponse>> findAll(@RequestParam Long teamId);
 
     @Operation(summary = "팀 일정 상세 조회", description = "특정 팀 일정 상세정보를 조회합니다.")
     ApiResponse<TeamCalenderResponse> findOne(@PathVariable Long scheduleId);

@@ -17,7 +17,7 @@ public class PersonalCalenderController implements PersonalCalenderSpecification
     }
 
     @GetMapping
-    public ApiResponse<List<PersonalCalenderResponse>> findAll() {
+    public ApiResponse<List<PersonalCalenderResponse>> findAll(Long userId) {
         return ApiResponse.success(List.of(new PersonalCalenderResponse()));
     }
 
