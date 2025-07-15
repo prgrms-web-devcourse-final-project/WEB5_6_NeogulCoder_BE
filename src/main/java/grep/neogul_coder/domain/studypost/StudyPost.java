@@ -18,7 +18,7 @@ import jakarta.validation.constraints.NotBlank;
 public class StudyPost extends BaseEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -40,6 +40,4 @@ public class StudyPost extends BaseEntity {
   @Column(nullable = false)
   private String content;
 
-  @Column(nullable = false)
-  private boolean isDeleted = false;
 }

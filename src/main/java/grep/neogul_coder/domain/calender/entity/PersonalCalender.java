@@ -18,7 +18,5 @@ public class PersonalCalender extends BaseEntity {
 
     @Column(name = "user_id")
     private Long userId;
-
-    private boolean isDeleted = false;
 }
 

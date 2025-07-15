@@ -20,6 +20,5 @@ public class TeamCalender extends BaseEntity {
     @Column(name = "study_id")
     private Long studyId;
 
-    private boolean isDeleted = false;
 }
 

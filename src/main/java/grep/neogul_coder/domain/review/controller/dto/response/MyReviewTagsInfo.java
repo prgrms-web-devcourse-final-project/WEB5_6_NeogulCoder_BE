@@ -25,7 +25,7 @@ public class MyReviewTagsInfo {
     public static MyReviewTagsInfo of(Map<ReviewType, Map<ReviewTag, Integer>> tagCountMapByType) {
         Map<String, List<ReviewTagCountInfo>> result = tagCountMapByType.entrySet().stream()
                 .collect(Collectors.toMap(
-                        entry -> entry.getKey().getDescription(),
+                        entry -> entry.getKey().name(),
                         entry -> convertToReviewTagCountInfoList(entry.getValue())
                 ));
 

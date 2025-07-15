@@ -45,7 +45,7 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         response.addHeader("Set-Cookie", accessTokenCookie.toString());
         response.addHeader("Set-Cookie", refreshTokenCookie.toString());
-        getRedirectStrategy().sendRedirect(request, response, "/");
+        getRedirectStrategy().sendRedirect(request, response, "http://localhost:3000/");
     }
 
 }
