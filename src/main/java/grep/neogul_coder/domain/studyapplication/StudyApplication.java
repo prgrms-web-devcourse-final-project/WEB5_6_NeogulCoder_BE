@@ -18,5 +18,6 @@ public class StudyApplication extends BaseEntity {
 
     private boolean isRead;
 
+    @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 }

@@ -1,10 +1,13 @@
 package grep.neogul_coder.domain.review.controller.service;
 
+import grep.neogul_coder.domain.IntegrationTestSupport;
 import grep.neogul_coder.domain.review.Review;
 import grep.neogul_coder.domain.review.ReviewType;
 import grep.neogul_coder.domain.review.controller.dto.response.MyReviewTagsInfo;
+import grep.neogul_coder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
-import grep.neogul_coder.domain.review.controller.service.request.ReviewSaveServiceRequest;
+import grep.neogul_coder.domain.review.service.ReviewService;
+import grep.neogul_coder.domain.review.service.request.ReviewSaveServiceRequest;
 import grep.neogul_coder.domain.review.entity.MyReviewTagEntity;
 import grep.neogul_coder.domain.review.entity.ReviewEntity;
 import grep.neogul_coder.domain.review.entity.ReviewTagEntity;
@@ -21,10 +24,9 @@ import grep.neogul_coder.domain.users.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.PageRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static grep.neogul_coder.domain.review.BadReviewTag.LACK_OF_RESPONSIBILITY;
@@ -33,10 +35,7 @@ import static grep.neogul_coder.domain.review.ReviewType.BAD;
 import static grep.neogul_coder.domain.review.ReviewType.GOOD;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Transactional
-@ActiveProfiles("test")
-@SpringBootTest
-class ReviewServiceTest {
+class ReviewServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private UserRepository userRepository;
@@ -150,6 +149,34 @@ class ReviewServiceTest {
         assertThat(response.getReviewTypeMap().entrySet()).hasSize(2);
     }
 
+    @DisplayName("자신이 받은 주관 리뷰들을 페이징 조회 합니다.")
+    @Test
+    void getMyReviewContents() {
+        //given
+        User reviewer = createUser("리뷰어");
+        User targetUser = createUser("리뷰대상");
+        userRepository.saveAll(List.of(reviewer, targetUser));
+
+        Study study = createStudy("자바 스터디", Category.IT);
+        studyRepository.save(study);
+
+        List<ReviewEntity> reviews = List.of(
+                createReviewEntity(createReview(study.getId(), targetUser.getId(), reviewer.getId(), "너무 친절 하세요"), new ArrayList<>()),
+                createReviewEntity(createReview(study.getId(), targetUser.getId(), reviewer.getId(), "감사합니다"), new ArrayList<>()),
+                createReviewEntity(createReview(study.getId(), targetUser.getId(), reviewer.getId(), null), new ArrayList<>())
+        );
+        reviewRepository.saveAll(reviews);
+
+        //when
+        PageRequest pageRequest = PageRequest.of(0, 2);
+        ReviewContentsPagingInfo result = reviewService.getMyReviewContents(pageRequest, targetUser.getId());
+
+        //then
+        assertThat(result.getReviewContents()).hasSize(2)
+                .extracting("content")
+                .containsExactlyInAnyOrder("너무 친절 하세요", "감사합니다");
+    }
+
     public User createUser(String nickname) {
         return User.builder()
                 .nickname(nickname)
@@ -169,6 +196,15 @@ class ReviewServiceTest {
                 .studyId(studyId)
                 .targetUserId(targetUserId)
                 .writeUserId(writeUserId)
+                .build();
+    }
+
+    private Review createReview(long studyId, long targetUserId, long writeUserId, String content) {
+        return Review.builder()
+                .studyId(studyId)
+                .targetUserId(targetUserId)
+                .writeUserId(writeUserId)
+                .content(content)
                 .build();
     }
 
