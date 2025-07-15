@@ -125,11 +125,11 @@ INSERT INTO group_chat_message (room_id, user_id, message) VALUES (1, 102, '오�
 INSERT INTO group_chat_message (room_id, user_id, message) VALUES (2, 103, '파일 올렸어요. 확인 부탁드려요.');
 INSERT INTO group_chat_message (room_id, user_id, message) VALUES (2, 101, '네 확인했어요. 감사합니다!');
 
-INSERT INTO review (study_id, write_user_id, target_user_id, message) VALUES (1, 1, 1, '열심히 참여하셨어요.');
-INSERT INTO review (study_id, write_user_id, target_user_id, message) VALUES (1, 2, 2, '피드백이 빠르고 정확했어요. 하지만 지각을 자주하십니다');
-INSERT INTO review (study_id, write_user_id, target_user_id, message) VALUES (1, 3, 2, '커뮤니케이션이 좋았어요');
-INSERT INTO review (study_id, write_user_id, target_user_id, message) VALUES (2, 1, 2, '책임감이 느껴졌어요.');
-INSERT INTO review (study_id, write_user_id, target_user_id, message) VALUES (2, 2, 1, '팀워크가 훌륭했어요.');
+INSERT INTO review (study_id, write_user_id, target_user_id, content) VALUES (1, 1, 1, '열심히 참여하셨어요.');
+INSERT INTO review (study_id, write_user_id, target_user_id, content) VALUES (1, 2, 2, '피드백이 빠르고 정확했어요. 하지만 지각을 자주하십니다');
+INSERT INTO review (study_id, write_user_id, target_user_id, content) VALUES (1, 3, 2, '커뮤니케이션이 좋았어요');
+INSERT INTO review (study_id, write_user_id, target_user_id, content) VALUES (2, 1, 2, '책임감이 느껴졌어요.');
+INSERT INTO review (study_id, write_user_id, target_user_id, content) VALUES (2, 2, 1, '팀워크가 훌륭했어요.');
 
 INSERT INTO review_tag (review_type, review_tag) VALUES ('GOOD', '항상 밝고 긍정적으로 참여 하십니다');
 INSERT INTO review_tag (review_type, review_tag) VALUES ('BAD', '자주 지각을 하십니다');
