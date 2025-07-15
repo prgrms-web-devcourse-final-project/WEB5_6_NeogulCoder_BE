@@ -8,6 +8,7 @@ import lombok.Getter;
 
 @Getter
 @Entity
+@Table(name = "review_tag")
 public class ReviewTagEntity extends BaseEntity {
 
     @Id

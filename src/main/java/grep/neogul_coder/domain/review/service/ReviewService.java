@@ -60,7 +60,7 @@ public class ReviewService {
 
         Review review = request.toReview(reviewTags.getReviewTags(), reviewType, userId);
         List<ReviewTagEntity> reviewTagEntities = mapToReviewTagEntities(reviewTags);
-        reviewRepository.save(ReviewEntity.from(review, reviewTagEntities));
+        reviewRepository.save(ReviewEntity.from(review, reviewTagEntities, request.getStudyId()));
     }
 
     public MyReviewTagsInfo getMyReviewTags(long userId) {

@@ -10,12 +10,14 @@ import java.util.List;
 
 @Getter
 @Entity
+@Table(name = "review")
 public class ReviewEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private long studyId;
     private long writeUserId;
     private long targetUserId;
 
@@ -28,7 +30,8 @@ public class ReviewEntity extends BaseEntity {
     }
 
     @Builder
-    private ReviewEntity(Review review, List<ReviewTagEntity> reviewTags) {
+    private ReviewEntity(Review review, List<ReviewTagEntity> reviewTags, long studyId) {
+        this.studyId = studyId;
         this.writeUserId = review.getWriteUserId();
         this.targetUserId = review.getTargetUserId();
         this.content = review.getContent();
@@ -37,10 +40,11 @@ public class ReviewEntity extends BaseEntity {
                 .toList();
     }
 
-    public static ReviewEntity from(Review review, List<ReviewTagEntity> reviewTags) {
+    public static ReviewEntity from(Review review, List<ReviewTagEntity> reviewTags, long studyId) {
         return ReviewEntity.builder()
                 .review(review)
                 .reviewTags(reviewTags)
+                .studyId(studyId)
                 .build();
     }
 }
