@@ -1,5 +1,7 @@
 package grep.neogul_coder.domain.prtemplate.controller.dto.response;
 
+import grep.neogul_coder.domain.buddy.entity.BuddyEnergy;
+import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +19,7 @@ public class PrPageResponse {
     private List<UserLocationAndLink> userLocationAndLinks;
 
     @Schema(description = "버디 에너지 수치", example = "85")
-    private int buddyEnergy;
+    private BuddyEnergy buddyEnergy;
 
     @Schema(description = "리뷰 태그 목록")
     private List<ReviewTagDto> reviewTags;
@@ -26,7 +28,7 @@ public class PrPageResponse {
     private List<ReviewContentDto> reviewContents;
 
     @Schema(description = "자기소개", example = "안녕하세요! 여행을 좋아하는 OO입니다.")
-    private String introduction;
+    private PrTemplate introduction;
 
     @Data
     @Schema(description = "사용자 위치 및 링크 정보")
