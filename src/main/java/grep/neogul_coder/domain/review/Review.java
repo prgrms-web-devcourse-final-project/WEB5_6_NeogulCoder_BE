@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.review;
 
+import grep.neogul_coder.domain.review.entity.ReviewEntity;
 import lombok.Builder;
 import lombok.Getter;
 

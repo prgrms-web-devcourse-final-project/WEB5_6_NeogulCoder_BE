@@ -26,4 +26,5 @@ public class ReviewTagEntity extends BaseEntity {
     }
 
     protected ReviewTagEntity() {}
+
 }
