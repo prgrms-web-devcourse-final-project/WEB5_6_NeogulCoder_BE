@@ -38,8 +38,9 @@ public class StudyController implements StudySpecification {
     }
 
     @GetMapping("/me/images")
-    public ApiResponse<List<StudyImageResponse>> getStudyImages() {
-        return ApiResponse.success(List.of(new StudyImageResponse()));
+    public ApiResponse<List<StudyImageResponse>> getStudyImages(@AuthenticationPrincipal Principal userDetails) {
+        Long userId = userDetails.getUserId();
+        return ApiResponse.success(studyService.getStudyImages(userId));
     }
 
     @GetMapping("/{studyId}/info")

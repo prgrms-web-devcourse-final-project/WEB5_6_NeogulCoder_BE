@@ -4,7 +4,9 @@ import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyHeaderResponse;
+import grep.neogul_coder.domain.study.controller.dto.response.StudyImageResponse;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyItemResponse;
+import grep.neogul_coder.domain.study.controller.dto.response.StudyResponse;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import grep.neogul_coder.domain.study.exception.code.StudyErrorCode;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
@@ -48,6 +50,14 @@ public class StudyService {
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND, STUDY_NOT_FOUND.getMessage()));
 
         return StudyHeaderResponse.from(study);
+    }
+
+    public List<StudyImageResponse> getStudyImages(Long userId) {
+        List<Study> myStudies = studyMemberRepository.findStudiesByUserId(userId);
+
+        return myStudies.stream()
+            .map(StudyImageResponse::from)
+            .toList();
     }
 
     @Transactional
