@@ -1,5 +1,7 @@
 package grep.neogul_coder.domain.prtemplate.service;
 
+import grep.neogul_coder.domain.prtemplate.controller.dto.response.PrPageResponse;
+import grep.neogul_coder.domain.prtemplate.entity.Link;
 import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
 import grep.neogul_coder.domain.prtemplate.exception.code.PrTemplateErrorCode;
 import grep.neogul_coder.domain.prtemplate.repository.PrTemplateRepository;
@@ -15,10 +17,20 @@ public class PrTemplateService {
 
     private final PrTemplateRepository prTemplateRepository;
 
-    public void deleteByUserId(Long userId){
-        PrTemplate prTemplate = prTemplateRepository.findById(userId)
-                .orElseThrow(() ->
-                        new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND,"템플릿이 존재하지 않습니다."));
+    public void deleteByUserId(Long userId) {
+        PrTemplate prTemplate = prTemplateRepository.findByUserId(userId);
         prTemplate.delete();
+    }
+
+    public void update(Long id, String location) {
+        PrTemplate prTemplate = prTemplateRepository.findById(id).orElseThrow(
+            () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND, "템플릿이 존재하지 않습니다."));
+        prTemplate.update(location);
+    }
+
+    public void updateIntroduction(Long id, String introduction){
+        PrTemplate prTemplate = prTemplateRepository.findById(id).orElseThrow(
+            () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND, "템플릿이 존재하지 않습니다."));
+        prTemplate.updateIntroduction(introduction);
     }
 }

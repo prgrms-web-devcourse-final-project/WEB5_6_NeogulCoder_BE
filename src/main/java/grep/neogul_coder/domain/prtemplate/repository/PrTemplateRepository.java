@@ -10,5 +10,4 @@ public interface PrTemplateRepository extends JpaRepository<PrTemplate, Long> {
 
     Optional<PrTemplate> findById(Long id);
     PrTemplate findByUserId(Long userId);
-
 }

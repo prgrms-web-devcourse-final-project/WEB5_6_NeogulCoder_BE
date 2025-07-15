@@ -34,7 +34,6 @@ public class LogoutFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-
         if(path.equals("/logout")) {
             Claims claims = jwtTokenProvider.getClaims(accessToken);
             refreshTokenService.deleteByAccessTokenId(claims.getId());

@@ -44,8 +44,6 @@ public class UserService {
 
         duplicationCheck(request.getEmail(), request.getNickname());
 
-        User user = findUser(request.getEmail());
-
         if (isNotMatchPasswordCheck(request.getPassword(), request.getPasswordCheck())) {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
@@ -53,12 +51,11 @@ public class UserService {
         String encodedPassword = encodingPassword(request.getPassword());
         userRepository.save(
             User.UserInit(request.getEmail(), encodedPassword, request.getNickname()));
+
+        User user = findUser(request.getEmail());
+
         prTemplateRepository.save(
-                PrTemplate.PrTemplateInit(user.getId(),null, null));
-        linkRepository.save(
-                Link.LinkInit(prTemplateRepository.findByUserId(user.getId()).getId()
-                        ,null
-                        ,null));
+            PrTemplate.PrTemplateInit(user.getId(), null, null));
     }
 
     public void updateProfile(Long id, String nickname, String profileImageUrl) {
@@ -90,22 +87,24 @@ public class UserService {
         }
 
         prTemplateService.deleteByUserId(user.getId());
-        linkService.deleteByUserId(user.getId());
+        linkService.deleteByPrId(prTemplateRepository.findByUserId((user.getId())).getId());
 
         user.delete();
     }
 
     private User findUser(Long id) {
         return userRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException(UserErrorCode.USER_NOT_FOUND,"회원이 존재하지 않습니다."));
+            .orElseThrow(
+                () -> new NotFoundException(UserErrorCode.USER_NOT_FOUND, "회원이 존재하지 않습니다."));
     }
 
     private User findUser(String email) {
         return userRepository.findByEmail(email)
-            .orElseThrow(() -> new NotFoundException(UserErrorCode.USER_NOT_FOUND,"회원이 존재하지 않습니다."));
+            .orElseThrow(
+                () -> new NotFoundException(UserErrorCode.USER_NOT_FOUND, "회원이 존재하지 않습니다."));
     }
 
-    private boolean duplicationCheck(String email, String nickname){
+    private boolean duplicationCheck(String email, String nickname) {
         if (isDuplicateEmail(email)) {
             throw new DuplicatedException(UserErrorCode.IS_DUPLICATED);
         }

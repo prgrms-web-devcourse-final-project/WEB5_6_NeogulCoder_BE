@@ -41,9 +41,17 @@ public class PrTemplate extends BaseEntity {
             .build();
     }
 
+    public void update(String location) {
+        this.location = location;
+    }
+
     public void delete() {
         this.isDeleted = true;
     }
 
     protected PrTemplate() {}
+
+    public void updateIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
 }
