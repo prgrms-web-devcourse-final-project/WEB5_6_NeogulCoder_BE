@@ -27,18 +27,19 @@ public class ReviewEntity {
     }
 
     @Builder
-    private ReviewEntity(Review review) {
+    private ReviewEntity(Review review, List<ReviewTagEntity> reviewTags) {
         this.writeUserId = review.getWriteUserId();
         this.targetUserId = review.getTargetUserId();
         this.content = review.getContent();
-        this.reviewTags = review.getReviewTags().stream()
-                .map(tag -> new MyReviewTagEntity(this, new ReviewTagEntity(review.getReviewType(), tag)))
+        this.reviewTags = reviewTags.stream()
+                .map(reviewTag -> new MyReviewTagEntity(this, reviewTag))
                 .toList();
     }
 
-    public static ReviewEntity from(Review review) {
+    public static ReviewEntity from(Review review, List<ReviewTagEntity> reviewTags) {
         return ReviewEntity.builder()
                 .review(review)
+                .reviewTags(reviewTags)
                 .build();
     }
 }

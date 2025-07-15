@@ -4,6 +4,9 @@ import grep.neogul_coder.global.exception.business.BusinessException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static grep.neogul_coder.domain.review.ReviewErrorCode.NOT_SINGLE_REVIEW_TYPE;
 
@@ -30,6 +33,29 @@ public class ReviewTags {
             throw new BusinessException(NOT_SINGLE_REVIEW_TYPE, NOT_SINGLE_REVIEW_TYPE.getMessage());
         }
         return firstReviewType;
+    }
+
+    public Map<ReviewType, Map<ReviewTag, Integer>> countTagsGroupedByReviewType() {
+        List<ReviewTag> reviewTagList = new ArrayList<>(reviewTags);
+        return reviewTagList.stream()
+                .collect(Collectors.groupingBy(
+                        ReviewTag::getReviewType,
+                        Collectors.groupingBy(
+                                Function.identity(),
+                                Collectors.collectingAndThen(
+                                        Collectors.counting(),
+                                        Long::intValue
+                                )
+                        )
+                ));
+    }
+
+    public List<String> extractDescription(){
+        List<ReviewTag> reviewTagList = new ArrayList<>(reviewTags);
+
+        return reviewTagList.stream()
+                .map(ReviewTag::getDescription)
+                .toList();
     }
 
     public List<ReviewTag> getReviewTags() {

@@ -3,7 +3,9 @@ package grep.neogul_coder.domain.review.entity;
 import grep.neogul_coder.domain.review.ReviewTag;
 import grep.neogul_coder.domain.review.ReviewType;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class ReviewTagEntity {
 

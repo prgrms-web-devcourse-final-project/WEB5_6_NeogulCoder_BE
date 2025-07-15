@@ -1,7 +1,9 @@
 package grep.neogul_coder.domain.review.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class MyReviewTagEntity {
 
@@ -17,7 +19,8 @@ public class MyReviewTagEntity {
     @JoinColumn(name = "review_tag_id")
     private ReviewTagEntity reviewTag;
 
-    protected MyReviewTagEntity() {}
+    protected MyReviewTagEntity() {
+    }
 
     public MyReviewTagEntity(ReviewEntity reviewEntity, ReviewTagEntity reviewTag) {
         this.reviewEntity = reviewEntity;

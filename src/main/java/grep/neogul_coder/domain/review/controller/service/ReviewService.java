@@ -1,11 +1,15 @@
 package grep.neogul_coder.domain.review.controller.service;
 
 import grep.neogul_coder.domain.review.*;
+import grep.neogul_coder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
 import grep.neogul_coder.domain.review.controller.service.request.ReviewSaveServiceRequest;
+import grep.neogul_coder.domain.review.entity.MyReviewTagEntity;
 import grep.neogul_coder.domain.review.entity.ReviewEntity;
-import grep.neogul_coder.domain.review.repository.ReviewQueryRepository;
+import grep.neogul_coder.domain.review.entity.ReviewTagEntity;
+import grep.neogul_coder.domain.review.repository.MyReviewTagRepository;
 import grep.neogul_coder.domain.review.repository.ReviewRepository;
+import grep.neogul_coder.domain.review.repository.ReviewTagRepository;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
@@ -17,8 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
-import static grep.neogul_coder.domain.review.ReviewErrorCode.*;
+import static grep.neogul_coder.domain.review.ReviewErrorCode.STUDY_MEMBER_EMPTY;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -29,9 +34,10 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final StudyMemberRepository studyMemberRepository;
     private final ReviewRepository reviewRepository;
-    private final ReviewQueryRepository reviewQueryRepository;
+    private final MyReviewTagRepository myReviewTagRepository;
+    private final ReviewTagRepository reviewTagRepository;
 
-    public ReviewTargetUsersInfo getTargetUsersInfo(long studyId, String myNickname) {
+    public ReviewTargetUsersInfo getReviewTargetUsersInfo(long studyId, String myNickname) {
         List<StudyMember> studyMembers = studyMemberRepository.findByStudyIdFetchStudy(studyId);
         List<User> targetUsers = findReviewTargetUsers(studyMembers, myNickname);
         Study study = extractStudyFrom(studyMembers);
@@ -45,16 +51,17 @@ public class ReviewService {
         ReviewType reviewType = reviewTags.ensureSingleReviewType();
 
         Review review = request.toReview(reviewTags.getReviewTags(), reviewType, userId);
-        reviewRepository.save(ReviewEntity.from(review));
+        List<ReviewTagEntity> reviewTagEntities = mapToReviewTagEntities(reviewTags);
+        reviewRepository.save(ReviewEntity.from(review, reviewTagEntities));
     }
 
-    public void getMyReviewTags(long userId) {
+    public MyReviewTagsInfo getMyReviewTags(long userId) {
         List<ReviewEntity> myReviews = reviewRepository.findByTargetUserId(userId);
-        List<Long> reviewIds = myReviews.stream()
-                .map(ReviewEntity::getId)
-                .toList();
+        List<ReviewTag> myReviewTags = extractReviewTags(myReviews);
 
-        reviewQueryRepository.findMyReviewTagFetchAll(reviewIds);
+        ReviewTags reviewTags = ReviewTags.from(myReviewTags);
+        Map<ReviewType, Map<ReviewTag, Integer>> tagCountMapByType = reviewTags.countTagsGroupedByReviewType();
+        return MyReviewTagsInfo.of(tagCountMapByType);
     }
 
     private List<User> findReviewTargetUsers(List<StudyMember> studyMembers, String myNickname) {
@@ -69,7 +76,7 @@ public class ReviewService {
     }
 
     private Study extractStudyFrom(List<StudyMember> studyMembers) {
-        if(studyMembers.isEmpty()){
+        if (studyMembers.isEmpty()) {
             throw new NotFoundException(STUDY_MEMBER_EMPTY, STUDY_MEMBER_EMPTY.getMessage());
         }
         return studyMembers.getFirst().getStudy();
@@ -78,6 +85,30 @@ public class ReviewService {
     private List<ReviewTag> convertStringToReviewTag(List<String> reviewTags) {
         return reviewTags.stream()
                 .map(reviewTagFinder::findBy)
+                .toList();
+    }
+
+    private List<ReviewTagEntity> mapToReviewTagEntities(ReviewTags reviewTags) {
+        List<String> reviewTagDescriptions = reviewTags.extractDescription();
+        return reviewTagRepository.findByReviewTagIn(reviewTagDescriptions);
+    }
+
+    private List<ReviewTag> extractReviewTags(List<ReviewEntity> myReviews) {
+        List<ReviewTagEntity> reviewTagEntities = getReviewTagEntities(myReviews);
+        return reviewTagEntities.stream()
+                .map(ReviewTagEntity::getReviewTag)
+                .map(reviewTagFinder::findBy)
+                .toList();
+    }
+
+    private List<ReviewTagEntity> getReviewTagEntities(List<ReviewEntity> myReviews) {
+        List<Long> reviewIds = myReviews.stream()
+                .map(ReviewEntity::getId)
+                .toList();
+
+        List<MyReviewTagEntity> myReviewTags = myReviewTagRepository.findByReviewTagIdFetchTag(reviewIds);
+        return myReviewTags.stream()
+                .map(MyReviewTagEntity::getReviewTag)
                 .toList();
     }
 }
