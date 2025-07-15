@@ -26,7 +26,6 @@ public class RecruitmentPost extends BaseEntity {
     private int recruitmentCount;
     private LocalDate expiredDate;
     private RecruitmentPostStatus status;
-    private boolean isDeleted;
 
     @Builder
     private RecruitmentPost(long studyId, String subject, String content, long userId,
@@ -50,10 +49,6 @@ public class RecruitmentPost extends BaseEntity {
 
     public boolean isNotOwnedBy(long userId) {
         return this.userId != userId;
-    }
-
-    public void delete() {
-        this.isDeleted = true;
     }
 
     public void updateStatus(RecruitmentPostStatus status) {
