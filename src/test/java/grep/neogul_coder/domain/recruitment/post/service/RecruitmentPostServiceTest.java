@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.recruitment.post.service;
 
+import grep.neogul_coder.domain.IntegrationTestSupport;
 import grep.neogul_coder.domain.recruitment.RecruitmentPostStatus;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
@@ -11,9 +12,6 @@ import grep.neogul_coder.global.exception.business.BusinessException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,10 +19,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@ActiveProfiles("test")
-@Transactional
-@SpringBootTest
-class RecruitmentPostServiceTest {
+class RecruitmentPostServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private UserRepository userRepository;

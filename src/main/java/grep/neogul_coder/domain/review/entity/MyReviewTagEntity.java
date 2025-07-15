@@ -1,11 +1,13 @@
 package grep.neogul_coder.domain.review.entity;
 
+import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 @Getter
 @Entity
-public class MyReviewTagEntity {
+@Table(name = "my_review_tag")
+public class MyReviewTagEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
