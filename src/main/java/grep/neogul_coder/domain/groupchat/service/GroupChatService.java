@@ -6,6 +6,7 @@ import grep.neogul_coder.domain.groupchat.controller.dto.requset.GroupChatMessag
 import grep.neogul_coder.domain.groupchat.controller.dto.response.GroupChatMessageResponseDto;
 import grep.neogul_coder.domain.groupchat.repository.GroupChatMessageRepository;
 import grep.neogul_coder.domain.groupchat.repository.GroupChatRoomRepository;
+import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,16 @@ public class GroupChatService {
     private final GroupChatMessageRepository messageRepository;
     private final GroupChatRoomRepository roomRepository;
     private final UserRepository userRepository;
+    private final StudyMemberRepository studyMemberRepository;
 
     public GroupChatService(GroupChatMessageRepository messageRepository,
         GroupChatRoomRepository roomRepository,
-        UserRepository userRepository) {
+        UserRepository userRepository,
+        StudyMemberRepository studyMemberRepository) {
         this.messageRepository = messageRepository;
         this.roomRepository = roomRepository;
         this.userRepository = userRepository;
+        this.studyMemberRepository = studyMemberRepository;
     }
 
     public GroupChatMessageResponseDto saveMessage(GroupChatMessageRequestDto requestDto) {
@@ -32,6 +36,13 @@ public class GroupChatService {
             .orElseThrow(() -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
         User sender = userRepository.findById(requestDto.getSenderId())
             .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+
+        // 스터디 참가자 검증 로직 추가
+        Long studyId = room.getStudyId();
+        boolean isParticipant = studyMemberRepository.existsByStudyIdAndUserId(studyId, sender.getId());
+        if (!isParticipant) {
+            throw new IllegalArgumentException("해당 스터디에 참가한 사용자만 채팅할 수 있습니다.");
+        }
 
         // 메시지 생성 및 저장
         GroupChatMessage message = new GroupChatMessage();
