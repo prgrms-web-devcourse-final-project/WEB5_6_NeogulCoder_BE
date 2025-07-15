@@ -87,6 +87,7 @@ public class SecurityConfig {
                         "/error").permitAll()
                     .anyRequest().authenticated()
             )
+            .headers(headers -> headers.disable())
             .oauth2Login(oauth2 -> oauth2
                 .successHandler(oAuthSuccessHandler)
                 .failureHandler(oAuthFailureHandler)

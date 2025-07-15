@@ -64,7 +64,7 @@ public class UserController implements UserSpecification {
 
     @DeleteMapping("/{id}")
     public ApiResponse<Void> delete(@PathVariable("id") Long id,
-        @Valid @RequestParam PasswordRequest request) {
+        @RequestBody @Valid PasswordRequest request) {
         usersService.deleteUser(id,request.getPassword());
         return ApiResponse.noContent();
     }
