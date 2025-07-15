@@ -5,10 +5,12 @@ import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.List;
+import lombok.Builder;
 import lombok.Data;
 
 
 @Data
+@Builder
 @Schema(description = "회원 PR 응답 DTO")
 public class PrPageResponse {
 
@@ -19,7 +21,7 @@ public class PrPageResponse {
     private List<UserLocationAndLink> userLocationAndLinks;
 
     @Schema(description = "버디 에너지 수치", example = "85")
-    private BuddyEnergy buddyEnergy;
+    private int buddyEnergy;
 
     @Schema(description = "리뷰 태그 목록")
     private List<ReviewTagDto> reviewTags;
@@ -28,9 +30,10 @@ public class PrPageResponse {
     private List<ReviewContentDto> reviewContents;
 
     @Schema(description = "자기소개", example = "안녕하세요! 여행을 좋아하는 OO입니다.")
-    private PrTemplate introduction;
+    private String introduction;
 
     @Data
+    @Builder
     @Schema(description = "사용자 위치 및 링크 정보")
     public static class UserLocationAndLink {
 
@@ -45,6 +48,7 @@ public class PrPageResponse {
     }
 
     @Data
+    @Builder
     @Schema(description = "유저 프로필 정보")
     public static class UserProfileDto {
 
@@ -56,6 +60,7 @@ public class PrPageResponse {
     }
 
     @Data
+    @Builder
     @Schema(description = "리뷰 태그 정보")
     public static class ReviewTagDto {
 
@@ -67,6 +72,7 @@ public class PrPageResponse {
     }
 
     @Data
+    @Builder
     @Schema(description = "리뷰 내용 정보")
     public static class ReviewContentDto {
 
