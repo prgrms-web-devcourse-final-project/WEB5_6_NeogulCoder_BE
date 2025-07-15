@@ -22,11 +22,12 @@ public interface ReviewSpecification {
                     ```json
                     {
                       "userInfos": [
-                        { "nickname": "짱구" },
-                        { "nickname": "철수" }
+                        { "userId": 2, "nickname": "짱구" },
+                        { "userId": 3, "nickname": "철수" }
                       ],
                       
                       "studyInfo": {
+                        "studyId" 3,
                         "studyName": "자바 스터디",
                         "imageUrl": "www.s3.com"
                       }
