@@ -26,7 +26,7 @@ public interface StudySpecification {
     ApiResponse<List<StudyImageResponse>> getStudyImages(Principal userDetails);
 
     @Operation(summary = "스터디 정보 조회", description = "스터디장이 스터디 정보를 조회합니다.")
-    ApiResponse<StudyInfoResponse> getStudyInfo(Long studyId);
+    ApiResponse<StudyInfoResponse> getStudyInfo(Long studyId, Principal userDetails);
 
     @Operation(summary = "스터디 내 정보 조회", description = "스터디의 내 정보를 조회합니다.")
     ApiResponse<StudyMyInfoResponse> getStudyMyInfo(Long studyId);

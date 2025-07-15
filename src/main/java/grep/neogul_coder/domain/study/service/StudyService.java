@@ -3,12 +3,9 @@ package grep.neogul_coder.domain.study.service;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
-import grep.neogul_coder.domain.study.controller.dto.response.StudyHeaderResponse;
-import grep.neogul_coder.domain.study.controller.dto.response.StudyImageResponse;
-import grep.neogul_coder.domain.study.controller.dto.response.StudyItemResponse;
-import grep.neogul_coder.domain.study.controller.dto.response.StudyResponse;
+import grep.neogul_coder.domain.study.controller.dto.response.*;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
-import grep.neogul_coder.domain.study.exception.code.StudyErrorCode;
+import grep.neogul_coder.domain.study.exception.NotStudyLeaderException;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyQueryRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
@@ -58,6 +55,19 @@ public class StudyService {
         return myStudies.stream()
             .map(StudyImageResponse::from)
             .toList();
+    }
+
+    public StudyInfoResponse getStudyInfo(Long studyId, Long userId) {
+        if (!studyQueryRepository.isStudyLeader(studyId, userId)) {
+            throw new NotStudyLeaderException(STUDY_NOT_LEADER, STUDY_NOT_LEADER.getMessage());
+        }
+
+        Study study = studyRepository.findById(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND, STUDY_NOT_FOUND.getMessage()));
+
+        List<StudyMemberResponse> members = studyQueryRepository.findStudyMembers(studyId);
+
+        return StudyInfoResponse.from(study, members);
     }
 
     @Transactional

@@ -3,6 +3,7 @@ package grep.neogul_coder.domain.study.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import grep.neogul_coder.domain.study.QStudy;
 import grep.neogul_coder.domain.study.QStudyMember;
+import grep.neogul_coder.domain.study.controller.dto.response.StudyMemberResponse;
 import grep.neogul_coder.domain.users.entity.QUser;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
@@ -41,5 +42,33 @@ public class StudyQueryRepository {
                 row -> row.get(qStudy.id),
                 row -> row.get(qUser.nickname)
             ));
+    }
+
+    public boolean isStudyLeader(Long studyId, Long userId) {
+        return queryFactory
+            .selectOne()
+            .from(qStudyMember)
+            .where(
+                qStudyMember.study.id.eq(studyId),
+                qStudyMember.userId.eq(userId),
+                qStudyMember.role.eq(LEADER)
+            )
+            .fetchFirst() != null;
+    }
+
+    public List<StudyMemberResponse> findStudyMembers(Long studyId) {
+        return queryFactory
+            .select(qUser.id, qUser.nickname, qUser.profileImageUrl)
+            .from(qStudyMember)
+            .join(qUser).on(qUser.id.eq(qStudyMember.studyMemberId))
+            .where(qStudyMember.study.id.eq(studyId))
+            .fetch()
+            .stream()
+            .map(row -> new StudyMemberResponse(
+                row.get(qUser.id),
+                row.get(qUser.nickname),
+                row.get(qUser.profileImageUrl)
+            ))
+            .toList();
     }
 }

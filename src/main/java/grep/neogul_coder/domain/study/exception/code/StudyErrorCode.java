@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum StudyErrorCode implements ErrorCode {
 
-    STUDY_NOT_FOUND("S001",HttpStatus.BAD_REQUEST,"스터디를 찾을 수 없습니다.");
+    STUDY_NOT_FOUND("S001",HttpStatus.BAD_REQUEST,"스터디를 찾을 수 없습니다."),
+    STUDY_NOT_LEADER("S002", HttpStatus.BAD_REQUEST, "스터디장만 접근이 가능합니다.");
 
     private final String code;
     private final HttpStatus status;
