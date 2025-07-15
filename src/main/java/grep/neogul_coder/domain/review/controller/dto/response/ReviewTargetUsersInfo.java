@@ -4,9 +4,11 @@ import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.users.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 
+@ToString
 @Getter
 public class ReviewTargetUsersInfo {
 
@@ -30,6 +32,7 @@ public class ReviewTargetUsersInfo {
         return new ReviewTargetUsersInfo(targetUserInfos, studyInfo);
     }
 
+    @ToString
     @Getter
     static class TargetUserInfo {
         @Schema(example = "짱구", description = "리뷰 대상 닉네임")
@@ -40,6 +43,7 @@ public class ReviewTargetUsersInfo {
         }
     }
 
+    @ToString
     @Getter
     static class StudyInfo {
         @Schema(example = "자바 스터디", description = "스터디 이름")
