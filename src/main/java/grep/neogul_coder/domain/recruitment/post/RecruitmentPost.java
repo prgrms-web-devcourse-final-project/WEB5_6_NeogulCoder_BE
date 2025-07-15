@@ -2,10 +2,7 @@ package grep.neogul_coder.domain.recruitment.post;
 
 import grep.neogul_coder.domain.recruitment.RecruitmentPostStatus;
 import grep.neogul_coder.global.entity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -25,8 +22,9 @@ public class RecruitmentPost extends BaseEntity {
     private String content;
     private int recruitmentCount;
     private LocalDate expiredDate;
+
+    @Enumerated(EnumType.STRING)
     private RecruitmentPostStatus status;
-    private boolean isDeleted;
 
     @Builder
     private RecruitmentPost(long studyId, String subject, String content, long userId,
@@ -50,10 +48,6 @@ public class RecruitmentPost extends BaseEntity {
 
     public boolean isNotOwnedBy(long userId) {
         return this.userId != userId;
-    }
-
-    public void delete() {
-        this.isDeleted = true;
     }
 
     public void updateStatus(RecruitmentPostStatus status) {
