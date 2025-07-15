@@ -9,23 +9,23 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/calendar/team")
+@RequestMapping("/api/teams/{teamId}/calendar")
 public class TeamCalenderController implements TeamCalenderSpecification {
 
     @PostMapping
-    public ApiResponse<Void> create(@RequestParam Long teamId, @RequestBody TeamCalenderRequest request) {
+    public ApiResponse<Void> create(@PathVariable("teamId") Long teamId, @RequestBody TeamCalenderRequest request) {
         return ApiResponse.noContent();
     }
 
     @GetMapping
-    public ApiResponse<List<TeamCalenderResponse>> findAll(@RequestParam Long teamId) {
+    public ApiResponse<List<TeamCalenderResponse>> findAll(@PathVariable("teamId") Long teamId) {
         return ApiResponse.success(List.of(new TeamCalenderResponse()));
     }
 
     @GetMapping("/{scheduleId}")
     public ApiResponse<TeamCalenderResponse> findOne(
-        @PathVariable("scheduleId") Long scheduleId,
-        @RequestParam Long teamId
+        @PathVariable("teamId") Long teamId,
+        @PathVariable("scheduleId") Long scheduleId
     ) {
         return ApiResponse.success(new TeamCalenderResponse());
     }
@@ -33,7 +33,7 @@ public class TeamCalenderController implements TeamCalenderSpecification {
 
     @GetMapping("/day")
     public ApiResponse<List<TeamCalenderResponse>> findByDate(
-        @RequestParam Long teamId,
+        @PathVariable("teamId") Long teamId,
         @RequestParam String date
     ) {
         return ApiResponse.success(List.of(new TeamCalenderResponse()));
@@ -41,8 +41,8 @@ public class TeamCalenderController implements TeamCalenderSpecification {
 
     @PutMapping("/{scheduleId}")
     public ApiResponse<Void> update(
+        @PathVariable("teamId") Long teamId,
         @PathVariable("scheduleId") Long scheduleId,
-        @RequestParam Long teamId,
         @RequestBody TeamCalenderRequest request
     ) {
         return ApiResponse.noContent();
@@ -50,8 +50,8 @@ public class TeamCalenderController implements TeamCalenderSpecification {
 
     @DeleteMapping("/{scheduleId}")
     public ApiResponse<Void> delete(
-        @PathVariable("scheduleId") Long scheduleId,
-        @RequestParam Long teamId
+        @PathVariable("teamId") Long teamId,
+        @PathVariable("scheduleId") Long scheduleId
     ) {
         return ApiResponse.noContent();
     }
