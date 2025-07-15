@@ -33,18 +33,19 @@ public class Link extends BaseEntity {
         this.isDeleted = isDeleted;
     }
 
-    public static Link LinkInit(Long prId, String prUrl, String urlName){
+    public static Link LinkInit(Long prId, String prUrl, String urlName) {
         return Link.builder()
-                .prId(prId)
-                .prUrl(prUrl)
-                .urlName(urlName)
-                .isDeleted(false)
-                .build();
+            .prId(prId)
+            .prUrl(prUrl)
+            .urlName(urlName)
+            .isDeleted(false)
+            .build();
     }
 
-    public void delete(){
+    public void delete() {
         this.isDeleted = true;
     }
 
-    protected Link() {}
+    protected Link() {
+    }
 }

@@ -1,7 +1,7 @@
 package grep.neogul_coder.domain.prtemplate.service;
 
-import grep.neogul_coder.domain.buddy.repository.BuddyEnergyRepository;
 import grep.neogul_coder.domain.buddy.entity.BuddyEnergy;
+import grep.neogul_coder.domain.buddy.repository.BuddyEnergyRepository;
 import grep.neogul_coder.domain.prtemplate.controller.dto.response.PrPageResponse;
 import grep.neogul_coder.domain.prtemplate.entity.Link;
 import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
@@ -11,10 +11,10 @@ import grep.neogul_coder.domain.prtemplate.repository.PrTemplateRepository;
 import grep.neogul_coder.domain.review.entity.ReviewEntity;
 import grep.neogul_coder.domain.review.repository.ReviewRepository;
 import grep.neogul_coder.domain.users.entity.User;
-import grep.neogul_coder.domain.users.service.UserService;
+import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
+import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import jakarta.transaction.Transactional;
-import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -27,11 +27,11 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class PrTemplateService {
 
-    private final UserService userService;
     private final PrTemplateRepository prTemplateRepository;
     private final LinkRepository linkRepository;
     private final ReviewRepository reviewRepository;
     private final BuddyEnergyRepository buddyEnergyRepository;
+    private final UserRepository userRepository;
 
     public void deleteByUserId(Long userId) {
         PrTemplate prTemplate = prTemplateRepository.findByUserId(userId);
@@ -44,7 +44,7 @@ public class PrTemplateService {
         prTemplate.update(location);
     }
 
-    public void updateIntroduction(Long id, String introduction){
+    public void updateIntroduction(Long id, String introduction) {
         PrTemplate prTemplate = prTemplateRepository.findById(id).orElseThrow(
             () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND, "템플릿이 존재하지 않습니다."));
         prTemplate.updateIntroduction(introduction);
@@ -52,7 +52,8 @@ public class PrTemplateService {
 
     public PrPageResponse toResponse(Long userId) {
 
-        User user = userService.get(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
+            UserErrorCode.USER_NOT_FOUND, "회원이 존재하지 않습니다."));
         PrTemplate prTemplate = prTemplateRepository.findByUserId(userId);
         List<Link> links = linkRepository.findAllByPrId(prTemplate.getId());
         List<ReviewEntity> reviews = reviewRepository.findAllByTargetUserId(userId);
@@ -92,8 +93,8 @@ public class PrTemplateService {
             .sorted(Comparator.comparing(ReviewEntity::getCreatedDate).reversed())
             .limit(5)
             .map(review -> {
-                User writer = userService.get(review.getWriteUserId());
-
+                User writer = userRepository.findById(review.getWriteUserId())
+                    .orElseThrow(() -> new NotFoundException(UserErrorCode.USER_NOT_FOUND, "작성자를 찾을 수 없습니다."));
                 return PrPageResponse.ReviewContentDto.builder()
                     .reviewUserId(writer.getId())
                     .reviewUserImgUrl(writer.getProfileImageUrl())

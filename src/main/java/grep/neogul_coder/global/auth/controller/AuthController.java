@@ -1,9 +1,9 @@
 package grep.neogul_coder.global.auth.controller;
 
-import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.service.UserService;
 import grep.neogul_coder.global.auth.code.AuthToken;
+import grep.neogul_coder.global.auth.jwt.JwtTokenProvider;
 import grep.neogul_coder.global.auth.jwt.TokenCookieFactory;
 import grep.neogul_coder.global.auth.jwt.dto.TokenDto;
 import grep.neogul_coder.global.auth.payload.LoginRequest;
@@ -11,11 +11,16 @@ import grep.neogul_coder.global.auth.payload.LoginResponse;
 import grep.neogul_coder.global.auth.payload.LoginUserResponse;
 import grep.neogul_coder.global.auth.payload.TokenResponse;
 import grep.neogul_coder.global.auth.service.AuthService;
+import grep.neogul_coder.global.auth.service.RefreshTokenService;
 import grep.neogul_coder.global.response.ApiResponse;
+import grep.neogul_coder.global.response.code.CommonCode;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +34,8 @@ public class AuthController {
 
     private final AuthService authService;
     private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
     public ApiResponse<LoginResponse> login(
@@ -60,6 +67,39 @@ public class AuthController {
                 .role(user.getRole())
                 .build())
             .build());
+    }
+
+    @PostMapping("/logout")
+    public ApiResponse<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        String accessToken = jwtTokenProvider.resolveToken(request, AuthToken.ACCESS_TOKEN);
+
+        if (accessToken == null || accessToken.isEmpty()) {
+            return ApiResponse.errorWithoutData(CommonCode.BAD_REQUEST);
+        }
+
+        try {
+
+            Claims claims = jwtTokenProvider.getClaims(accessToken);
+            refreshTokenService.deleteByAccessTokenId(claims.getId());
+
+            SecurityContextHolder.clearContext();
+
+            ResponseCookie expiredAccessToken = TokenCookieFactory.createExpiredToken(
+                AuthToken.ACCESS_TOKEN.name());
+            ResponseCookie expiredRefreshToken = TokenCookieFactory.createExpiredToken(
+                AuthToken.REFRESH_TOKEN.name());
+            ResponseCookie expiredSessionId = TokenCookieFactory.createExpiredToken(
+                AuthToken.AUTH_SERVER_SESSION_ID.name());
+
+            response.addHeader("Set-Cookie", expiredAccessToken.toString());
+            response.addHeader("Set-Cookie", expiredRefreshToken.toString());
+            response.addHeader("Set-Cookie", expiredSessionId.toString());
+
+            return ApiResponse.noContent();
+
+        } catch (Exception e) {
+            return ApiResponse.errorWithoutData(CommonCode.BAD_REQUEST);
+        }
     }
 
 }
