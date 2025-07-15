@@ -1,4 +1,4 @@
-package grep.neogul_coder.domain.review.controller.service.request;
+package grep.neogul_coder.domain.review.service.request;
 
 import grep.neogul_coder.domain.review.Review;
 import grep.neogul_coder.domain.review.ReviewTag;
