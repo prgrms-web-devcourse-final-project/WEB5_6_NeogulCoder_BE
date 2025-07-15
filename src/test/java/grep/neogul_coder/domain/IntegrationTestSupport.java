@@ -1,6 +1,6 @@
 package grep.neogul_coder.domain;
 
-import grep.neogul_coder.domain.review.controller.service.ReviewService;
+import grep.neogul_coder.domain.review.service.ReviewService;
 import grep.neogul_coder.domain.review.repository.MyReviewTagRepository;
 import grep.neogul_coder.domain.review.repository.ReviewRepository;
 import grep.neogul_coder.domain.review.repository.ReviewTagRepository;

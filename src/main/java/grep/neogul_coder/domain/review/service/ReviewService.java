@@ -1,10 +1,10 @@
-package grep.neogul_coder.domain.review.controller.service;
+package grep.neogul_coder.domain.review.service;
 
 import grep.neogul_coder.domain.review.*;
 import grep.neogul_coder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
-import grep.neogul_coder.domain.review.controller.service.request.ReviewSaveServiceRequest;
+import grep.neogul_coder.domain.review.service.request.ReviewSaveServiceRequest;
 import grep.neogul_coder.domain.review.entity.MyReviewTagEntity;
 import grep.neogul_coder.domain.review.entity.ReviewEntity;
 import grep.neogul_coder.domain.review.entity.ReviewTagEntity;

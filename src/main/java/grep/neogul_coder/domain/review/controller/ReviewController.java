@@ -4,7 +4,7 @@ import grep.neogul_coder.domain.review.controller.dto.request.ReviewSaveRequest;
 import grep.neogul_coder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
-import grep.neogul_coder.domain.review.controller.service.ReviewService;
+import grep.neogul_coder.domain.review.service.ReviewService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
