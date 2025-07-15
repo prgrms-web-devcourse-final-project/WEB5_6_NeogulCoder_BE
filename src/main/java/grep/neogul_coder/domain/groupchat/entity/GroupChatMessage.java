@@ -18,9 +18,8 @@ public class GroupChatMessage extends BaseEntity {
     @JoinColumn(name = "room_id")
     private GroupChatRoom groupChatRoom;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     private Long userId;
 
-    @Column(nullable = false)
     private String content;
 }

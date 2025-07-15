@@ -24,6 +24,7 @@ public class BuddyLog {
     private BuddyEnergyReason reason;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "buddy_energy_id")
     private BuddyEnergy buddyEnergy;
 
 }

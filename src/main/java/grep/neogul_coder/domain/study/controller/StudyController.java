@@ -3,19 +3,28 @@ package grep.neogul_coder.domain.study.controller;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyEditRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.*;
+import grep.neogul_coder.domain.study.service.StudyService;
+import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequestMapping("/api/studies")
+@RequiredArgsConstructor
 @RestController
 public class StudyController implements StudySpecification {
 
+    private final StudyService studyService;
+
     @GetMapping
-    public ApiResponse<List<StudyItemResponse>> getStudies() {
-        return ApiResponse.success(List.of(new StudyItemResponse()));
+    public ApiResponse<List<StudyItemResponse>> getStudies(@AuthenticationPrincipal Principal userDetails) {
+        Long userId = userDetails.getUserId();
+        List<StudyItemResponse> studies = studyService.getMyStudies(userId);
+        return ApiResponse.success(studies);
     }
 
     @GetMapping("/{studyId}/header")
@@ -44,7 +53,9 @@ public class StudyController implements StudySpecification {
     }
 
     @PostMapping
-    public ApiResponse<Void> createStudy(@RequestBody @Valid StudyCreateRequest request) {
+    public ApiResponse<Void> createStudy(@RequestBody @Valid StudyCreateRequest request,
+                                         @AuthenticationPrincipal Principal userDetails) {
+        studyService.createStudy(request, userDetails.getUserId());
         return ApiResponse.noContent();
     }
 

@@ -1,6 +1,7 @@
 package grep.neogul_coder.domain.review.entity;
 
 import grep.neogul_coder.domain.review.Review;
+import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,12 +10,14 @@ import java.util.List;
 
 @Getter
 @Entity
-public class ReviewEntity {
+@Table(name = "review")
+public class ReviewEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private long studyId;
     private long writeUserId;
     private long targetUserId;
 
@@ -27,18 +30,21 @@ public class ReviewEntity {
     }
 
     @Builder
-    private ReviewEntity(Review review) {
+    private ReviewEntity(Review review, List<ReviewTagEntity> reviewTags, long studyId) {
+        this.studyId = studyId;
         this.writeUserId = review.getWriteUserId();
         this.targetUserId = review.getTargetUserId();
         this.content = review.getContent();
-        this.reviewTags = review.getReviewTags().stream()
-                .map(tag -> new MyReviewTagEntity(this, new ReviewTagEntity(review.getReviewType(), tag)))
+        this.reviewTags = reviewTags.stream()
+                .map(reviewTag -> new MyReviewTagEntity(this, reviewTag))
                 .toList();
     }
 
-    public static ReviewEntity from(Review review) {
+    public static ReviewEntity from(Review review, List<ReviewTagEntity> reviewTags, long studyId) {
         return ReviewEntity.builder()
                 .review(review)
+                .reviewTags(reviewTags)
+                .studyId(studyId)
                 .build();
     }
 }

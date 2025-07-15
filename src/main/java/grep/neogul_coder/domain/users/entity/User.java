@@ -38,14 +38,12 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Boolean isDeleted;
-
     public static User UserInit(String email, String password, String nickname) {
         return User.builder()
             .email(email)
             .password(password)
             .nickname(nickname)
-            .isDeleted(false)
+            .activated(true)
             .role(Role.ROLE_USER)
             .build();
     }
@@ -60,12 +58,12 @@ public class User extends BaseEntity {
     }
 
     public void delete() {
-        this.isDeleted = true;
+        this.activated = false;
     }
 
     @Builder
     private User(Long id, String oauthId, String oauthProvider, String email, String password,
-        String nickname, String profileImageUrl, Role role, Boolean isDeleted) {
+        String nickname, String profileImageUrl, Role role, Boolean activated) {
         this.id = id;
         this.oauthId = oauthId;
         this.oauthProvider = oauthProvider;
@@ -74,7 +72,7 @@ public class User extends BaseEntity {
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
         this.role = role;
-        this.isDeleted = isDeleted;
+        this.activated = activated;
     }
 
     protected User() {
