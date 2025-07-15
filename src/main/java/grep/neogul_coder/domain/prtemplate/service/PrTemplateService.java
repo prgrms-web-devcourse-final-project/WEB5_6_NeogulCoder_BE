@@ -1,12 +1,24 @@
 package grep.neogul_coder.domain.prtemplate.service;
 
+import grep.neogul_coder.domain.buddy.repository.BuddyEnergyRepository;
+import grep.neogul_coder.domain.buddy.entity.BuddyEnergy;
 import grep.neogul_coder.domain.prtemplate.controller.dto.response.PrPageResponse;
 import grep.neogul_coder.domain.prtemplate.entity.Link;
 import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
 import grep.neogul_coder.domain.prtemplate.exception.code.PrTemplateErrorCode;
+import grep.neogul_coder.domain.prtemplate.repository.LinkRepository;
 import grep.neogul_coder.domain.prtemplate.repository.PrTemplateRepository;
+import grep.neogul_coder.domain.review.entity.ReviewEntity;
+import grep.neogul_coder.domain.review.repository.ReviewRepository;
+import grep.neogul_coder.domain.users.entity.User;
+import grep.neogul_coder.domain.users.service.UserService;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +27,11 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class PrTemplateService {
 
+    private final UserService userService;
     private final PrTemplateRepository prTemplateRepository;
+    private final LinkRepository linkRepository;
+    private final ReviewRepository reviewRepository;
+    private final BuddyEnergyRepository buddyEnergyRepository;
 
     public void deleteByUserId(Long userId) {
         PrTemplate prTemplate = prTemplateRepository.findByUserId(userId);
@@ -32,5 +48,68 @@ public class PrTemplateService {
         PrTemplate prTemplate = prTemplateRepository.findById(id).orElseThrow(
             () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND, "템플릿이 존재하지 않습니다."));
         prTemplate.updateIntroduction(introduction);
+    }
+
+    public PrPageResponse toResponse(Long userId) {
+
+        User user = userService.get(userId);
+        PrTemplate prTemplate = prTemplateRepository.findByUserId(userId);
+        List<Link> links = linkRepository.findAllByPrId(prTemplate.getId());
+        List<ReviewEntity> reviews = reviewRepository.findAllByTargetUserId(userId);
+
+        List<PrPageResponse.UserProfileDto> userProfiles = List.of(
+            PrPageResponse.UserProfileDto.builder()
+                .nickname(user.getNickname())
+                .profileImgUrl(user.getProfileImageUrl())
+                .build()
+        );
+
+        List<PrPageResponse.UserLocationAndLink> userLocationAndLinks = links.stream()
+            .map(link -> PrPageResponse.UserLocationAndLink.builder()
+                .location(prTemplate.getLocation())
+                .linkName(link.getUrlName())
+                .link(link.getPrUrl())
+                .build())
+            .toList();
+
+        int buddyEnergy = buddyEnergyRepository.findByUserId(userId)
+            .map(BuddyEnergy::getLevel)
+            .orElse(0);
+
+        Map<String, Long> tagMap = reviews.stream()
+            .flatMap(review -> review.getReviewTags().stream())
+            .map(myTag -> myTag.getReviewTag().getReviewTag())
+            .collect(Collectors.groupingBy(tag -> tag, Collectors.counting()));
+
+        List<PrPageResponse.ReviewTagDto> reviewTags = tagMap.entrySet().stream()
+            .map(entry -> PrPageResponse.ReviewTagDto.builder()
+                .reviewType(entry.getKey())
+                .reviewCount(entry.getValue().intValue())
+                .build())
+            .toList();
+
+        List<PrPageResponse.ReviewContentDto> reviewContents = reviews.stream()
+            .sorted(Comparator.comparing(ReviewEntity::getCreatedDate).reversed())
+            .limit(5)
+            .map(review -> {
+                User writer = userService.get(review.getWriteUserId());
+
+                return PrPageResponse.ReviewContentDto.builder()
+                    .reviewUserId(writer.getId())
+                    .reviewUserImgUrl(writer.getProfileImageUrl())
+                    .reviewComment(review.getContent())
+                    .reviewDate(review.getCreatedDate().toLocalDate())
+                    .build();
+            })
+            .toList();
+
+        return PrPageResponse.builder()
+            .userProfiles(userProfiles)
+            .userLocationAndLinks(userLocationAndLinks)
+            .buddyEnergy(50)
+            .reviewTags(reviewTags)
+            .reviewContents(reviewContents)
+            .introduction(prTemplate.getIntroduction())
+            .build();
     }
 }

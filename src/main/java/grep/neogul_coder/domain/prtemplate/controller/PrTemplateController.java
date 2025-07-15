@@ -20,8 +20,8 @@ public class PrTemplateController implements PrTemplateSpecification {
 
     @GetMapping("{id}")
     public ApiResponse<PrPageResponse> get(@PathVariable("id") Long id) {
-        PrPageResponse PrPageResponse = null;
-        return ApiResponse.success(PrPageResponse);
+        PrPageResponse prPageResponse = prTemplateService.toResponse(id);
+        return ApiResponse.success(prPageResponse);
     }
 
     @PutMapping("/{id}")
