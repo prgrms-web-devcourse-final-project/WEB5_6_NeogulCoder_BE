@@ -1,8 +1,10 @@
 package grep.neogul_coder.domain.groupchat.controller.dto.response;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
+@Hidden
 @Getter
 public class GroupChatMessageResponseDto {
 

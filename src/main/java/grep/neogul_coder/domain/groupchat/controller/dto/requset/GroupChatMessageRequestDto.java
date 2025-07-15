@@ -1,7 +1,9 @@
 package grep.neogul_coder.domain.groupchat.controller.dto.requset;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Getter;
 
+@Hidden
 @Getter
 public class GroupChatMessageRequestDto {
     private Long roomId;

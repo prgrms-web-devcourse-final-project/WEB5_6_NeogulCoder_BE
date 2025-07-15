@@ -14,5 +14,5 @@ public interface GroupChatRoomRepository extends JpaRepository<GroupChatRoom, Lo
 
     // Optional을 쓰는 이유 : studyId에 해당하는 채팅방이 없을 수 도 있기 때문
     // Optional.empty()로 감싸 null 에러 방지
-    Optional<GroupChatRoom> findByStudy(Long studyId);
+    Optional<GroupChatRoom> findByStudyId(Long studyId);
 }

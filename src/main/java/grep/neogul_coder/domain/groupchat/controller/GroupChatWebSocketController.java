@@ -3,11 +3,13 @@ package grep.neogul_coder.domain.groupchat.controller;
 import grep.neogul_coder.domain.groupchat.controller.dto.requset.GroupChatMessageRequestDto;
 import grep.neogul_coder.domain.groupchat.controller.dto.response.GroupChatMessageResponseDto;
 import grep.neogul_coder.domain.groupchat.service.GroupChatService;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+@Hidden
 @Controller
 public class GroupChatWebSocketController {
 
