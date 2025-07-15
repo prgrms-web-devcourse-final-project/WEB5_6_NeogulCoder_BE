@@ -3,14 +3,14 @@
 //public class GroupChatMessageRequestDto {
 //    private Long roomId;
 //    private Long senderId;
-//    private String content;
+//    private String message;
 //
 //    public GroupChatMessageRequestDto() {}
 //
-//    public GroupChatMessageRequestDto(Long roomId, Long senderId, String content) {
+//    public GroupChatMessageRequestDto(Long roomId, Long senderId, String message) {
 //        this.roomId = roomId;
 //        this.senderId = senderId;
-//        this.content = content;
+//        this.message = message;
 //    }
 //
 //    public Long getRoomId() {
@@ -29,11 +29,11 @@
 //        this.senderId = senderId;
 //    }
 //
-//    public String getContent() {
-//        return content;
+//    public String getMessage() {
+//        return message;
 //    }
 //
-//    public void setContent(String content) {
-//        this.content = content;
+//    public void setMessage(String message) {
+//        this.message = message;
 //    }
 //}

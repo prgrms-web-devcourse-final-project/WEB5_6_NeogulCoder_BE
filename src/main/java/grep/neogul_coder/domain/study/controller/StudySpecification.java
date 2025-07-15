@@ -3,6 +3,7 @@ package grep.neogul_coder.domain.study.controller;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyEditRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.*;
+import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +14,7 @@ import java.util.List;
 public interface StudySpecification {
 
     @Operation(summary = "스터디 목록 조회", description = "가입한 스터디 목록을 조회합니다.")
-    ApiResponse<List<StudyItemResponse>> getStudies();
+    ApiResponse<List<StudyItemResponse>> getStudies(Principal userDetails);
 
     @Operation(summary = "스터디 헤더 조회", description = "스터디 헤더 정보를 조회합니다.")
     ApiResponse<StudyHeaderResponse> getStudyHeader(Long studyId);
@@ -31,7 +32,7 @@ public interface StudySpecification {
     ApiResponse<StudyMyInfoResponse> getStudyMyInfo(Long studyId);
 
     @Operation(summary = "스터디 생성", description = "새로운 스터디를 생성합니다.")
-    ApiResponse<Void> createStudy(StudyCreateRequest request);
+    ApiResponse<Void> createStudy(StudyCreateRequest request, Principal userDetails);
 
     @Operation(summary = "스터디 수정", description = "스터디를 수정합니다.")
     ApiResponse<Void> editStudy(Long studyId, StudyEditRequest request);

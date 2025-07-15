@@ -1,8 +1,11 @@
 package grep.neogul_coder.domain.review.entity;
 
+import grep.neogul_coder.domain.review.ReviewTag;
 import grep.neogul_coder.domain.review.ReviewType;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class ReviewTagEntity {
 
@@ -12,6 +15,13 @@ public class ReviewTagEntity {
 
     @Enumerated(EnumType.STRING)
     private ReviewType reviewType;
-    private String message;
 
+    private String reviewTag;
+
+    public ReviewTagEntity(ReviewType reviewType, ReviewTag reviewTag) {
+        this.reviewType = reviewType;
+        this.reviewTag = reviewTag.getDescription();
+    }
+
+    protected ReviewTagEntity() {}
 }

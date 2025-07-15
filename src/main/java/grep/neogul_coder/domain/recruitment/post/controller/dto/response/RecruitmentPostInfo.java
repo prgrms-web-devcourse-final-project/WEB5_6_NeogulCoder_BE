@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 public class RecruitmentPostInfo {
@@ -38,5 +39,22 @@ public class RecruitmentPostInfo {
     @Schema(example = "오프라인", description = "진행 방식")
     private String studyType;
 
-    // TODO 댓글 정보 List 추가 필요
+    @Schema(example = "[ {nickname: 닉네임, imageUrl: www.., content: 댓글}, {nickname: 닉네임2, imageUrl: www.., content: 댓글2} ]")
+    private List<CommentsInfo> commentsInfos;
+
+    @Schema(example = "2", description = "신청 내역 수")
+    private int applicationCount;
+
+    @Getter
+    static class CommentsInfo{
+
+        @Schema(example = "테스터", description = "닉네임")
+        private String nickname;
+
+        @Schema(example = "www.s3.com", description = "회원 이미지 접근 URL")
+        private String imageUrl;
+
+        @Schema(example = "참여 하고 싶습니다!", description = "댓글 내용")
+        private String content;
+    }
 }

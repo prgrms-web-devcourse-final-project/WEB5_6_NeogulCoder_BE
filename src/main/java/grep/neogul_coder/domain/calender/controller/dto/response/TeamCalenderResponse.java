@@ -15,6 +15,15 @@ public class TeamCalenderResponse {
     @Schema(description = "팀 ID", example = "101")
     private Long teamId;
 
+    @Schema(description = "작성자 ID", example = "123")
+    private Long writerId;
+
+    @Schema(description = "작성자 닉네임", example = "유강현")
+    private String writerNickname;
+
+    @Schema(description = "작성자 프로필 이미지 URL", example = "https://wibby.com/profile/유강현.jpg")
+    private String writerProfileImageUrl;
+
     @Schema(description = "일정 제목", example = "스터디A")
     private String title;
 
@@ -27,13 +36,4 @@ public class TeamCalenderResponse {
     @Schema(description = "종료 시간", example = "2025-07-12T15:00:00")
     private LocalDateTime endTime;
 
-    @Builder
-    private TeamCalenderResponse(Long scheduleId, Long teamId, String title, String description, LocalDateTime startTime, LocalDateTime endTime) {
-        this.scheduleId = scheduleId;
-        this.teamId = teamId;
-        this.title = title;
-        this.description = description;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
 }

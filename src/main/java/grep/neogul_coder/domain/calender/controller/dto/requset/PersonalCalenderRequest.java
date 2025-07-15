@@ -9,6 +9,9 @@ import lombok.Getter;
 @Getter
 public class PersonalCalenderRequest {
 
+    @Schema(description = "사용자 ID", example = "1")
+    private Long userId;
+
     @Schema(description = "일정 제목", example = "면접 준비")
     private String title;
 

@@ -9,35 +9,51 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/calendar/team")
+@RequestMapping("/api/teams/{teamId}/calendar")
 public class TeamCalenderController implements TeamCalenderSpecification {
 
     @PostMapping
-    public ApiResponse<Void> create(@RequestBody TeamCalenderRequest request) {
-        return ApiResponse.success(null);
+    public ApiResponse<Void> create(@PathVariable("teamId") Long teamId, @RequestBody TeamCalenderRequest request) {
+        return ApiResponse.noContent();
     }
 
     @GetMapping
-    public ApiResponse<List<TeamCalenderResponse>> findAll() {
-        return ApiResponse.success(List.of(
-            TeamCalenderResponse.builder().build()
-        ));
+    public ApiResponse<List<TeamCalenderResponse>> findAll(@PathVariable("teamId") Long teamId) {
+        return ApiResponse.success(List.of(new TeamCalenderResponse()));
     }
 
     @GetMapping("/{scheduleId}")
-    public ApiResponse<TeamCalenderResponse> findOne(@PathVariable Long scheduleId) {
-        return ApiResponse.success(
-            TeamCalenderResponse.builder().build());
+    public ApiResponse<TeamCalenderResponse> findOne(
+        @PathVariable("teamId") Long teamId,
+        @PathVariable("scheduleId") Long scheduleId
+    ) {
+        return ApiResponse.success(new TeamCalenderResponse());
+    }
+
+
+    @GetMapping("/day")
+    public ApiResponse<List<TeamCalenderResponse>> findByDate(
+        @PathVariable("teamId") Long teamId,
+        @RequestParam String date
+    ) {
+        return ApiResponse.success(List.of(new TeamCalenderResponse()));
     }
 
     @PutMapping("/{scheduleId}")
-    public ApiResponse<Void> update(@PathVariable Long scheduleId, @RequestBody TeamCalenderRequest request) {
-        return ApiResponse.success(null);
+    public ApiResponse<Void> update(
+        @PathVariable("teamId") Long teamId,
+        @PathVariable("scheduleId") Long scheduleId,
+        @RequestBody TeamCalenderRequest request
+    ) {
+        return ApiResponse.noContent();
     }
 
     @DeleteMapping("/{scheduleId}")
-    public ApiResponse<Void> delete(@PathVariable Long scheduleId) {
-        return ApiResponse.success(null);
+    public ApiResponse<Void> delete(
+        @PathVariable("teamId") Long teamId,
+        @PathVariable("scheduleId") Long scheduleId
+    ) {
+        return ApiResponse.noContent();
     }
 }
 
