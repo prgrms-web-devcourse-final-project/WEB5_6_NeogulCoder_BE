@@ -29,7 +29,7 @@ public class StudyController implements StudySpecification {
 
     @GetMapping("/{studyId}/header")
     public ApiResponse<StudyHeaderResponse> getStudyHeader(@PathVariable("studyId") Long studyId) {
-        return ApiResponse.success(new StudyHeaderResponse());
+        return ApiResponse.success(studyService.getStudyHeader(studyId));
     }
 
     @GetMapping("/{studyId}")

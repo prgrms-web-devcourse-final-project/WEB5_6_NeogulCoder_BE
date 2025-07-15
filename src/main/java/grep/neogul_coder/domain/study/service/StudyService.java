@@ -3,17 +3,22 @@ package grep.neogul_coder.domain.study.service;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
+import grep.neogul_coder.domain.study.controller.dto.response.StudyHeaderResponse;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyItemResponse;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
+import grep.neogul_coder.domain.study.exception.code.StudyErrorCode;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyQueryRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
+import grep.neogul_coder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+
+import static grep.neogul_coder.domain.study.exception.code.StudyErrorCode.*;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -36,6 +41,13 @@ public class StudyService {
                 study, leaderNicknames.get(study.getId())
             ))
             .toList();
+    }
+
+    public StudyHeaderResponse getStudyHeader(Long studyId) {
+        Study study = studyRepository.findById(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND, STUDY_NOT_FOUND.getMessage()));
+
+        return StudyHeaderResponse.from(study);
     }
 
     @Transactional
