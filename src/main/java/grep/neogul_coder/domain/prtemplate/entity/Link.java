@@ -13,7 +13,7 @@ import lombok.Getter;
 public class Link extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long prId;
@@ -22,15 +22,13 @@ public class Link extends BaseEntity {
 
     private String urlName;
 
-    private Boolean isDeleted;
-
     @Builder
-    private Link(Long id, Long prId, String prUrl, String urlName, Boolean isDeleted) {
+    private Link(Long id, Long prId, String prUrl, String urlName, Boolean activated) {
         this.id = id;
         this.prId = prId;
         this.prUrl = prUrl;
         this.urlName = urlName;
-        this.isDeleted = isDeleted;
+        this.activated = activated;
     }
 
     public static Link LinkInit(Long prId, String prUrl, String urlName) {
@@ -38,12 +36,12 @@ public class Link extends BaseEntity {
             .prId(prId)
             .prUrl(prUrl)
             .urlName(urlName)
-            .isDeleted(false)
+            .activated(true)
             .build();
     }
 
     public void delete() {
-        this.isDeleted = true;
+        this.activated = false;
     }
 
     protected Link() {

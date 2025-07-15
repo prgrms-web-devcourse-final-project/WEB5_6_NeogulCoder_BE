@@ -13,7 +13,7 @@ import lombok.Getter;
 public class PrTemplate extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long userId;
@@ -22,15 +22,13 @@ public class PrTemplate extends BaseEntity {
 
     private String location;
 
-    private Boolean isDeleted;
-
     @Builder
-    private PrTemplate(Long templateId, Long userId, String introduction, String location, Boolean isDeleted) {
+    private PrTemplate(Long templateId, Long userId, String introduction, String location, Boolean activated) {
         this.id = templateId;
         this.userId = userId;
         this.introduction = introduction;
         this.location = location;
-        this.isDeleted = isDeleted;
+        this.activated = activated;
     }
 
     public static PrTemplate PrTemplateInit(Long userId, String introduction, String location) {
@@ -46,7 +44,7 @@ public class PrTemplate extends BaseEntity {
     }
 
     public void delete() {
-        this.isDeleted = true;
+        this.activated = false;
     }
 
     protected PrTemplate() {}
