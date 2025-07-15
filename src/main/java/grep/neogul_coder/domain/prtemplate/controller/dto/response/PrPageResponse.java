@@ -1,12 +1,16 @@
 package grep.neogul_coder.domain.prtemplate.controller.dto.response;
 
+import grep.neogul_coder.domain.buddy.entity.BuddyEnergy;
+import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.List;
+import lombok.Builder;
 import lombok.Data;
 
 
 @Data
+@Builder
 @Schema(description = "회원 PR 응답 DTO")
 public class PrPageResponse {
 
@@ -29,6 +33,7 @@ public class PrPageResponse {
     private String introduction;
 
     @Data
+    @Builder
     @Schema(description = "사용자 위치 및 링크 정보")
     public static class UserLocationAndLink {
 
@@ -43,6 +48,7 @@ public class PrPageResponse {
     }
 
     @Data
+    @Builder
     @Schema(description = "유저 프로필 정보")
     public static class UserProfileDto {
 
@@ -54,6 +60,7 @@ public class PrPageResponse {
     }
 
     @Data
+    @Builder
     @Schema(description = "리뷰 태그 정보")
     public static class ReviewTagDto {
 
@@ -65,6 +72,7 @@ public class PrPageResponse {
     }
 
     @Data
+    @Builder
     @Schema(description = "리뷰 내용 정보")
     public static class ReviewContentDto {
 
