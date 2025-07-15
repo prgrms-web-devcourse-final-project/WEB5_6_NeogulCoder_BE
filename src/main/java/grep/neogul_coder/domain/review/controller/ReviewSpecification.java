@@ -1,13 +1,14 @@
 package grep.neogul_coder.domain.review.controller;
 
 import grep.neogul_coder.domain.review.controller.dto.request.ReviewSaveRequest;
-import grep.neogul_coder.domain.review.controller.dto.response.ReviewPagingContentsInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.MyReviewTagsInfo;
+import grep.neogul_coder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Pageable;
 
 @Tag(name = "Review", description = "리뷰 API")
 public interface ReviewSpecification {
@@ -22,5 +23,5 @@ public interface ReviewSpecification {
     ApiResponse<MyReviewTagsInfo> getMyReviewTags(Principal userDetails);
 
     @Operation(summary = "회원 주관 리뷰 페이징 조회", description = "회원이 받은 주관 리뷰를 페이징 조회 합니다")
-    ApiResponse<ReviewPagingContentsInfo> getMyReviewContents(Principal userDetails);
+    ApiResponse<ReviewContentsPagingInfo> getMyReviewContents(Pageable pageable, Principal userDetails);
 }

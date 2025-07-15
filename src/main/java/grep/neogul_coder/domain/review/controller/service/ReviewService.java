@@ -2,12 +2,14 @@ package grep.neogul_coder.domain.review.controller.service;
 
 import grep.neogul_coder.domain.review.*;
 import grep.neogul_coder.domain.review.controller.dto.response.MyReviewTagsInfo;
+import grep.neogul_coder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
 import grep.neogul_coder.domain.review.controller.service.request.ReviewSaveServiceRequest;
 import grep.neogul_coder.domain.review.entity.MyReviewTagEntity;
 import grep.neogul_coder.domain.review.entity.ReviewEntity;
 import grep.neogul_coder.domain.review.entity.ReviewTagEntity;
 import grep.neogul_coder.domain.review.repository.MyReviewTagRepository;
+import grep.neogul_coder.domain.review.repository.ReviewQueryRepository;
 import grep.neogul_coder.domain.review.repository.ReviewRepository;
 import grep.neogul_coder.domain.review.repository.ReviewTagRepository;
 import grep.neogul_coder.domain.study.Study;
@@ -17,11 +19,15 @@ import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static grep.neogul_coder.domain.review.ReviewErrorCode.STUDY_MEMBER_EMPTY;
 
@@ -30,10 +36,12 @@ import static grep.neogul_coder.domain.review.ReviewErrorCode.STUDY_MEMBER_EMPTY
 @Service
 public class ReviewService {
 
-    private final ReviewTagFinder reviewTagFinder;
     private final UserRepository userRepository;
     private final StudyMemberRepository studyMemberRepository;
+
+    private final ReviewTagFinder reviewTagFinder;
     private final ReviewRepository reviewRepository;
+    private final ReviewQueryRepository reviewQueryRepository;
     private final MyReviewTagRepository myReviewTagRepository;
     private final ReviewTagRepository reviewTagRepository;
 
@@ -56,12 +64,21 @@ public class ReviewService {
     }
 
     public MyReviewTagsInfo getMyReviewTags(long userId) {
-        List<ReviewEntity> myReviews = reviewRepository.findByTargetUserId(userId);
-        List<ReviewTag> myReviewTags = extractReviewTags(myReviews);
+        List<ReviewEntity> reviews = reviewRepository.findByTargetUserId(userId);
+        List<ReviewTag> reviewTagList = extractReviewTags(reviews);
 
-        ReviewTags reviewTags = ReviewTags.from(myReviewTags);
+        ReviewTags reviewTags = ReviewTags.from(reviewTagList);
         Map<ReviewType, Map<ReviewTag, Integer>> tagCountMapByType = reviewTags.countTagsGroupedByReviewType();
         return MyReviewTagsInfo.of(tagCountMapByType);
+    }
+
+    public ReviewContentsPagingInfo getMyReviewContents(Pageable pageable, long userId) {
+        Page<ReviewEntity> reviewPages = reviewQueryRepository.findContentsPagingBy(pageable, userId);
+        List<ReviewEntity> reviews = reviewPages.getContent();
+
+        List<User> users = findReviewWritersBy(reviews);
+        Map<Long, User> userIdMap = mapUsersBy(users);
+        return ReviewContentsPagingInfo.of(reviewPages, userIdMap);
     }
 
     private List<User> findReviewTargetUsers(List<StudyMember> studyMembers, String myNickname) {
@@ -110,5 +127,24 @@ public class ReviewService {
         return myReviewTags.stream()
                 .map(MyReviewTagEntity::getReviewTag)
                 .toList();
+    }
+
+    private List<User> findReviewWritersBy(List<ReviewEntity> reviews) {
+        List<Long> writeUserIds = extractWriteUserIds(reviews);
+        return userRepository.findByIdIn(writeUserIds);
+    }
+
+    private List<Long> extractWriteUserIds(List<ReviewEntity> reviews) {
+        return reviews.stream()
+                .map(ReviewEntity::getWriteUserId)
+                .toList();
+    }
+
+    private Map<Long, User> mapUsersBy(List<User> users) {
+        return users.stream()
+                .collect(Collectors.toMap(
+                        User::getId,
+                        Function.identity()
+                ));
     }
 }
