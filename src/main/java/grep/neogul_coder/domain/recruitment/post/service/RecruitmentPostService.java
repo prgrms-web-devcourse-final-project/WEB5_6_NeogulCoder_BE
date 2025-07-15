@@ -47,7 +47,7 @@ public class RecruitmentPostService {
     @Transactional
     public void delete(long recruitmentPostId, long userId) {
         RecruitmentPost recruitmentPost = findRecruitmentPost(recruitmentPostId, userId);
-        recruitmentPost.delete();
+        // recruitmentPost.delete();
     }
 
     private RecruitmentPost findRecruitmentPost(long recruitmentPostId, long userId) {
