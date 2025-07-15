@@ -12,10 +12,10 @@ import java.util.List;
 @Getter
 public class ReviewTargetUsersInfo {
 
-    @Schema(example = "[ { nickname: 짱구 }, { nickname: 철수 } ]", description = "회원 이름들")
+    @Schema(example = "[ { userId: 1, nickname: 짱구 }, { userId: 2, nickname: 철수 } ]", description = "회원 이름들")
     private final List<TargetUserInfo> userInfos;
 
-    @Schema(example = "{ nickname: 자바 스터디, imageUrl: www.s3.com }")
+    @Schema(example = "{ studyId: 2, nickname: 자바 스터디, imageUrl: www.s3.com }")
     private final StudyInfo studyInfo;
 
     private ReviewTargetUsersInfo(List<TargetUserInfo> userInfos, StudyInfo studyInfo) {
