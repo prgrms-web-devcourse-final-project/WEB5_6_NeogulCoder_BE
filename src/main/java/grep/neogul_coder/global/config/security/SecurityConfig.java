@@ -2,6 +2,7 @@ package grep.neogul_coder.global.config.security;
 
 import grep.neogul_coder.global.auth.jwt.JwtAuthenticationFilter;
 import grep.neogul_coder.global.auth.jwt.JwtExceptionFilter;
+import grep.neogul_coder.global.auth.oauth.CustomAuthorizationRequestResolver;
 import grep.neogul_coder.global.auth.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
 import grep.neogul_coder.global.auth.oauth.OAuthFailureHandler;
 import grep.neogul_coder.global.auth.oauth.OAuthSuccessHandler;
@@ -21,6 +22,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
@@ -62,7 +64,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, ClientRegistrationRepository clientRegistrationRepository) throws Exception {
+
+        CustomAuthorizationRequestResolver customResolver =
+            new CustomAuthorizationRequestResolver(clientRegistrationRepository, "/oauth2/authorization");
 
         http
             .csrf(AbstractHttpConfigurer::disable)
@@ -89,6 +94,9 @@ public class SecurityConfig {
             )
             .headers(headers -> headers.disable())
             .oauth2Login(oauth2 -> oauth2
+                .authorizationEndpoint(config -> config
+                    .authorizationRequestResolver(customResolver) // 여기!
+                )
                 .successHandler(oAuthSuccessHandler)
                 .failureHandler(oAuthFailureHandler)
             )
