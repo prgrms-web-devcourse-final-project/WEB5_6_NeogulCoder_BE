@@ -24,13 +24,18 @@ public class LinkService {
     }
 
     public void update(Long prId, List<LinkUpdateRequest> prUrls) {
-        linkRepository.findAllByPrId(prId);
+        List<Link> existingLinks = linkRepository.findAllByPrId(prId);
+        for (Link link : existingLinks) {
+            link.delete();
+        }
+        linkRepository.saveAll(existingLinks);
 
         for (LinkUpdateRequest request : prUrls) {
             Link link = Link.builder()
                     .prId(prId)
                     .urlName(request.getUrlName())
                     .prUrl(request.getPrUrl())
+                    .activated(true)
                     .build();
 
             linkRepository.save(link);
