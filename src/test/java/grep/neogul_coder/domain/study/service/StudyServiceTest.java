@@ -5,7 +5,6 @@ import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyUpdateRequest;
-import grep.neogul_coder.domain.study.controller.dto.response.StudyHeaderResponse;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyItemPagingResponse;
 import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
@@ -71,10 +70,10 @@ class StudyServiceTest extends IntegrationTestSupport {
             .build();
 
         // when
-        studyService.createStudy(request, userId1);
+        Long id = studyService.createStudy(request, userId1);
 
         // then
-        Study findStudy = studyRepository.findByIdAndActivatedTrue(1L).orElseThrow();
+        Study findStudy = studyRepository.findByIdAndActivatedTrue(id).orElseThrow();
         assertThat(findStudy.getName()).isEqualTo("스터디");
     }
 
