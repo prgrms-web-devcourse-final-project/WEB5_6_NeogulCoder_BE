@@ -52,10 +52,10 @@ public class RecruitmentPostService {
 
     private RecruitmentPost findRecruitmentPost(long recruitmentPostId, long userId) {
         RecruitmentPost recruitmentPost = recruitmentPostRepository.findById(recruitmentPostId)
-                .orElseThrow(() -> new NotFoundException(NOT_FOUND, NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND));
 
         if (recruitmentPost.isNotOwnedBy(userId)) {
-            throw new BusinessException(NOT_OWNER, NOT_OWNER.getMessage());
+            throw new BusinessException(NOT_OWNER);
         }
         return recruitmentPost;
     }

@@ -59,7 +59,7 @@ public class ReviewService {
     @Transactional
     public void save(ReviewSaveServiceRequest request, long writeUserId) {
         if(isAlreadyWrittenReviewBy(request.getStudyId(), request.getTargetUserId(), writeUserId)){
-            throw new BusinessException(ALREADY_REVIEW_WRITE_USER, ALREADY_REVIEW_WRITE_USER.getMessage());
+            throw new BusinessException(ALREADY_REVIEW_WRITE_USER);
         }
 
         Study study = findValidStudy(request.getStudyId());
@@ -91,14 +91,14 @@ public class ReviewService {
 
     private Study findValidStudy(long studyId){
         return studyRepository.findById(studyId)
-                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND, STUDY_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
     }
 
     private List<StudyMember> findValidStudyMember(long studyId) {
         List<StudyMember> studyMembers = studyMemberRepository.findByStudyIdFetchStudy(studyId);
 
         if (studyMembers.isEmpty()) {
-            throw new NotFoundException(STUDY_MEMBER_EMPTY, STUDY_MEMBER_EMPTY.getMessage());
+            throw new NotFoundException(STUDY_MEMBER_EMPTY);
         }
         return studyMembers;
     }
