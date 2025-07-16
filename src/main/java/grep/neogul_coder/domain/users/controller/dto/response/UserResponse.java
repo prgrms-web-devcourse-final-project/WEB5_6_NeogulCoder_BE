@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.users.controller.dto.response;
 
+import grep.neogul_coder.global.auth.code.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,23 +17,23 @@ public class UserResponse {
     @Schema(description = "회원 nickname", example = "홍길동")
     private String nickname;
 
-    @Schema(description = "프로필 이미지 URL")
-    private String profileImgUrl;
+    @Schema(description = "Role")
+    private Role role;
 
     @Builder
-    private UserResponse(Long id, String email, String nickname, String profileImgUrl) {
+    private UserResponse(Long id, String email, String nickname, Role role) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
-        this.profileImgUrl = profileImgUrl;
+        this.role = role;
     }
 
-    public static UserResponse toUserResponse(Long id, String email, String nickname, String profileImgUrl){
+    public static UserResponse toUserResponse(Long id, String email, String nickname, Role role){
         return UserResponse.builder()
             .id(id)
             .email(email)
             .nickname(nickname)
-            .profileImgUrl(profileImgUrl)
+            .role(role)
             .build();
     }
 }

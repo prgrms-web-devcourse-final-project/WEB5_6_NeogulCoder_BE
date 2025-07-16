@@ -1,13 +1,13 @@
 package grep.neogul_coder.domain.users.service;
 
 import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
+import grep.neogul_coder.domain.prtemplate.exception.code.PrTemplateErrorCode;
 import grep.neogul_coder.domain.prtemplate.repository.LinkRepository;
 import grep.neogul_coder.domain.prtemplate.repository.PrTemplateRepository;
 import grep.neogul_coder.domain.prtemplate.service.LinkService;
 import grep.neogul_coder.domain.prtemplate.service.PrTemplateService;
 import grep.neogul_coder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogul_coder.domain.users.entity.User;
-import grep.neogul_coder.domain.users.exception.EmailDuplicationException;
 import grep.neogul_coder.domain.users.exception.EmailDuplicationException;
 import grep.neogul_coder.domain.users.exception.PasswordNotMatchException;
 import grep.neogul_coder.domain.users.exception.UserNotFoundException;
@@ -81,15 +81,17 @@ public class UserService {
         user.updatePassword(encodedPassword);
     }
 
-    public void deleteUser(Long id, String password) {
-        User user = findUser(id);
+    public void deleteUser(Long userId, String password) {
+        User user = findUser(userId);
+        PrTemplate prTemplate = prTemplateRepository.findByUserId((user.getId()))
+            .orElseThrow(() -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
 
         if (isNotMatchCurrentPassword(password, user.getPassword())) {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
 
         prTemplateService.deleteByUserId(user.getId());
-        linkService.deleteByPrId(prTemplateRepository.findByUserId((user.getId())).getId());
+        linkService.deleteByPrId(prTemplate.getId());
 
         user.delete();
     }
@@ -97,16 +99,16 @@ public class UserService {
     private User findUser(Long id) {
         return userRepository.findById(id)
             .orElseThrow(
-                () -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND, "회원이 존재하지 않습니다."));
+                () -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
     }
 
     private User findUser(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(
-                () -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND, "회원이 존재하지 않습니다."));
+                () -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
     }
 
-    private boolean duplicationCheck(String email, String nickname) {
+    private void duplicationCheck(String email, String nickname) {
         if (isDuplicateEmail(email)) {
             throw new EmailDuplicationException(UserErrorCode.IS_DUPLICATED_MALI);
         }
@@ -114,7 +116,6 @@ public class UserService {
         if (isDuplicateNickname(nickname)) {
             throw new DuplicatedException(UserErrorCode.IS_DUPLICATED_NICKNAME);
         }
-        return false;
     }
 
     private boolean isDuplicateEmail(String email) {

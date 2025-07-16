@@ -5,9 +5,8 @@ import grep.neogul_coder.global.response.code.ErrorCode;
 
 public class UserNotFoundException extends NotFoundException {
 
-    public UserNotFoundException(ErrorCode errorcode,
-        String message) {
-        super(errorcode, message);
+    public UserNotFoundException(ErrorCode errorcode) {
+        super(errorcode);
     }
 
 }

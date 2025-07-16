@@ -20,6 +20,9 @@ public class LinkService {
 
     public void deleteByPrId(Long prId) {
         Link link = linkRepository.findByPrId(prId);
+        if(link == null){
+            return;
+        }
         link.delete();
     }
 
