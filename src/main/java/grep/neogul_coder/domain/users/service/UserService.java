@@ -1,6 +1,5 @@
 package grep.neogul_coder.domain.users.service;
 
-import grep.neogul_coder.domain.prtemplate.entity.Link;
 import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
 import grep.neogul_coder.domain.prtemplate.repository.LinkRepository;
 import grep.neogul_coder.domain.prtemplate.repository.PrTemplateRepository;
@@ -8,7 +7,9 @@ import grep.neogul_coder.domain.prtemplate.service.LinkService;
 import grep.neogul_coder.domain.prtemplate.service.PrTemplateService;
 import grep.neogul_coder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogul_coder.domain.users.entity.User;
+import grep.neogul_coder.domain.users.exception.EmailDuplicationException;
 import grep.neogul_coder.domain.users.exception.PasswordNotMatchException;
+import grep.neogul_coder.domain.users.exception.UserNotFoundException;
 import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.NotFoundException;
@@ -95,22 +96,22 @@ public class UserService {
     private User findUser(Long id) {
         return userRepository.findById(id)
             .orElseThrow(
-                () -> new NotFoundException(UserErrorCode.USER_NOT_FOUND, "회원이 존재하지 않습니다."));
+                () -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND, "회원이 존재하지 않습니다."));
     }
 
     private User findUser(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(
-                () -> new NotFoundException(UserErrorCode.USER_NOT_FOUND, "회원이 존재하지 않습니다."));
+                () -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND, "회원이 존재하지 않습니다."));
     }
 
     private boolean duplicationCheck(String email, String nickname) {
         if (isDuplicateEmail(email)) {
-            throw new DuplicatedException(UserErrorCode.IS_DUPLICATED);
+            throw new EmailDuplicationException(UserErrorCode.IS_DUPLICATED_MALI);
         }
 
         if (isDuplicateNickname(nickname)) {
-            throw new DuplicatedException(UserErrorCode.IS_DUPLICATED);
+            throw new DuplicatedException(UserErrorCode.IS_DUPLICATED_NICKNAME);
         }
         return false;
     }
