@@ -6,10 +6,10 @@ import lombok.Getter;
 
 @Getter
 @Schema(description = "팀 캘린더 요청 DTO")
-public class TeamCalenderRequest {
+public class TeamCalendarRequest {
 
-    @Schema(description = "팀 ID", example = "101")
-    private Long teamId;
+    @Schema(description = "스터디 ID", example = "101")
+    private Long studyId;
 
     @Schema(description = "일정 제목", example = "주간 회의")
     private String title;
