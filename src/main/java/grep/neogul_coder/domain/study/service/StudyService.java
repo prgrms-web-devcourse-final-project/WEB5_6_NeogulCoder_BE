@@ -8,6 +8,7 @@ import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyUpdateRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.*;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
+import grep.neogul_coder.domain.study.enums.StudyType;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyQueryRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
@@ -69,6 +70,9 @@ public class StudyService {
     @Transactional
     public Long createStudy(StudyCreateRequest request, Long userId) {
         Study study = studyRepository.save(request.toEntity());
+
+        validationLocation(request.getStudyType(), request.getLocation());
+
         StudyMember leader = StudyMember.builder()
             .study(study)
             .userId(userId)
@@ -84,6 +88,7 @@ public class StudyService {
         Study study = studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
+        validationLocation(request.getStudyType(), request.getLocation());
         validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
         validateStudyStartDate(request, study);
@@ -112,6 +117,12 @@ public class StudyService {
         study.delete();
         studyMemberRepository.deactivateByStudyId(studyId);
         recruitmentPostRepository.deactivateByStudyId(studyId);
+    }
+
+    private static void validationLocation(StudyType studyType, String location) {
+        if ((studyType == StudyType.OFFLINE || studyType == StudyType.HYBRID) && (location == null || location.isBlank())) {
+            throw new BusinessException(STUDY_LOCATION_REQUIRED);
+        }
     }
 
     private void validateStudyMember(Long studyId, Long userId) {

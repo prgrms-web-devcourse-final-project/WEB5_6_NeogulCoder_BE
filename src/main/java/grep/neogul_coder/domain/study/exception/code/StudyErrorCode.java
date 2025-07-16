@@ -11,7 +11,8 @@ public enum StudyErrorCode implements ErrorCode {
     STUDY_NOT_LEADER("S002", HttpStatus.BAD_REQUEST, "스터디장만 접근이 가능합니다."),
     STUDY_ALREADY_STARTED("S003", HttpStatus.BAD_REQUEST, "이미 시작된 스터디의 시작일은 변경할 수 없습니다."),
     STUDY_DELETE_NOT_ALLOWED("S004", HttpStatus.BAD_REQUEST, "스터디 멤버가 1명일 때만 삭제할 수 있습니다."),
-    STUDY_NOT_MEMBER("S005", HttpStatus.BAD_REQUEST, "스터디 멤버가 아닙니다.");
+    STUDY_NOT_MEMBER("S005", HttpStatus.BAD_REQUEST, "스터디 멤버가 아닙니다."),
+    STUDY_LOCATION_REQUIRED("S006", HttpStatus.BAD_REQUEST, "스터디 타입이 OFFLINE이나 HYBRID인 스터디는 지역 입력이 필수입니다.");
 
     private final String code;
     private final HttpStatus status;
