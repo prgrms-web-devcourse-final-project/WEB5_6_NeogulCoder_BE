@@ -59,4 +59,8 @@ public class Study extends BaseEntity {
         this.imageUrl = imageUrl;
         this.isFinished = false;
     }
+
+    public long calculateRemainSlots(long currentCount) {
+        return this.capacity - currentCount;
+    }
 }

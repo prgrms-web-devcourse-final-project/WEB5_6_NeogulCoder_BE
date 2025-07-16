@@ -2,6 +2,7 @@ package grep.neogul_coder.domain.recruitment.post.service;
 
 import grep.neogul_coder.domain.IntegrationTestSupport;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.LoadParticipatedStudyInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudiesInfo;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostCreateServiceRequest;
@@ -9,6 +10,7 @@ import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
+import grep.neogul_coder.domain.study.enums.StudyType;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.domain.users.entity.User;
@@ -22,6 +24,7 @@ import java.util.List;
 
 import static grep.neogul_coder.domain.study.enums.StudyMemberRole.LEADER;
 import static grep.neogul_coder.domain.study.enums.StudyMemberRole.MEMBER;
+import static grep.neogul_coder.domain.study.enums.StudyType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -122,6 +125,32 @@ class RecruitmentPostSaveServiceTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrder("자바 스터디", "클라이밍 동아리", "책 읽기");
     }
 
+    @DisplayName("스터디 정보를 불러옵니다.")
+    @Test
+    void loadParticipatedStudyInfo() {
+        //given
+        User user1 = createUser("테스터1");
+        User user2 = createUser("테스터2");
+        userRepository.saveAll(List.of(user1, user2));
+
+        Study study = createStudy("자바 스터디", Category.IT, ONLINE, 5);
+        studyRepository.save(study);
+
+        List<StudyMember> studyMembers = List.of(
+                createStudyMember(study, user1.getId(), MEMBER),
+                createStudyMember(study, user2.getId(), MEMBER)
+        );
+        studyMemberRepository.saveAll(studyMembers);
+
+        //when
+        LoadParticipatedStudyInfo result = recruitmentPostService.loadParticipatedStudyInfo(study.getId(), user1.getId());
+
+        //then
+        assertThat(result)
+                .extracting("category", "studyType", "remainSlots")
+                .containsExactlyInAnyOrder("IT", "ONLINE", 3L);
+    }
+
     private User createUser(String nickname) {
         return User.builder()
                 .nickname(nickname)
@@ -132,6 +161,15 @@ class RecruitmentPostSaveServiceTest extends IntegrationTestSupport {
         return Study.builder()
                 .name(name)
                 .category(category)
+                .build();
+    }
+
+    private Study createStudy(String name, Category category, StudyType studyType, int capacity) {
+        return Study.builder()
+                .name(name)
+                .category(category)
+                .studyType(studyType)
+                .capacity(capacity)
                 .build();
     }
 

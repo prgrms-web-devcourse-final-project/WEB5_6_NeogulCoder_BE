@@ -1,7 +1,7 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyLoadInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.LoadParticipatedStudyInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudiesInfo;
 import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostSaveService;
 import grep.neogul_coder.global.auth.Principal;
@@ -32,8 +32,9 @@ public class RecruitmentPostSaveController implements RecruitmentPostSaveSpecifi
     }
 
     @GetMapping("/studies/{study-id}")
-    public ApiResponse<ParticipatedStudyLoadInfo> getParticipatedStudy(@PathVariable("study-id") long StudyId,
-                                                                       @AuthenticationPrincipal Principal userDetails) {
-        return ApiResponse.success(new ParticipatedStudyLoadInfo());
+    public ApiResponse<LoadParticipatedStudyInfo> loadParticipatedStudyInfo(@PathVariable("study-id") long studyId,
+                                                                            @AuthenticationPrincipal Principal userDetails) {
+        LoadParticipatedStudyInfo response = recruitmentPostService.loadParticipatedStudyInfo(studyId, userDetails.getUserId());
+        return ApiResponse.success(response);
     }
 }

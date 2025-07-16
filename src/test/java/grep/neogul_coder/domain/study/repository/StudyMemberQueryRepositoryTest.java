@@ -54,6 +54,30 @@ class StudyMemberQueryRepositoryTest extends IntegrationTestSupport {
                 .containsExactly("자바 스터디", "운영체제 스터디");
     }
 
+    @DisplayName("스터디에 참여중인 회원수를 조회 합니다.")
+    @Test
+    void findCurrentCountBy() {
+        //given
+        User user1 = createUser("테스터1");
+        User user2 = createUser("테스터2");
+        userRepository.saveAll(List.of(user1, user2));
+
+        Study study = createStudy("자바 스터디", Category.IT);
+        studyRepository.save(study);
+
+        List<StudyMember> studyMembers = List.of(
+                createStudyMember(study, user1.getId(), MEMBER),
+                createStudyMember(study, user2.getId(), MEMBER)
+        );
+        studyMemberRepository.saveAll(studyMembers);
+
+        //when
+        long currentCount = studyMemberQueryRepository.findCurrentCountBy(study.getId());
+
+        //then
+        assertThat(currentCount).isEqualTo(2);
+    }
+
     private User createUser(String nickname) {
         return User.builder()
                 .nickname(nickname)

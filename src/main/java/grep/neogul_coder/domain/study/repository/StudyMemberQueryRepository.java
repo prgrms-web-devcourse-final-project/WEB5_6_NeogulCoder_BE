@@ -31,6 +31,19 @@ public class StudyMemberQueryRepository {
                 .fetch();
     }
 
+    public long findCurrentCountBy(long studyId){
+        Long participatedCount = queryFactory.select(studyMember.count())
+                .from(studyMember)
+                .where(
+                        studyMember.study.id.eq(studyId),
+                        studyMember.activated.isTrue()
+                )
+                .join(studyMember.study, study)
+                .fetchOne();
+
+        return participatedCount != null ? participatedCount : 0;
+    }
+
     public StudyMember findByStudyIdAndUserId(long studyId, long userId) {
         return queryFactory.selectFrom(studyMember)
                 .where(

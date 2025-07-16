@@ -1,7 +1,7 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyLoadInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.LoadParticipatedStudyInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudiesInfo;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
@@ -57,5 +57,5 @@ public interface RecruitmentPostSaveSpecification {
                     - `recruitmentCount`: 스터디 정원 - 스터디 참여 인원 
                     """
     )
-    ApiResponse<ParticipatedStudyLoadInfo> getParticipatedStudy(long studyId, Principal userDetails);
+    ApiResponse<LoadParticipatedStudyInfo> loadParticipatedStudyInfo(long studyId, Principal userDetails);
 }
