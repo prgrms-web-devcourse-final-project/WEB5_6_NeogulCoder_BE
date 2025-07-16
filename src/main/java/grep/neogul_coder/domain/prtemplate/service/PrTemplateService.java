@@ -40,20 +40,20 @@ public class PrTemplateService {
 
     public void update(Long id, String location) {
         PrTemplate prTemplate = prTemplateRepository.findById(id).orElseThrow(
-            () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND, "템플릿이 존재하지 않습니다."));
+            () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
         prTemplate.update(location);
     }
 
     public void updateIntroduction(Long id, String introduction) {
         PrTemplate prTemplate = prTemplateRepository.findById(id).orElseThrow(
-            () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND, "템플릿이 존재하지 않습니다."));
+            () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
         prTemplate.updateIntroduction(introduction);
     }
 
     public PrPageResponse toResponse(Long userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
-            UserErrorCode.USER_NOT_FOUND, "회원이 존재하지 않습니다."));
+            UserErrorCode.USER_NOT_FOUND));
         PrTemplate prTemplate = prTemplateRepository.findByUserId(userId);
         List<Link> links = linkRepository.findAllByPrIdAndActivatedTrue(prTemplate.getId());
         List<ReviewEntity> reviews = reviewRepository.findAllByTargetUserId(userId);
@@ -94,7 +94,7 @@ public class PrTemplateService {
             .limit(5)
             .map(review -> {
                 User writer = userRepository.findById(review.getWriteUserId())
-                    .orElseThrow(() -> new NotFoundException(UserErrorCode.USER_NOT_FOUND, "작성자를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new NotFoundException(UserErrorCode.USER_NOT_FOUND));
                 return PrPageResponse.ReviewContentDto.builder()
                     .reviewUserId(writer.getId())
                     .reviewUserImgUrl(writer.getProfileImageUrl())

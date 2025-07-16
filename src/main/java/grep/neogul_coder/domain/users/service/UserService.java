@@ -8,6 +8,7 @@ import grep.neogul_coder.domain.prtemplate.service.PrTemplateService;
 import grep.neogul_coder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.exception.EmailDuplicationException;
+import grep.neogul_coder.domain.users.exception.EmailDuplicationException;
 import grep.neogul_coder.domain.users.exception.PasswordNotMatchException;
 import grep.neogul_coder.domain.users.exception.UserNotFoundException;
 import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
