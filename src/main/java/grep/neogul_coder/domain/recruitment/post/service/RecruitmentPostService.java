@@ -2,7 +2,6 @@ package grep.neogul_coder.domain.recruitment.post.service;
 
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
-import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostCreateServiceRequest;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostStatusUpdateServiceRequest;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostUpdateServiceRequest;
 import grep.neogul_coder.global.exception.business.BusinessException;
@@ -20,12 +19,6 @@ import static grep.neogul_coder.domain.recruitment.RecruitmentErrorCode.NOT_OWNE
 public class RecruitmentPostService {
 
     private final RecruitmentPostRepository recruitmentPostRepository;
-
-    //TODO 스터디장만 스터디 모집글 생성 가능 하도록 변경 필요
-    @Transactional
-    public void create(RecruitmentPostCreateServiceRequest request, long userId) {
-        recruitmentPostRepository.save(request.toEntity(userId));
-    }
 
     @Transactional
     public void update(RecruitmentPostUpdateServiceRequest request, long recruitmentPostId, long userId) {
@@ -47,11 +40,11 @@ public class RecruitmentPostService {
     @Transactional
     public void delete(long recruitmentPostId, long userId) {
         RecruitmentPost recruitmentPost = findRecruitmentPost(recruitmentPostId, userId);
-        // recruitmentPost.delete();
+        recruitmentPost.delete();
     }
 
     private RecruitmentPost findRecruitmentPost(long recruitmentPostId, long userId) {
-        RecruitmentPost recruitmentPost = recruitmentPostRepository.findById(recruitmentPostId)
+        RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdAndActivatedTrue(recruitmentPostId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND));
 
         if (recruitmentPost.isNotOwnedBy(userId)) {

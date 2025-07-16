@@ -79,4 +79,8 @@ public class Study extends BaseEntity {
     public void delete() {
         this.activated = false;
     }
+
+    public long calculateRemainSlots(long currentCount) {
+        return this.capacity - currentCount;
+    }
 }
