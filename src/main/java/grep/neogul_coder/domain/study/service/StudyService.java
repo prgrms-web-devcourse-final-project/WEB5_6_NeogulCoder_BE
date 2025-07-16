@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
+import static grep.neogul_coder.domain.study.enums.StudyMemberRole.LEADER;
 import static grep.neogul_coder.domain.study.exception.code.StudyErrorCode.*;
 
 @Transactional(readOnly = true)
@@ -29,17 +29,7 @@ public class StudyService {
     private final StudyQueryRepository studyQueryRepository;
 
     public List<StudyItemResponse> getMyStudies(Long userId) {
-        List<Study> myStudies = studyMemberRepository.findStudiesByUserId(userId);
-        List<Long> studyIds = myStudies.stream()
-            .map(Study::getId)
-            .toList();
-        Map<Long, String> leaderNicknames = studyQueryRepository.findLeaderNicknamesByStudyIds(studyIds);
-
-        return myStudies.stream()
-            .map(study -> StudyItemResponse.from(
-                study, leaderNicknames.get(study.getId())
-            ))
-            .toList();
+        return studyQueryRepository.findMyStudies(userId);
     }
 
     public StudyHeaderResponse getStudyHeader(Long studyId) {
@@ -58,8 +48,9 @@ public class StudyService {
     }
 
     public StudyInfoResponse getStudyInfo(Long studyId, Long userId) {
-        if (!studyQueryRepository.isStudyLeader(studyId, userId)) {
-            throw new NotStudyLeaderException(STUDY_NOT_LEADER, STUDY_NOT_LEADER.getMessage());
+        StudyMemberRole role = studyQueryRepository.findMyRole(studyId, userId);
+        if (!role.equals(LEADER)) {
+            throw new NotStudyLeaderException(STUDY_NOT_LEADER, STUDY_NOT_FOUND.getMessage());
         }
 
         Study study = studyRepository.findById(studyId)
@@ -76,7 +67,7 @@ public class StudyService {
         StudyMember leader = StudyMember.builder()
             .study(study)
             .userId(userId)
-            .role(StudyMemberRole.LEADER)
+            .role(LEADER)
             .build();
         studyMemberRepository.save(leader);
     }
