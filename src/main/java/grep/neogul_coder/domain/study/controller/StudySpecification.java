@@ -33,7 +33,7 @@ public interface StudySpecification {
     ApiResponse<StudyMyInfoResponse> getStudyMyInfo(Long studyId);
 
     @Operation(summary = "스터디 생성", description = "새로운 스터디를 생성합니다.")
-    ApiResponse<Void> createStudy(StudyCreateRequest request, Principal userDetails);
+    ApiResponse<Long> createStudy(StudyCreateRequest request, Principal userDetails);
 
     @Operation(summary = "스터디 수정", description = "스터디를 수정합니다.")
     ApiResponse<Void> updateStudy(Long studyId, StudyUpdateRequest request, Principal userDetails);

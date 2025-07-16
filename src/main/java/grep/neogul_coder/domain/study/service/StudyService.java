@@ -65,7 +65,7 @@ public class StudyService {
     }
 
     @Transactional
-    public void createStudy(StudyCreateRequest request, Long userId) {
+    public Long createStudy(StudyCreateRequest request, Long userId) {
         Study study = studyRepository.save(request.toEntity());
         StudyMember leader = StudyMember.builder()
             .study(study)
@@ -73,6 +73,8 @@ public class StudyService {
             .role(LEADER)
             .build();
         studyMemberRepository.save(leader);
+
+        return study.getId();
     }
 
     @Transactional

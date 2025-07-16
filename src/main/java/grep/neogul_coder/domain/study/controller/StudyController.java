@@ -59,10 +59,10 @@ public class StudyController implements StudySpecification {
     }
 
     @PostMapping
-    public ApiResponse<Void> createStudy(@RequestBody @Valid StudyCreateRequest request,
+    public ApiResponse<Long> createStudy(@RequestBody @Valid StudyCreateRequest request,
                                          @AuthenticationPrincipal Principal userDetails) {
-        studyService.createStudy(request, userDetails.getUserId());
-        return ApiResponse.noContent();
+        Long id = studyService.createStudy(request, userDetails.getUserId());
+        return ApiResponse.success(id);
     }
 
     @PutMapping("/{studyId}")
