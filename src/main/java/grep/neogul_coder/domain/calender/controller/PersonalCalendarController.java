@@ -2,41 +2,41 @@ package grep.neogul_coder.domain.calender.controller;
 
 import grep.neogul_coder.domain.calender.controller.dto.requset.PersonalCalendarRequest;
 import grep.neogul_coder.domain.calender.controller.dto.response.PersonalCalendarResponse;
+import grep.neogul_coder.domain.calender.service.PersonalCalendarService;
 import grep.neogul_coder.global.response.ApiResponse;
 
+import java.time.LocalDate;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users/{userId}/calendar")
 public class PersonalCalendarController implements PersonalCalendarSpecification {
+
+    private final PersonalCalendarService personalCalendarService;
 
     @PostMapping
     public ApiResponse<Void> create(
         @PathVariable("userId") Long userId,
         @RequestBody PersonalCalendarRequest request) {
+        personalCalendarService.create(userId, request);
         return ApiResponse.noContent();
     }
 
     @GetMapping
     public ApiResponse<List<PersonalCalendarResponse>> findAll(@PathVariable("userId") Long userId) {
-        return ApiResponse.success(List.of(new PersonalCalendarResponse()));
+        return ApiResponse.success(personalCalendarService.findAll(userId));
     }
 
-
-    @GetMapping("/{calendarId}")
-    public ApiResponse<PersonalCalendarResponse> findOne(
-        @PathVariable("userId") Long userId,
-        @PathVariable("calendarId") Long calendarId
-    ) {
-        return ApiResponse.success(new PersonalCalendarResponse());
-    }
     @GetMapping("/day")
     public ApiResponse<List<PersonalCalendarResponse>> findByDate(
         @PathVariable("userId") Long userId,
         @RequestParam String date
     ) {
-        return ApiResponse.success(List.of(new PersonalCalendarResponse()));
+        LocalDate parsedDate = LocalDate.parse(date);
+        return ApiResponse.success(personalCalendarService.findByDate(userId, parsedDate));
     }
 
     @PutMapping("/{calendarId}")
@@ -45,6 +45,7 @@ public class PersonalCalendarController implements PersonalCalendarSpecification
         @PathVariable("calendarId") Long calendarId,
         @RequestBody PersonalCalendarRequest request
     ) {
+        personalCalendarService.update(userId, calendarId, request);
         return ApiResponse.noContent();
     }
 
@@ -53,6 +54,7 @@ public class PersonalCalendarController implements PersonalCalendarSpecification
         @PathVariable("userId") Long userId,
         @PathVariable("calendarId") Long calendarId
     ) {
+        personalCalendarService.delete(userId, calendarId);
         return ApiResponse.noContent();
     }
 }

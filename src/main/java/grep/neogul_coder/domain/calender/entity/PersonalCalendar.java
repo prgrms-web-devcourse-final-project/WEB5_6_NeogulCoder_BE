@@ -17,5 +17,14 @@ public class PersonalCalendar extends BaseEntity {
 
     @Column(name = "user_id")
     private Long userId;
+
+    public PersonalCalendar(Long userId, Calendar calendar) {
+        this.userId = userId;
+        this.calendar = calendar;
+    }
+
+    public PersonalCalendar() {
+
+    }
 }
 

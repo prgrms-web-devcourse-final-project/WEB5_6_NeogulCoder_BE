@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.calender.controller.dto.requset;
 
+import grep.neogul_coder.domain.calender.entity.Calendar;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -23,5 +24,14 @@ public class PersonalCalendarRequest {
 
     @Schema(description = "종료 시간", example = "2025-07-10T10:00:00")
     private LocalDateTime endTime;
+
+    public Calendar toCalendar() {
+        return Calendar.builder()
+            .title(title)
+            .content(description)
+            .scheduledStart(startTime)
+            .scheduledEnd(endTime)
+            .build();
+    }
 
 }
