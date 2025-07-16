@@ -3,9 +3,11 @@ package grep.neogul_coder.domain.study.service;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
+import grep.neogul_coder.domain.study.controller.dto.request.StudyUpdateRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.*;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import grep.neogul_coder.domain.study.exception.NotStudyLeaderException;
+import grep.neogul_coder.domain.study.exception.StudyAlreadyStartedException;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyQueryRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
@@ -51,10 +53,7 @@ public class StudyService {
         Study study = studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
-        StudyMemberRole role = studyQueryRepository.findMyRole(studyId, userId);
-        if (!role.equals(LEADER)) {
-            throw new NotStudyLeaderException(STUDY_NOT_LEADER);
-        }
+        validateStudyLeader(studyId, userId);
 
         List<StudyMemberResponse> members = studyQueryRepository.findStudyMembers(studyId);
 
@@ -70,5 +69,38 @@ public class StudyService {
             .role(LEADER)
             .build();
         studyMemberRepository.save(leader);
+    }
+
+    @Transactional
+    public void updateStudy(Long studyId, StudyUpdateRequest request, Long userId) {
+        Study study = studyRepository.findById(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+
+        validateStudyLeader(studyId, userId);
+        validateStudyStartDate(request, study);
+
+        study.update(
+            request.getName(),
+            request.getCategory(),
+            request.getCapacity(),
+            request.getStudyType(),
+            request.getLocation(),
+            request.getStartDate(),
+            request.getIntroduction(),
+            request.getImageUrl()
+        );
+    }
+
+    private void validateStudyLeader(Long studyId, Long userId) {
+        StudyMemberRole role = studyQueryRepository.findMyRole(studyId, userId);
+        if (!role.equals(LEADER)) {
+            throw new NotStudyLeaderException(STUDY_NOT_LEADER);
+        }
+    }
+
+    private static void validateStudyStartDate(StudyUpdateRequest request, Study study) {
+        if (study.hasStarted() && !study.getStartDate().equals(request.getStartDate())) {
+            throw new StudyAlreadyStartedException(STUDY_ALREADY_STARTED);
+        }
     }
 }

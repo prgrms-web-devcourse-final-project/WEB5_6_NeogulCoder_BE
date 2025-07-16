@@ -1,16 +1,18 @@
 package grep.neogul_coder.domain.study.controller.dto.request;
 
+import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Getter
-public class StudyEditRequest {
+public class StudyUpdateRequest {
 
     @NotBlank
     @Schema(description = "스터디 이름", example = "자바 스터디")
@@ -39,4 +41,32 @@ public class StudyEditRequest {
     @NotBlank
     @Schema(description = "대표 이미지", example = "http://localhost:8083/image.jpg")
     private String imageUrl;
+
+    private StudyUpdateRequest() {}
+
+    @Builder
+    private StudyUpdateRequest(String name, Category category, int capacity, StudyType studyType, String location,
+                               LocalDate startDate, String introduction, String imageUrl) {
+        this.name = name;
+        this.category = category;
+        this.capacity = capacity;
+        this.studyType = studyType;
+        this.location = location;
+        this.startDate = startDate;
+        this.introduction = introduction;
+        this.imageUrl = imageUrl;
+    }
+
+    public Study toEntity() {
+        return Study.builder()
+            .name(this.name)
+            .category(this.category)
+            .capacity(this.capacity)
+            .studyType(this.studyType)
+            .location(this.location)
+            .startDate(this.startDate)
+            .introduction(this.introduction)
+            .imageUrl(this.imageUrl)
+            .build();
+    }
 }

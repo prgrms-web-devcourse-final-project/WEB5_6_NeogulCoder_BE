@@ -1,7 +1,7 @@
 package grep.neogul_coder.domain.study.controller;
 
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
-import grep.neogul_coder.domain.study.controller.dto.request.StudyEditRequest;
+import grep.neogul_coder.domain.study.controller.dto.request.StudyUpdateRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.*;
 import grep.neogul_coder.domain.study.service.StudyService;
 import grep.neogul_coder.global.auth.Principal;
@@ -63,8 +63,10 @@ public class StudyController implements StudySpecification {
     }
 
     @PutMapping("/{studyId}")
-    public ApiResponse<Void> editStudy(@PathVariable("studyId") Long studyId,
-                                       @RequestBody @Valid StudyEditRequest request) {
+    public ApiResponse<Void> updateStudy(@PathVariable("studyId") Long studyId,
+                                         @RequestBody @Valid StudyUpdateRequest request,
+                                         @AuthenticationPrincipal Principal userDetails) {
+        studyService.updateStudy(studyId, request, userDetails.getUserId());
         return ApiResponse.noContent();
     }
 

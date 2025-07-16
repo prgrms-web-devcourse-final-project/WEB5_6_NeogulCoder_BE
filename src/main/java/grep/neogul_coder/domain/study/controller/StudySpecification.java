@@ -1,7 +1,7 @@
 package grep.neogul_coder.domain.study.controller;
 
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
-import grep.neogul_coder.domain.study.controller.dto.request.StudyEditRequest;
+import grep.neogul_coder.domain.study.controller.dto.request.StudyUpdateRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.*;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
@@ -35,7 +35,7 @@ public interface StudySpecification {
     ApiResponse<Void> createStudy(StudyCreateRequest request, Principal userDetails);
 
     @Operation(summary = "스터디 수정", description = "스터디를 수정합니다.")
-    ApiResponse<Void> editStudy(Long studyId, StudyEditRequest request);
+    ApiResponse<Void> updateStudy(Long studyId, StudyUpdateRequest request, Principal userDetails);
 
     @Operation(summary = "스터디 삭제", description = "스터디를 삭제합니다.")
     ApiResponse<Void> deleteStudy(Long studyId);
