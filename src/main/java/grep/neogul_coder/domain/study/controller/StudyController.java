@@ -71,7 +71,9 @@ public class StudyController implements StudySpecification {
     }
 
     @DeleteMapping("/{studyId}")
-    public ApiResponse<Void> deleteStudy(@PathVariable("studyId") Long studyId) {
+    public ApiResponse<Void> deleteStudy(@PathVariable("studyId") Long studyId,
+                                         @AuthenticationPrincipal Principal userDetails) {
+        studyService.deleteStudy(studyId, userDetails.getUserId());
         return ApiResponse.noContent();
     }
 }

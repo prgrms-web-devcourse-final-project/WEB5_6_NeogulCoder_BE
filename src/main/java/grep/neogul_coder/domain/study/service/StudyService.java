@@ -11,6 +11,7 @@ import grep.neogul_coder.domain.study.exception.StudyAlreadyStartedException;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyQueryRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
+import grep.neogul_coder.global.exception.business.BusinessException;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,7 @@ public class StudyService {
         Study study = studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
+        validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
 
         List<StudyMemberResponse> members = studyQueryRepository.findStudyMembers(studyId);
@@ -76,6 +78,7 @@ public class StudyService {
         Study study = studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
+        validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
         validateStudyStartDate(request, study);
 
@@ -91,6 +94,25 @@ public class StudyService {
         );
     }
 
+    @Transactional
+    public void deleteStudy(Long studyId, Long userId) {
+        Study study = studyRepository.findById(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+
+        validateStudyMember(studyId, userId);
+        validateStudyLeader(studyId, userId);
+        validateStudyDeletable(studyId);
+
+        study.delete();
+    }
+
+    private void validateStudyMember(Long studyId, Long userId) {
+        boolean exists = studyMemberRepository.existsByStudyIdAndUserIdAndActivatedTrue(studyId, userId);
+        if (!exists) {
+            throw new BusinessException(STUDY_NOT_MEMBER);
+        }
+    }
+
     private void validateStudyLeader(Long studyId, Long userId) {
         StudyMemberRole role = studyQueryRepository.findMyRole(studyId, userId);
         if (!role.equals(LEADER)) {
@@ -101,6 +123,13 @@ public class StudyService {
     private static void validateStudyStartDate(StudyUpdateRequest request, Study study) {
         if (study.hasStarted() && !study.getStartDate().equals(request.getStartDate())) {
             throw new StudyAlreadyStartedException(STUDY_ALREADY_STARTED);
+        }
+    }
+
+    private void validateStudyDeletable(Long studyId) {
+        int memberCount = studyMemberRepository.countByStudyIdAndActivatedTrue(studyId);
+        if (memberCount != 1) {
+            throw new BusinessException(STUDY_DELETE_NOT_ALLOWED);
         }
     }
 }

@@ -75,4 +75,8 @@ public class Study extends BaseEntity {
     public boolean hasStarted() {
         return this.startDate.isBefore(LocalDate.now());
     }
+
+    public void delete() {
+        this.activated = false;
+    }
 }
