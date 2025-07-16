@@ -9,6 +9,11 @@ import grep.neogul_coder.domain.groupchat.repository.GroupChatRoomRepository;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
+import grep.neogul_coder.global.response.PageResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
@@ -20,6 +25,7 @@ public class GroupChatService {
     private final UserRepository userRepository;
     private final StudyMemberRepository studyMemberRepository;
 
+    // 생성자 주입을 통한 의존성 주입
     public GroupChatService(GroupChatMessageRepository messageRepository,
         GroupChatRoomRepository roomRepository,
         UserRepository userRepository,
@@ -31,9 +37,10 @@ public class GroupChatService {
     }
 
     public GroupChatMessageResponseDto saveMessage(GroupChatMessageRequestDto requestDto) {
-        // 필요한 도메인 객체 조회
+        // 채팅방 존재 여부 확인
         GroupChatRoom room = roomRepository.findById(requestDto.getRoomId())
             .orElseThrow(() -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
+        // 메시지 발신자(사용자) 정보 조회
         User sender = userRepository.findById(requestDto.getSenderId())
             .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
 
@@ -51,9 +58,10 @@ public class GroupChatService {
         message.setMessage(requestDto.getMessage());
         message.setSentAt(LocalDateTime.now());
 
+        // 메시지 저장
         messageRepository.save(message);
 
-        // 응답 DTO 구성
+        // 저장된 메시지를 dto로 변환
         return new GroupChatMessageResponseDto(
             message.getMessageId(),
             message.getGroupChatRoom().getRoomId(),   // ← roomId 필드가 필요하면 여기서 꺼내야 함
@@ -64,4 +72,38 @@ public class GroupChatService {
             message.getSentAt()
         );
     }
+
+    // 과거 채팅 메시지 페이징 조회 (무한 스크롤용)
+    public PageResponse<GroupChatMessageResponseDto> getMessages(Long roomId, int page, int size) {
+        // 오래된 메시지부터 조회되도록 정렬 기준을 ASC로 설정
+        Pageable pageable = PageRequest.of(page, size, Sort.by("sentAt").ascending());
+
+        // JPQL 쿼리 메서드 기반 조회
+        Page<GroupChatMessage> messages = messageRepository.findMessagesByRoomIdAsc(roomId, pageable);
+
+        // 응답 DTO로 변환
+        Page<GroupChatMessageResponseDto> messagePage = messages.map(message -> {
+            User sender = userRepository.findById(message.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+
+            return new GroupChatMessageResponseDto(
+                message.getMessageId(),
+                message.getGroupChatRoom().getRoomId(),
+                sender.getId(),
+                sender.getNickname(),
+                sender.getProfileImageUrl(),
+                message.getMessage(),
+                message.getSentAt()
+            );
+        });
+
+        // PageResponse로 감싸서 반환
+        return new PageResponse<>(
+            "/api/chat/room/" + roomId + "/messages",
+            messagePage,
+            5 // 페이지 버튼 개수
+        );
+    }
+
+
 }
