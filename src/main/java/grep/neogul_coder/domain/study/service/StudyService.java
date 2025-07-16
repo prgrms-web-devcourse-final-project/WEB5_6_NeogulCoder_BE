@@ -6,8 +6,6 @@ import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyUpdateRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.*;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
-import grep.neogul_coder.domain.study.exception.NotStudyLeaderException;
-import grep.neogul_coder.domain.study.exception.StudyAlreadyStartedException;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyQueryRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
@@ -116,13 +114,13 @@ public class StudyService {
     private void validateStudyLeader(Long studyId, Long userId) {
         StudyMemberRole role = studyQueryRepository.findMyRole(studyId, userId);
         if (!role.equals(LEADER)) {
-            throw new NotStudyLeaderException(STUDY_NOT_LEADER);
+            throw new BusinessException(STUDY_NOT_LEADER);
         }
     }
 
     private static void validateStudyStartDate(StudyUpdateRequest request, Study study) {
         if (study.hasStarted() && !study.getStartDate().equals(request.getStartDate())) {
-            throw new StudyAlreadyStartedException(STUDY_ALREADY_STARTED);
+            throw new BusinessException(STUDY_ALREADY_STARTED);
         }
     }
 
