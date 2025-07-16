@@ -30,7 +30,7 @@ public class ReviewTags {
                 .anyMatch(tag -> firstReviewType.isNotSameType(tag.getReviewType()));
 
         if (hasNotSingleType) {
-            throw new BusinessException(NOT_SINGLE_REVIEW_TYPE, NOT_SINGLE_REVIEW_TYPE.getMessage());
+            throw new BusinessException(NOT_SINGLE_REVIEW_TYPE);
         }
         return firstReviewType;
     }

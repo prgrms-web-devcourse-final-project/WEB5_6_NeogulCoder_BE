@@ -95,13 +95,13 @@ public class UserService {
     private User findUser(Long id) {
         return userRepository.findById(id)
             .orElseThrow(
-                () -> new NotFoundException(UserErrorCode.USER_NOT_FOUND, "회원이 존재하지 않습니다."));
+                () -> new NotFoundException(UserErrorCode.USER_NOT_FOUND));
     }
 
     private User findUser(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(
-                () -> new NotFoundException(UserErrorCode.USER_NOT_FOUND, "회원이 존재하지 않습니다."));
+                () -> new NotFoundException(UserErrorCode.USER_NOT_FOUND));
     }
 
     private boolean duplicationCheck(String email, String nickname) {
