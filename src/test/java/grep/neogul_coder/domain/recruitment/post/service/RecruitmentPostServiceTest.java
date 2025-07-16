@@ -9,7 +9,6 @@ import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPost
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -98,7 +97,7 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
 
         //then
         RecruitmentPost findRecruitmentPost = recruitmentPostRepository.findById(savedRecruitmentPost.getId()).orElseThrow();
-        Assertions.assertThat(findRecruitmentPost.isDeleted()).isTrue();
+        assertThat(findRecruitmentPost.getActivated()).isFalse();
     }
 
     private static User createUser(String nickname) {
