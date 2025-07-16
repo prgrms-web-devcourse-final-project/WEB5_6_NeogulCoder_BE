@@ -24,13 +24,14 @@ public class RecruitmentPostService {
     private final RecruitmentPostRepository recruitmentPostRepository;
 
     @Transactional
-    public void create(RecruitmentPostCreateServiceRequest request, long userId) {
+    public long create(RecruitmentPostCreateServiceRequest request, long userId) {
         StudyMember studyMember = studyMemberRepository.findByStudyIdAndUserId(request.getStudyId(), userId);
 
         if(studyMember.hasNotRoleReader()){
             throw new BusinessException(NOT_STUDY_READER, NOT_STUDY_READER.getMessage());
         }
-        recruitmentPostRepository.save(request.toEntity(userId));
+
+        return recruitmentPostRepository.save(request.toEntity(userId)).getId();
     }
 
     @Transactional

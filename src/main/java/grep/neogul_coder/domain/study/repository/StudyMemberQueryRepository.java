@@ -21,7 +21,7 @@ public class StudyMemberQueryRepository {
     public StudyMember findByStudyIdAndUserId(long studyId, long userId) {
         return queryFactory.selectFrom(studyMember)
                 .where(
-                        studyMember.id.eq(studyId),
+                        studyMember.study.id.eq(studyId),
                         studyMember.userId.eq(userId),
                         studyMember.activated.isTrue()
                 )
