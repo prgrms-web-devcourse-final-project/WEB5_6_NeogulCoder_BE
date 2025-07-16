@@ -48,13 +48,13 @@ public class StudyService {
     }
 
     public StudyInfoResponse getStudyInfo(Long studyId, Long userId) {
+        Study study = studyRepository.findById(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND, STUDY_NOT_FOUND.getMessage()));
+
         StudyMemberRole role = studyQueryRepository.findMyRole(studyId, userId);
         if (!role.equals(LEADER)) {
             throw new NotStudyLeaderException(STUDY_NOT_LEADER, STUDY_NOT_FOUND.getMessage());
         }
-
-        Study study = studyRepository.findById(studyId)
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND, STUDY_NOT_FOUND.getMessage()));
 
         List<StudyMemberResponse> members = studyQueryRepository.findStudyMembers(studyId);
 
