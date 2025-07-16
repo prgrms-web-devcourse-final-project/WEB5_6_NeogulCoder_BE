@@ -1,8 +1,8 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyNamesInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyLoadInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudiesInfo;
 import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostSaveService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
@@ -26,13 +26,14 @@ public class RecruitmentPostSaveController implements RecruitmentPostSaveSpecifi
     }
 
     @GetMapping("/studies")
-    public ApiResponse<ParticipatedStudyNamesInfo> getParticipatedStudyNames(@AuthenticationPrincipal Principal userDetails) {
-        return ApiResponse.success(new ParticipatedStudyNamesInfo());
+    public ApiResponse<ParticipatedStudiesInfo> getParticipatedStudyInfo(@AuthenticationPrincipal Principal userDetails) {
+        ParticipatedStudiesInfo response = recruitmentPostService.getParticipatedStudyInfo(userDetails.getUserId());
+        return ApiResponse.success(response);
     }
 
     @GetMapping("/studies/{study-id}")
-    public ApiResponse<ParticipatedStudyInfo> getParticipatedStudy(@PathVariable("study-id") long StudyId,
-                                                                   @AuthenticationPrincipal Principal userDetails) {
-        return ApiResponse.success(new ParticipatedStudyInfo());
+    public ApiResponse<ParticipatedStudyLoadInfo> getParticipatedStudy(@PathVariable("study-id") long StudyId,
+                                                                       @AuthenticationPrincipal Principal userDetails) {
+        return ApiResponse.success(new ParticipatedStudyLoadInfo());
     }
 }

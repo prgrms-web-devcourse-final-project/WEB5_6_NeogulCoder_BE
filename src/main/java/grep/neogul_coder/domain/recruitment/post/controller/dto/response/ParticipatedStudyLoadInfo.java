@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-public class ParticipatedStudyInfo {
+public class ParticipatedStudyLoadInfo {
 
     @Schema(example = "IT", description = "카테고리")
     private String category;

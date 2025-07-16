@@ -2,6 +2,7 @@ package grep.neogul_coder.domain.recruitment.post.service;
 
 import grep.neogul_coder.domain.IntegrationTestSupport;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudiesInfo;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostCreateServiceRequest;
 import grep.neogul_coder.domain.study.Study;
@@ -13,10 +14,7 @@ import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
@@ -52,7 +50,7 @@ class RecruitmentPostSaveServiceTest extends IntegrationTestSupport {
         User user = userRepository.save(createUser("테스터"));
         userId = user.getId();
 
-        RecruitmentPost recruitmentPost = createRecruitmentPost("제목", "내용", 1, userId);
+        RecruitmentPost recruitmentPost = createRecruitmentPost(userId, "제목", "내용", 1);
         recruitmentPostRepository.save(recruitmentPost);
         recruitmentPostId = recruitmentPost.getId();
     }
@@ -99,6 +97,31 @@ class RecruitmentPostSaveServiceTest extends IntegrationTestSupport {
         );
     }
 
+    @DisplayName("참여 중인 스터디의 정보를 조회 합니다.")
+    @Test
+    void getParticipatedStudyInfo() {
+        //given
+        Study study1 = createStudy("자바 스터디", Category.IT);
+        Study study2 = createStudy("클라이밍 동아리", Category.HOBBY);
+        Study study3 = createStudy("책 읽기", Category.ETC);
+        studyRepository.saveAll(List.of(study1, study2, study3));
+
+        List<StudyMember> studyMembers = List.of(
+                createStudyMember(study1, userId, MEMBER),
+                createStudyMember(study2, userId, MEMBER),
+                createStudyMember(study3, userId, MEMBER)
+        );
+        studyMemberRepository.saveAll(studyMembers);
+
+        //when
+        ParticipatedStudiesInfo result = recruitmentPostService.getParticipatedStudyInfo(userId);
+        System.out.println("result = " + result);
+        //then
+        assertThat(result.getStudyInfos()).hasSize(3)
+                .extracting("name")
+                .containsExactlyInAnyOrder("자바 스터디", "클라이밍 동아리", "책 읽기");
+    }
+
     private User createUser(String nickname) {
         return User.builder()
                 .nickname(nickname)
@@ -120,7 +143,7 @@ class RecruitmentPostSaveServiceTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private RecruitmentPost createRecruitmentPost(String subject, String content, int count, long userId) {
+    private RecruitmentPost createRecruitmentPost(long userId, String subject, String content, int count) {
         return RecruitmentPost.builder()
                 .subject(subject)
                 .content(content)

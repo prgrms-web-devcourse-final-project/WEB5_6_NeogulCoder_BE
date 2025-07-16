@@ -1,8 +1,8 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyNamesInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyLoadInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudiesInfo;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +34,7 @@ public interface RecruitmentPostSaveSpecification {
                     - `name`: 스터디 이름
                     """
     )
-    ApiResponse<ParticipatedStudyNamesInfo> getParticipatedStudyNames(Principal userDetails);
+    ApiResponse<ParticipatedStudiesInfo> getParticipatedStudyInfo(Principal userDetails);
 
     @Operation(
             summary = "참여중인 스터디 상세 정보 조회",
@@ -57,5 +57,5 @@ public interface RecruitmentPostSaveSpecification {
                     - `recruitmentCount`: 스터디 정원 - 스터디 참여 인원 
                     """
     )
-    ApiResponse<ParticipatedStudyInfo> getParticipatedStudy(long studyId, Principal userDetails);
+    ApiResponse<ParticipatedStudyLoadInfo> getParticipatedStudy(long studyId, Principal userDetails);
 }
