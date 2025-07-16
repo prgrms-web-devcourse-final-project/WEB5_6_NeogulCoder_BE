@@ -40,23 +40,23 @@ INSERT INTO study_application ( recruitment_post_id, application_reason, is_read
 INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (2, '시간이 맞아 지원합니다.', FALSE, 'REJECTED');
 INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (3, '프로젝트 경험 쌓고 싶습니다.', TRUE, 'APPROVED');
 
-INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-20 10:00:00', '2025-07-20 12:00:00', '스터디 회의', '진행 상황 공유');
-INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-21 09:00:00', '2025-07-21 10:30:00', '모각코', '혼자 코딩하기');
-INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-22 15:00:00', '2025-07-22 16:00:00', '운동', '헬스장 가기');
-INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-23 13:00:00', '2025-07-23 14:30:00', '리팩토링', '코드 개선');
-INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-24 11:00:00', '2025-07-24 12:00:00', '디자인 회의', 'UI 피드백');
+INSERT INTO calender (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-20 10:00:00', '2025-07-20 12:00:00', '스터디 회의', '진행 상황 공유');
+INSERT INTO calender (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-21 09:00:00', '2025-07-21 10:30:00', '모각코', '혼자 코딩하기');
+INSERT INTO calender (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-22 15:00:00', '2025-07-22 16:00:00', '운동', '헬스장 가기');
+INSERT INTO calender (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-23 13:00:00', '2025-07-23 14:30:00', '리팩토링', '코드 개선');
+INSERT INTO calender (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-24 11:00:00', '2025-07-24 12:00:00', '디자인 회의', 'UI 피드백');
 
-INSERT INTO personal_calendar (user_id, calendar_id) VALUES (101, 1);
-INSERT INTO personal_calendar (user_id, calendar_id) VALUES (101, 2);
-INSERT INTO personal_calendar (user_id, calendar_id) VALUES (102, 3);
-INSERT INTO personal_calendar (user_id, calendar_id) VALUES (103, 4);
-INSERT INTO personal_calendar (user_id, calendar_id) VALUES (104, 5);
+INSERT INTO personal_calender (user_id, calendar_id) VALUES (1, 1);
+INSERT INTO personal_calender (user_id, calendar_id) VALUES (1, 2);
+INSERT INTO personal_calender (user_id, calendar_id) VALUES (2, 3);
+INSERT INTO personal_calender (user_id, calendar_id) VALUES (3, 4);
+INSERT INTO personal_calender (user_id, calendar_id) VALUES (4, 5);
 
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (201, 1);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (202, 2);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (201, 3);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (203, 4);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (204, 5);
+INSERT INTO team_calender (study_id, calendar_id) VALUES (1, 1);
+INSERT INTO team_calender (study_id, calendar_id) VALUES (2, 2);
+INSERT INTO team_calender (study_id, calendar_id) VALUES (1, 3);
+INSERT INTO team_calender (study_id, calendar_id) VALUES (3, 4);
+INSERT INTO team_calender (study_id, calendar_id) VALUES (4, 5);
 
 INSERT INTO time_vote_period (study_id, start_date, end_date) VALUES (2, '2025-07-15 00:00:00', '2025-07-22 00:00:00');
 
@@ -90,9 +90,9 @@ INSERT INTO quiz (post_id, quiz, quiz_answer) VALUES (5, '의존성 주입은 Sp
 -- INSERT INTO upload_img (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('aliquid.png', 'da163f7e-6a68-4e04-8aae-034cf8dd587c.png', 'https://storage.googleapis.com/neogulcoder-wibby/profile/2025/07/14/da163f7e-6a68-4e04-8aae-034cf8dd587c.png', 'profile/2025/07/14/', 1, 'PROFILE', 9);
 -- INSERT INTO upload_img (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('earum.png', 'f65140dd-4cd2-49bb-9981-031e24a4e725.png', 'https://storage.googleapis.com/neogulcoder-wibby/profile/2025/07/14/f65140dd-4cd2-49bb-9981-031e24a4e725.png', 'profile/2025/07/14/', 1, 'PROFILE', 4);
 
-INSERT INTO buddy_energy (user_id, level) VALUES (101, 50);
-INSERT INTO buddy_energy (user_id, level) VALUES (102, 53);
-INSERT INTO buddy_energy (user_id, level) VALUES (103, 49);
+INSERT INTO buddy_energy (user_id, level) VALUES (1, 50);
+INSERT INTO buddy_energy (user_id, level) VALUES (2, 53);
+INSERT INTO buddy_energy (user_id, level) VALUES (3, 49);
 
 INSERT INTO buddy_log (reason, buddy_energy_id) VALUES ('SIGN_UP', 1);
 INSERT INTO buddy_log (reason, buddy_energy_id) VALUES ('STUDY_DONE', 2);
@@ -117,13 +117,13 @@ INSERT INTO attendance (study_id, user_id, attendance_date) VALUES (1, 4, '2025-
 INSERT INTO attendance (study_id, user_id, attendance_date) VALUES (2, 5, '2025-07-01');
 INSERT INTO attendance (study_id, user_id, attendance_date) VALUES (3, 2, '2025-07-03');
 
-INSERT INTO group_chat_room (study_id) VALUES (301);
-INSERT INTO group_chat_room (study_id) VALUES (302);
+INSERT INTO group_chat_room (study_id) VALUES (1);
+INSERT INTO group_chat_room (study_id) VALUES (2);
 
-INSERT INTO group_chat_message (room_id, user_id, content) VALUES (1, 101, '안녕하세요! 스터디 언제 시작하나요?');
-INSERT INTO group_chat_message (room_id, user_id, content) VALUES (1, 102, '오늘 저녁 8시에 시작해요!');
-INSERT INTO group_chat_message (room_id, user_id, content) VALUES (2, 103, '파일 올렸어요. 확인 부탁드려요.');
-INSERT INTO group_chat_message (room_id, user_id, content) VALUES (2, 101, '네 확인했어요. 감사합니다!');
+INSERT INTO group_chat_message (room_id, user_id, content) VALUES (1, 1, '안녕하세요! 스터디 언제 시작하나요?');
+INSERT INTO group_chat_message (room_id, user_id, content) VALUES (1, 2, '오늘 저녁 8시에 시작해요!');
+INSERT INTO group_chat_message (room_id, user_id, content) VALUES (2, 3, '파일 올렸어요. 확인 부탁드려요.');
+INSERT INTO group_chat_message (room_id, user_id, content) VALUES (2, 1, '네 확인했어요. 감사합니다!');
 
 INSERT INTO review (study_id, write_user_id, target_user_id, content, created_date) VALUES (1, 1, 1, '열심히 참여하셨어요.', '2025-07-10 10:00:00');
 INSERT INTO review (study_id, write_user_id, target_user_id, content, created_date) VALUES (1, 2, 2, '피드백이 빠르고 정확했어요. 하지만 지각을 자주하십니다', '2025-07-11 09:30:00');
