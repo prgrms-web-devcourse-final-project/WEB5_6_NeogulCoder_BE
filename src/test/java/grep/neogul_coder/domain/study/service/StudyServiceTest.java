@@ -43,14 +43,14 @@ class StudyServiceTest extends IntegrationTestSupport {
     @Autowired
     private StudyMemberRepository studyMemberRepository;
 
-    private Long userId1;
+    private Long userId;
 
     @BeforeEach
     void init() {
         User user1 = createUser("test1");
         User user2 = createUser("test2");
         userRepository.saveAll(List.of(user1, user2));
-        userId1 = user1.getId();
+        userId = user1.getId();
     }
 
     @DisplayName("스터디를 생성합니다.")
@@ -70,7 +70,7 @@ class StudyServiceTest extends IntegrationTestSupport {
             .build();
 
         // when
-        Long id = studyService.createStudy(request, userId1);
+        Long id = studyService.createStudy(request, userId);
 
         // then
         Study findStudy = studyRepository.findByIdAndActivatedTrue(id).orElseThrow();
@@ -88,11 +88,11 @@ class StudyServiceTest extends IntegrationTestSupport {
         studyRepository.save(study);
         Long studyId = study.getId();
 
-        StudyMember studyMember = createStudyMember(study, userId1, LEADER);
+        StudyMember studyMember = createStudyMember(study, userId, LEADER);
         studyMemberRepository.save(studyMember);
 
         // when
-        StudyItemPagingResponse response = studyService.getMyStudies(pageable, studyId);
+        StudyItemPagingResponse response = studyService.getMyStudies(pageable, userId);
 
         // then
         assertThat(response.getStudies().getFirst().getName()).isEqualTo("스터디");
@@ -107,7 +107,7 @@ class StudyServiceTest extends IntegrationTestSupport {
         studyRepository.save(study);
         Long studyId = study.getId();
 
-        StudyMember studyMember = createStudyMember(study, userId1, LEADER);
+        StudyMember studyMember = createStudyMember(study, userId, LEADER);
         studyMemberRepository.save(studyMember);
 
         StudyUpdateRequest request = StudyUpdateRequest.builder()
@@ -122,7 +122,7 @@ class StudyServiceTest extends IntegrationTestSupport {
             .build();
 
         // when
-        studyService.updateStudy(studyId, request, userId1);
+        studyService.updateStudy(studyId, request, userId);
 
         // then
         Study findStudy = studyRepository.findByIdAndActivatedTrue(studyId).orElseThrow();
@@ -138,7 +138,7 @@ class StudyServiceTest extends IntegrationTestSupport {
         studyRepository.save(study);
         Long studyId = study.getId();
 
-        StudyMember studyMember = createStudyMember(study, userId1, MEMBER);
+        StudyMember studyMember = createStudyMember(study, userId, MEMBER);
         studyMemberRepository.save(studyMember);
 
         StudyUpdateRequest request = StudyUpdateRequest.builder()
@@ -154,8 +154,28 @@ class StudyServiceTest extends IntegrationTestSupport {
 
         // when then
         assertThatThrownBy(() ->
-            studyService.updateStudy(studyId, request, userId1))
+            studyService.updateStudy(studyId, request, userId))
             .isInstanceOf(BusinessException.class).hasMessage(STUDY_NOT_LEADER.getMessage());
+    }
+
+    @DisplayName("스터디장이 스터디를 삭제합니다.")
+    @Test
+    void deleteStudy() {
+        // given
+        Study study = createStudy("스터디", Category.IT, 3, StudyType.OFFLINE, "서울", LocalDate.of(2025, 7, 18),
+            LocalDate.of(2025, 7, 28), "스터디입니다.", "http://localhost:8083/image.url");
+        studyRepository.save(study);
+        Long studyId = study.getId();
+
+        StudyMember studyMember = createStudyMember(study, userId, LEADER);
+        studyMemberRepository.save(studyMember);
+
+        // when
+        studyService.deleteStudy(studyId, userId);
+
+        // then
+        Study findStudy = studyRepository.findById(studyId).orElseThrow();
+        assertThat(findStudy.getActivated()).isFalse();
     }
 
     private static User createUser(String nickname) {
