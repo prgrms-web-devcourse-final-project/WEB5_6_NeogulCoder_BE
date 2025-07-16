@@ -28,7 +28,7 @@ public class RecruitmentPostService {
         StudyMember studyMember = studyMemberRepository.findByStudyIdAndUserId(request.getStudyId(), userId);
 
         if(studyMember.hasNotRoleReader()){
-            throw new BusinessException(NOT_STUDY_READER, NOT_STUDY_READER.getMessage());
+            throw new BusinessException(NOT_STUDY_READER);
         }
 
         return recruitmentPostRepository.save(request.toEntity(userId)).getId();
@@ -58,7 +58,7 @@ public class RecruitmentPostService {
     }
 
     private RecruitmentPost findRecruitmentPost(long recruitmentPostId, long userId) {
-        RecruitmentPost recruitmentPost = recruitmentPostRepository.findById(recruitmentPostId)
+        RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdAndActivatedTrue(recruitmentPostId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND));
 
         if (recruitmentPost.isNotOwnedBy(userId)) {
