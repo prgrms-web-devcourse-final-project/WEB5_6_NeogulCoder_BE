@@ -12,7 +12,7 @@ public class StudyMember extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long studyMemberId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "study_id")
@@ -30,5 +30,9 @@ public class StudyMember extends BaseEntity {
         this.study = study;
         this.userId = userId;
         this.role = role;
+    }
+
+    public boolean hasNotRoleReader(){
+        return this.role != StudyMemberRole.LEADER;
     }
 }

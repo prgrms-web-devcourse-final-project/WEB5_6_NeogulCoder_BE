@@ -5,25 +5,31 @@ import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepos
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostCreateServiceRequest;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostStatusUpdateServiceRequest;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostUpdateServiceRequest;
+import grep.neogul_coder.domain.study.StudyMember;
+import grep.neogul_coder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogul_coder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
-import static grep.neogul_coder.domain.recruitment.RecruitmentErrorCode.NOT_OWNER;
+import static grep.neogul_coder.domain.recruitment.RecruitmentErrorCode.*;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
 public class RecruitmentPostService {
 
+    private final StudyMemberQueryRepository studyMemberRepository;
     private final RecruitmentPostRepository recruitmentPostRepository;
 
-    //TODO 스터디장만 스터디 모집글 생성 가능 하도록 변경 필요
     @Transactional
     public void create(RecruitmentPostCreateServiceRequest request, long userId) {
+        StudyMember studyMember = studyMemberRepository.findByStudyIdAndUserId(request.getStudyId(), userId);
+
+        if(studyMember.hasNotRoleReader()){
+            throw new BusinessException(NOT_STUDY_READER, NOT_STUDY_READER.getMessage());
+        }
         recruitmentPostRepository.save(request.toEntity(userId));
     }
 
@@ -47,7 +53,7 @@ public class RecruitmentPostService {
     @Transactional
     public void delete(long recruitmentPostId, long userId) {
         RecruitmentPost recruitmentPost = findRecruitmentPost(recruitmentPostId, userId);
-        // recruitmentPost.delete();
+        recruitmentPost.delete();
     }
 
     private RecruitmentPost findRecruitmentPost(long recruitmentPostId, long userId) {
