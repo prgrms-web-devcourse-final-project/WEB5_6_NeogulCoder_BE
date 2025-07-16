@@ -46,17 +46,17 @@ INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2
 INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-23 13:00:00', '2025-07-23 14:30:00', '리팩토링', '코드 개선');
 INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-24 11:00:00', '2025-07-24 12:00:00', '디자인 회의', 'UI 피드백');
 
-INSERT INTO personal_calendar (user_id, calendar_id) VALUES (101, 1);
-INSERT INTO personal_calendar (user_id, calendar_id) VALUES (101, 2);
-INSERT INTO personal_calendar (user_id, calendar_id) VALUES (102, 3);
-INSERT INTO personal_calendar (user_id, calendar_id) VALUES (103, 4);
-INSERT INTO personal_calendar (user_id, calendar_id) VALUES (104, 5);
+INSERT INTO personal_calendar (user_id, calendar_id) VALUES (1, 1);
+INSERT INTO personal_calendar (user_id, calendar_id) VALUES (1, 2);
+INSERT INTO personal_calendar (user_id, calendar_id) VALUES (2, 3);
+INSERT INTO personal_calendar (user_id, calendar_id) VALUES (3, 4);
+INSERT INTO personal_calendar (user_id, calendar_id) VALUES (4, 5);
 
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (201, 1);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (202, 2);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (201, 3);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (203, 4);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (204, 5);
+INSERT INTO team_calendar (study_id, calendar_id) VALUES (1, 1);
+INSERT INTO team_calendar (study_id, calendar_id) VALUES (2, 2);
+INSERT INTO team_calendar (study_id, calendar_id) VALUES (1, 3);
+INSERT INTO team_calendar (study_id, calendar_id) VALUES (3, 4);
+INSERT INTO team_calendar (study_id, calendar_id) VALUES (4, 5);
 
 INSERT INTO time_vote_period (study_id, start_date, end_date) VALUES (2, '2025-07-15 00:00:00', '2025-07-22 00:00:00');
 
@@ -120,7 +120,7 @@ INSERT INTO attendance (study_id, user_id, attendance_date) VALUES (3, 2, '2025-
 INSERT INTO group_chat_room (study_id) VALUES (1);
 INSERT INTO group_chat_room (study_id) VALUES (2);
 
-INSERT INTO group_chat_message (room_id, user_id, message) VALUES (1, 1, '안녕하세요! 스터디 언제 시작하나요?');
+INSERT INTO group_chat_message (room_id, user_id, meesage) VALUES (1, 1, '안녕하세요! 스터디 언제 시작하나요?');
 INSERT INTO group_chat_message (room_id, user_id, message) VALUES (1, 2, '오늘 저녁 8시에 시작해요!');
 INSERT INTO group_chat_message (room_id, user_id, message) VALUES (2, 3, '파일 올렸어요. 확인 부탁드려요.');
 INSERT INTO group_chat_message (room_id, user_id, message) VALUES (2, 1, '네 확인했어요. 감사합니다!');
