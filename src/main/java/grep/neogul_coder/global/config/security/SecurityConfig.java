@@ -87,12 +87,10 @@ public class SecurityConfig {
                         "/reissue",
                         "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**",
                         "/webjars/**",
-                        "/h2-console/**",
                         "/favicon.ico",
                         "/error").permitAll()
                     .anyRequest().authenticated()
             )
-            .headers(headers -> headers.disable())
             .oauth2Login(oauth2 -> oauth2
                 .authorizationEndpoint(config -> config
                     .authorizationRequestResolver(customResolver) // 여기!
