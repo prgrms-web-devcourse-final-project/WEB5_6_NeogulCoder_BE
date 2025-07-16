@@ -14,6 +14,7 @@ public class PrUpdateRequest {
     private String location;
 
     @Size(max = 2, message = "링크는 최대 2개 까지 가능합니다.")
-    @Schema(description = "PR 링크 목록", example = "[\"https://instagram.com/example\"]")
+    @Schema(description = "PR 링크 목록", example = "[{\"urlName\": \"인스타그램\", \"prUrl\": \"https://instagram.com/example\"}]")
     private List<LinkUpdateRequest> prUrls;
+
 }

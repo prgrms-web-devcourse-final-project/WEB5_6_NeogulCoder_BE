@@ -46,7 +46,7 @@ public class StudyItemResponse {
     private boolean isFinished;
 
     @Builder
-    private StudyItemResponse(Long studyId, String name, String leaderNickname, int capacity, int currentCount, LocalDate startDate,
+    public StudyItemResponse(Long studyId, String name, String leaderNickname, int capacity, int currentCount, LocalDate startDate,
                              String imageUrl, String introduction, Category category, StudyType studyType, boolean isFinished) {
         this.studyId = studyId;
         this.name = name;
