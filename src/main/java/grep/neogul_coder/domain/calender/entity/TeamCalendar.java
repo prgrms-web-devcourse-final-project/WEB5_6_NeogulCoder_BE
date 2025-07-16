@@ -19,5 +19,14 @@ public class TeamCalendar extends BaseEntity {
     @Column(name = "study_id")
     private Long studyId;
 
+    public TeamCalendar(Long studyId, Calendar calendar) {
+        this.studyId = studyId;
+        this.calendar = calendar;
+
+    }
+
+    public TeamCalendar() {
+
+    }
 }
 

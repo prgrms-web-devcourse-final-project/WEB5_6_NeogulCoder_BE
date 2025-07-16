@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface TeamCalendarRepository extends JpaRepository<TeamCalendar, Long> {
     List<TeamCalendar> findByStudyId(Long studyId);
-    List<TeamCalendar> findByStudyIdAndCalendar_ScheduledStartBetween(Long studyId, LocalDateTime start, LocalDateTime end);
-}
+    List<TeamCalendar> findByStudyIdAndCalendar_ScheduledStartLessThanEqualAndCalendar_ScheduledEndGreaterThanEqual(
+        Long studyId, LocalDateTime scheduledStart, LocalDateTime scheduledEnd
+    );}

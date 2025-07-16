@@ -26,20 +26,6 @@ public interface TeamCalendarSpecification {
         @PathVariable("studyId") Long studyId
     );
 
-
-    @Operation(
-        summary = "팀 일정 상세 조회",
-        description = "특정 팀의 특정 일정 상세정보를 조회합니다.\n\n" +
-            "예: `/api/teams/{studyId}/calendar/{calendarId}`"
-    )
-    ApiResponse<TeamCalendarResponse> findOne(
-        @Parameter(name = "studyId", description = "팀 ID", required = true, in = ParameterIn.PATH)
-        @PathVariable("studyId") Long studyId,
-        @Parameter(name = "calendarId", description = "일정 ID", required = true, in = ParameterIn.PATH)
-        @PathVariable("calendarId") Long calendarId
-    );
-
-
     @Operation(
         summary = "팀 일정 날짜별 조회",
         description = "특정 팀의 특정 날짜(yyyy-MM-dd)에 등록된 일정들을 조회합니다.\n\n" +

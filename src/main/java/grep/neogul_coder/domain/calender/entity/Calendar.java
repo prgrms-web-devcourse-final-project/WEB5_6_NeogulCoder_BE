@@ -35,12 +35,10 @@ public class Calendar extends BaseEntity {
 
     }
 
-
     public void update(Calendar updated) {
         this.title = updated.title;
         this.content = updated.content;
         this.scheduledStart = updated.scheduledStart;
         this.scheduledEnd = updated.scheduledEnd;
     }
-
 }

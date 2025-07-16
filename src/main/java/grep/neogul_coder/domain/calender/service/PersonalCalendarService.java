@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+import static grep.neogul_coder.domain.calender.exception.code.CalendarErrorCode.CALENDAR_NOT_FOUND;
 import static grep.neogul_coder.global.response.code.ErrorCode.*;
 
 @Service
@@ -57,14 +58,14 @@ public class PersonalCalendarService {
     public void update(Long userId, Long calendarId, PersonalCalendarRequest request) {
         PersonalCalendar calendar = personalCalendarRepository.findById(calendarId)
             .filter(pc -> pc.getUserId().equals(userId))
-            .orElseThrow(() -> new CalendarNotFoundException(CalendarErrorCode.CALENDAR_NOT_FOUND));
+            .orElseThrow(() -> new NotFoundException(CALENDAR_NOT_FOUND));
         calendar.getCalendar().update(request.toCalendar());
     }
 
     public void delete(Long userId, Long calendarId) {
         PersonalCalendar calendar = personalCalendarRepository.findById(calendarId)
             .filter(pc -> pc.getUserId().equals(userId))
-            .orElseThrow(() -> new CalendarNotFoundException(CalendarErrorCode.CALENDAR_NOT_FOUND));
+            .orElseThrow(() -> new NotFoundException(CALENDAR_NOT_FOUND));
         personalCalendarRepository.delete(calendar);
     }
 }

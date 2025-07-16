@@ -1,7 +1,10 @@
 package grep.neogul_coder.domain.calender.controller.dto.response;
 
+import grep.neogul_coder.domain.calender.entity.Calendar;
+import grep.neogul_coder.domain.calender.entity.TeamCalendar;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -34,5 +37,34 @@ public class TeamCalendarResponse {
 
     @Schema(description = "종료 시간", example = "2025-07-12T15:00:00")
     private LocalDateTime endTime;
+
+    @Builder
+    public TeamCalendarResponse(Long calendarId, Long studyId, Long writerId, String writerNickname,
+        String writerProfileImageUrl, String title, String description, LocalDateTime startTime,
+        LocalDateTime endTime) {
+        this.calendarId = calendarId;
+        this.studyId = studyId;
+        this.writerId = writerId;
+        this.writerNickname = writerNickname;
+        this.writerProfileImageUrl = writerProfileImageUrl;
+        this.title = title;
+        this.description = description;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public static TeamCalendarResponse from(TeamCalendar teamCalendar) {
+        Calendar calendar = teamCalendar.getCalendar();
+
+        return TeamCalendarResponse.builder()
+            .calendarId(calendar.getId())
+            .title(calendar.getTitle())
+            .description(calendar.getContent())
+            .startTime(calendar.getScheduledStart())
+            .endTime(calendar.getScheduledEnd())
+            .studyId(teamCalendar.getStudyId())
+            .build();
+    }
+
 
 }
