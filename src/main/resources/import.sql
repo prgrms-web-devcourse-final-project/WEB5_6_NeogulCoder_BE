@@ -1,8 +1,8 @@
-INSERT INTO member (email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES ('eungyeonghwang@ju.com', '&QT5Jklx#t', '$2a$10$WZzvlwlN6FVtQvGUXw2CIeNQvT5fPfA4qN99NisD2GOyCeuC4W0t2', 'https://www.lorempixel.com/227/245', 'ROLE_ADMIN', NULL, NULL);
-INSERT INTO member (email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES ('aryu@ihanjang.kr', '!h1nRU1oKH', '$2a$10$WZzvlwlN6FVtQvGUXw2CIeNQvT5fPfA4qN99NisD2GOyCeuC4W0t2', 'https://placeimg.com/350/227/any', 'ROLE_USER', 2139, 'google');
-INSERT INTO member (email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES ('eunjeongi@hotmail.com', 'm#T99Yfl@*', '$2a$10$WZzvlwlN6FVtQvGUXw2CIeNQvT5fPfA4qN99NisD2GOyCeuC4W0t2', 'https://placekitten.com/101/440', 'ROLE_USER', 5741, 'google');
-INSERT INTO member (email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES ('rryu@yuhanhoesa.com', 'NPy2EpXd$6', '$2a$10$WZzvlwlN6FVtQvGUXw2CIeNQvT5fPfA4qN99NisD2GOyCeuC4W0t2', 'https://placekitten.com/842/456', 'ROLE_USER', NULL, NULL);
-INSERT INTO member (email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES ('yeonghoseo@nate.com', '$c3VDMSkF)', '$2a$10$WZzvlwlN6FVtQvGUXw2CIeNQvT5fPfA4qN99NisD2GOyCeuC4W0t2', 'https://placekitten.com/812/623', 'ROLE_ADMIN', NULL, NULL);
+INSERT INTO member (email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES ('eungyeonghwang@ju.com',  '$2a$10$WZzvlwlN6FVtQvGUXw2CIeNQvT5fPfA4qN99NisD2GOyCeuC4W0t2','&QT5Jklx#t', 'https://www.lorempixel.com/227/245', 'ROLE_ADMIN', NULL, NULL);
+INSERT INTO member (email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES ('aryu@ihanjang.kr',  '$2a$10$WZzvlwlN6FVtQvGUXw2CIeNQvT5fPfA4qN99NisD2GOyCeuC4W0t2', '!h1nRU1oKH','https://placeimg.com/350/227/any', 'ROLE_USER', 2139, 'google');
+INSERT INTO member (email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES ('eunjeongi@hotmail.com',  '$2a$10$WZzvlwlN6FVtQvGUXw2CIeNQvT5fPfA4qN99NisD2GOyCeuC4W0t2', 'm#T99Yfl@*','https://placekitten.com/101/440', 'ROLE_USER', 5741, 'google');
+INSERT INTO member (email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES ('rryu@yuhanhoesa.com',  '$2a$10$WZzvlwlN6FVtQvGUXw2CIeNQvT5fPfA4qN99NisD2GOyCeuC4W0t2','NPy2EpXd$6', 'https://placekitten.com/842/456', 'ROLE_USER', NULL, NULL);
+INSERT INTO member (email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES ('yeonghoseo@nate.com',  '$2a$10$WZzvlwlN6FVtQvGUXw2CIeNQvT5fPfA4qN99NisD2GOyCeuC4W0t2', '$c3VDMSkF)','https://placekitten.com/812/623', 'ROLE_ADMIN', NULL, NULL);
 
 INSERT INTO study (origin_study_id, name, category, capacity, current_count, study_type, location, start_date, end_date, introduction, image_url, is_finished) VALUES (NULL, '자바 스터디', 'IT', 10, 1, 'ONLINE', NULL, '2025-08-01', '2025-12-31', '자바 스터디에 오신 것을 환영합니다.', 'https://example.com/image.jpg', FALSE);
 INSERT INTO study (origin_study_id, name, category, capacity, current_count, study_type, location, start_date, end_date, introduction, image_url, is_finished) VALUES (NULL, '파이썬 스터디', 'IT', 8, 1, 'OFFLINE', '대구', '2025-09-01', '2026-01-31', '파이썬 기초부터 심화까지 학습합니다.', 'https://example.com/python.jpg', FALSE);
@@ -100,10 +100,10 @@ INSERT INTO buddy_log (reason, buddy_energy_id) VALUES ('TEAM_LEADER_BONUS', 2);
 INSERT INTO buddy_log (reason, buddy_energy_id) VALUES ('NEGATIVE_REVIEW', 3);
 
 INSERT INTO pr_template (user_id, introduction, location) VALUES (1, '함께 성장하는 백엔드 개발자입니다. 협업과 커뮤니케이션을 중요하게 생각하며, 문제 해결에 집중하는 개발 문화를 지향합니다.', '서울시 강남구');
-INSERT INTO pr_template (user_id, introduction, location) VALUES (1, '기획부터 배포까지 경험한 풀스택 개발자입니다.React와 Spring Boot를 주로 사용하며, 사용자 경험 개선에 관심이 많습니다.', '경기도 성남시');
+INSERT INTO pr_template (user_id, introduction, location) VALUES (3, '기획부터 배포까지 경험한 풀스택 개발자입니다.React와 Spring Boot를 주로 사용하며, 사용자 경험 개선에 관심이 많습니다.', '경기도 성남시');
 INSERT INTO pr_template (user_id, introduction, location) VALUES (2, '실용적인 코드 작성을 지향하는 개발자입니다. 코드를 통해 팀의 효율을 높이고, 항상 학습하고 성장하는 자세를 가지고 있습니다.', '부산시 해운대구');
 INSERT INTO pr_template (user_id, introduction, location) VALUES (4, '초심을 잃지 않는 프론트엔드 개발자입니다. Vue, React 기반 프로젝트 경험이 있으며, UI/UX에 대한 관심도 많습니다.', '대전시 유성구');
-INSERT INTO pr_template (user_id, introduction, location) VALUES (1, '문제를 해결하는 것이 즐거운 백엔드 개발자입니다. JPA, QueryDSL 기반의 안정적인 데이터 처리와 아키텍처 설계에 관심이 있습니다.', '인천시 연수구');
+INSERT INTO pr_template (user_id, introduction, location) VALUES (5, '문제를 해결하는 것이 즐거운 백엔드 개발자입니다. JPA, QueryDSL 기반의 안정적인 데이터 처리와 아키텍처 설계에 관심이 있습니다.', '인천시 연수구');
 
 INSERT INTO link (pr_id, pr_url, url_name) VALUES (1, 'https://github.com/yeongho', 'GitHub 포트폴리오');
 INSERT INTO link (pr_id, pr_url, url_name) VALUES (2, 'https://velog.io/@jiweon01', '기술 블로그 (Velog)');
@@ -125,11 +125,11 @@ INSERT INTO group_chat_message (room_id, user_id, content) VALUES (1, 102, '오�
 INSERT INTO group_chat_message (room_id, user_id, content) VALUES (2, 103, '파일 올렸어요. 확인 부탁드려요.');
 INSERT INTO group_chat_message (room_id, user_id, content) VALUES (2, 101, '네 확인했어요. 감사합니다!');
 
-INSERT INTO review (study_id, write_user_id, target_user_id, content) VALUES (1, 1, 1, '열심히 참여하셨어요.');
-INSERT INTO review (study_id, write_user_id, target_user_id, content) VALUES (1, 2, 2, '피드백이 빠르고 정확했어요. 하지만 지각을 자주하십니다');
-INSERT INTO review (study_id, write_user_id, target_user_id, content) VALUES (1, 3, 2, '커뮤니케이션이 좋았어요');
-INSERT INTO review (study_id, write_user_id, target_user_id, content) VALUES (2, 1, 2, '책임감이 느껴졌어요.');
-INSERT INTO review (study_id, write_user_id, target_user_id, content) VALUES (2, 2, 1, '팀워크가 훌륭했어요.');
+INSERT INTO review (study_id, write_user_id, target_user_id, content, created_date) VALUES (1, 1, 1, '열심히 참여하셨어요.', '2025-07-10 10:00:00');
+INSERT INTO review (study_id, write_user_id, target_user_id, content, created_date) VALUES (1, 2, 2, '피드백이 빠르고 정확했어요. 하지만 지각을 자주하십니다', '2025-07-11 09:30:00');
+INSERT INTO review (study_id, write_user_id, target_user_id, content, created_date) VALUES (1, 3, 2, '커뮤니케이션이 좋았어요', '2025-07-12 14:20:00');
+INSERT INTO review (study_id, write_user_id, target_user_id, content, created_date) VALUES (2, 1, 2, '책임감이 느껴졌어요.', '2025-07-13 16:45:00');
+INSERT INTO review (study_id, write_user_id, target_user_id, content, created_date) VALUES (2, 2, 1, '팀워크가 훌륭했어요.', '2025-07-14 11:15:00');
 
 INSERT INTO review_tag (review_type, review_tag) VALUES ('GOOD', '항상 밝고 긍정적으로 참여 하십니다');
 INSERT INTO review_tag (review_type, review_tag) VALUES ('BAD', '자주 지각을 하십니다');

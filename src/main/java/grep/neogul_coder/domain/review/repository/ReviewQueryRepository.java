@@ -37,4 +37,14 @@ public class ReviewQueryRepository {
 
         return new PageImpl<>(reviews, pageable, (total != null) ? total : 0L);
     }
+
+    public ReviewEntity findBy(long studyId, long targetUserId, long writeUserId) {
+        return queryFactory.selectFrom(reviewEntity)
+                .where(
+                        reviewEntity.studyId.eq(studyId),
+                        reviewEntity.targetUserId.eq(targetUserId),
+                        reviewEntity.writeUserId.eq(writeUserId)
+                )
+                .fetchOne();
+    }
 }
