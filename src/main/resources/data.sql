@@ -120,10 +120,10 @@ INSERT INTO attendance (study_id, user_id, attendance_date) VALUES (3, 2, '2025-
 INSERT INTO group_chat_room (study_id) VALUES (1);
 INSERT INTO group_chat_room (study_id) VALUES (2);
 
-INSERT INTO group_chat_message (room_id, user_id, content) VALUES (1, 1, '안녕하세요! 스터디 언제 시작하나요?');
-INSERT INTO group_chat_message (room_id, user_id, content) VALUES (1, 2, '오늘 저녁 8시에 시작해요!');
-INSERT INTO group_chat_message (room_id, user_id, content) VALUES (2, 3, '파일 올렸어요. 확인 부탁드려요.');
-INSERT INTO group_chat_message (room_id, user_id, content) VALUES (2, 1, '네 확인했어요. 감사합니다!');
+INSERT INTO group_chat_message (room_id, user_id, message) VALUES (1, 1, '안녕하세요! 스터디 언제 시작하나요?');
+INSERT INTO group_chat_message (room_id, user_id, message) VALUES (1, 2, '오늘 저녁 8시에 시작해요!');
+INSERT INTO group_chat_message (room_id, user_id, message) VALUES (2, 3, '파일 올렸어요. 확인 부탁드려요.');
+INSERT INTO group_chat_message (room_id, user_id, message) VALUES (2, 1, '네 확인했어요. 감사합니다!');
 
 INSERT INTO review (study_id, write_user_id, target_user_id, content, created_date) VALUES (1, 1, 1, '열심히 참여하셨어요.', '2025-07-10 10:00:00');
 INSERT INTO review (study_id, write_user_id, target_user_id, content, created_date) VALUES (1, 2, 2, '피드백이 빠르고 정확했어요. 하지만 지각을 자주하십니다', '2025-07-11 09:30:00');
