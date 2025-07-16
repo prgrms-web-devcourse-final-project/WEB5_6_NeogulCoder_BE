@@ -27,7 +27,7 @@ public class ReviewTagInitializer {
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void initReviewTags() {
-        if (reviewTagRepository.count() == 0) {
+        if (reviewTagRepository.count() == 5) {
             List<ReviewTagEntity> reviewTagEntities = Stream.of(
                             GoodReviewTag.values(),
                             BadReviewTag.values(),
@@ -39,7 +39,9 @@ public class ReviewTagInitializer {
 
             reviewTagRepository.saveAll(reviewTagEntities);
             log.info("리뷰 태그 저장 실행");
+            return;
         }
+
         log.info("리뷰 태그 초기화 실행 X");
     }
 }
