@@ -22,7 +22,7 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> 
 
     boolean existsByStudyIdAndUserIdAndActivatedTrue(Long studyId, Long userId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update StudyMember m set m.activated = false where m.study.id = :studyId")
     void deactivateByStudyId(@Param("studyId") Long studyId);
 }

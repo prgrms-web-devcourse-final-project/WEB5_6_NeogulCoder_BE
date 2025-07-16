@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface RecruitmentPostRepository extends JpaRepository<RecruitmentPost, Long> {
     Optional<RecruitmentPost> findByIdAndActivatedTrue(long recruitmentPostId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update RecruitmentPost r set r.activated = false where r.studyId = :studyId")
     void deactivateByStudyId(@Param("studyId") Long studyId);
 }
