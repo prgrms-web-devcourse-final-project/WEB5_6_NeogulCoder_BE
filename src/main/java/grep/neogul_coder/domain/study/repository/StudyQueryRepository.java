@@ -42,7 +42,11 @@ public class StudyQueryRepository {
             .from(studyMember)
             .join(user).on(user.id.eq(studyMember.userId))
             .join(study).on(study.id.eq(studyMember.study.id))
-            .where(studyMember.userId.eq(userId))
+            .where(
+                studyMember.userId.eq(userId),
+                studyMember.activated.isTrue(),
+                study.activated.isTrue()
+            )
             .fetch();
     }
 
@@ -50,9 +54,12 @@ public class StudyQueryRepository {
         return queryFactory
             .select(studyMember.role)
             .from(studyMember)
+            .join(study).on(study.id.eq(studyMember.study.id))
             .where(
                 studyMember.study.id.eq(studyId),
-                studyMember.userId.eq(userId)
+                studyMember.userId.eq(userId),
+                studyMember.activated.isTrue(),
+                study.activated.isTrue()
             )
             .fetchOne();
     }
@@ -66,8 +73,14 @@ public class StudyQueryRepository {
                 user.profileImageUrl
             ))
             .from(studyMember)
-            .join(user).on(user.id.eq(studyMember.studyMemberId))
-            .where(studyMember.study.id.eq(studyId))
+            .join(study).on(study.id.eq(studyMember.study.id))
+            .join(user).on(user.id.eq(studyMember.userId))
+            .where(
+                studyMember.study.id.eq(studyId),
+                studyMember.activated.isTrue(),
+                study.activated.isTrue(),
+                user.activated.isTrue()
+            )
             .fetch();
     }
 }

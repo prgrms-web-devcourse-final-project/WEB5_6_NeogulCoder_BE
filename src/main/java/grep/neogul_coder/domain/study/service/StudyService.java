@@ -34,7 +34,7 @@ public class StudyService {
     }
 
     public StudyHeaderResponse getStudyHeader(Long studyId) {
-        Study study = studyRepository.findById(studyId)
+        Study study = studyRepository.findByIdAndActivatedTrue(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
         return StudyHeaderResponse.from(study);
@@ -49,7 +49,7 @@ public class StudyService {
     }
 
     public StudyInfoResponse getStudyInfo(Long studyId, Long userId) {
-        Study study = studyRepository.findById(studyId)
+        Study study = studyRepository.findByIdAndActivatedTrue(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
         validateStudyMember(studyId, userId);
