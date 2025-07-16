@@ -2,18 +2,17 @@ package grep.neogul_coder.domain.calender.controller.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Schema(description = "팀 캘린더 응답 DTO")
-public class TeamCalenderResponse {
+public class TeamCalendarResponse {
 
     @Schema(description = "일정 ID", example = "2001")
-    private Long scheduleId;
+    private Long calendarId;
 
-    @Schema(description = "팀 ID", example = "101")
-    private Long teamId;
+    @Schema(description = "스터디 ID", example = "101")
+    private Long studyId;
 
     @Schema(description = "작성자 ID", example = "123")
     private Long writerId;

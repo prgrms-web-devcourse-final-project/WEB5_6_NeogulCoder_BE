@@ -1,24 +1,23 @@
 package grep.neogul_coder.domain.calender.entity;
 
+
 import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Entity
 @Getter
-public class Calender extends BaseEntity {
+public class TeamCalendar extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime scheduledStart;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Calendar calendar;
 
-    private LocalDateTime scheduledEnd;
-
-    private String title;
-
-    private String content;
+    @Column(name = "study_id")
+    private Long studyId;
 
 }
+
