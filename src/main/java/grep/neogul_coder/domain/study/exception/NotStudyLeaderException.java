@@ -5,7 +5,7 @@ import grep.neogul_coder.global.response.code.ErrorCode;
 
 public class NotStudyLeaderException extends BusinessException {
 
-    public NotStudyLeaderException(ErrorCode errorCode, String message) {
-        super(errorCode, message);
+    public NotStudyLeaderException(ErrorCode errorCode) {
+        super(errorCode);
     }
 }

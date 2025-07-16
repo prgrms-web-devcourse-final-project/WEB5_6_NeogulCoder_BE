@@ -53,4 +53,8 @@ public class RecruitmentPost extends BaseEntity {
     public void updateStatus(RecruitmentPostStatus status) {
         this.status = status;
     }
+
+    public void delete() {
+        this.activated = false;
+    }
 }

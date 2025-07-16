@@ -66,7 +66,7 @@ public class StudyQueryRepository {
                 user.profileImageUrl
             ))
             .from(studyMember)
-            .join(user).on(user.id.eq(studyMember.studyMemberId))
+            .join(user).on(user.id.eq(studyMember.id))
             .where(studyMember.study.id.eq(studyId))
             .fetch();
     }

@@ -4,9 +4,11 @@ import grep.neogul_coder.domain.users.entity.User;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+@Getter
 public class Principal extends org.springframework.security.core.userdetails.User {
 
     private final long userId;
@@ -29,7 +31,4 @@ public class Principal extends org.springframework.security.core.userdetails.Use
         this.accessToken = accessToken;
     }
 
-    public long getUserId() {
-        return userId;
-    }
 }

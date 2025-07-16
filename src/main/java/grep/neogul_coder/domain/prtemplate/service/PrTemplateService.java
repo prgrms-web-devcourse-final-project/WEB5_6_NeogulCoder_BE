@@ -5,12 +5,14 @@ import grep.neogul_coder.domain.buddy.repository.BuddyEnergyRepository;
 import grep.neogul_coder.domain.prtemplate.controller.dto.response.PrPageResponse;
 import grep.neogul_coder.domain.prtemplate.entity.Link;
 import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
+import grep.neogul_coder.domain.prtemplate.exception.TemplateNotFoundException;
 import grep.neogul_coder.domain.prtemplate.exception.code.PrTemplateErrorCode;
 import grep.neogul_coder.domain.prtemplate.repository.LinkRepository;
 import grep.neogul_coder.domain.prtemplate.repository.PrTemplateRepository;
 import grep.neogul_coder.domain.review.entity.ReviewEntity;
 import grep.neogul_coder.domain.review.repository.ReviewRepository;
 import grep.neogul_coder.domain.users.entity.User;
+import grep.neogul_coder.domain.users.exception.UserNotFoundException;
 import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.NotFoundException;
@@ -34,27 +36,29 @@ public class PrTemplateService {
     private final UserRepository userRepository;
 
     public void deleteByUserId(Long userId) {
-        PrTemplate prTemplate = prTemplateRepository.findByUserId(userId);
+        PrTemplate prTemplate = prTemplateRepository.findByUserId(userId)
+            .orElseThrow(() -> new TemplateNotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
         prTemplate.delete();
     }
 
     public void update(Long id, String location) {
         PrTemplate prTemplate = prTemplateRepository.findById(id).orElseThrow(
-            () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND, "템플릿이 존재하지 않습니다."));
+            () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
         prTemplate.update(location);
     }
 
     public void updateIntroduction(Long id, String introduction) {
         PrTemplate prTemplate = prTemplateRepository.findById(id).orElseThrow(
-            () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND, "템플릿이 존재하지 않습니다."));
+            () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
         prTemplate.updateIntroduction(introduction);
     }
 
     public PrPageResponse toResponse(Long userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
-            UserErrorCode.USER_NOT_FOUND, "회원이 존재하지 않습니다."));
-        PrTemplate prTemplate = prTemplateRepository.findByUserId(userId);
+            UserErrorCode.USER_NOT_FOUND));
+        PrTemplate prTemplate = prTemplateRepository.findByUserId(userId)
+            .orElseThrow(() -> new TemplateNotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
         List<Link> links = linkRepository.findAllByPrIdAndActivatedTrue(prTemplate.getId());
         List<ReviewEntity> reviews = reviewRepository.findAllByTargetUserId(userId);
 
@@ -94,7 +98,7 @@ public class PrTemplateService {
             .limit(5)
             .map(review -> {
                 User writer = userRepository.findById(review.getWriteUserId())
-                    .orElseThrow(() -> new NotFoundException(UserErrorCode.USER_NOT_FOUND, "작성자를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
                 return PrPageResponse.ReviewContentDto.builder()
                     .reviewUserId(writer.getId())
                     .reviewUserImgUrl(writer.getProfileImageUrl())
