@@ -31,7 +31,4 @@ public class Principal extends org.springframework.security.core.userdetails.Use
         this.accessToken = accessToken;
     }
 
-    public long getUserId() {
-        return userId;
-    }
 }
