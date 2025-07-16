@@ -3,7 +3,7 @@ package grep.neogul_coder.domain.recruitment.post.controller;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyNamesInfo;
-import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostService;
+import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostSaveService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class RecruitmentPostSaveController implements RecruitmentPostSaveSpecification {
 
-    private final RecruitmentPostService recruitmentPostService;
+    private final RecruitmentPostSaveService recruitmentPostService;
 
     @PostMapping
     public ApiResponse<Void> save(@Valid @RequestBody RecruitmentPostCreateRequest request,
