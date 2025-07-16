@@ -5,6 +5,7 @@ import grep.neogul_coder.domain.prtemplate.entity.Link;
 import grep.neogul_coder.domain.prtemplate.repository.LinkRepository;
 import grep.neogul_coder.domain.prtemplate.repository.PrTemplateRepository;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,8 @@ public class LinkService {
     private final PrTemplateRepository prTemplateRepository;
 
     public void deleteByPrId(Long prId) {
-        Link link = linkRepository.findByPrId(prId);
-        link.delete();
+        Optional.ofNullable(linkRepository.findByPrId(prId))
+                .ifPresent(Link::delete);
     }
 
     public void update(Long prId, List<LinkUpdateRequest> prUrls) {
