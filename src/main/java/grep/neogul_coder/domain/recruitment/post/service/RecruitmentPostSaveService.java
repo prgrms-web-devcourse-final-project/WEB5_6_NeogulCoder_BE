@@ -1,7 +1,7 @@
 package grep.neogul_coder.domain.recruitment.post.service;
 
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.LoadParticipatedStudyInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudiesInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudyLoadInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudiesInfo;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostCreateServiceRequest;
 import grep.neogul_coder.domain.study.Study;
@@ -37,18 +37,18 @@ public class RecruitmentPostSaveService {
         return recruitmentPostRepository.save(request.toEntity(userId)).getId();
     }
 
-    public ParticipatedStudiesInfo getParticipatedStudyInfo(long userId) {
+    public JoinedStudiesInfo getJoinedStudyInfo(long userId) {
         List<StudyMember> studyMembers = studyMemberRepository.findAllFetchStudyByUserId(userId);
         List<Study> studyList = toStudyList(studyMembers);
-        return ParticipatedStudiesInfo.of(studyList);
+        return JoinedStudiesInfo.of(studyList);
     }
 
-    public LoadParticipatedStudyInfo loadParticipatedStudyInfo(long studyId, long userId) {
+    public JoinedStudyLoadInfo getJoinedStudyLoadInfo(long studyId, long userId) {
         Study study = findValidStudy(studyId, userId);
         long currentCount = studyMemberRepository.findCurrentCountBy(studyId);
         long remainSlots = study.calculateRemainSlots(currentCount);
 
-        return LoadParticipatedStudyInfo.of(study, remainSlots);
+        return JoinedStudyLoadInfo.of(study, remainSlots);
     }
 
     private boolean isNotParticipated(StudyMember studyMember) {

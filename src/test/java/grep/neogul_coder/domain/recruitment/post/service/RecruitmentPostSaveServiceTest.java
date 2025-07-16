@@ -2,8 +2,8 @@ package grep.neogul_coder.domain.recruitment.post.service;
 
 import grep.neogul_coder.domain.IntegrationTestSupport;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.LoadParticipatedStudyInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudiesInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudyLoadInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudiesInfo;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostCreateServiceRequest;
 import grep.neogul_coder.domain.study.Study;
@@ -102,7 +102,7 @@ class RecruitmentPostSaveServiceTest extends IntegrationTestSupport {
 
     @DisplayName("참여 중인 스터디의 정보를 조회 합니다.")
     @Test
-    void getParticipatedStudyInfo() {
+    void getJoinedStudyInfo() {
         //given
         Study study1 = createStudy("자바 스터디", Category.IT);
         Study study2 = createStudy("클라이밍 동아리", Category.HOBBY);
@@ -117,7 +117,7 @@ class RecruitmentPostSaveServiceTest extends IntegrationTestSupport {
         studyMemberRepository.saveAll(studyMembers);
 
         //when
-        ParticipatedStudiesInfo result = recruitmentPostService.getParticipatedStudyInfo(userId);
+        JoinedStudiesInfo result = recruitmentPostService.getJoinedStudyInfo(userId);
         System.out.println("result = " + result);
         //then
         assertThat(result.getStudyInfos()).hasSize(3)
@@ -127,7 +127,7 @@ class RecruitmentPostSaveServiceTest extends IntegrationTestSupport {
 
     @DisplayName("스터디 정보를 불러옵니다.")
     @Test
-    void loadParticipatedStudyInfo() {
+    void getJoinedStudyLoadInfo() {
         //given
         User user1 = createUser("테스터1");
         User user2 = createUser("테스터2");
@@ -143,7 +143,7 @@ class RecruitmentPostSaveServiceTest extends IntegrationTestSupport {
         studyMemberRepository.saveAll(studyMembers);
 
         //when
-        LoadParticipatedStudyInfo result = recruitmentPostService.loadParticipatedStudyInfo(study.getId(), user1.getId());
+        JoinedStudyLoadInfo result = recruitmentPostService.getJoinedStudyLoadInfo(study.getId(), user1.getId());
 
         //then
         assertThat(result)

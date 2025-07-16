@@ -8,7 +8,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-public class LoadParticipatedStudyInfo {
+public class JoinedStudyLoadInfo {
 
     @Schema(example = "IT", description = "카테고리")
     private String category;
@@ -29,7 +29,7 @@ public class LoadParticipatedStudyInfo {
     private long remainSlots;
 
     @Builder
-    private LoadParticipatedStudyInfo(Study study, long remainSlots) {
+    private JoinedStudyLoadInfo(Study study, long remainSlots) {
         this.category = study.getCategory().name();
         this.location = study.getLocation();
         this.studyType = study.getStudyType().name();
@@ -38,8 +38,8 @@ public class LoadParticipatedStudyInfo {
         this.remainSlots = remainSlots;
     }
 
-    public static LoadParticipatedStudyInfo of(Study study, long remainSlots) {
-        return LoadParticipatedStudyInfo.builder()
+    public static JoinedStudyLoadInfo of(Study study, long remainSlots) {
+        return JoinedStudyLoadInfo.builder()
                 .study(study)
                 .remainSlots(remainSlots)
                 .build();

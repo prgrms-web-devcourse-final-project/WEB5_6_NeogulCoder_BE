@@ -1,8 +1,8 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.LoadParticipatedStudyInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudiesInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudyLoadInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudiesInfo;
 import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostSaveService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
@@ -26,15 +26,15 @@ public class RecruitmentPostSaveController implements RecruitmentPostSaveSpecifi
     }
 
     @GetMapping("/studies")
-    public ApiResponse<ParticipatedStudiesInfo> getParticipatedStudyInfo(@AuthenticationPrincipal Principal userDetails) {
-        ParticipatedStudiesInfo response = recruitmentPostService.getParticipatedStudyInfo(userDetails.getUserId());
+    public ApiResponse<JoinedStudiesInfo> getJoinedStudyInfo(@AuthenticationPrincipal Principal userDetails) {
+        JoinedStudiesInfo response = recruitmentPostService.getJoinedStudyInfo(userDetails.getUserId());
         return ApiResponse.success(response);
     }
 
     @GetMapping("/studies/{study-id}")
-    public ApiResponse<LoadParticipatedStudyInfo> loadParticipatedStudyInfo(@PathVariable("study-id") long studyId,
-                                                                            @AuthenticationPrincipal Principal userDetails) {
-        LoadParticipatedStudyInfo response = recruitmentPostService.loadParticipatedStudyInfo(studyId, userDetails.getUserId());
+    public ApiResponse<JoinedStudyLoadInfo> getJoinedStudyLoadInfo(@PathVariable("study-id") long studyId,
+                                                                   @AuthenticationPrincipal Principal userDetails) {
+        JoinedStudyLoadInfo response = recruitmentPostService.getJoinedStudyLoadInfo(studyId, userDetails.getUserId());
         return ApiResponse.success(response);
     }
 }
