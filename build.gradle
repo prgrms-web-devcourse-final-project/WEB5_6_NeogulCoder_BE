@@ -78,6 +78,11 @@ dependencies {
 	// swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 
+	// gemini
+	implementation 'dev.langchain4j:langchain4j-spring-boot-starter:1.0.0-beta3'
+	implementation 'dev.langchain4j:langchain4j-google-ai-gemini-spring-boot-starter:1.0.0-beta3'
+
+
 	// 배포 관련 의존성
 	// implementation 'com.h2database:h2:2.3.232'
 	// implementation 'org.springframework.boot:spring-boot-devtools'
