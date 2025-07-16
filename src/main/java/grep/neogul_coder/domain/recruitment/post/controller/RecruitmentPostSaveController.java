@@ -1,9 +1,9 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyNamesInfo;
-import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostService;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudyLoadInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudiesInfo;
+import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostSaveService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class RecruitmentPostSaveController implements RecruitmentPostSaveSpecification {
 
-    private final RecruitmentPostService recruitmentPostService;
+    private final RecruitmentPostSaveService recruitmentPostService;
 
     @PostMapping
     public ApiResponse<Void> save(@Valid @RequestBody RecruitmentPostCreateRequest request,
@@ -26,13 +26,15 @@ public class RecruitmentPostSaveController implements RecruitmentPostSaveSpecifi
     }
 
     @GetMapping("/studies")
-    public ApiResponse<ParticipatedStudyNamesInfo> getParticipatedStudyNames(@AuthenticationPrincipal Principal userDetails) {
-        return ApiResponse.success(new ParticipatedStudyNamesInfo());
+    public ApiResponse<JoinedStudiesInfo> getJoinedStudyInfo(@AuthenticationPrincipal Principal userDetails) {
+        JoinedStudiesInfo response = recruitmentPostService.getJoinedStudyInfo(userDetails.getUserId());
+        return ApiResponse.success(response);
     }
 
     @GetMapping("/studies/{study-id}")
-    public ApiResponse<ParticipatedStudyInfo> getParticipatedStudy(@PathVariable("study-id") long StudyId,
+    public ApiResponse<JoinedStudyLoadInfo> getJoinedStudyLoadInfo(@PathVariable("study-id") long studyId,
                                                                    @AuthenticationPrincipal Principal userDetails) {
-        return ApiResponse.success(new ParticipatedStudyInfo());
+        JoinedStudyLoadInfo response = recruitmentPostService.getJoinedStudyLoadInfo(studyId, userDetails.getUserId());
+        return ApiResponse.success(response);
     }
 }

@@ -1,8 +1,8 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.ParticipatedStudyNamesInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudyLoadInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudiesInfo;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,10 +34,10 @@ public interface RecruitmentPostSaveSpecification {
                     - `name`: 스터디 이름
                     """
     )
-    ApiResponse<ParticipatedStudyNamesInfo> getParticipatedStudyNames(Principal userDetails);
+    ApiResponse<JoinedStudiesInfo> getJoinedStudyInfo(Principal userDetails);
 
     @Operation(
-            summary = "참여중인 스터디 상세 정보 조회",
+            summary = "참여 중인 스터디 정보 불러오기",
             description = """
                     스터디 모집글 작성시, 참여 중인 스터디를 선택하여  
                     해당 스터디의 상세 정보를 불러올 수 있습니다.
@@ -50,12 +50,12 @@ public interface RecruitmentPostSaveSpecification {
                       "studyType": "ONLINE",
                       "startDate": "2025-07-13",
                       "endDate": "2025-07-14",
-                      "recruitmentCount": 3
+                      "remainSlots": 3
                     }
                     ```
                     
-                    - `recruitmentCount`: 스터디 정원 - 스터디 참여 인원 
+                    - `remainSlots`: 스터디 정원 - 스터디 참여 인원 
                     """
     )
-    ApiResponse<ParticipatedStudyInfo> getParticipatedStudy(long studyId, Principal userDetails);
+    ApiResponse<JoinedStudyLoadInfo> getJoinedStudyLoadInfo(long studyId, Principal userDetails);
 }

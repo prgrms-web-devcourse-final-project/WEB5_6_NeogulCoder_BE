@@ -4,12 +4,18 @@ import grep.neogul_coder.domain.IntegrationTestSupport;
 import grep.neogul_coder.domain.recruitment.RecruitmentPostStatus;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
+import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostCreateServiceRequest;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostStatusUpdateServiceRequest;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostUpdateServiceRequest;
+import grep.neogul_coder.domain.study.Study;
+import grep.neogul_coder.domain.study.StudyMember;
+import grep.neogul_coder.domain.study.enums.Category;
+import grep.neogul_coder.domain.study.enums.StudyMemberRole;
+import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
+import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,6 +29,12 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private StudyRepository studyRepository;
+
+    @Autowired
+    private StudyMemberRepository studyMemberRepository;
 
     @Autowired
     private RecruitmentPostService recruitmentPostService;
@@ -43,8 +55,8 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
         recruitmentPostId = recruitmentPost.getId();
     }
 
-    @TestFactory
     @DisplayName("모집글을 수정 합니다.")
+    @TestFactory
     Collection<DynamicTest> update() {
         //given
         RecruitmentPostUpdateServiceRequest request = createUpdateRequest("수정된 제목", "수정된 내용", 2);
@@ -98,16 +110,31 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
 
         //then
         RecruitmentPost findRecruitmentPost = recruitmentPostRepository.findById(savedRecruitmentPost.getId()).orElseThrow();
-        Assertions.assertThat(findRecruitmentPost.isDeleted()).isTrue();
+        assertThat(findRecruitmentPost.getActivated()).isFalse();
     }
 
-    private static User createUser(String nickname) {
+    private User createUser(String nickname) {
         return User.builder()
                 .nickname(nickname)
                 .build();
     }
 
-    private static RecruitmentPost createRecruitmentPost(String subject, String content, int count, long userId) {
+    private Study createStudy(String name, Category category) {
+        return Study.builder()
+                .name(name)
+                .category(category)
+                .build();
+    }
+
+    private StudyMember createStudyMember(Study study, long userId, StudyMemberRole role) {
+        return StudyMember.builder()
+                .study(study)
+                .userId(userId)
+                .role(role)
+                .build();
+    }
+
+    private RecruitmentPost createRecruitmentPost(String subject, String content, int count, long userId) {
         return RecruitmentPost.builder()
                 .subject(subject)
                 .content(content)
@@ -116,7 +143,15 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private static RecruitmentPostUpdateServiceRequest createUpdateRequest(String subject, String content, int count) {
+    private RecruitmentPostCreateServiceRequest createRecruitmentPostServiceRequest(long studyId, String subject, String content) {
+        return RecruitmentPostCreateServiceRequest.builder()
+                .studyId(studyId)
+                .subject(subject)
+                .content(content)
+                .build();
+    }
+
+    private RecruitmentPostUpdateServiceRequest createUpdateRequest(String subject, String content, int count) {
         return RecruitmentPostUpdateServiceRequest.builder()
                 .subject(subject)
                 .content(content)
