@@ -7,6 +7,7 @@ import grep.neogul_coder.domain.prtemplate.repository.PrTemplateRepository;
 import grep.neogul_coder.domain.prtemplate.service.LinkService;
 import grep.neogul_coder.domain.prtemplate.service.PrTemplateService;
 import grep.neogul_coder.domain.users.controller.dto.request.SignUpRequest;
+import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.exception.EmailDuplicationException;
 import grep.neogul_coder.domain.users.exception.PasswordNotMatchException;
@@ -94,6 +95,15 @@ public class UserService {
         linkService.deleteByPrId(prTemplate.getId());
 
         user.delete();
+    }
+
+    public UserResponse getUserResponse(Long userId) {
+        User user = get(userId);
+        return UserResponse.toUserResponse(
+            user.getId(),
+            user.getEmail(),
+            user.getNickname(),
+            user.getRole());
     }
 
     private User findUser(Long id) {

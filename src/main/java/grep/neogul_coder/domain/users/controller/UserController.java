@@ -33,13 +33,7 @@ public class UserController implements UserSpecification {
 
     @GetMapping("/me")
     public ApiResponse<UserResponse> get(@AuthenticationPrincipal Principal principal) {
-        User user = usersService.get(principal.getUserId());
-        UserResponse userResponse =
-            UserResponse.toUserResponse(
-                user.getId(),
-                user.getEmail(),
-                user.getNickname(),
-                user.getRole());
+        UserResponse userResponse = usersService.getUserResponse(principal.getUserId());
         return ApiResponse.success(userResponse);
     }
 
