@@ -15,8 +15,10 @@ import grep.neogul_coder.domain.review.repository.ReviewTagRepository;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
+import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
+import grep.neogul_coder.global.exception.business.BusinessException;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,7 +31,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static grep.neogul_coder.domain.review.ReviewErrorCode.STUDY_MEMBER_EMPTY;
+import static grep.neogul_coder.domain.review.ReviewErrorCode.*;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -37,6 +39,7 @@ import static grep.neogul_coder.domain.review.ReviewErrorCode.STUDY_MEMBER_EMPTY
 public class ReviewService {
 
     private final UserRepository userRepository;
+    private final StudyRepository studyRepository;
     private final StudyMemberRepository studyMemberRepository;
 
     private final ReviewTagFinder reviewTagFinder;
@@ -46,21 +49,26 @@ public class ReviewService {
     private final ReviewTagRepository reviewTagRepository;
 
     public ReviewTargetUsersInfo getReviewTargetUsersInfo(long studyId, String myNickname) {
-        List<StudyMember> studyMembers = studyMemberRepository.findByStudyIdFetchStudy(studyId);
-        List<User> targetUsers = findReviewTargetUsers(studyMembers, myNickname);
-        Study study = extractStudyFrom(studyMembers);
+        Study study = findValidStudy(studyId);
+        List<StudyMember> studyMembers = findValidStudyMember(studyId);
 
+        List<User> targetUsers = findReviewTargetUsers(studyMembers, myNickname);
         return ReviewTargetUsersInfo.of(study, targetUsers);
     }
 
     @Transactional
-    public void save(ReviewSaveServiceRequest request, long userId) {
+    public void save(ReviewSaveServiceRequest request, long writeUserId) {
+        if(isAlreadyWrittenReviewBy(request.getStudyId(), request.getTargetUserId(), writeUserId)){
+            throw new BusinessException(ALREADY_REVIEW_WRITE_USER);
+        }
+
+        Study study = findValidStudy(request.getStudyId());
         ReviewTags reviewTags = ReviewTags.from(convertStringToReviewTag(request.getReviewTag()));
         ReviewType reviewType = reviewTags.ensureSingleReviewType();
 
-        Review review = request.toReview(reviewTags.getReviewTags(), reviewType, userId);
+        Review review = request.toReview(reviewTags.getReviewTags(), reviewType, writeUserId);
         List<ReviewTagEntity> reviewTagEntities = mapToReviewTagEntities(reviewTags);
-        reviewRepository.save(ReviewEntity.from(review, reviewTagEntities, request.getStudyId()));
+        reviewRepository.save(ReviewEntity.from(review, reviewTagEntities, study.getId()));
     }
 
     public MyReviewTagsInfo getMyReviewTags(long userId) {
@@ -81,6 +89,20 @@ public class ReviewService {
         return ReviewContentsPagingInfo.of(reviewPages, userIdMap);
     }
 
+    private Study findValidStudy(long studyId){
+        return studyRepository.findById(studyId)
+                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+    }
+
+    private List<StudyMember> findValidStudyMember(long studyId) {
+        List<StudyMember> studyMembers = studyMemberRepository.findByStudyIdFetchStudy(studyId);
+
+        if (studyMembers.isEmpty()) {
+            throw new NotFoundException(STUDY_MEMBER_EMPTY);
+        }
+        return studyMembers;
+    }
+
     private List<User> findReviewTargetUsers(List<StudyMember> studyMembers, String myNickname) {
         List<Long> userIds = studyMembers.stream()
                 .map(StudyMember::getUserId)
@@ -92,11 +114,8 @@ public class ReviewService {
                 .toList();
     }
 
-    private Study extractStudyFrom(List<StudyMember> studyMembers) {
-        if (studyMembers.isEmpty()) {
-            throw new NotFoundException(STUDY_MEMBER_EMPTY, STUDY_MEMBER_EMPTY.getMessage());
-        }
-        return studyMembers.getFirst().getStudy();
+    private boolean isAlreadyWrittenReviewBy(long studyId, long targetUserId, long writeUserId) {
+        return reviewQueryRepository.findBy(studyId, targetUserId, writeUserId) != null;
     }
 
     private List<ReviewTag> convertStringToReviewTag(List<String> reviewTags) {

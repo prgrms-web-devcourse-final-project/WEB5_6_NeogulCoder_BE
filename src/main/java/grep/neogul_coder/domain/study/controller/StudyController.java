@@ -29,7 +29,7 @@ public class StudyController implements StudySpecification {
 
     @GetMapping("/{studyId}/header")
     public ApiResponse<StudyHeaderResponse> getStudyHeader(@PathVariable("studyId") Long studyId) {
-        return ApiResponse.success(new StudyHeaderResponse());
+        return ApiResponse.success(studyService.getStudyHeader(studyId));
     }
 
     @GetMapping("/{studyId}")
@@ -38,13 +38,16 @@ public class StudyController implements StudySpecification {
     }
 
     @GetMapping("/me/images")
-    public ApiResponse<List<StudyImageResponse>> getStudyImages() {
-        return ApiResponse.success(List.of(new StudyImageResponse()));
+    public ApiResponse<List<StudyImageResponse>> getStudyImages(@AuthenticationPrincipal Principal userDetails) {
+        Long userId = userDetails.getUserId();
+        return ApiResponse.success(studyService.getStudyImages(userId));
     }
 
     @GetMapping("/{studyId}/info")
-    public ApiResponse<StudyInfoResponse> getStudyInfo(@PathVariable("studyId") Long studyId) {
-        return ApiResponse.success(new StudyInfoResponse());
+    public ApiResponse<StudyInfoResponse> getStudyInfo(@PathVariable("studyId") Long studyId,
+                                                       @AuthenticationPrincipal Principal userDetails) {
+        Long userId = userDetails.getUserId();
+        return ApiResponse.success(studyService.getStudyInfo(studyId, userId));
     }
 
     @GetMapping("/{studyId}/me")

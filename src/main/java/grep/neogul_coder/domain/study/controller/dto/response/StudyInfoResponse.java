@@ -1,7 +1,11 @@
 package grep.neogul_coder.domain.study.controller.dto.response;
 
+import grep.neogul_coder.domain.study.Study;
+import grep.neogul_coder.domain.study.enums.Category;
+import grep.neogul_coder.domain.study.enums.StudyType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -17,13 +21,13 @@ public class StudyInfoResponse {
     private String name;
 
     @Schema(description = "카테고리", example = "IT")
-    private String category;
+    private Category category;
 
     @Schema(description = "인원수", example = "6")
     private int capacity;
 
     @Schema(description = "타입", example = "ONLINE")
-    private String studyType;
+    private StudyType studyType;
 
     @Schema(description = "지역", example = "서울")
     private String location;
@@ -40,4 +44,34 @@ public class StudyInfoResponse {
 
     @Schema(description = "스터디 멤버 목록")
     private List<StudyMemberResponse> members;
+
+    @Builder
+    private StudyInfoResponse(String imageUrl, String name, Category category, int capacity, StudyType studyType, String location,
+                              LocalDate startDate, LocalDate endDate, String introduction, List<StudyMemberResponse> members) {
+        this.imageUrl = imageUrl;
+        this.name = name;
+        this.category = category;
+        this.capacity = capacity;
+        this.studyType = studyType;
+        this.location = location;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.introduction = introduction;
+        this.members = members;
+    }
+
+    public static StudyInfoResponse from(Study study, List<StudyMemberResponse> members) {
+        return StudyInfoResponse.builder()
+            .imageUrl(study.getImageUrl())
+            .name(study.getName())
+            .category(study.getCategory())
+            .capacity(study.getCapacity())
+            .studyType(study.getStudyType())
+            .location(study.getLocation())
+            .startDate(study.getStartDate())
+            .endDate(study.getEndDate())
+            .introduction(study.getIntroduction())
+            .members(members)
+            .build();
+    }
 }

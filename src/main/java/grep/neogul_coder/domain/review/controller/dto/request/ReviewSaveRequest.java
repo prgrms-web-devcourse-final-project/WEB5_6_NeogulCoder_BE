@@ -31,6 +31,8 @@ public class ReviewSaveRequest {
     @Schema(example = "너무 친절 하세요!", description = "주관 리뷰")
     private String content;
 
+    private ReviewSaveRequest() {}
+
     @Builder
     private ReviewSaveRequest(long studyId, long targetUserId, ReviewType reviewType,
                               List<String> reviewTag, String content) {

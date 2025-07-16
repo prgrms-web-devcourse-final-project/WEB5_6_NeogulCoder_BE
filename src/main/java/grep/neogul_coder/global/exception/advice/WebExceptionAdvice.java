@@ -1,24 +1,35 @@
 package grep.neogul_coder.global.exception.advice;
 
 import grep.neogul_coder.global.exception.CommonException;
+import grep.neogul_coder.global.exception.business.BusinessException;
+import grep.neogul_coder.global.response.ApiResponse;
+import grep.neogul_coder.global.response.code.CommonCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice(basePackages = "grep.neogul_coder")
+@RestControllerAdvice(basePackages = "grep.neogul_coder")
 public class WebExceptionAdvice {
 
     @ExceptionHandler(CommonException.class)
-    public String webExceptionHandler(CommonException ex, Model model) {
-        model.addAttribute("message", ex.code().getMessage());
-        return "error/redirect";
+    public ResponseEntity<ApiResponse<String>> commonExHandler(CommonException ex) {
+        return ResponseEntity
+            .status(ex.code().getStatus())
+            .body(ApiResponse.errorWithoutData(ex.code()));
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ApiResponse<String>> businessExHandler(BusinessException ex) {
+        return ResponseEntity
+            .status(ex.errorCode().getStatus())
+            .body(ApiResponse.errorWithoutData(ex.errorCode()));
     }
 
     @ExceptionHandler(AuthorizationDeniedException.class)
-    public String authorizationDeniedHandler(AuthorizationDeniedException ex, Model model) {
-        model.addAttribute("message", "접근 권한 없음");
-        return "error/redirect";
+    public ResponseEntity<ApiResponse<String>> authorizationDeniedExHandler(AuthorizationDeniedException ex) {
+        return ResponseEntity
+            .status(CommonCode.UNAUTHORIZED.getStatus())
+            .body(ApiResponse.errorWithoutData(CommonCode.UNAUTHORIZED));
     }
-
 }

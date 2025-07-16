@@ -3,9 +3,11 @@ package grep.neogul_coder.domain.recruitment.post.service.request;
 import grep.neogul_coder.domain.recruitment.RecruitmentPostStatus;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
+@Getter
 public class RecruitmentPostCreateServiceRequest {
 
     private long studyId;

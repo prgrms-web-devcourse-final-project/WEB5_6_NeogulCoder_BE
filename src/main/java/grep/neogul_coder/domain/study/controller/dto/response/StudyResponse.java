@@ -1,7 +1,7 @@
 package grep.neogul_coder.domain.study.controller.dto.response;
 
 import grep.neogul_coder.domain.attendance.controller.dto.response.AttendanceResponse;
-import grep.neogul_coder.domain.calender.controller.dto.response.TeamCalenderResponse;
+import grep.neogul_coder.domain.calender.controller.dto.response.TeamCalendarResponse;
 import grep.neogul_coder.domain.studypost.dto.StudyPostListResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class StudyResponse {
     private List<AttendanceResponse> attendances;
 
     @Schema(description = "팀 달력")
-    private List<TeamCalenderResponse> teamCalenders;
+    private List<TeamCalendarResponse> teamCalenders;
 
     @Schema(description = "게시글 리스트")
     private List<StudyPostListResponse> studyPosts;
