@@ -6,6 +6,9 @@ import grep.neogul_coder.domain.study.controller.dto.response.StudyItemResponse;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyMemberResponse;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,8 +26,8 @@ public class StudyQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public List<StudyItemResponse> findMyStudies(Long userId) {
-        return queryFactory
+    public Page<StudyItemResponse> findMyStudies(Pageable pageable, Long userId) {
+        List<StudyItemResponse> studies = queryFactory
             .select(Projections.constructor(
                 StudyItemResponse.class,
                 study.id,
@@ -48,6 +51,19 @@ public class StudyQueryRepository {
                 study.activated.isTrue()
             )
             .fetch();
+
+        Long total = queryFactory
+            .select(study.count())
+            .from(studyMember)
+            .join(study).on(study.id.eq(studyMember.study.id))
+            .where(
+                studyMember.userId.eq(userId),
+                studyMember.activated.eq(true),
+                study.activated.eq(true)
+            )
+            .fetchOne();
+
+        return new PageImpl<>(studies, pageable, total);
     }
 
     public StudyMemberRole findMyRole(Long studyId, Long userId) {

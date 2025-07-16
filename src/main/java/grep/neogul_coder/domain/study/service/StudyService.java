@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.study.service;
 
+import grep.neogul_coder.domain.study.controller.dto.response.StudyItemPagingResponse;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
@@ -12,6 +13,8 @@ import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +32,9 @@ public class StudyService {
     private final StudyMemberRepository studyMemberRepository;
     private final StudyQueryRepository studyQueryRepository;
 
-    public List<StudyItemResponse> getMyStudies(Long userId) {
-        return studyQueryRepository.findMyStudies(userId);
+    public StudyItemPagingResponse getMyStudies(Pageable pageable, Long userId) {
+        Page<StudyItemResponse> page = studyQueryRepository.findMyStudies(pageable, userId);
+        return StudyItemPagingResponse.of(page);
     }
 
     public StudyHeaderResponse getStudyHeader(Long studyId) {

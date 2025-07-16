@@ -8,6 +8,8 @@ import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +23,10 @@ public class StudyController implements StudySpecification {
     private final StudyService studyService;
 
     @GetMapping
-    public ApiResponse<List<StudyItemResponse>> getStudies(@AuthenticationPrincipal Principal userDetails) {
+    public ApiResponse<StudyItemPagingResponse> getStudies(@PageableDefault(size = 12) Pageable pageable,
+                                                           @AuthenticationPrincipal Principal userDetails) {
         Long userId = userDetails.getUserId();
-        List<StudyItemResponse> studies = studyService.getMyStudies(userId);
+        StudyItemPagingResponse studies = studyService.getMyStudies(pageable, userId);
         return ApiResponse.success(studies);
     }
 
