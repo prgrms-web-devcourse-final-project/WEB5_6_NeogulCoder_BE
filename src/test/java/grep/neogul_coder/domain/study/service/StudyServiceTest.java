@@ -81,7 +81,7 @@ class StudyServiceTest extends IntegrationTestSupport {
     @Test
     void getStudies() {
         // given
-        Pageable pageable = PageRequest.of(1, 12);
+        Pageable pageable = PageRequest.of(0, 12);
 
         Study study = createStudy("스터디", Category.IT, 3, StudyType.OFFLINE, "서울", LocalDate.of(2025, 7, 18),
             LocalDate.of(2025, 7, 28), "스터디입니다.", "http://localhost:8083/image.url");

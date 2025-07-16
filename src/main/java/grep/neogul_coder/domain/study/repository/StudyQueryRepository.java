@@ -61,6 +61,8 @@ public class StudyQueryRepository {
                 studyMember.activated.eq(true),
                 study.activated.eq(true)
             )
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
             .fetchOne();
 
         return new PageImpl<>(studies, pageable, total);
