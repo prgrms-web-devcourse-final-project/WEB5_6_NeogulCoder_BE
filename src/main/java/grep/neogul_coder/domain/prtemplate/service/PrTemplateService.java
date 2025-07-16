@@ -55,7 +55,7 @@ public class PrTemplateService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
             UserErrorCode.USER_NOT_FOUND, "회원이 존재하지 않습니다."));
         PrTemplate prTemplate = prTemplateRepository.findByUserId(userId);
-        List<Link> links = linkRepository.findAllByPrId(prTemplate.getId());
+        List<Link> links = linkRepository.findAllByPrIdAndActivatedTrue(prTemplate.getId());
         List<ReviewEntity> reviews = reviewRepository.findAllByTargetUserId(userId);
 
         List<PrPageResponse.UserProfileDto> userProfiles = List.of(
