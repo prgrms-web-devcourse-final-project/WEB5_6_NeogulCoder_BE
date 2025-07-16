@@ -3,6 +3,7 @@ package grep.neogul_coder.domain.study.repository;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,4 +21,8 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> 
     int countByStudyIdAndActivatedTrue(Long studyId);
 
     boolean existsByStudyIdAndUserIdAndActivatedTrue(Long studyId, Long userId);
+
+    @Modifying
+    @Query("update StudyMember m set m.activated = false where m.study.id = :studyId")
+    void deactivateByStudyId(@Param("studyId") Long studyId);
 }

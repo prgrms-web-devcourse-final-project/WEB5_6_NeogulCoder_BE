@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.study.service;
 
+import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyItemPagingResponse;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
@@ -31,6 +32,7 @@ public class StudyService {
     private final StudyRepository studyRepository;
     private final StudyMemberRepository studyMemberRepository;
     private final StudyQueryRepository studyQueryRepository;
+    private final RecruitmentPostRepository recruitmentPostRepository;
 
     public StudyItemPagingResponse getMyStudies(Pageable pageable, Long userId) {
         Page<StudyItemResponse> page = studyQueryRepository.findMyStudies(pageable, userId);
@@ -108,6 +110,8 @@ public class StudyService {
         validateStudyDeletable(studyId);
 
         study.delete();
+        studyMemberRepository.deactivateByStudyId(studyId);
+        recruitmentPostRepository.deactivateByStudyId(studyId);
     }
 
     private void validateStudyMember(Long studyId, Long userId) {
