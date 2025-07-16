@@ -174,8 +174,7 @@ class StudyServiceTest extends IntegrationTestSupport {
         studyService.deleteStudy(studyId, userId);
 
         // then
-        Study findStudy = studyRepository.findById(studyId).orElseThrow();
-        assertThat(findStudy.getActivated()).isFalse();
+        assertThat(study.getActivated()).isFalse();
     }
 
     private static User createUser(String nickname) {
