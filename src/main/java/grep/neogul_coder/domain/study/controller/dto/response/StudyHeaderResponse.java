@@ -1,7 +1,9 @@
 package grep.neogul_coder.domain.study.controller.dto.response;
 
+import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.enums.StudyType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -21,4 +23,24 @@ public class StudyHeaderResponse {
 
     @Schema(description = "지역", example = "서울")
     private String location;
+
+    @Builder
+    private StudyHeaderResponse(String name, String introduction, String imageUrl,
+                                StudyType studyType, String location) {
+        this.name = name;
+        this.introduction = introduction;
+        this.imageUrl = imageUrl;
+        this.studyType = studyType;
+        this.location = location;
+    }
+
+    public static StudyHeaderResponse from(Study study) {
+        return StudyHeaderResponse.builder()
+            .name(study.getName())
+            .introduction(study.getIntroduction())
+            .imageUrl(study.getImageUrl())
+            .studyType(study.getStudyType())
+            .location(study.getLocation())
+            .build();
+    }
 }
