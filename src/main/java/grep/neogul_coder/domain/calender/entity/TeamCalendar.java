@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
+@Table(name = "team_calendar")
 public class TeamCalendar extends BaseEntity {
 
     @Id

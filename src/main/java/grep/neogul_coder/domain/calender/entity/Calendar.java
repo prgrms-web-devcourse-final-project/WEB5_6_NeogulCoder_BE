@@ -9,6 +9,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
+@Table(name = "calendar")
 public class Calendar extends BaseEntity {
 
     @Id

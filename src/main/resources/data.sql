@@ -58,7 +58,6 @@ INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (1, 2, 3);
 INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (3, 3, 4);
 INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (4, 4, 5);
 
-
 INSERT INTO time_vote_period (study_id, start_date, end_date) VALUES (2, '2025-07-15 00:00:00', '2025-07-22 00:00:00');
 
 INSERT INTO time_vote (period_id, study_member_id, start_time, end_time) VALUES (1, 1, '2025-07-15 10:00:00', '2025-07-15 12:00:00');
