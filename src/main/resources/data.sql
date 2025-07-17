@@ -34,9 +34,9 @@ INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_c
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status) VALUES (3, 5, '클라이밍 같이 하실분 모집 합니다', '클라이밍 좋아하시는 분들의 많은 관심 바랍니다!', 5, '2025-06-08', 'IN_PROGRESS');
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status) VALUES (2, 3, '토익 스터디', '토익 고수들의 많은 참여 부탁 드립니다', 2, '2025-03-31', 'IN_PROGRESS');
 
-INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (1, '자바 스터디에 참여하고 싶습니다.', FALSE, 'PENDING');
+INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (1, '자바 스터디에 참여하고 싶습니다.', FALSE, 'APPLYING');
 INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (1, '열심히 참여하겠습니다.', TRUE, 'APPROVED');
-INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (3, '관심있어 지원합니다.', FALSE, 'PENDING');
+INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (3, '관심있어 지원합니다.', FALSE, 'APPLYING');
 INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (2, '시간이 맞아 지원합니다.', FALSE, 'REJECTED');
 INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (3, '프로젝트 경험 쌓고 싶습니다.', TRUE, 'APPROVED');
 

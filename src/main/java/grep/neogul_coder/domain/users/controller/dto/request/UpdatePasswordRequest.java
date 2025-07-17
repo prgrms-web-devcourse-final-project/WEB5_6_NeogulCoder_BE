@@ -12,7 +12,7 @@ public class UpdatePasswordRequest {
     @Schema(description = "현재 비밀번호", example = "oldPassword")
     private String password;
 
-    @NotBlank(message = "변겯할 비밀번호를 입력해주세요")
+    @NotBlank(message = "변경할 비밀번호를 입력해주세요")
     @Schema(description = "새 비밀번호", example = "newPassword")
     private String newPassword;
 

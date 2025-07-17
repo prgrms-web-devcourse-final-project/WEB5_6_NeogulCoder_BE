@@ -16,4 +16,7 @@ public class RecruitmentPostStatusUpdateRequest {
     public RecruitmentPostStatusUpdateServiceRequest toServiceRequest() {
         return new RecruitmentPostStatusUpdateServiceRequest(status);
     }
+
+    private RecruitmentPostStatusUpdateRequest() {
+    }
 }

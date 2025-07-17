@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.prtemplate.entity;
 
+import grep.neogul_coder.domain.prtemplate.controller.dto.request.LinkUpdateRequest;
 import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +17,7 @@ public class Link extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long prId;
+    private Long userId;
 
     private String prUrl;
 
@@ -25,7 +26,7 @@ public class Link extends BaseEntity {
     @Builder
     private Link(Long id, Long prId, String prUrl, String urlName, Boolean activated) {
         this.id = id;
-        this.prId = prId;
+        this.userId = prId;
         this.prUrl = prUrl;
         this.urlName = urlName;
         this.activated = activated;
@@ -40,10 +41,27 @@ public class Link extends BaseEntity {
             .build();
     }
 
+    public static boolean isRequestLinkEmpty(LinkUpdateRequest request) {
+        String prUrl = request.getPrUrl();
+        return prUrl == null || prUrl.isBlank();
+    }
+
+    protected Link() {
+    }
+
     public void delete() {
         this.activated = false;
     }
 
-    protected Link() {
+    public void reactivate() {
+        this.activated = true;
+    }
+
+    public void updateUrlName(String urlName) {
+        this.urlName = urlName;
+    }
+
+    public void updatePrUrl(String prUrl) {
+        this.prUrl = prUrl;
     }
 }

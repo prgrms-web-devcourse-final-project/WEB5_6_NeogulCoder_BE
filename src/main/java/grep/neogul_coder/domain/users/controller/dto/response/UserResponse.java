@@ -17,22 +17,27 @@ public class UserResponse {
     @Schema(description = "회원 nickname", example = "홍길동")
     private String nickname;
 
+    @Schema(description = "회원 프로필 이미지", example = "profileImageUrl")
+    private String profileImageUrl;
+
     @Schema(description = "Role")
     private Role role;
 
     @Builder
-    private UserResponse(Long id, String email, String nickname, Role role) {
+    private UserResponse(Long id, String email, String nickname,String profileImageUrl, Role role) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
         this.role = role;
     }
 
-    public static UserResponse toUserResponse(Long id, String email, String nickname, Role role){
+    public static UserResponse toUserResponse(Long id, String email, String nickname,String profileImageUrl, Role role){
         return UserResponse.builder()
             .id(id)
             .email(email)
             .nickname(nickname)
+            .profileImageUrl(profileImageUrl)
             .role(role)
             .build();
     }
