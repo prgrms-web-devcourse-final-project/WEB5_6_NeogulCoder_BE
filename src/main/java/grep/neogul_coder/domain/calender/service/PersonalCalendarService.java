@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 import static grep.neogul_coder.domain.calender.exception.code.CalendarErrorCode.CALENDAR_NOT_FOUND;
 import static grep.neogul_coder.global.response.code.ErrorCode.*;
@@ -35,7 +36,7 @@ public class PersonalCalendarService {
     // 해당 사용자의 전체 개인 일정 조회
     public List<PersonalCalendarResponse> findAll(Long userId) {
         User user = userService.get(userId);
-        return personalCalendarRepository.findByUserId(userId).stream()
+        return personalCalendarRepository.findAllWithCalendarByUserId(userId).stream()
             .map(pc -> PersonalCalendarResponse.from(pc, user))
             .toList();
     }
@@ -66,6 +67,7 @@ public class PersonalCalendarService {
     }
 
     // 개인 일정 수정
+    @Transactional
     public void update(Long userId, Long calendarId, PersonalCalendarRequest request) {
         // 필수 필드 검증
         if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {

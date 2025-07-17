@@ -33,6 +33,7 @@ public class PersonalCalendarQueryRepository {
         // 종료 시간 >= 당일 시작시간인 일정들을 모두 조회
         return queryFactory
             .selectFrom(pc)
+            .join(pc.calendar, QCalendar.calendar).fetchJoin()
             .where(
                 pc.userId.eq(userId),
                 calendar.scheduledStart.loe(end),
