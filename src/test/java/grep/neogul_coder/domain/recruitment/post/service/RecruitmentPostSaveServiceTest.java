@@ -2,8 +2,8 @@ package grep.neogul_coder.domain.recruitment.post.service;
 
 import grep.neogul_coder.domain.IntegrationTestSupport;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudyLoadInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudiesInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.save.JoinedStudyLoadInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.save.JoinedStudiesInfo;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostCreateServiceRequest;
 import grep.neogul_coder.domain.study.Study;
