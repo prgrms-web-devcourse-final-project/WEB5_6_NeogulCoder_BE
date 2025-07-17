@@ -1,8 +1,8 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudyLoadInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudiesInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.save.JoinedStudyLoadInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.save.JoinedStudiesInfo;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;

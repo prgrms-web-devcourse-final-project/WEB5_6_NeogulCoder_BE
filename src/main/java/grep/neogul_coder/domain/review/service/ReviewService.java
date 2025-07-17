@@ -49,11 +49,11 @@ public class ReviewService {
     private final ReviewTagRepository reviewTagRepository;
 
     public ReviewTargetUsersInfo getReviewTargetUsersInfo(long studyId, String myNickname) {
-        Study study = findValidStudy(studyId);
         List<StudyMember> studyMembers = findValidStudyMember(studyId);
+        findValidStudy(studyId);
 
         List<User> targetUsers = findReviewTargetUsers(studyMembers, myNickname);
-        return ReviewTargetUsersInfo.of(study, targetUsers);
+        return ReviewTargetUsersInfo.of(targetUsers);
     }
 
     @Transactional
