@@ -78,11 +78,11 @@ INSERT INTO time_vote_stat (period_id, start_time, end_time, vote_count) VALUES 
 -- INSERT INTO alarm (receive_user_id, alram_type, message, is_read, redirect_url) VALUES (1, 'TIME_VOTE', '스터디 모임 시간 투표가 시작되었습니다.', FALSE, '/studies/5/time-vote');
 -- INSERT INTO alarm (receive_user_id, alram_type, message, is_read, redirect_url) VALUES (4, 'APPLICATION_STATUS', '스터디 신청이 거절되었습니다.', TRUE, '/my/applications');
 
-INSERT INTO quiz (post_id, quiz, quiz_answer) VALUES (1, 'Java에서 List는 인터페이스다.', TRUE);
-INSERT INTO quiz (post_id, quiz, quiz_answer) VALUES (4, 'Spring Boot는 톰캣을 기본 내장하지 않는다.', FALSE);
-INSERT INTO quiz (post_id, quiz, quiz_answer) VALUES (1, 'JPA는 SQL을 직접 작성하지 않아도 된다.', TRUE);
-INSERT INTO quiz (post_id, quiz, quiz_answer) VALUES (2, 'React는 서버 사이드 렌더링만 지원한다.', FALSE);
-INSERT INTO quiz (post_id, quiz, quiz_answer) VALUES (5, '의존성 주입은 Spring의 핵심 기능 중 하나이다.', TRUE);
+INSERT INTO quiz (post_id, quiz_content, quiz_answer) VALUES (1, 'Java에서 List는 인터페이스다.', TRUE);
+INSERT INTO quiz (post_id, quiz_content, quiz_answer) VALUES (4, 'Spring Boot는 톰캣을 기본 내장하지 않는다.', FALSE);
+INSERT INTO quiz (post_id, quiz_content, quiz_answer) VALUES (1, 'JPA는 SQL을 직접 작성하지 않아도 된다.', TRUE);
+INSERT INTO quiz (post_id, quiz_content, quiz_answer) VALUES (2, 'React는 서버 사이드 렌더링만 지원한다.', FALSE);
+INSERT INTO quiz (post_id, quiz_content, quiz_answer) VALUES (5, '의존성 주입은 Spring의 핵심 기능 중 하나이다.', TRUE);
 
 -- INSERT INTO upload_img (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('soluta.png', '63922d43-ee89-49ba-8a31-b658a59cd5f9.png', 'https://storage.googleapis.com/neogulcoder-wibby/post/2025/07/14/63922d43-ee89-49ba-8a31-b658a59cd5f9.png', 'post/2025/07/14/', 2, 'POST', 3);
 -- INSERT INTO upload_img (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('accusantium.png', '37337416-66da-4ab9-890a-ad855cea1c49.png', 'https://storage.googleapis.com/neogulcoder-wibby/post/2025/07/14/37337416-66da-4ab9-890a-ad855cea1c49.png', 'post/2025/07/14/', 3, 'POST', 4);
