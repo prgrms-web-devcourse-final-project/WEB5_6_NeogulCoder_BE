@@ -1,6 +1,7 @@
 package grep.neogul_coder.domain.review.controller;
 
 import grep.neogul_coder.domain.review.controller.dto.request.ReviewSaveRequest;
+import grep.neogul_coder.domain.review.controller.dto.response.JoinedStudiesInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
@@ -26,6 +27,11 @@ public class ReviewController implements ReviewSpecification {
                                                                        @AuthenticationPrincipal Principal userDetails) {
         ReviewTargetUsersInfo response = reviewService.getReviewTargetUsersInfo(studyId, userDetails.getUsername());
         return ApiResponse.success(response);
+    }
+
+    @GetMapping("/studies/me")
+    public ApiResponse<JoinedStudiesInfo> getJoinedStudiesInfo(@AuthenticationPrincipal Principal userDetails) {
+        return ApiResponse.success(new JoinedStudiesInfo());
     }
 
     @PostMapping

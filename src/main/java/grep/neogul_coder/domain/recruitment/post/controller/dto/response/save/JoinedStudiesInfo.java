@@ -1,4 +1,4 @@
-package grep.neogul_coder.domain.recruitment.post.controller.dto.response;
+package grep.neogul_coder.domain.recruitment.post.controller.dto.response.save;
 
 import grep.neogul_coder.domain.study.Study;
 import io.swagger.v3.oas.annotations.media.Schema;

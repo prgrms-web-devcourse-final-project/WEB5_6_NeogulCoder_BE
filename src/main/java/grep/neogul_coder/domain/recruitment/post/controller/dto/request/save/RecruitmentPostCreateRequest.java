@@ -1,4 +1,4 @@
-package grep.neogul_coder.domain.recruitment.post.controller.dto.request;
+package grep.neogul_coder.domain.recruitment.post.controller.dto.request.save;
 
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostCreateServiceRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
