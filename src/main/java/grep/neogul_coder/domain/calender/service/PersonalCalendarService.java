@@ -68,14 +68,14 @@ public class PersonalCalendarService {
 
     // 개인 일정 수정
     @Transactional
-    public void update(Long userId, Long calendarId, PersonalCalendarRequest request) {
+    public void update(Long userId, Long personalCalendarId, PersonalCalendarRequest request) {
         // 필수 필드 검증
         if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
             throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
         }
 
         // 해당 일정이 존재하고 본인이 소유한 일정인지 확인
-        PersonalCalendar calendar = personalCalendarRepository.findById(calendarId)
+        PersonalCalendar calendar = personalCalendarRepository.findById(personalCalendarId)
             .filter(pc -> pc.getUserId().equals(userId))
             .orElseThrow(() -> new NotFoundException(CALENDAR_NOT_FOUND));
         // 기존 Calendar 엔티티 안의 필드들을 새 요청으로 갱신
@@ -83,9 +83,9 @@ public class PersonalCalendarService {
     }
 
     // 개인 일정 삭제
-    public void delete(Long userId, Long calendarId) {
+    public void delete(Long userId, Long personalCalendarId) {
         // 일정 조회 및 본인 확인
-        PersonalCalendar calendar = personalCalendarRepository.findById(calendarId)
+        PersonalCalendar calendar = personalCalendarRepository.findById(personalCalendarId)
             .filter(pc -> pc.getUserId().equals(userId))
             .orElseThrow(() -> new NotFoundException(CALENDAR_NOT_FOUND));
         personalCalendarRepository.delete(calendar);

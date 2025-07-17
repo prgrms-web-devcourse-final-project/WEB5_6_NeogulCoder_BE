@@ -32,6 +32,7 @@ public class TeamCalendarQueryRepository {
         // - 일정 종료가 하루 시작 이후
         return queryFactory
             .selectFrom(tc)
+            .join(tc.calendar, QCalendar.calendar).fetchJoin()
             .where(
                 tc.studyId.eq(studyId),
                 calendar.scheduledStart.loe(end),

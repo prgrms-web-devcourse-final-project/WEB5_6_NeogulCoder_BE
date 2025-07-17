@@ -13,6 +13,7 @@ import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.service.UserService;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import grep.neogul_coder.global.exception.validation.ValidationException;
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class TeamCalendarService {
     private final UserService userService;
 
     public List<TeamCalendarResponse> findAll(Long studyId) {
-        return teamCalendarRepository.findByStudyId(studyId).stream()
+        return teamCalendarRepository.findAllWithCalendarByStudyId(studyId).stream()
             .map(tc -> {
                 User user = userService.get(tc.getUserId());
                 return TeamCalendarResponse.from(tc, user);
@@ -65,12 +66,13 @@ public class TeamCalendarService {
         teamCalendarRepository.save(teamCalendar);
     }
 
-    public void update(Long studyId, Long userId, Long calendarId, TeamCalendarRequest request) {
+    @Transactional
+    public void update(Long studyId, Long userId, Long teamCalendarId, TeamCalendarRequest request) {
 
         if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
             throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
         }
-        TeamCalendar calendar = teamCalendarRepository.findById(calendarId)
+        TeamCalendar calendar = teamCalendarRepository.findById(teamCalendarId)
             // 본인이 작성한 일정만 수정할 수 있음
             .filter(tc -> tc.getStudyId().equals(studyId) && tc.getUserId().equals(userId))
             // 예외처리
@@ -78,8 +80,8 @@ public class TeamCalendarService {
         calendar.getCalendar().update(request.toCalendar());
     }
 
-    public void delete(Long studyId, Long userId, Long calendarId) {
-        TeamCalendar calendar = teamCalendarRepository.findById(calendarId)
+    public void delete(Long studyId, Long userId, Long teamCalendarId) {
+        TeamCalendar calendar = teamCalendarRepository.findById(teamCalendarId)
             // 본인이 작성한 일정만 삭제할 수 있음
             .filter(tc -> tc.getStudyId().equals(studyId) && tc.getUserId().equals(userId))
             // 예외처리

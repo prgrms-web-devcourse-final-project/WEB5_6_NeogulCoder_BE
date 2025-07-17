@@ -44,22 +44,22 @@ public class PersonalCalendarController implements PersonalCalendarSpecification
         return ApiResponse.success(personalCalendarService.findByDate(userId, parsedDate));
     }
 
-    @PutMapping("/{calendarId}")
+    @PutMapping("/{personalCalendarId}")
     public ApiResponse<Void> update(
         @PathVariable("userId") Long userId,
-        @PathVariable("calendarId") Long calendarId,
+        @PathVariable("personalCalendarId") Long personalCalendarId,
         @Valid @RequestBody PersonalCalendarRequest request
     ) {
-        personalCalendarService.update(userId, calendarId, request);
+        personalCalendarService.update(userId, personalCalendarId, request);
         return ApiResponse.noContent();
     }
 
-    @DeleteMapping("/{calendarId}")
+    @DeleteMapping("/{personalCalendarId}")
     public ApiResponse<Void> delete(
         @PathVariable("userId") Long userId,
-        @PathVariable("calendarId") Long calendarId
+        @PathVariable("personalCalendarId") Long personalCalendarId
     ) {
-        personalCalendarService.delete(userId, calendarId);
+        personalCalendarService.delete(userId, personalCalendarId);
         return ApiResponse.noContent();
     }
 }
