@@ -7,13 +7,12 @@ import grep.neogul_coder.global.response.ApiResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/recruitment-posts/{post-id}/comments")
+@RequestMapping("/recruitment-posts/comments")
 @RestController
 public class RecruitmentPostCommentController implements RecruitmentPostCommentSpecification {
 
     @PostMapping
-    public ApiResponse<Void> save(@PathVariable("post-id") long postId,
-                                  @RequestBody RecruitmentCommentSaveRequest request,
+    public ApiResponse<Void> save(@RequestBody RecruitmentCommentSaveRequest request,
                                   @AuthenticationPrincipal Principal userDetails) {
         return ApiResponse.noContent();
     }

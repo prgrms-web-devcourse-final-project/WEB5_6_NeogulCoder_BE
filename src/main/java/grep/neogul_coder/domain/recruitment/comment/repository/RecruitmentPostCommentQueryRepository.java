@@ -21,11 +21,12 @@ public class RecruitmentPostCommentQueryRepository {
     }
 
     public List<RecruitmentPostComment> findByPostIdIn(List<Long> postIds) {
-        return queryFactory.selectFrom(recruitmentPostComment)
-                .where(
-                        recruitmentPostComment.recruitmentPost.id.in(postIds),
-                        recruitmentPostComment.activated.isTrue()
-                )
-                .fetch();
+//        return queryFactory.selectFrom(recruitmentPostComment)
+//                .where(
+//                        recruitmentPostComment.recruitmentPost.id.in(postIds),
+//                        recruitmentPostComment.activated.isTrue()
+//                )
+//                .fetch();
+        return null;
     }
 }

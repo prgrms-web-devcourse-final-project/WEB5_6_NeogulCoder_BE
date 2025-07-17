@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface RecruitmentPostCommentSpecification {
 
     @Operation(summary = "모집글 댓글 작성", description = "모집글에 대한 댓글을 작성 합니다.")
-    ApiResponse<Void> save(long postId, RecruitmentCommentSaveRequest request, Principal userDetails);
+    ApiResponse<Void> save(RecruitmentCommentSaveRequest request, Principal userDetails);
 
     @Operation(summary = "모집글 댓글 수정", description = "모집글에 대한 댓글을 수정 합니다.")
     ApiResponse<Void> update(long commentId, RecruitmentCommentUpdateRequest request, Principal userDetails);

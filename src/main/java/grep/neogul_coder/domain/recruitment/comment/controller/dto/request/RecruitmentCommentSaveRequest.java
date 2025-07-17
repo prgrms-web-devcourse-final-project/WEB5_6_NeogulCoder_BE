@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 public class RecruitmentCommentSaveRequest {
 
-    @Schema(example = "2", description = "회원 ID")
-    private long userId;
+    @Schema(example = "2", description = "모집글 ID")
+    private long postId;
 
     @Schema(example = "저도 참여 할래요!", description = "모집글 내용")
     private String content;
