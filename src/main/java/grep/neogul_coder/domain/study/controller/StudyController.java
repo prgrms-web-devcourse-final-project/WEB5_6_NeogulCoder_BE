@@ -1,13 +1,15 @@
 package grep.neogul_coder.domain.study.controller;
 
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
-import grep.neogul_coder.domain.study.controller.dto.request.StudyEditRequest;
+import grep.neogul_coder.domain.study.controller.dto.request.StudyUpdateRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.*;
 import grep.neogul_coder.domain.study.service.StudyService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +23,10 @@ public class StudyController implements StudySpecification {
     private final StudyService studyService;
 
     @GetMapping
-    public ApiResponse<List<StudyItemResponse>> getStudies(@AuthenticationPrincipal Principal userDetails) {
+    public ApiResponse<StudyItemPagingResponse> getStudies(@PageableDefault(size = 12) Pageable pageable,
+                                                           @AuthenticationPrincipal Principal userDetails) {
         Long userId = userDetails.getUserId();
-        List<StudyItemResponse> studies = studyService.getMyStudies(userId);
+        StudyItemPagingResponse studies = studyService.getMyStudies(pageable, userId);
         return ApiResponse.success(studies);
     }
 
@@ -56,20 +59,24 @@ public class StudyController implements StudySpecification {
     }
 
     @PostMapping
-    public ApiResponse<Void> createStudy(@RequestBody @Valid StudyCreateRequest request,
+    public ApiResponse<Long> createStudy(@RequestBody @Valid StudyCreateRequest request,
                                          @AuthenticationPrincipal Principal userDetails) {
-        studyService.createStudy(request, userDetails.getUserId());
-        return ApiResponse.noContent();
+        Long id = studyService.createStudy(request, userDetails.getUserId());
+        return ApiResponse.success(id);
     }
 
     @PutMapping("/{studyId}")
-    public ApiResponse<Void> editStudy(@PathVariable("studyId") Long studyId,
-                                       @RequestBody @Valid StudyEditRequest request) {
+    public ApiResponse<Void> updateStudy(@PathVariable("studyId") Long studyId,
+                                         @RequestBody @Valid StudyUpdateRequest request,
+                                         @AuthenticationPrincipal Principal userDetails) {
+        studyService.updateStudy(studyId, request, userDetails.getUserId());
         return ApiResponse.noContent();
     }
 
     @DeleteMapping("/{studyId}")
-    public ApiResponse<Void> deleteStudy(@PathVariable("studyId") Long studyId) {
+    public ApiResponse<Void> deleteStudy(@PathVariable("studyId") Long studyId,
+                                         @AuthenticationPrincipal Principal userDetails) {
+        studyService.deleteStudy(studyId, userDetails.getUserId());
         return ApiResponse.noContent();
     }
 }
