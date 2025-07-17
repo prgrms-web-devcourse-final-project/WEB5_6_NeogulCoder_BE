@@ -1,8 +1,10 @@
 package grep.neogul_coder.domain.recruitment.post.repository;
 
 import grep.neogul_coder.domain.IntegrationTestSupport;
+import grep.neogul_coder.domain.recruitment.comment.repository.RecruitmentPostCommentQueryRepository;
+import grep.neogul_coder.domain.recruitment.comment.repository.RecruitmentPostCommentRepository;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
-import grep.neogul_coder.domain.recruitment.post.RecruitmentPostComment;
+import grep.neogul_coder.domain.recruitment.comment.RecruitmentPostComment;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.repository.StudyRepository;

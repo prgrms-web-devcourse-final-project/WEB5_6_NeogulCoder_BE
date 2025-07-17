@@ -1,10 +1,9 @@
 package grep.neogul_coder.domain.recruitment.post.service;
 
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
-import grep.neogul_coder.domain.recruitment.post.RecruitmentPostComment;
+import grep.neogul_coder.domain.recruitment.comment.RecruitmentPostComment;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
-import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostCommentQueryRepository;
-import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostQueryRepository;
+import grep.neogul_coder.domain.recruitment.comment.repository.RecruitmentPostCommentQueryRepository;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostStatusUpdateServiceRequest;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostUpdateServiceRequest;

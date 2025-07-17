@@ -1,7 +1,7 @@
 package grep.neogul_coder.domain.recruitment.post.controller.dto.response;
 
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
-import grep.neogul_coder.domain.recruitment.post.RecruitmentPostComment;
+import grep.neogul_coder.domain.recruitment.comment.RecruitmentPostComment;
 import grep.neogul_coder.domain.study.Study;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
