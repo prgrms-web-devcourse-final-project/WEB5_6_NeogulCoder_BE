@@ -3,16 +3,10 @@ package grep.neogul_coder.domain.prtemplate.service;
 import grep.neogul_coder.domain.prtemplate.controller.dto.request.LinkUpdateRequest;
 import grep.neogul_coder.domain.prtemplate.entity.Link;
 import grep.neogul_coder.domain.prtemplate.repository.LinkRepository;
-import grep.neogul_coder.domain.prtemplate.repository.PrTemplateRepository;
 import jakarta.transaction.Transactional;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +14,6 @@ import java.util.List;
 public class LinkService {
 
     private final LinkRepository linkRepository;
-    private final PrTemplateRepository prTemplateRepository;
 
     public void deleteByUserId(Long userId) {
         List<Link> links = linkRepository.findAllByUserId(userId);

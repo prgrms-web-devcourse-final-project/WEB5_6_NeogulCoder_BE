@@ -7,7 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class Quiz extends BaseEntity {
 
@@ -19,7 +21,7 @@ public class Quiz extends BaseEntity {
     private Long postId;
 
     @NotNull
-    private String quiz;
+    private String quizContent;
 
     @NotNull
     private boolean quizAnswer;
@@ -28,7 +30,7 @@ public class Quiz extends BaseEntity {
     protected Quiz(Long id, Long postId, String quiz, boolean quizAnswer) {
         this.id = id;
         this.postId = postId;
-        this.quiz = quiz;
+        this.quizContent = quiz;
         this.quizAnswer = quizAnswer;
     }
 
@@ -36,7 +38,7 @@ public class Quiz extends BaseEntity {
 
     }
 
-    public Quiz QuizInit(Long postId, String quiz, boolean quizAnswer){
+    public Quiz QuizInit(Long postId, String quiz, boolean quizAnswer) {
         return Quiz.builder()
             .postId(postId)
             .quiz(quiz)

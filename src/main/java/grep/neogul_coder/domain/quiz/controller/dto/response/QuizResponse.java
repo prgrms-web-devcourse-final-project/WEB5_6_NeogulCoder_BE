@@ -1,6 +1,7 @@
 package grep.neogul_coder.domain.quiz.controller.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 @Schema(description = "퀴즈 응답 DTO")
@@ -12,5 +13,18 @@ public class QuizResponse {
 
     @Schema(description = "퀴즈 정답 여부", example = "true")
     private Boolean quizAnswer;
+
+    @Builder
+    private QuizResponse(String quizContent, Boolean quizAnswer) {
+        this.quizContent = quizContent;
+        this.quizAnswer = quizAnswer;
+    }
+
+    public static QuizResponse toResponse(String quizContent, Boolean quizAnswer) {
+        return QuizResponse.builder()
+            .quizContent(quizContent)
+            .quizAnswer(quizAnswer)
+            .build();
+    }
 
 }
