@@ -5,6 +5,7 @@ import grep.neogul_coder.domain.recruitment.RecruitmentPostStatus;
 import grep.neogul_coder.domain.recruitment.comment.RecruitmentPostComment;
 import grep.neogul_coder.domain.recruitment.comment.repository.RecruitmentPostCommentRepository;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostStatusUpdateServiceRequest;
@@ -16,9 +17,12 @@ import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import grep.neogul_coder.domain.study.enums.StudyType;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
+import grep.neogul_coder.domain.studyapplication.StudyApplication;
+import grep.neogul_coder.domain.studyapplication.repository.StudyApplicationRepository;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
+import jakarta.persistence.EntityManager;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +39,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class RecruitmentPostServiceTest extends IntegrationTestSupport {
+
+    @Autowired
+    private EntityManager em;
 
     @Autowired
     private UserRepository userRepository;
@@ -54,6 +61,9 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
     @Autowired
     private RecruitmentPostCommentRepository commentRepository;
 
+    @Autowired
+    private StudyApplicationRepository studyApplicationRepository;
+
     private long userId;
     private long recruitmentPostId;
 
@@ -66,6 +76,83 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
         recruitmentPostRepository.save(recruitmentPost);
         recruitmentPostId = recruitmentPost.getId();
     }
+
+    @DisplayName("모집글의 정보를 조회 합니다.")
+    @Test
+    void get() {
+        //given
+        User user1 = createUser("테스터1");
+        User user2 = createUser("테스터2");
+        userRepository.saveAll(List.of(user1, user2));
+
+        Study study1 = createStudy("자바 스터디", Category.IT, ONLINE);
+        studyRepository.save(study1);
+
+        RecruitmentPost post = createRecruitmentPost(study1.getId(), user1.getId(), "모집글 제목1", "내용1", IN_PROGRESS);
+        recruitmentPostRepository.save(post);
+
+        List<RecruitmentPostComment> comments = List.of(
+                createPostComment(post, user1.getId(), "댓글1"),
+                createPostComment(post, user2.getId(), "댓글2")
+        );
+        commentRepository.saveAll(comments);
+
+        StudyApplication application1 = createStudyApplication(post.getId(), user1.getId(), "신청 사유");
+        StudyApplication application2 = createStudyApplication(post.getId(), user2.getId(), "신청 사유2");
+        studyApplicationRepository.saveAll(List.of(application1, application2));
+
+        //when
+        RecruitmentPostInfo response = recruitmentPostService.get(post.getId());
+
+        //then
+        assertThat(response.getApplicationCount()).isEqualTo(2);
+        assertThat(response.getPostDetailsInfo())
+                .extracting("nickname", "subject", "category", "studyType")
+                .containsExactly("테스터1", "모집글 제목1", "IT", "ONLINE");
+
+        assertThat(response.getCommentsWithWriterInfos())
+                .extracting("nickname", "content")
+                .containsExactlyInAnyOrder(
+                        Tuple.tuple("테스터1", "댓글1"),
+                        Tuple.tuple("테스터2", "댓글2")
+                );
+    }
+
+    @DisplayName("모집글의 댓글 정보를 조회할때 탈퇴한 회원은 탈퇴한 회원이라고 표기 됩니다. ")
+    @Test
+    void get_WhenWithdrawnUser_ThenNicknameUpdate() {
+        //given
+        User user1 = createUser("테스터1");
+        User user2 = createUser("테스터2");
+        userRepository.saveAll(List.of(user1, user2));
+
+        Study study1 = createStudy("자바 스터디", Category.IT, ONLINE);
+        studyRepository.save(study1);
+
+        RecruitmentPost post = createRecruitmentPost(study1.getId(), user1.getId(), "모집글 제목1", "내용1", IN_PROGRESS);
+        recruitmentPostRepository.save(post);
+
+        List<RecruitmentPostComment> comments = List.of(
+                createPostComment(post, user1.getId(), "댓글1"),
+                createPostComment(post, user2.getId(), "댓글2")
+        );
+        commentRepository.saveAll(comments);
+
+        user1.delete();
+        em.flush(); em.clear();
+
+        //when
+        RecruitmentPostInfo response = recruitmentPostService.get(post.getId());
+
+        //then
+        assertThat(response.getCommentsWithWriterInfos())
+                .extracting("nickname", "content")
+                .containsExactlyInAnyOrder(
+                        Tuple.tuple("탈퇴한 회원", "댓글1"),
+                        Tuple.tuple("테스터2", "댓글2")
+                );
+    }
+
 
     @DisplayName("모집글과 관련된 정보들을 페이징 조회 합니다.")
     @Test
@@ -220,6 +307,15 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
                 .subject(subject)
                 .content(content)
                 .recruitmentCount(count)
+                .build();
+    }
+
+    private StudyApplication createStudyApplication(long postId, long userId, String reason) {
+        return StudyApplication.builder()
+                .recruitmentPostId(postId)
+                .applicationReason(reason)
+                .userId(userId)
+                .isRead(false)
                 .build();
     }
 }

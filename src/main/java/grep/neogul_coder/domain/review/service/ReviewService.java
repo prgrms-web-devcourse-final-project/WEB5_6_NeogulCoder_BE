@@ -57,7 +57,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public void save(ReviewSaveServiceRequest request, long writeUserId) {
+    public long save(ReviewSaveServiceRequest request, long writeUserId) {
         if(isAlreadyWrittenReviewBy(request.getStudyId(), request.getTargetUserId(), writeUserId)){
             throw new BusinessException(ALREADY_REVIEW_WRITE_USER);
         }
@@ -68,7 +68,7 @@ public class ReviewService {
 
         Review review = request.toReview(reviewTags.getReviewTags(), reviewType, writeUserId);
         List<ReviewTagEntity> reviewTagEntities = mapToReviewTagEntities(reviewTags);
-        reviewRepository.save(ReviewEntity.from(review, reviewTagEntities, study.getId()));
+        return reviewRepository.save(ReviewEntity.from(review, reviewTagEntities, study.getId())).getId();
     }
 
     public MyReviewTagsInfo getMyReviewTags(long userId) {

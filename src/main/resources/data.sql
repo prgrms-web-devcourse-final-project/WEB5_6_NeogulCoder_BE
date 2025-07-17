@@ -34,29 +34,29 @@ INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_c
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status) VALUES (3, 5, '클라이밍 같이 하실분 모집 합니다', '클라이밍 좋아하시는 분들의 많은 관심 바랍니다!', 5, '2025-06-08', 'IN_PROGRESS');
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status) VALUES (2, 3, '토익 스터디', '토익 고수들의 많은 참여 부탁 드립니다', 2, '2025-03-31', 'IN_PROGRESS');
 
-INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (1, '자바 스터디에 참여하고 싶습니다.', FALSE, 'PENDING');
-INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (1, '열심히 참여하겠습니다.', TRUE, 'APPROVED');
-INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (3, '관심있어 지원합니다.', FALSE, 'PENDING');
-INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (2, '시간이 맞아 지원합니다.', FALSE, 'REJECTED');
-INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (3, '프로젝트 경험 쌓고 싶습니다.', TRUE, 'APPROVED');
+INSERT INTO study_application (user_id, recruitment_post_id, application_reason, is_read, status) VALUES (1, 1, '자바 스터디에 참여하고 싶습니다.', FALSE, 'APPLYING');
+INSERT INTO study_application (user_id, recruitment_post_id, application_reason, is_read, status) VALUES (2, 1, '열심히 참여하겠습니다.', TRUE, 'APPROVED');
+INSERT INTO study_application (user_id, recruitment_post_id, application_reason, is_read, status) VALUES (3, 3, '관심있어 지원합니다.', FALSE, 'APPLYING');
+INSERT INTO study_application (user_id, recruitment_post_id, application_reason, is_read, status) VALUES (4, 2, '시간이 맞아 지원합니다.', FALSE, 'REJECTED');
+INSERT INTO study_application (user_id, recruitment_post_id, application_reason, is_read, status) VALUES (5, 3, '프로젝트 경험 쌓고 싶습니다.', TRUE, 'APPROVED');
 
-INSERT INTO calender (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-20 10:00:00', '2025-07-20 12:00:00', '스터디 회의', '진행 상황 공유');
-INSERT INTO calender (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-21 09:00:00', '2025-07-21 10:30:00', '모각코', '혼자 코딩하기');
-INSERT INTO calender (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-22 15:00:00', '2025-07-22 16:00:00', '운동', '헬스장 가기');
-INSERT INTO calender (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-23 13:00:00', '2025-07-23 14:30:00', '리팩토링', '코드 개선');
-INSERT INTO calender (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-24 11:00:00', '2025-07-24 12:00:00', '디자인 회의', 'UI 피드백');
+INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-20 10:00:00', '2025-07-20 12:00:00', '스터디 회의', '진행 상황 공유');
+INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-21 09:00:00', '2025-07-21 10:30:00', '모각코', '혼자 코딩하기');
+INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-22 15:00:00', '2025-07-22 16:00:00', '운동', '헬스장 가기');
+INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-23 13:00:00', '2025-07-23 14:30:00', '리팩토링', '코드 개선');
+INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-24 11:00:00', '2025-07-24 12:00:00', '디자인 회의', 'UI 피드백');
 
-INSERT INTO personal_calender (user_id, calendar_id) VALUES (1, 1);
-INSERT INTO personal_calender (user_id, calendar_id) VALUES (1, 2);
-INSERT INTO personal_calender (user_id, calendar_id) VALUES (2, 3);
-INSERT INTO personal_calender (user_id, calendar_id) VALUES (3, 4);
-INSERT INTO personal_calender (user_id, calendar_id) VALUES (4, 5);
+INSERT INTO personal_calendar (user_id, calendar_id) VALUES (1, 1);
+INSERT INTO personal_calendar (user_id, calendar_id) VALUES (1, 2);
+INSERT INTO personal_calendar (user_id, calendar_id) VALUES (2, 3);
+INSERT INTO personal_calendar (user_id, calendar_id) VALUES (3, 4);
+INSERT INTO personal_calendar (user_id, calendar_id) VALUES (4, 5);
 
-INSERT INTO team_calender (study_id, calendar_id) VALUES (1, 1);
-INSERT INTO team_calender (study_id, calendar_id) VALUES (2, 2);
-INSERT INTO team_calender (study_id, calendar_id) VALUES (1, 3);
-INSERT INTO team_calender (study_id, calendar_id) VALUES (3, 4);
-INSERT INTO team_calender (study_id, calendar_id) VALUES (4, 5);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (1, 1, 1);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (2, 1, 2);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (1, 2, 3);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (3, 3, 4);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (4, 4, 5);
 
 INSERT INTO time_vote_period (study_id, start_date, end_date) VALUES (2, '2025-07-15 00:00:00', '2025-07-22 00:00:00');
 
