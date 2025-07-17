@@ -49,11 +49,14 @@ public class StudyCreateRequest {
     @Schema(description = "대표 이미지", example = "http://localhost:8083/image.jpg")
     private String imageUrl;
 
+    private StudyCreateRequest() {}
+
     @Builder
-    private StudyCreateRequest(String name, Category category, StudyType studyType, String location,
+    private StudyCreateRequest(String name, Category category, int capacity, StudyType studyType, String location,
                                LocalDate startDate, LocalDate endDate, String introduction, String imageUrl) {
         this.name = name;
         this.category = category;
+        this.capacity = capacity;
         this.studyType = studyType;
         this.location = location;
         this.startDate = startDate;

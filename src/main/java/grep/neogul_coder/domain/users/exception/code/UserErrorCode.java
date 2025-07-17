@@ -10,7 +10,9 @@ public enum UserErrorCode implements ErrorCode {
     USER_NOT_FOUND("U001",HttpStatus.BAD_REQUEST,"회원을 찾을 수 없습니다."),
     PASSWORD_MISMATCH("U002", HttpStatus.BAD_REQUEST, "비밀번호를 다시 확인해주세요."),
     PASSWORD_UNCHECKED("U003", HttpStatus.BAD_REQUEST, "비밀번호와 비밀번호 확인이 다릅니다"),
-    IS_DUPLICATED("U004", HttpStatus.BAD_REQUEST,"이미 존재하는 데이터입니다.");
+    IS_DUPLICATED_MALI("U004", HttpStatus.BAD_REQUEST,"이미 존재하는 이메일입니다."),
+    IS_DUPLICATED_NICKNAME("U005", HttpStatus.BAD_REQUEST,"이미 존재하는 닉네임입니다.");
+
 
     private final String code;
     private final HttpStatus status;

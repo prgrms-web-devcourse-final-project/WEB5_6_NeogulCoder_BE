@@ -87,7 +87,7 @@ public class AuthService {
                             .oauthId(userInfo.getProviderId())
                             .password(dummyPassword)
                             .role(Role.ROLE_USER)
-                            .isDeleted(false)
+                            .activated(true)
                             .build();
                     return usersRepository.save(newUser);
                 });

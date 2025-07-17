@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
     List<ReviewEntity> findByTargetUserId(long userId);
+
+    List<ReviewEntity> findAllByTargetUserId(Long userId);
 }

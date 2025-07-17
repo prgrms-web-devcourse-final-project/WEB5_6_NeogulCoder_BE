@@ -1,7 +1,7 @@
 package grep.neogul_coder.domain.review.controller.dto.request;
 
 import grep.neogul_coder.domain.review.ReviewType;
-import grep.neogul_coder.domain.review.controller.service.request.ReviewSaveServiceRequest;
+import grep.neogul_coder.domain.review.service.request.ReviewSaveServiceRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -30,6 +30,8 @@ public class ReviewSaveRequest {
 
     @Schema(example = "너무 친절 하세요!", description = "주관 리뷰")
     private String content;
+
+    private ReviewSaveRequest() {}
 
     @Builder
     private ReviewSaveRequest(long studyId, long targetUserId, ReviewType reviewType,

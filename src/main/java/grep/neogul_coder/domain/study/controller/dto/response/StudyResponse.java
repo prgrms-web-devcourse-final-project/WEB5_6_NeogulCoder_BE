@@ -1,7 +1,7 @@
 package grep.neogul_coder.domain.study.controller.dto.response;
 
 import grep.neogul_coder.domain.attendance.controller.dto.response.AttendanceResponse;
-import grep.neogul_coder.domain.calender.controller.dto.response.TeamCalenderResponse;
+import grep.neogul_coder.domain.calender.controller.dto.response.TeamCalendarResponse;
 import grep.neogul_coder.domain.studypost.dto.StudyPostListResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -23,11 +23,17 @@ public class StudyResponse {
     @Schema(description = "인원수", example = "3")
     private int currentCount;
 
+    @Schema(description = "스터디 총 게시물 수", example = "10")
+    private int totalPostCount;
+
     @Schema(description = "출석 정보")
     private List<AttendanceResponse> attendances;
 
+    @Schema(description = "출석률", example = "60")
+    private int attendanceRate;
+
     @Schema(description = "팀 달력")
-    private List<TeamCalenderResponse> teamCalenders;
+    private List<TeamCalendarResponse> teamCalenders;
 
     @Schema(description = "게시글 리스트")
     private List<StudyPostListResponse> studyPosts;

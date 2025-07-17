@@ -1,9 +1,11 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
-import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.*;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostCommentPagingInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
@@ -21,27 +23,15 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
 
     private final RecruitmentPostService recruitmentPostService;
 
+    @GetMapping
+    public ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(@PageableDefault(size = 10) Pageable pageable) {
+        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(pageable);
+        return ApiResponse.success(response);
+    }
+
     @GetMapping("/{recruitment-post-id}")
     public ApiResponse<RecruitmentPostInfo> get(@PathVariable("recruitment-post-id") long recruitmentPostId) {
         return ApiResponse.success(new RecruitmentPostInfo());
-    }
-
-    @GetMapping("/studies")
-    public ApiResponse<ParticipatedStudyNamesInfo> getParticipatedStudyNames(@AuthenticationPrincipal Principal userDetails) {
-        return ApiResponse.success(new ParticipatedStudyNamesInfo());
-    }
-
-    @GetMapping("/studies/{study-id}")
-    public ApiResponse<ParticipatedStudyInfo> getParticipatedStudy(@PathVariable("study-id") long StudyId,
-                                                                   @AuthenticationPrincipal Principal userDetails) {
-        return ApiResponse.success(new ParticipatedStudyInfo());
-    }
-
-    @PostMapping
-    public ApiResponse<Void> save(@Valid @RequestBody RecruitmentPostCreateRequest request,
-                                  @AuthenticationPrincipal Principal userDetails) {
-        recruitmentPostService.create(request.toServiceRequest(), userDetails.getUserId());
-        return ApiResponse.noContent();
     }
 
     @PutMapping("/{recruitment-post-id}")
