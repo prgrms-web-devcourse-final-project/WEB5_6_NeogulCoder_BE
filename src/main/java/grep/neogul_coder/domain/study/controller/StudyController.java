@@ -26,7 +26,7 @@ public class StudyController implements StudySpecification {
     public ApiResponse<StudyItemPagingResponse> getStudies(@PageableDefault(size = 12) Pageable pageable,
                                                            @AuthenticationPrincipal Principal userDetails) {
         Long userId = userDetails.getUserId();
-        StudyItemPagingResponse studies = studyService.getMyStudies(pageable, userId);
+        StudyItemPagingResponse studies = studyService.getMyStudiesPaging(pageable, userId);
         return ApiResponse.success(studies);
     }
 

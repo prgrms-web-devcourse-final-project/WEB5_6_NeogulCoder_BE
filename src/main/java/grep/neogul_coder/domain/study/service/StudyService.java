@@ -1,7 +1,6 @@
 package grep.neogul_coder.domain.study.service;
 
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
-import grep.neogul_coder.domain.study.controller.dto.response.StudyItemPagingResponse;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.controller.dto.request.StudyCreateRequest;
@@ -26,9 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static grep.neogul_coder.domain.study.enums.StudyMemberRole.*;
+import static grep.neogul_coder.domain.study.enums.StudyMemberRole.LEADER;
 import static grep.neogul_coder.domain.study.exception.code.StudyErrorCode.*;
-import static grep.neogul_coder.domain.users.exception.code.UserErrorCode.*;
+import static grep.neogul_coder.domain.users.exception.code.UserErrorCode.USER_NOT_FOUND;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -42,9 +41,13 @@ public class StudyService {
     private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final UserRepository userRepository;
 
-    public StudyItemPagingResponse getMyStudies(Pageable pageable, Long userId) {
-        Page<StudyItemResponse> page = studyQueryRepository.findMyStudies(pageable, userId);
+    public StudyItemPagingResponse getMyStudiesPaging(Pageable pageable, Long userId) {
+        Page<StudyItemResponse> page = studyQueryRepository.findMyStudiesPaging(pageable, userId);
         return StudyItemPagingResponse.of(page);
+    }
+
+    public List<StudyItemResponse> getMyStudies(Long userId) {
+        return studyQueryRepository.findMyStudies(userId);
     }
 
     public StudyHeaderResponse getStudyHeader(Long studyId) {
@@ -55,9 +58,9 @@ public class StudyService {
     }
 
     public List<StudyImageResponse> getStudyImages(Long userId) {
-        List<Study> myStudies = studyMemberRepository.findStudiesByUserId(userId);
+        List<Study> myStudiesImage = studyMemberRepository.findStudiesByUserId(userId);
 
-        return myStudies.stream()
+        return myStudiesImage.stream()
             .map(StudyImageResponse::from)
             .toList();
     }
