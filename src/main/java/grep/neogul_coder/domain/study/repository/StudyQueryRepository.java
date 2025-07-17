@@ -6,6 +6,9 @@ import grep.neogul_coder.domain.study.controller.dto.response.StudyItemResponse;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyMemberResponse;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,8 +26,8 @@ public class StudyQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public List<StudyItemResponse> findMyStudies(Long userId) {
-        return queryFactory
+    public Page<StudyItemResponse> findMyStudies(Pageable pageable, Long userId) {
+        List<StudyItemResponse> studies = queryFactory
             .select(Projections.constructor(
                 StudyItemResponse.class,
                 study.id,
@@ -42,17 +45,39 @@ public class StudyQueryRepository {
             .from(studyMember)
             .join(user).on(user.id.eq(studyMember.userId))
             .join(study).on(study.id.eq(studyMember.study.id))
-            .where(studyMember.userId.eq(userId))
+            .where(
+                studyMember.userId.eq(userId),
+                studyMember.activated.isTrue(),
+                study.activated.isTrue()
+            )
             .fetch();
+
+        Long total = queryFactory
+            .select(study.count())
+            .from(studyMember)
+            .join(study).on(study.id.eq(studyMember.study.id))
+            .where(
+                studyMember.userId.eq(userId),
+                studyMember.activated.eq(true),
+                study.activated.eq(true)
+            )
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetchOne();
+
+        return new PageImpl<>(studies, pageable, total);
     }
 
     public StudyMemberRole findMyRole(Long studyId, Long userId) {
         return queryFactory
             .select(studyMember.role)
             .from(studyMember)
+            .join(study).on(study.id.eq(studyMember.study.id))
             .where(
                 studyMember.study.id.eq(studyId),
-                studyMember.userId.eq(userId)
+                studyMember.userId.eq(userId),
+                studyMember.activated.isTrue(),
+                study.activated.isTrue()
             )
             .fetchOne();
     }
@@ -66,8 +91,14 @@ public class StudyQueryRepository {
                 user.profileImageUrl
             ))
             .from(studyMember)
-            .join(user).on(user.id.eq(studyMember.id))
-            .where(studyMember.study.id.eq(studyId))
+            .join(study).on(study.id.eq(studyMember.study.id))
+            .join(user).on(user.id.eq(studyMember.userId))
+            .where(
+                studyMember.study.id.eq(studyId),
+                studyMember.activated.isTrue(),
+                study.activated.isTrue(),
+                user.activated.isTrue()
+            )
             .fetch();
     }
 }
