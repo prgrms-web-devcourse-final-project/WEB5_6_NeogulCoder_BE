@@ -47,22 +47,17 @@ public class StudyQueryRepository {
             .join(study).on(study.id.eq(studyMember.study.id))
             .where(
                 studyMember.userId.eq(userId),
-                studyMember.activated.isTrue(),
-                study.activated.isTrue()
+                studyMember.activated.isTrue()
             )
             .fetch();
 
         Long total = queryFactory
             .select(study.count())
             .from(studyMember)
-            .join(study).on(study.id.eq(studyMember.study.id))
             .where(
                 studyMember.userId.eq(userId),
-                studyMember.activated.eq(true),
-                study.activated.eq(true)
+                studyMember.activated.eq(true)
             )
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
             .fetchOne();
 
         return new PageImpl<>(studies, pageable, total);
