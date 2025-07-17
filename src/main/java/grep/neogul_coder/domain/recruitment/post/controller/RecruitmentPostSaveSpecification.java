@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface RecruitmentPostSaveSpecification {
 
     @Operation(summary = "모집글 저장", description = "스터디 모집 글을 저장 합니다.")
-    ApiResponse<Void> save(RecruitmentPostCreateRequest request, Principal userDetails);
+    ApiResponse<Long> save(RecruitmentPostCreateRequest request, Principal userDetails);
 
     @Operation(
             summary = "참여중인 스터디 목록 조회",

@@ -19,10 +19,10 @@ public class RecruitmentPostSaveController implements RecruitmentPostSaveSpecifi
     private final RecruitmentPostSaveService recruitmentPostService;
 
     @PostMapping
-    public ApiResponse<Void> save(@Valid @RequestBody RecruitmentPostCreateRequest request,
+    public ApiResponse<Long> save(@Valid @RequestBody RecruitmentPostCreateRequest request,
                                   @AuthenticationPrincipal Principal userDetails) {
-        recruitmentPostService.create(request.toServiceRequest(), userDetails.getUserId());
-        return ApiResponse.noContent();
+        long postId = recruitmentPostService.create(request.toServiceRequest(), userDetails.getUserId());
+        return ApiResponse.success(postId);
     }
 
     @GetMapping("/studies")
