@@ -4,6 +4,7 @@ import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.recruitment.comment.RecruitmentPostComment;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogul_coder.domain.recruitment.comment.repository.RecruitmentPostCommentQueryRepository;
+import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostQueryRepository;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostStatusUpdateServiceRequest;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostUpdateServiceRequest;
@@ -31,21 +32,20 @@ public class RecruitmentPostService {
 
     private final StudyRepository studyRepository;
     private final RecruitmentPostRepository postRepository;
-    // private final RecruitmentPostQueryRepository postQueryRepository;
+    private final RecruitmentPostQueryRepository postQueryRepository;
     private final RecruitmentPostCommentQueryRepository commentQueryRepository;
 
     public RecruitmentPostPagingInfo getPagingInfo(Pageable pageable) {
-//        List<RecruitmentPost> recruitmentPosts = postQueryRepository.findPaging(pageable);
-//        List<Long> recruitmentPostIds = extractId(recruitmentPosts);
-//
-//        List<Study> studies = findConnectedStudiesFrom(recruitmentPosts);
-//        Map<Long, Study> studyIdMap = groupedStudyIdMapFrom(studies);
-//
-//        List<RecruitmentPostComment> comments = commentQueryRepository.findByPostIdIn(recruitmentPostIds);
-//        Map<Long, List<RecruitmentPostComment>> postIdMap = groupedPostIdBy(comments);
-//
-//        return RecruitmentPostPagingInfo.of(recruitmentPosts, studyIdMap, postIdMap);
-        return null;
+        List<RecruitmentPost> recruitmentPosts = postQueryRepository.findPaging(pageable);
+        List<Long> recruitmentPostIds = extractId(recruitmentPosts);
+
+        List<Study> studies = findConnectedStudiesFrom(recruitmentPosts);
+        Map<Long, Study> studyIdMap = groupedStudyIdMapFrom(studies);
+
+        List<RecruitmentPostComment> comments = commentQueryRepository.findByPostIdIn(recruitmentPostIds);
+        Map<Long, List<RecruitmentPostComment>> postIdMap = groupedPostIdBy(comments);
+
+        return RecruitmentPostPagingInfo.of(recruitmentPosts, studyIdMap, postIdMap);
     }
 
     @Transactional
@@ -79,8 +79,7 @@ public class RecruitmentPostService {
 
     private List<Study> findConnectedStudiesFrom(List<RecruitmentPost> recruitmentPosts) {
         List<Long> studyIds = extractStudyId(recruitmentPosts);
-        // return studyRepository.findByIdIn(studyIds);
-        return null;
+        return studyRepository.findByIdIn(studyIds);
     }
 
     private List<Long> extractId(List<RecruitmentPost> recruitmentPosts) {
