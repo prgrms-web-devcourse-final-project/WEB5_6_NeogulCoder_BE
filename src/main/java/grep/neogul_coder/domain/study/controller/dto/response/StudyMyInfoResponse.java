@@ -1,9 +1,14 @@
 package grep.neogul_coder.domain.study.controller.dto.response;
 
+import grep.neogul_coder.domain.studypost.dto.StudyPostListResponse;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class StudyMyInfoResponse {
 
-    // 작성한 게시글, 댓글 추가 예정
+    @Schema(description = "게시글 리스트")
+    private List<StudyPostListResponse> studyPosts;
 }
