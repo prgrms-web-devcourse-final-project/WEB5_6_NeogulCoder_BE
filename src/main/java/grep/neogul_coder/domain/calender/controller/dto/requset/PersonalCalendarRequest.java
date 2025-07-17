@@ -39,4 +39,6 @@ public class PersonalCalendarRequest {
             .build();
     }
 
+    protected PersonalCalendarRequest() {
+    }
 }
