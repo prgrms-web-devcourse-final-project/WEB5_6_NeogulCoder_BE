@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static grep.neogul_coder.domain.recruitment.post.QRecruitmentPostComment.recruitmentPostComment;
+import static grep.neogul_coder.domain.recruitment.comment.QRecruitmentPostComment.recruitmentPostComment;
 
 @Repository
 public class RecruitmentPostCommentQueryRepository {
@@ -21,12 +21,11 @@ public class RecruitmentPostCommentQueryRepository {
     }
 
     public List<RecruitmentPostComment> findByPostIdIn(List<Long> postIds) {
-//        return queryFactory.selectFrom(recruitmentPostComment)
-//                .where(
-//                        recruitmentPostComment.recruitmentPost.id.in(postIds),
-//                        recruitmentPostComment.activated.isTrue()
-//                )
-//                .fetch();
-        return null;
+        return queryFactory.selectFrom(recruitmentPostComment)
+                .where(
+                        recruitmentPostComment.recruitmentPost.id.in(postIds),
+                        recruitmentPostComment.activated.isTrue()
+                )
+                .fetch();
     }
 }
