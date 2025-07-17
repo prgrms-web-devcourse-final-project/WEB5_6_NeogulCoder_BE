@@ -37,6 +37,12 @@ public class UserController implements UserSpecification {
         return ApiResponse.success(userResponse);
     }
 
+    @GetMapping("/{userid}")
+    public ApiResponse<UserResponse> get(@PathVariable("userid") Long userId) {
+        UserResponse userResponse = usersService.getUserResponse(userId);
+        return ApiResponse.success(userResponse);
+    }
+
     @PutMapping("/update/profile")
     public ApiResponse<Void> updateProfile(@AuthenticationPrincipal Principal principal,
         @RequestBody UpdateProfileRequest request) {
