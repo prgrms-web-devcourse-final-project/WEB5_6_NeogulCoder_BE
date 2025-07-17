@@ -5,6 +5,7 @@ import grep.neogul_coder.domain.calender.controller.dto.response.PersonalCalenda
 import grep.neogul_coder.domain.calender.service.PersonalCalendarService;
 import grep.neogul_coder.global.response.ApiResponse;
 
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class PersonalCalendarController implements PersonalCalendarSpecification
     @PostMapping
     public ApiResponse<Void> create(
         @PathVariable("userId") Long userId,
-        @RequestBody PersonalCalendarRequest request) {
+        @Valid @RequestBody PersonalCalendarRequest request) {
         personalCalendarService.create(userId, request);
         return ApiResponse.noContent();
     }
@@ -43,7 +44,7 @@ public class PersonalCalendarController implements PersonalCalendarSpecification
     public ApiResponse<Void> update(
         @PathVariable("userId") Long userId,
         @PathVariable("calendarId") Long calendarId,
-        @RequestBody PersonalCalendarRequest request
+        @Valid @RequestBody PersonalCalendarRequest request
     ) {
         personalCalendarService.update(userId, calendarId, request);
         return ApiResponse.noContent();

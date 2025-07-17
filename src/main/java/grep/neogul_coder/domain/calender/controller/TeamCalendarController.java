@@ -6,6 +6,7 @@ import grep.neogul_coder.domain.calender.service.PersonalCalendarService;
 import grep.neogul_coder.domain.calender.service.TeamCalendarService;
 import grep.neogul_coder.global.response.ApiResponse;
 
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,10 @@ public class TeamCalendarController implements TeamCalendarSpecification {
     private final TeamCalendarService teamCalendarService;
 
     @PostMapping
-    public ApiResponse<Void> create(@PathVariable("studyId") Long studyId, @RequestBody TeamCalendarRequest request) {
+    public ApiResponse<Void> create(
+        @PathVariable("studyId") Long studyId,
+        @Valid @RequestBody TeamCalendarRequest request
+    ) {
         teamCalendarService.create(studyId, request);
         return ApiResponse.noContent();
     }
@@ -43,7 +47,7 @@ public class TeamCalendarController implements TeamCalendarSpecification {
     public ApiResponse<Void> update(
         @PathVariable("studyId") Long studyId,
         @PathVariable("calendarId") Long calendarId,
-        @RequestBody TeamCalendarRequest request
+        @Valid @RequestBody TeamCalendarRequest request
     ) {
         teamCalendarService.update(studyId, calendarId, request);
         return ApiResponse.noContent();

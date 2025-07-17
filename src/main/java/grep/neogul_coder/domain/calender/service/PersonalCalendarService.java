@@ -10,6 +10,7 @@ import grep.neogul_coder.domain.calender.repository.PersonalCalendarRepository;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.service.UserService;
 import grep.neogul_coder.global.exception.business.NotFoundException;
+import grep.neogul_coder.global.exception.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;
@@ -50,12 +51,20 @@ public class PersonalCalendarService {
     }
 
     public void create(Long userId, PersonalCalendarRequest request) {
+        if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
+            throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
+        }
+
         Calendar calendar = request.toCalendar();
         PersonalCalendar personalCalendar = new PersonalCalendar(userId, calendar);
         personalCalendarRepository.save(personalCalendar);
     }
 
     public void update(Long userId, Long calendarId, PersonalCalendarRequest request) {
+        if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
+            throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
+        }
+
         PersonalCalendar calendar = personalCalendarRepository.findById(calendarId)
             .filter(pc -> pc.getUserId().equals(userId))
             .orElseThrow(() -> new NotFoundException(CALENDAR_NOT_FOUND));

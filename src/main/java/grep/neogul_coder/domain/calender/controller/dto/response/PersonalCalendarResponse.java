@@ -31,10 +31,10 @@ public class PersonalCalendarResponse {
     @Schema(description = "일정 설명", example = "코테 대비 공부")
     private String description;
 
-    @Schema(description = "시작 시간", example = "2025-07-10T09:00:00")
+    @Schema(description = "시작 기간", example = "2025-07-10T09:00:00")
     private LocalDateTime startTime;
 
-    @Schema(description = "종료 시간", example = "2025-07-10T10:00:00")
+    @Schema(description = "종료 기간", example = "2025-07-10T10:00:00")
     private LocalDateTime endTime;
 
     @Builder

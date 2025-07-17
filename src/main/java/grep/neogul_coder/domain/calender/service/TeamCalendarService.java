@@ -5,9 +5,11 @@ import grep.neogul_coder.domain.calender.controller.dto.response.TeamCalendarRes
 import grep.neogul_coder.domain.calender.entity.Calendar;
 import grep.neogul_coder.domain.calender.entity.TeamCalendar;
 import grep.neogul_coder.domain.calender.exception.CalendarNotFoundException;
+import grep.neogul_coder.domain.calender.exception.CalendarValidationException;
 import grep.neogul_coder.domain.calender.exception.code.CalendarErrorCode;
 import grep.neogul_coder.domain.calender.repository.TeamCalendarRepository;
 import grep.neogul_coder.global.exception.business.NotFoundException;
+import grep.neogul_coder.global.exception.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;
@@ -45,12 +47,19 @@ public class TeamCalendarService {
 
 
     public void create(Long studyId, TeamCalendarRequest request) {
+        if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
+            throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
+        }
         Calendar calendar = request.toCalendar();
         TeamCalendar teamCalendar = new TeamCalendar(studyId, calendar);
         teamCalendarRepository.save(teamCalendar);
     }
 
     public void update(Long studyId, Long calendarId, TeamCalendarRequest request) {
+
+        if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
+            throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
+        }
         TeamCalendar calendar = teamCalendarRepository.findById(calendarId)
             .filter(tc -> tc.getStudyId().equals(studyId))
             .orElseThrow(() -> new NotFoundException(CALENDAR_NOT_FOUND));
@@ -63,4 +72,5 @@ public class TeamCalendarService {
             .orElseThrow(() -> new NotFoundException(CALENDAR_NOT_FOUND));
         teamCalendarRepository.delete(calendar);
     }
+
 }

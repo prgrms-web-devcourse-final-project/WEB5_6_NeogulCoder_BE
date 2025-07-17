@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum CalendarErrorCode implements ErrorCode {
 
+    MISSING_REQUIRED_FIELDS("C01", HttpStatus.BAD_REQUEST, "일정 제목과 시작/종료 시간은 필수입니다."),
     CALENDAR_NOT_FOUND("C404", HttpStatus.NOT_FOUND, "해당 캘린더를 찾을 수 없습니다.");
+
 
     private final String code;
     private final HttpStatus status;
