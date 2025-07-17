@@ -2,16 +2,25 @@ package grep.neogul_coder.domain.study.controller;
 
 import grep.neogul_coder.domain.study.controller.dto.request.DelegateLeaderRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.ExtendStudyRequest;
+import grep.neogul_coder.domain.study.service.StudyManagementService;
+import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/studies/{studyId}")
+@RequiredArgsConstructor
 @RestController
 public class StudyManagementController implements StudyManagementSpecification {
 
+    private final StudyManagementService studyManagementService;
+
     @DeleteMapping("/me")
-    public ApiResponse<Void> leaveStudy(@PathVariable("studyId") Long studyId) {
+    public ApiResponse<Void> leaveStudy(@PathVariable("studyId") Long studyId,
+                                        @AuthenticationPrincipal Principal userDetails) {
+        studyManagementService.leaveStudy(studyId, userDetails.getUserId());
         return ApiResponse.noContent();
     }
 

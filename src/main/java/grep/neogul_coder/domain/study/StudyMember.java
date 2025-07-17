@@ -32,6 +32,10 @@ public class StudyMember extends BaseEntity {
         this.role = role;
     }
 
+    public void delete() {
+        this.activated = false;
+    }
+
     public boolean hasNotRoleReader(){
         return this.role != StudyMemberRole.LEADER;
     }
