@@ -36,4 +36,7 @@ public class RecruitmentPostUpdateRequest {
                 .recruitmentCount(this.recruitmentCount)
                 .build();
     }
+
+    private RecruitmentPostUpdateRequest() {
+    }
 }

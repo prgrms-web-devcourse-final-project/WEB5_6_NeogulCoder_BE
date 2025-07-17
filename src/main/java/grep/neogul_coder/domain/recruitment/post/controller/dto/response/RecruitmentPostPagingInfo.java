@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,10 @@ public class RecruitmentPostPagingInfo {
                                                Map<Long, List<RecruitmentPostComment>> postIdMap) {
 
         List<RecruitmentPostInfo> postInfos = recruitmentPosts.stream()
-                .map(post -> new RecruitmentPostInfo(post, studyIdMap.get(post.getStudyId()), postIdMap.get(post.getId())))
+                .map(post -> new RecruitmentPostInfo(
+                        post,
+                        studyIdMap.get(post.getStudyId()),
+                        postIdMap.getOrDefault(post.getId(), Collections.emptyList())))
                 .toList();
 
         return new RecruitmentPostPagingInfo(postInfos);
