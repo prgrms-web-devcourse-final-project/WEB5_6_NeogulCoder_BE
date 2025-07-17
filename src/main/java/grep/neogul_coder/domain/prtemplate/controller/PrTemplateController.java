@@ -33,6 +33,12 @@ public class PrTemplateController implements PrTemplateSpecification {
         return ApiResponse.success(prPageResponse);
     }
 
+    @GetMapping("/{userid}")
+    public ApiResponse<PrPageResponse> get(@PathVariable("userid") Long userId) {
+        PrPageResponse prPageResponse = prTemplateService.toResponse(userId);
+        return ApiResponse.success(prPageResponse);
+    }
+
     @PutMapping("/update/template")
     public ApiResponse<Void> update(@AuthenticationPrincipal Principal principal,
         @RequestBody PrUpdateRequest request) {
