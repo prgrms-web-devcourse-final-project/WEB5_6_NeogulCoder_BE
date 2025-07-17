@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -22,23 +23,10 @@ public interface TeamCalendarSpecification {
             "예: `/api/teams/{studyId}/calendar`"
     )
     ApiResponse<List<TeamCalendarResponse>> findAll(
+        @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
         @Parameter(name = "studyId", description = "조회할 팀 ID", required = true, in = ParameterIn.PATH)
         @PathVariable("studyId") Long studyId
     );
-
-
-    @Operation(
-        summary = "팀 일정 상세 조회",
-        description = "특정 팀의 특정 일정 상세정보를 조회합니다.\n\n" +
-            "예: `/api/teams/{studyId}/calendar/{calendarId}`"
-    )
-    ApiResponse<TeamCalendarResponse> findOne(
-        @Parameter(name = "studyId", description = "팀 ID", required = true, in = ParameterIn.PATH)
-        @PathVariable("studyId") Long studyId,
-        @Parameter(name = "calendarId", description = "일정 ID", required = true, in = ParameterIn.PATH)
-        @PathVariable("calendarId") Long calendarId
-    );
-
 
     @Operation(
         summary = "팀 일정 날짜별 조회",
@@ -46,6 +34,7 @@ public interface TeamCalendarSpecification {
             "예: `/api/teams/{studyId}/calendar/day?date=2025-07-17`"
     )
     ApiResponse<List<TeamCalendarResponse>> findByDate(
+        @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
         @Parameter(name = "studyId", description = "조회할 팀 ID", required = true, in = ParameterIn.PATH)
         @PathVariable("studyId") Long studyId,
 
@@ -60,6 +49,7 @@ public interface TeamCalendarSpecification {
             "예: `/api/teams/{studyId}/calendar`"
     )
     ApiResponse<Void> create(
+        @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
         @Parameter(name = "studyId", description = "일정을 생성할 팀 ID", required = true, in = ParameterIn.PATH)
         @PathVariable("studyId") Long studyId,
         @RequestBody TeamCalendarRequest request
@@ -71,6 +61,7 @@ public interface TeamCalendarSpecification {
             "예: `/api/teams/{studyId}/calendar/{calendarId}`"
     )
     ApiResponse<Void> update(
+        @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
         @Parameter(name = "studyId", description = "팀 ID", required = true, in = ParameterIn.PATH)
         @PathVariable("studyId") Long studyId,
         @Parameter(name = "calendarId", description = "일정 ID", required = true, in = ParameterIn.PATH)
@@ -84,6 +75,7 @@ public interface TeamCalendarSpecification {
             "예: `/api/teams/{studyId}/calendar/{calendarId}`"
     )
     ApiResponse<Void> delete(
+        @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
         @Parameter(name = "studyId", description = "팀 ID", required = true, in = ParameterIn.PATH)
         @PathVariable("studyId") Long studyId,
         @Parameter(name = "calendarId", description = "일정 ID", required = true, in = ParameterIn.PATH)

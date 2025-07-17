@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LinkRepository extends JpaRepository<Link, Long> {
-    Link findByPrId(Long prId);
-    List<Link> findAllByPrIdAndActivatedTrue(Long prId);
-    List<Link> findAllByPrId(Long prId);
+    Link findByUserId(Long prId);
+    List<Link> findAllByUserIdAndActivatedTrue(Long prId);
+    List<Link> findAllByUserId(Long userId);
 }

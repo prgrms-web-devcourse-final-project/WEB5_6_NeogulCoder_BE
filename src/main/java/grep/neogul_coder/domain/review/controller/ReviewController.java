@@ -35,7 +35,7 @@ public class ReviewController implements ReviewSpecification {
     }
 
     @PostMapping
-    public ApiResponse<Void> save(@Valid @RequestBody ReviewSaveRequest request, @AuthenticationPrincipal Principal userDetails) {
+    public ApiResponse<Long> save(@Valid @RequestBody ReviewSaveRequest request, @AuthenticationPrincipal Principal userDetails) {
         reviewService.save(request.toServiceRequest(), userDetails.getUserId());
         return ApiResponse.noContent();
     }
