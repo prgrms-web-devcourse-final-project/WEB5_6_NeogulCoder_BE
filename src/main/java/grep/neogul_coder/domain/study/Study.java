@@ -60,6 +60,26 @@ public class Study extends BaseEntity {
         this.isFinished = false;
     }
 
+    public void update(String name, Category category, int capacity, StudyType studyType,
+                       String location, LocalDate startDate, String introduction, String imageUrl) {
+        this.name = name;
+        this.category = category;
+        this.capacity = capacity;
+        this.studyType = studyType;
+        this.location = location;
+        this.startDate = startDate;
+        this.introduction = introduction;
+        this.imageUrl = imageUrl;
+    }
+
+    public boolean isStarted() {
+        return this.startDate.isBefore(LocalDate.now());
+    }
+
+    public void delete() {
+        this.activated = false;
+    }
+
     public long calculateRemainSlots(long currentCount) {
         return this.capacity - currentCount;
     }
