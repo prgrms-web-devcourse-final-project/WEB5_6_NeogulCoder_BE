@@ -140,7 +140,7 @@ public class StudyService {
     }
 
     private static void validateStudyStartDate(StudyUpdateRequest request, Study study) {
-        if (study.hasStarted() && !study.getStartDate().equals(request.getStartDate())) {
+        if (study.isStarted() && !study.getStartDate().equals(request.getStartDate())) {
             throw new BusinessException(STUDY_ALREADY_STARTED);
         }
     }

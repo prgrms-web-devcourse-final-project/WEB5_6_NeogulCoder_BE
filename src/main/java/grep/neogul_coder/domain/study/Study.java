@@ -72,7 +72,7 @@ public class Study extends BaseEntity {
         this.imageUrl = imageUrl;
     }
 
-    public boolean hasStarted() {
+    public boolean isStarted() {
         return this.startDate.isBefore(LocalDate.now());
     }
 
