@@ -135,7 +135,7 @@ public class StudyService {
     private void validateStudyLeader(Long studyId, Long userId) {
         StudyMemberRole role = studyQueryRepository.findMyRole(studyId, userId);
         if (!role.equals(LEADER)) {
-            throw new BusinessException(STUDY_NOT_LEADER);
+            throw new BusinessException(NOT_STUDY_LEADER);
         }
     }
 

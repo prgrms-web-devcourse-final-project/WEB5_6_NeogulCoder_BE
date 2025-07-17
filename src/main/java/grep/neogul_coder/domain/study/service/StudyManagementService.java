@@ -2,7 +2,6 @@ package grep.neogul_coder.domain.study.service;
 
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
-import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyQueryRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
@@ -12,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogul_coder.domain.study.enums.StudyMemberRole.*;
 import static grep.neogul_coder.domain.study.exception.code.StudyErrorCode.*;
 
 @Transactional
@@ -31,7 +29,7 @@ public class StudyManagementService {
         StudyMember studyMember = studyMemberRepository.findByStudyIdAndUserId(studyId, userId)
             .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
 
-        validateStudyLeader(studyId, userId);
+        validateIsLeader(studyMember);
         studyMember.delete();
         study.decreaseMemberCount();
     }
@@ -45,7 +43,7 @@ public class StudyManagementService {
             .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
 
         if (currentLeader.hasNotRoleLeader()) {
-            throw new BusinessException(STUDY_NOT_LEADER);
+            throw new BusinessException(NOT_STUDY_LEADER);
         }
 
         StudyMember newLeader = studyMemberRepository.findByStudyIdAndUserId(studyId, newLeaderId)
@@ -55,9 +53,8 @@ public class StudyManagementService {
         newLeader.changeRoleLeader();
     }
 
-    private void validateStudyLeader(Long studyId, Long userId) {
-        StudyMemberRole role = studyQueryRepository.findMyRole(studyId, userId);
-        if (role.equals(LEADER)) {
+    private void validateIsLeader(StudyMember studyMember) {
+        if (studyMember.hasNotRoleLeader()) {
             throw new BusinessException(LEADER_CANNOT_LEAVE_STUDY);
         }
     }
