@@ -26,7 +26,9 @@ public class StudyManagementController implements StudyManagementSpecification {
 
     @PostMapping("/delegate")
     public ApiResponse<Void> delegateLeader(@PathVariable("studyId") Long studyId,
-                                            @RequestBody DelegateLeaderRequest request) {
+                                            @RequestBody DelegateLeaderRequest request,
+                                            @AuthenticationPrincipal Principal userDetails) {
+        studyManagementService.delegateLeader(studyId, userDetails.getUserId(), request.getNewLeaderId());
         return ApiResponse.noContent();
     }
 

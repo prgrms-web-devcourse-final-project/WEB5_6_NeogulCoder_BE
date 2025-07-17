@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogul_coder.domain.study.enums.StudyMemberRole.LEADER;
+import static grep.neogul_coder.domain.study.enums.StudyMemberRole.*;
 import static grep.neogul_coder.domain.study.exception.code.StudyErrorCode.*;
 
 @Transactional
@@ -29,11 +29,30 @@ public class StudyManagementService {
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
         StudyMember studyMember = studyMemberRepository.findByStudyIdAndUserId(studyId, userId)
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_MEMBER));
+            .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
 
         validateStudyLeader(studyId, userId);
         studyMember.delete();
         study.decreaseMemberCount();
+    }
+
+    public void delegateLeader(Long studyId, Long userId, Long newLeaderId) {
+        if (userId.equals(newLeaderId)) {
+            throw new BusinessException(LEADER_CANNOT_DELEGATE_TO_SELF);
+        }
+
+        StudyMember currentLeader = studyMemberRepository.findByStudyIdAndUserId(studyId, userId)
+            .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
+
+        if (currentLeader.hasNotRoleLeader()) {
+            throw new BusinessException(STUDY_NOT_LEADER);
+        }
+
+        StudyMember newLeader = studyMemberRepository.findByStudyIdAndUserId(studyId, newLeaderId)
+            .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
+
+        currentLeader.changeRoleMember();
+        newLeader.changeRoleLeader();
     }
 
     private void validateStudyLeader(Long studyId, Long userId) {

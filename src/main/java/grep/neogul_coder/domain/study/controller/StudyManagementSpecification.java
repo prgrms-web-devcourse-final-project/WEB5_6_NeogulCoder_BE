@@ -14,7 +14,7 @@ public interface StudyManagementSpecification {
     ApiResponse<Void> leaveStudy(Long studyId, Principal userDetails);
 
     @Operation(summary = "스터디장 위임", description = "스터디원에게 스터디장을 위임합니다.")
-    ApiResponse<Void> delegateLeader(Long studyId, DelegateLeaderRequest request);
+    ApiResponse<Void> delegateLeader(Long studyId, DelegateLeaderRequest request, Principal userDetails);
 
     @Operation(summary = "스터디 연장", description = "스터디장이 스터디를 연장합니다.")
     ApiResponse<Void> extendStudy(Long studyId, ExtendStudyRequest request);

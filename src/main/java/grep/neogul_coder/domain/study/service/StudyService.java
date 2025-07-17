@@ -128,7 +128,7 @@ public class StudyService {
     private void validateStudyMember(Long studyId, Long userId) {
         boolean exists = studyMemberRepository.existsByStudyIdAndUserIdAndActivatedTrue(studyId, userId);
         if (!exists) {
-            throw new BusinessException(STUDY_NOT_MEMBER);
+            throw new BusinessException(STUDY_MEMBER_NOT_FOUND);
         }
     }
 
