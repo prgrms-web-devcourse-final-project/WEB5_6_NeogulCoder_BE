@@ -31,7 +31,8 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
 
     @GetMapping("/{recruitment-post-id}")
     public ApiResponse<RecruitmentPostInfo> get(@PathVariable("recruitment-post-id") long recruitmentPostId) {
-        return ApiResponse.success(new RecruitmentPostInfo());
+        RecruitmentPostInfo response = recruitmentPostService.get(recruitmentPostId);
+        return ApiResponse.success(response);
     }
 
     @PutMapping("/{recruitment-post-id}")
