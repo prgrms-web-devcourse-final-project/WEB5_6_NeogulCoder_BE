@@ -24,12 +24,6 @@ public class StudyManagementController implements StudyManagementSpecification {
         return ApiResponse.noContent();
     }
 
-    @DeleteMapping("/users/{userId}")
-    public ApiResponse<Void> deleteMember(@PathVariable("studyId") Long studyId,
-                                          @PathVariable("userId") Long userId) {
-        return ApiResponse.noContent();
-    }
-
     @PostMapping("/delegate")
     public ApiResponse<Void> delegateLeader(@PathVariable("studyId") Long studyId,
                                             @RequestBody DelegateLeaderRequest request) {
