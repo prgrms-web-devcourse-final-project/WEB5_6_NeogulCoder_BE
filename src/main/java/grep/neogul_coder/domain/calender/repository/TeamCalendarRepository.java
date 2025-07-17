@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TeamCalendarRepository extends JpaRepository<TeamCalendar, Long> {
+
+    // 특정 스터디(studyId)의 전체 팀 일정 조회
     List<TeamCalendar> findByStudyId(Long studyId);
-    List<TeamCalendar> findByStudyIdAndCalendar_ScheduledStartLessThanEqualAndCalendar_ScheduledEndGreaterThanEqual(
-        Long studyId, LocalDateTime scheduledStart, LocalDateTime scheduledEnd
-    );}
+}

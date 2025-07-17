@@ -21,9 +21,10 @@ public class TeamCalendarController implements TeamCalendarSpecification {
 
     private final TeamCalendarService teamCalendarService;
 
+    // 팀 일정 생성
     @PostMapping
     public ApiResponse<Void> create(
-        @AuthenticationPrincipal Long userId,
+        @AuthenticationPrincipal Long userId,               // 인증된 사용자의 ID를 자동 주입받음
         @PathVariable("studyId") Long studyId,
         @Valid @RequestBody TeamCalendarRequest request
     ) {
@@ -31,6 +32,7 @@ public class TeamCalendarController implements TeamCalendarSpecification {
         return ApiResponse.noContent();
     }
 
+    // 전체 일정 조회 API
     @GetMapping
     public ApiResponse<List<TeamCalendarResponse>> findAll(
         @AuthenticationPrincipal Long userId,
@@ -38,6 +40,7 @@ public class TeamCalendarController implements TeamCalendarSpecification {
         return ApiResponse.success(teamCalendarService.findAll(studyId));
     }
 
+    // 특정 날짜에 해당하는 팀 일정 조회 API
     @GetMapping("/day")
     public ApiResponse<List<TeamCalendarResponse>> findByDate(
         @AuthenticationPrincipal Long userId,
@@ -48,6 +51,7 @@ public class TeamCalendarController implements TeamCalendarSpecification {
         return ApiResponse.success(teamCalendarService.findByDate(studyId, parsedDate));
     }
 
+    // 팀 일정 수정 API - 본인이 작성한 일정만 수정 가능
     @PutMapping("/{calendarId}")
     public ApiResponse<Void> update(
         @AuthenticationPrincipal Long userId,
@@ -59,6 +63,7 @@ public class TeamCalendarController implements TeamCalendarSpecification {
         return ApiResponse.noContent();
     }
 
+    // 팀 일정 삭제 API - 본인이 작성한 일정만 삭제 가능
     @DeleteMapping("/{calendarId}")
     public ApiResponse<Void> delete(
         @AuthenticationPrincipal Long userId,

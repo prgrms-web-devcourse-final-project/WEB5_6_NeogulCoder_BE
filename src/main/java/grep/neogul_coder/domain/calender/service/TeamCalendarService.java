@@ -7,6 +7,7 @@ import grep.neogul_coder.domain.calender.entity.TeamCalendar;
 import grep.neogul_coder.domain.calender.exception.CalendarNotFoundException;
 import grep.neogul_coder.domain.calender.exception.CalendarValidationException;
 import grep.neogul_coder.domain.calender.exception.code.CalendarErrorCode;
+import grep.neogul_coder.domain.calender.repository.TeamCalendarQueryRepository;
 import grep.neogul_coder.domain.calender.repository.TeamCalendarRepository;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.service.UserService;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static grep.neogul_coder.domain.calender.exception.code.CalendarErrorCode.CALENDAR_NOT_FOUND;
+import static grep.neogul_coder.domain.calender.exception.code.CalendarErrorCode.NOT_CALENDAR_OWNER;
 import static grep.neogul_coder.global.response.code.ErrorCode.*;
 
 @Service
@@ -28,6 +30,7 @@ import static grep.neogul_coder.global.response.code.ErrorCode.*;
 public class TeamCalendarService {
 
     private final TeamCalendarRepository teamCalendarRepository;
+    private final TeamCalendarQueryRepository teamCalendarQueryRepository;
     private final UserService userService;
 
     public List<TeamCalendarResponse> findAll(Long studyId) {
@@ -41,12 +44,10 @@ public class TeamCalendarService {
 
     public List<TeamCalendarResponse> findByDate(Long studyId, LocalDate date) {
         LocalDateTime startOfDay = date.atStartOfDay();
-        LocalDateTime endOfDay = date.atTime(LocalTime.MAX); // 23:59:59.999...
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX); // 23:59:59.999..
 
-        return teamCalendarRepository
-            .findByStudyIdAndCalendar_ScheduledStartLessThanEqualAndCalendar_ScheduledEndGreaterThanEqual(
-                studyId, endOfDay, startOfDay
-            ).stream()
+        return teamCalendarQueryRepository
+            .findByStudyIdAndDate(studyId, date).stream()
             .map(tc -> {
                 User user = userService.get(tc.getUserId());
                 return TeamCalendarResponse.from(tc, user);
@@ -70,15 +71,19 @@ public class TeamCalendarService {
             throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
         }
         TeamCalendar calendar = teamCalendarRepository.findById(calendarId)
+            // 본인이 작성한 일정만 수정할 수 있음
             .filter(tc -> tc.getStudyId().equals(studyId) && tc.getUserId().equals(userId))
-            .orElseThrow(() -> new NotFoundException(CALENDAR_NOT_FOUND));
+            // 예외처리
+            .orElseThrow(() ->  new ValidationException(NOT_CALENDAR_OWNER));
         calendar.getCalendar().update(request.toCalendar());
     }
 
     public void delete(Long studyId, Long userId, Long calendarId) {
         TeamCalendar calendar = teamCalendarRepository.findById(calendarId)
+            // 본인이 작성한 일정만 삭제할 수 있음
             .filter(tc -> tc.getStudyId().equals(studyId) && tc.getUserId().equals(userId))
-            .orElseThrow(() -> new NotFoundException(CALENDAR_NOT_FOUND));
+            // 예외처리
+            .orElseThrow(() ->  new ValidationException(NOT_CALENDAR_OWNER));
         teamCalendarRepository.delete(calendar);
     }
 
