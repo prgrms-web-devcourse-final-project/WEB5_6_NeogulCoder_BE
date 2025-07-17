@@ -3,6 +3,8 @@ package grep.neogul_coder.domain.quiz.service;
 import grep.neogul_coder.domain.quiz.controller.dto.response.QuizResponse;
 import grep.neogul_coder.domain.quiz.entity.Quiz;
 import grep.neogul_coder.domain.quiz.repository.AiQuizRepository;
+import grep.neogul_coder.global.response.ApiResponse;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

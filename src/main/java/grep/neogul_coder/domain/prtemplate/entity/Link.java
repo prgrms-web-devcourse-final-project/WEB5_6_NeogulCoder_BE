@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.prtemplate.entity;
 
+import grep.neogul_coder.domain.prtemplate.controller.dto.request.LinkUpdateRequest;
 import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,6 +39,11 @@ public class Link extends BaseEntity {
             .urlName(urlName)
             .activated(true)
             .build();
+    }
+
+    public static boolean isRequestLinkEmpty(LinkUpdateRequest request) {
+        String prUrl = request.getPrUrl();
+        return prUrl == null || prUrl.isBlank();
     }
 
     protected Link() {

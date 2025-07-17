@@ -9,8 +9,6 @@ public enum PostErrorCode implements ErrorCode {
 
     POST_NOT_FOUND("P001",HttpStatus.BAD_REQUEST,"게시글을 찾을 수 없습니다.");
 
-
-
     private final String code;
     private final HttpStatus status;
     private final String message;
@@ -20,8 +18,5 @@ public enum PostErrorCode implements ErrorCode {
         this.status = status;
         this.message = message;
     }
-
-
-
 
 }

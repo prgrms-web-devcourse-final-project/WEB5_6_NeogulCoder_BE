@@ -17,13 +17,10 @@ public class Quiz extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     private Long postId;
 
-    @NotNull
     private String quizContent;
 
-    @NotNull
     private boolean quizAnswer;
 
     @Builder

@@ -3,8 +3,10 @@ package grep.neogul_coder.domain.quiz.controller.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 @Schema(description = "퀴즈 응답 DTO")
+@Getter
 @Data
 public class QuizResponse {
 

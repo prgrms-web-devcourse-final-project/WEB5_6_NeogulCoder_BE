@@ -28,13 +28,14 @@ public class AiQuizController implements AiQuizSpecification {
 
     @GetMapping("/{postId}")
     public ApiResponse<QuizResponse> get(@PathVariable("postId") Long postId) {
+
         StudyPost post = studyPostService.findById(postId);
+
         if (!Category.FREE.equals((post.getCategory()))) {
             throw new PostNotFreeException(QuizErrorCode.POST_NOT_FREE_ERROR);
         }
 
         Optional<Quiz> quiz = aiQuizRepository.findByPostId(postId);
-
         if (quiz.isPresent()) {
             Quiz q = quiz.get();
             QuizResponse quizResponse = QuizResponse.toResponse(q.getQuizContent(), q.isQuizAnswer());
