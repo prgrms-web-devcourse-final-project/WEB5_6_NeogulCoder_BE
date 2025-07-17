@@ -1,17 +1,16 @@
 package grep.neogul_coder.domain.recruitment.post.controller.dto.response;
 
-import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.recruitment.comment.RecruitmentPostComment;
+import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.study.Study;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@ToString
 @Getter
 public class RecruitmentPostPagingInfo {
 
@@ -26,13 +25,15 @@ public class RecruitmentPostPagingInfo {
                                                Map<Long, List<RecruitmentPostComment>> postIdMap) {
 
         List<RecruitmentPostInfo> postInfos = recruitmentPosts.stream()
-                .map(post -> new RecruitmentPostInfo(post, studyIdMap.get(post.getStudyId()), postIdMap.get(post.getId())))
+                .map(post -> new RecruitmentPostInfo(
+                        post,
+                        studyIdMap.get(post.getStudyId()),
+                        postIdMap.getOrDefault(post.getId(), Collections.emptyList())))
                 .toList();
 
         return new RecruitmentPostPagingInfo(postInfos);
     }
 
-    @ToString
     @Getter
     static class RecruitmentPostInfo {
 

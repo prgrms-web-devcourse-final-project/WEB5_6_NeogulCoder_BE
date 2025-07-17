@@ -36,20 +36,17 @@ public class PrTemplateService {
     private final UserRepository userRepository;
 
     public void deleteByUserId(Long userId) {
-        PrTemplate prTemplate = prTemplateRepository.findByUserId(userId)
-            .orElseThrow(() -> new TemplateNotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
+        PrTemplate prTemplate = getPrTemplateByUserId(userId);
         prTemplate.delete();
     }
 
-    public void update(Long id, String location) {
-        PrTemplate prTemplate = prTemplateRepository.findById(id).orElseThrow(
-            () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
+    public void update(Long userId, String location) {
+        PrTemplate prTemplate = getPrTemplateByUserId(userId);
         prTemplate.update(location);
     }
 
-    public void updateIntroduction(Long id, String introduction) {
-        PrTemplate prTemplate = prTemplateRepository.findById(id).orElseThrow(
-            () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
+    public void updateIntroduction(Long userId, String introduction) {
+        PrTemplate prTemplate = getPrTemplateByUserId(userId);
         prTemplate.updateIntroduction(introduction);
     }
 
@@ -57,9 +54,8 @@ public class PrTemplateService {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
             UserErrorCode.USER_NOT_FOUND));
-        PrTemplate prTemplate = prTemplateRepository.findByUserId(userId)
-            .orElseThrow(() -> new TemplateNotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
-        List<Link> links = linkRepository.findAllByPrIdAndActivatedTrue(prTemplate.getId());
+        PrTemplate prTemplate = getPrTemplateByUserId(userId);
+        List<Link> links = linkRepository.findAllByUserIdAndActivatedTrue(userId);
         List<ReviewEntity> reviews = reviewRepository.findAllByTargetUserId(userId);
 
         List<PrPageResponse.UserProfileDto> userProfiles = List.of(
@@ -70,6 +66,7 @@ public class PrTemplateService {
         );
 
         List<PrPageResponse.UserLocationAndLink> userLocationAndLinks = links.stream()
+            .filter(Link::getActivated)
             .map(link -> PrPageResponse.UserLocationAndLink.builder()
                 .location(prTemplate.getLocation())
                 .linkName(link.getUrlName())
@@ -111,10 +108,15 @@ public class PrTemplateService {
         return PrPageResponse.builder()
             .userProfiles(userProfiles)
             .userLocationAndLinks(userLocationAndLinks)
-            .buddyEnergy(50)
+            .buddyEnergy(buddyEnergy)
             .reviewTags(reviewTags)
             .reviewContents(reviewContents)
             .introduction(prTemplate.getIntroduction())
             .build();
+    }
+
+    public PrTemplate getPrTemplateByUserId(Long userId) {
+        return prTemplateRepository.findByUserId(userId).orElseThrow(
+            () -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
     }
 }

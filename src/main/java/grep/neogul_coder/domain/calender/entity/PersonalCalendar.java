@@ -6,6 +6,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
+@Table(name = "personal_calendar")
 public class PersonalCalendar extends BaseEntity {
 
     @Id
@@ -17,5 +18,14 @@ public class PersonalCalendar extends BaseEntity {
 
     @Column(name = "user_id")
     private Long userId;
+
+    public PersonalCalendar(Long userId, Calendar calendar) {
+        this.userId = userId;
+        this.calendar = calendar;
+    }
+
+    public PersonalCalendar() {
+
+    }
 }
 

@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.users.service;
 
+import grep.neogul_coder.domain.prtemplate.entity.Link;
 import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
 import grep.neogul_coder.domain.prtemplate.exception.code.PrTemplateErrorCode;
 import grep.neogul_coder.domain.prtemplate.repository.LinkRepository;
@@ -10,12 +11,12 @@ import grep.neogul_coder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.exception.EmailDuplicationException;
+import grep.neogul_coder.domain.users.exception.NicknameDuplicatedException;
 import grep.neogul_coder.domain.users.exception.PasswordNotMatchException;
 import grep.neogul_coder.domain.users.exception.UserNotFoundException;
 import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.NotFoundException;
-import grep.neogul_coder.global.exception.validation.DuplicatedException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,6 +60,9 @@ public class UserService {
 
         prTemplateRepository.save(
             PrTemplate.PrTemplateInit(user.getId(), null, null));
+
+        linkRepository.save(Link.LinkInit(user.getId(), null, null));
+        linkRepository.save(Link.LinkInit(user.getId(), null, null));
     }
 
     public void updateProfile(Long id, String nickname, String profileImageUrl) {
@@ -92,7 +96,7 @@ public class UserService {
         }
 
         prTemplateService.deleteByUserId(user.getId());
-        linkService.deleteByPrId(prTemplate.getId());
+        linkService.deleteByUserId(userId);
 
         user.delete();
     }
@@ -103,6 +107,7 @@ public class UserService {
             user.getId(),
             user.getEmail(),
             user.getNickname(),
+            user.getProfileImageUrl(),
             user.getRole());
     }
 
@@ -124,7 +129,7 @@ public class UserService {
         }
 
         if (isDuplicateNickname(nickname)) {
-            throw new DuplicatedException(UserErrorCode.IS_DUPLICATED_NICKNAME);
+            throw new NicknameDuplicatedException(UserErrorCode.IS_DUPLICATED_NICKNAME);
         }
     }
 
