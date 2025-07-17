@@ -50,12 +50,19 @@ public class StudyController implements StudySpecification {
     public ApiResponse<StudyInfoResponse> getStudyInfo(@PathVariable("studyId") Long studyId,
                                                        @AuthenticationPrincipal Principal userDetails) {
         Long userId = userDetails.getUserId();
-        return ApiResponse.success(studyService.getStudyInfo(studyId, userId));
+        return ApiResponse.success(studyService.getMyStudyContent(studyId, userId));
+    }
+
+    @GetMapping("/{studyId}/content")
+    public ApiResponse<StudyMyContentResponse> getMyStudyContent(@PathVariable("studyId") Long studyId) {
+        return ApiResponse.success(new StudyMyContentResponse());
     }
 
     @GetMapping("/{studyId}/me")
-    public ApiResponse<StudyMyInfoResponse> getStudyMyInfo(@PathVariable("studyId") Long studyId) {
-        return ApiResponse.success(new StudyMyInfoResponse());
+    public ApiResponse<StudyMemberInfoResponse> getMyStudyMemberInfo(@PathVariable("studyId") Long studyId,
+                                                                     @AuthenticationPrincipal Principal userDetails) {
+        Long userId = userDetails.getUserId();
+        return ApiResponse.success(studyService.getMyStudyMemberInfo(studyId, userId));
     }
 
     @PostMapping

@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class StudyMyInfoResponse {
+public class StudyMyContentResponse {
 
     @Schema(description = "게시글 리스트")
     private List<StudyPostListResponse> studyPosts;

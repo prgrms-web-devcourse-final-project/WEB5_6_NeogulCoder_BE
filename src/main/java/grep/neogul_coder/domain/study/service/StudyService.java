@@ -9,9 +9,12 @@ import grep.neogul_coder.domain.study.controller.dto.request.StudyUpdateRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.*;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import grep.neogul_coder.domain.study.enums.StudyType;
+import grep.neogul_coder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyQueryRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
+import grep.neogul_coder.domain.users.entity.User;
+import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +24,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
-import static grep.neogul_coder.domain.study.enums.StudyMemberRole.LEADER;
+import static grep.neogul_coder.domain.study.enums.StudyMemberRole.*;
 import static grep.neogul_coder.domain.study.exception.code.StudyErrorCode.*;
+import static grep.neogul_coder.domain.users.exception.code.UserErrorCode.*;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -34,6 +39,8 @@ public class StudyService {
     private final StudyMemberRepository studyMemberRepository;
     private final StudyQueryRepository studyQueryRepository;
     private final RecruitmentPostRepository recruitmentPostRepository;
+    private final StudyMemberQueryRepository studyMemberQueryRepository;
+    private final UserRepository userRepository;
 
     public StudyItemPagingResponse getMyStudies(Pageable pageable, Long userId) {
         Page<StudyItemResponse> page = studyQueryRepository.findMyStudies(pageable, userId);
@@ -55,7 +62,7 @@ public class StudyService {
             .toList();
     }
 
-    public StudyInfoResponse getStudyInfo(Long studyId, Long userId) {
+    public StudyInfoResponse getMyStudyContent(Long studyId, Long userId) {
         Study study = studyRepository.findByIdAndActivatedTrue(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
@@ -65,6 +72,16 @@ public class StudyService {
         List<StudyMemberResponse> members = studyQueryRepository.findStudyMembers(studyId);
 
         return StudyInfoResponse.from(study, members);
+    }
+
+    public StudyMemberInfoResponse getMyStudyMemberInfo(Long studyId, Long userId) {
+        StudyMember studyMember = Optional.ofNullable(studyMemberQueryRepository.findByStudyIdAndUserId(studyId, userId))
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_MEMBER));
+
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+
+        return StudyMemberInfoResponse.from(studyMember, user);
     }
 
     @Transactional

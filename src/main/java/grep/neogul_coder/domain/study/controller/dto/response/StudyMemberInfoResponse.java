@@ -8,34 +8,34 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class StudyMemberResponse {
+public class StudyMemberInfoResponse {
 
     @Schema(description = "유저 Id", example = "1")
     private Long userId;
 
-    @Schema(description = "스터디원 닉네임", example = "너굴")
-    private String nickname;
-
-    @Schema(description = "스터디원 프로필 사진", example = "http://localhost:8083/image.jpg")
-    private String profileImageUrl;
+    @Schema(description = "스터디 Id", example = "1")
+    private Long studyId;
 
     @Schema(description = "스터디 멤버 역할", example = "LEADER")
     private StudyMemberRole role;
 
+    @Schema(description = "닉네임", example = "너굴")
+    private String nickname;
+
     @Builder
-    public StudyMemberResponse(Long userId, String nickname, String profileImageUrl, StudyMemberRole role) {
+    private StudyMemberInfoResponse(Long userId, Long studyId, StudyMemberRole role, String nickname) {
         this.userId = userId;
-        this.nickname = nickname;
-        this.profileImageUrl = profileImageUrl;
+        this.studyId = studyId;
         this.role = role;
+        this.nickname = nickname;
     }
 
-    public static StudyMemberResponse from(StudyMember studyMember, User user) {
-        return StudyMemberResponse.builder()
+    public static StudyMemberInfoResponse from(StudyMember studyMember, User user) {
+        return StudyMemberInfoResponse.builder()
             .userId(user.getId())
-            .nickname(user.getNickname())
-            .profileImageUrl(user.getProfileImageUrl())
+            .studyId(studyMember.getStudy().getId())
             .role(studyMember.getRole())
+            .nickname(user.getNickname())
             .build();
     }
 }
