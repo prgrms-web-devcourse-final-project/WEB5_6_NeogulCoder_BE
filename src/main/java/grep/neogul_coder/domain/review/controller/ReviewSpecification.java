@@ -55,7 +55,7 @@ public interface ReviewSpecification {
     ApiResponse<JoinedStudiesInfo> getJoinedStudiesInfo(Principal userDetails);
 
     @Operation(summary = "리뷰 생성", description = "스터디에 대한 리뷰를 작성 합니다.")
-    ApiResponse<Void> save(ReviewSaveRequest request, Principal userDetails);
+    ApiResponse<Long> save(ReviewSaveRequest request, Principal userDetails);
 
     @Operation(
             summary = "자신이 받은 리뷰 태그 조회",

@@ -1,17 +1,15 @@
 package grep.neogul_coder.domain.recruitment.post.controller.dto.response;
 
-import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.recruitment.comment.RecruitmentPostComment;
+import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.study.Study;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-@ToString
 @Getter
 public class RecruitmentPostPagingInfo {
 
@@ -32,7 +30,6 @@ public class RecruitmentPostPagingInfo {
         return new RecruitmentPostPagingInfo(postInfos);
     }
 
-    @ToString
     @Getter
     static class RecruitmentPostInfo {
 

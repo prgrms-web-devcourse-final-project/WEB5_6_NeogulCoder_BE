@@ -70,7 +70,7 @@ public class RecruitmentPostService {
     }
 
     @Transactional
-    public void update(RecruitmentPostUpdateServiceRequest request, long recruitmentPostId, long userId) {
+    public long update(RecruitmentPostUpdateServiceRequest request, long recruitmentPostId, long userId) {
         RecruitmentPost recruitmentPost = findRecruitmentPost(recruitmentPostId, userId);
 
         recruitmentPost.update(
@@ -78,12 +78,14 @@ public class RecruitmentPostService {
                 request.getContent(),
                 request.getRecruitmentCount()
         );
+        return recruitmentPost.getId();
     }
 
     @Transactional
-    public void updateStatus(RecruitmentPostStatusUpdateServiceRequest request, long recruitmentPostId, long userId) {
+    public long updateStatus(RecruitmentPostStatusUpdateServiceRequest request, long recruitmentPostId, long userId) {
         RecruitmentPost recruitmentPost = findRecruitmentPost(recruitmentPostId, userId);
         recruitmentPost.updateStatus(request.getStatus());
+        return recruitmentPost.getId();
     }
 
     @Transactional
