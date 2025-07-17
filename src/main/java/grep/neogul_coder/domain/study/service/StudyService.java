@@ -69,9 +69,9 @@ public class StudyService {
 
     @Transactional
     public Long createStudy(StudyCreateRequest request, Long userId) {
-        Study study = studyRepository.save(request.toEntity());
-
         validateLocation(request.getStudyType(), request.getLocation());
+
+        Study study = studyRepository.save(request.toEntity());
 
         StudyMember leader = StudyMember.builder()
             .study(study)
