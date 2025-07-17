@@ -36,6 +36,10 @@ public class StudyMember extends BaseEntity {
         this.activated = false;
     }
 
+    public boolean isLeader() {
+        return this.role == StudyMemberRole.LEADER;
+    }
+
     public boolean hasNotRoleLeader(){
         return this.role != StudyMemberRole.LEADER;
     }

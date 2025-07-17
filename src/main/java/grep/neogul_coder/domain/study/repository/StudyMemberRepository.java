@@ -28,4 +28,7 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> 
     void deactivateByStudyId(@Param("studyId") Long studyId);
 
     Optional<StudyMember> findByStudyIdAndUserId(Long studyId, Long userId);
+
+    @Query("select m from StudyMember m where m.study.id = :studyId and m.role = 'MEMBER' and m.activated = true")
+    List<StudyMember> findAvailableNewLeaders(@Param("studyId") Long studyId);
 }
