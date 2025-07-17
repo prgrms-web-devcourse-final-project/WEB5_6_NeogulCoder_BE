@@ -2,6 +2,7 @@ package grep.neogul_coder.domain.calender.controller.dto.response;
 
 import grep.neogul_coder.domain.calender.entity.Calendar;
 import grep.neogul_coder.domain.calender.entity.TeamCalendar;
+import grep.neogul_coder.domain.users.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Builder;
@@ -53,7 +54,7 @@ public class TeamCalendarResponse {
         this.endTime = endTime;
     }
 
-    public static TeamCalendarResponse from(TeamCalendar teamCalendar) {
+    public static TeamCalendarResponse from(TeamCalendar teamCalendar, User user) {
         Calendar calendar = teamCalendar.getCalendar();
 
         return TeamCalendarResponse.builder()
@@ -62,6 +63,9 @@ public class TeamCalendarResponse {
             .description(calendar.getContent())
             .startTime(calendar.getScheduledStart())
             .endTime(calendar.getScheduledEnd())
+            .writerId(user.getId())
+            .writerNickname(user.getNickname())
+            .writerProfileImageUrl(user.getProfileImageUrl())
             .studyId(teamCalendar.getStudyId())
             .build();
     }

@@ -52,11 +52,12 @@ INSERT INTO personal_calendar (user_id, calendar_id) VALUES (2, 3);
 INSERT INTO personal_calendar (user_id, calendar_id) VALUES (3, 4);
 INSERT INTO personal_calendar (user_id, calendar_id) VALUES (4, 5);
 
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (1, 1);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (2, 2);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (1, 3);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (3, 4);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (4, 5);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (1, 1, 1);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (2, 1, 2);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (1, 2, 3);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (3, 3, 4);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (4, 4, 5);
+
 
 INSERT INTO time_vote_period (study_id, start_date, end_date) VALUES (2, '2025-07-15 00:00:00', '2025-07-22 00:00:00');
 

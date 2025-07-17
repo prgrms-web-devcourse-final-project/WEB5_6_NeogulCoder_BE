@@ -8,6 +8,8 @@ import grep.neogul_coder.domain.calender.exception.CalendarNotFoundException;
 import grep.neogul_coder.domain.calender.exception.CalendarValidationException;
 import grep.neogul_coder.domain.calender.exception.code.CalendarErrorCode;
 import grep.neogul_coder.domain.calender.repository.TeamCalendarRepository;
+import grep.neogul_coder.domain.users.entity.User;
+import grep.neogul_coder.domain.users.service.UserService;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import grep.neogul_coder.global.exception.validation.ValidationException;
 import java.time.LocalDateTime;
@@ -26,10 +28,14 @@ import static grep.neogul_coder.global.response.code.ErrorCode.*;
 public class TeamCalendarService {
 
     private final TeamCalendarRepository teamCalendarRepository;
+    private final UserService userService;
 
     public List<TeamCalendarResponse> findAll(Long studyId) {
         return teamCalendarRepository.findByStudyId(studyId).stream()
-            .map(TeamCalendarResponse::from)
+            .map(tc -> {
+                User user = userService.get(tc.getUserId());
+                return TeamCalendarResponse.from(tc, user);
+            })
             .toList();
     }
 
@@ -41,34 +47,37 @@ public class TeamCalendarService {
             .findByStudyIdAndCalendar_ScheduledStartLessThanEqualAndCalendar_ScheduledEndGreaterThanEqual(
                 studyId, endOfDay, startOfDay
             ).stream()
-            .map(TeamCalendarResponse::from)
+            .map(tc -> {
+                User user = userService.get(tc.getUserId());
+                return TeamCalendarResponse.from(tc, user);
+            })
             .toList();
     }
 
 
-    public void create(Long studyId, TeamCalendarRequest request) {
+    public void create(Long studyId, Long userId, TeamCalendarRequest request) {
         if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
             throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
         }
         Calendar calendar = request.toCalendar();
-        TeamCalendar teamCalendar = new TeamCalendar(studyId, calendar);
+        TeamCalendar teamCalendar = new TeamCalendar(studyId, userId, calendar);
         teamCalendarRepository.save(teamCalendar);
     }
 
-    public void update(Long studyId, Long calendarId, TeamCalendarRequest request) {
+    public void update(Long studyId, Long userId, Long calendarId, TeamCalendarRequest request) {
 
         if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
             throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
         }
         TeamCalendar calendar = teamCalendarRepository.findById(calendarId)
-            .filter(tc -> tc.getStudyId().equals(studyId))
+            .filter(tc -> tc.getStudyId().equals(studyId) && tc.getUserId().equals(userId))
             .orElseThrow(() -> new NotFoundException(CALENDAR_NOT_FOUND));
         calendar.getCalendar().update(request.toCalendar());
     }
 
-    public void delete(Long studyId, Long calendarId) {
+    public void delete(Long studyId, Long userId, Long calendarId) {
         TeamCalendar calendar = teamCalendarRepository.findById(calendarId)
-            .filter(tc -> tc.getStudyId().equals(studyId))
+            .filter(tc -> tc.getStudyId().equals(studyId) && tc.getUserId().equals(userId))
             .orElseThrow(() -> new NotFoundException(CALENDAR_NOT_FOUND));
         teamCalendarRepository.delete(calendar);
     }
