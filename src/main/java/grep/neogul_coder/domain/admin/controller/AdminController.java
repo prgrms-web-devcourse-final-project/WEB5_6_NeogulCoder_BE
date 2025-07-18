@@ -56,7 +56,11 @@ public class AdminController {
         return ApiResponse.noContent();
     }
 
+<<<<<<< HEAD
     @DeleteMapping("/recruitment-posts/{postId}")
+=======
+    @DeleteMapping("/studies/{postId}")
+>>>>>>> origin/feature/EA3-152-admin
     public ApiResponse<Void> deleteRecruitmentPost(@PathVariable Long postId) {
         adminService.deleteRecruitmentPost(postId);
         return ApiResponse.noContent();
