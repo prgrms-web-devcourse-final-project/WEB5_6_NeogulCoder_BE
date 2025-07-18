@@ -13,7 +13,7 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> 
     List<StudyMember> findByStudyId(long studyId);
 
     @Query("select m.study from StudyMember m where m.userId = :userId and m.study.activated = true")
-    List<Study> findStudiesByUserId(long userId);
+    List<Study> findStudiesByUserId(@Param("userId") long userId);
 
     @Query("select sm from StudyMember sm join fetch sm.study where sm.study.id = :studyId")
     List<StudyMember> findByStudyIdFetchStudy(@Param("studyId") long studyId);

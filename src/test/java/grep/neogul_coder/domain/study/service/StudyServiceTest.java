@@ -92,7 +92,7 @@ class StudyServiceTest extends IntegrationTestSupport {
         studyMemberRepository.save(studyMember);
 
         // when
-        StudyItemPagingResponse response = studyService.getMyStudies(pageable, userId);
+        StudyItemPagingResponse response = studyService.getMyStudiesPaging(pageable, userId);
 
         // then
         assertThat(response.getStudies().getFirst().getName()).isEqualTo("스터디");
