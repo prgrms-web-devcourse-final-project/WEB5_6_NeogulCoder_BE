@@ -3,7 +3,6 @@ package grep.neogul_coder.domain.recruitment.post.controller;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostCommentPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogul_coder.global.auth.Principal;
@@ -93,34 +92,4 @@ public interface RecruitmentPostSpecification {
     )
     ApiResponse<RecruitmentApplicationPagingInfo> getApplications(Pageable pageable, long recruitmentPostId);
 
-    @Operation(
-            summary = "모집글 댓글 페이징 조회",
-            description = """
-                    특정 모집글에 작성된 댓글들을 페이징하여 조회합니다.
-                    
-                    ✅ 요청 형식:
-                    `GET /recruitment-posts/{id}/comments?page=0&size=5`
-                    
-                    ✅ 응답 예시:
-                    ```json
-                    {
-                      "commentsInfos": [
-                        {
-                          "nickname": "테스터",
-                          "imageUrl": "www.s3.com",
-                          "content": "참여 하고 싶습니다!"
-                        },
-                        {
-                          "nickname": "철수",
-                          "imageUrl": "www.s3.com/철수.png",
-                          "content": "스터디에 관심 있습니다!"
-                        }
-                      ],
-                      "totalPage": 3,
-                      "totalElementCount": 20
-                    }
-                    ```    
-                    """
-    )
-    ApiResponse<RecruitmentPostCommentPagingInfo> getComments(Pageable pageable, long recruitmentPostId);
 }
