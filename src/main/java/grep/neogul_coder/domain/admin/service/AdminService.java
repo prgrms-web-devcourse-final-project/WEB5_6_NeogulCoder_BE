@@ -5,6 +5,8 @@ import grep.neogul_coder.domain.admin.controller.dto.response.AdminStudyResponse
 import grep.neogul_coder.domain.admin.controller.dto.response.AdminUserResponse;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.study.Study;
+import grep.neogul_coder.domain.study.enums.Category;
+import grep.neogul_coder.domain.study.repository.StudyQueryRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.domain.users.service.UserService;
@@ -24,13 +26,14 @@ public class AdminService {
 
     private final UserRepository userRepository;
     private final UserService userService;
+    private final StudyQueryRepository studyQueryRepository;
     private final StudyRepository studyRepository;
     private final RecruitmentPostRepository recruitmentPostRepository;
 
     @Transactional(readOnly = true)
     public Page<AdminUserResponse> getAllUsers(Pageable pageable, String email) {
-        if(IsContainEmail(email)) {
-            return userRepository.findByEmailContainingIgnoreCase(email,pageable)
+        if (isContainEmail(email)) {
+            return userRepository.findByEmailContainingIgnoreCase(email, pageable)
                 .map(AdminUserResponse::from);
         }
         return userRepository.findAll(pageable)
@@ -38,16 +41,20 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AdminStudyResponse> getAllStudies(int page) {
-        int size = 10;
-        return studyRepository.findAll(PageRequest.of(page, size))
+    public Page<AdminStudyResponse> getAllStudies(int page, String name, Category category) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return studyQueryRepository.adminSearchStudy(name, category, pageable)
             .map(AdminStudyResponse::from);
     }
 
     @Transactional(readOnly = true)
-    public Page<AdminRecruitmentPostResponse> getAllRecruitmentPosts(int page) {
-        int size = 10;
-        return recruitmentPostRepository.findAll(PageRequest.of(page, size))
+    public Page<AdminRecruitmentPostResponse> getAllRecruitmentPosts(int page, String subject) {
+        Pageable pageable = PageRequest.of(page, 10);
+        if (isContainSubject(subject)) {
+            return recruitmentPostRepository.findBySubjectContainingIgnoreCase(subject, pageable)
+                .map(AdminRecruitmentPostResponse::from);
+        }
+        return recruitmentPostRepository.findAll(pageable)
             .map(AdminRecruitmentPostResponse::from);
     }
 
@@ -68,8 +75,12 @@ public class AdminService {
         recruitmentPostRepository.deleteById(recruitmentPostId);
     }
 
-    private Boolean IsContainEmail(String email) {
+    private Boolean isContainEmail(String email) {
         return email != null && !email.isEmpty();
+    }
+
+    private Boolean isContainSubject(String subject) {
+        return subject != null && !subject.isEmpty();
     }
 
 }

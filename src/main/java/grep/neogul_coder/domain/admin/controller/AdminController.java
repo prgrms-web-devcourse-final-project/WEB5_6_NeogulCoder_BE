@@ -4,6 +4,7 @@ import grep.neogul_coder.domain.admin.controller.dto.response.AdminRecruitmentPo
 import grep.neogul_coder.domain.admin.controller.dto.response.AdminStudyResponse;
 import grep.neogul_coder.domain.admin.controller.dto.response.AdminUserResponse;
 import grep.neogul_coder.domain.admin.service.AdminService;
+import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,15 +37,18 @@ public class AdminController implements AdminSpecification {
 
     @GetMapping("/studies")
     public ApiResponse<Page<AdminStudyResponse>> getStudies(
-        @RequestParam(defaultValue = "0") int page) {
-        return ApiResponse.success(adminService.getAllStudies(page));
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) Category category) {
+        return ApiResponse.success(adminService.getAllStudies(page,name,category));
     }
 
     @GetMapping("/recruitment-posts")
     public ApiResponse<Page<AdminRecruitmentPostResponse>> getRecruitmentPosts(
-        @RequestParam(defaultValue = "0") int page) {
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(required = false) String subject) {
 
-        return ApiResponse.success(adminService.getAllRecruitmentPosts(page));
+        return ApiResponse.success(adminService.getAllRecruitmentPosts(page, subject));
     }
 
     @DeleteMapping("/users/{userId}")

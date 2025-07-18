@@ -3,6 +3,7 @@ package grep.neogul_coder.domain.admin.controller;
 import grep.neogul_coder.domain.admin.controller.dto.response.AdminRecruitmentPostResponse;
 import grep.neogul_coder.domain.admin.controller.dto.response.AdminStudyResponse;
 import grep.neogul_coder.domain.admin.controller.dto.response.AdminUserResponse;
+import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,14 +28,17 @@ public interface AdminSpecification {
     @GetMapping("/admin/studies")
     ApiResponse<Page<AdminStudyResponse>> getStudies(
         @Parameter(description = "페이지 번호 (0부터 시작)", example = "0")
-        @RequestParam(defaultValue = "0") int page
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) Category category
     );
 
     @Operation(summary = "전체 모집글 조회", description = "관리자가 전체 모집글 목록을 페이지 단위로 조회합니다.")
     @GetMapping("/admin/recruitment-posts")
     ApiResponse<Page<AdminRecruitmentPostResponse>> getRecruitmentPosts(
         @Parameter(description = "페이지 번호 (0부터 시작)", example = "0")
-        @RequestParam(defaultValue = "0") int page
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(required = false) String subject
     );
 
     @Operation(summary = "사용자 강제 탈퇴", description = "관리자가 특정 사용자를 탈퇴(삭제) 처리합니다.")
