@@ -13,7 +13,7 @@ public class PersonalCalendar extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Calendar calendar;
 
     @Column(name = "user_id")
@@ -26,6 +26,10 @@ public class PersonalCalendar extends BaseEntity {
 
     public PersonalCalendar() {
 
+    }
+
+    public void delete() {
+        this.activated = false;
     }
 }
 

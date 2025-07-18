@@ -11,7 +11,6 @@ public enum CalendarErrorCode implements ErrorCode {
     NOT_CALENDAR_OWNER("CALENDAR_003", HttpStatus.BAD_REQUEST,"작성자만 수정 또는 삭제할 수 있습니다."),
     CALENDAR_NOT_FOUND("C404", HttpStatus.NOT_FOUND, "해당 캘린더를 찾을 수 없습니다.");
 
-
     private final String code;
     private final HttpStatus status;
     private final String message;
