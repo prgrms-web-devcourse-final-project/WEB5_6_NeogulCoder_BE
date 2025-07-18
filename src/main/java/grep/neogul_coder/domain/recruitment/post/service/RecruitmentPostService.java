@@ -4,7 +4,7 @@ import grep.neogul_coder.domain.recruitment.comment.RecruitmentPostComment;
 import grep.neogul_coder.domain.recruitment.comment.controller.dto.response.CommentsWithWriterInfo;
 import grep.neogul_coder.domain.recruitment.comment.repository.RecruitmentPostCommentQueryRepository;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostDetailsInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostWithStudyInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostQueryRepository;
@@ -46,14 +46,11 @@ public class RecruitmentPostService {
         RecruitmentPost post = postRepository.findByIdAndActivatedTrue(recruitmentPostId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND));
 
-        List<CommentsWithWriterInfo> comments = commentQueryRepository.findCommentsWithWriterInfo(post.getId());
-        List<CommentsWithWriterInfo> withdrawnUserComments = withdrawnUserChangeNameFrom(comments);
-        List<CommentsWithWriterInfo> updatedComments = applyWithdrawnUserNameChanges(comments, withdrawnUserComments);
-
+        RecruitmentPostWithStudyInfo postInfo = postQueryRepository.findPostWithStudyInfo(post.getId());
+        List<CommentsWithWriterInfo> comments = findCommentsWithWriterInfo(post);
         List<StudyApplication> applications = studyApplicationRepository.findByRecruitmentPostId(post.getId());
-        RecruitmentPostDetailsInfo postInfo = postQueryRepository.findPostDetailsInfo(post.getId());
 
-        return new RecruitmentPostInfo(postInfo, updatedComments, applications.size());
+        return new RecruitmentPostInfo(postInfo, comments, applications.size());
     }
 
     public RecruitmentPostPagingInfo getPagingInfo(Pageable pageable) {
@@ -92,6 +89,12 @@ public class RecruitmentPostService {
     public void delete(long recruitmentPostId, long userId) {
         RecruitmentPost recruitmentPost = findRecruitmentPost(recruitmentPostId, userId);
         recruitmentPost.delete();
+    }
+
+    private List<CommentsWithWriterInfo> findCommentsWithWriterInfo(RecruitmentPost post) {
+        List<CommentsWithWriterInfo> comments = commentQueryRepository.findCommentsWithWriterInfo(post.getId());
+        List<CommentsWithWriterInfo> withdrawnUserComments = withdrawnUserChangeNameFrom(comments);
+        return applyWithdrawnUserNameChanges(comments, withdrawnUserComments);
     }
 
     private List<CommentsWithWriterInfo> withdrawnUserChangeNameFrom(List<CommentsWithWriterInfo> comments) {

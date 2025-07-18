@@ -103,6 +103,7 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
 
         //when
         RecruitmentPostInfo response = recruitmentPostService.get(post.getId());
+        System.out.println("response = " + response);
 
         //then
         assertThat(response.getApplicationCount()).isEqualTo(2);
