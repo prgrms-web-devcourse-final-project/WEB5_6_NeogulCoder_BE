@@ -27,6 +27,7 @@ import static grep.neogul_coder.global.response.code.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PersonalCalendarService {
 
     private final PersonalCalendarRepository personalCalendarRepository;
@@ -55,6 +56,7 @@ public class PersonalCalendarService {
     }
 
     // 개인 일정 생성
+    @Transactional
     public void create(Long userId, PersonalCalendarRequest request) {
         // 필수 필드  입력 안할 시 유효성 예외 발생
         validateRequiredFields(request); // 메서드로 분리
@@ -78,6 +80,7 @@ public class PersonalCalendarService {
     }
 
     // 개인 일정 삭제
+    @Transactional
     public void delete(Long userId, Long personalCalendarId) {
         // 일정 조회 및 본인 확인
         PersonalCalendar calendar = personalCalendarRepository.findById(personalCalendarId)

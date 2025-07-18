@@ -28,6 +28,7 @@ import static grep.neogul_coder.global.response.code.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TeamCalendarService {
 
     private final TeamCalendarRepository teamCalendarRepository;
@@ -56,7 +57,7 @@ public class TeamCalendarService {
             .toList();
     }
 
-
+    @Transactional
     public void create(Long studyId, Long userId, TeamCalendarRequest request) {
         validateRequest(request);
 
@@ -77,6 +78,7 @@ public class TeamCalendarService {
         calendar.getCalendar().update(request.toCalendar());
     }
 
+    @Transactional
     public void delete(Long studyId, Long userId, Long teamCalendarId) {
         TeamCalendar calendar = teamCalendarRepository.findById(teamCalendarId)
             // 본인이 작성한 일정만 삭제할 수 있음
