@@ -51,9 +51,21 @@ public class RecruitmentPostQueryRepository {
                 ).fetchOne();
     }
 
-    public List<RecruitmentPost> findPaging(Pageable pageable) {
+    public List<RecruitmentPost> findAllByFilter(Pageable pageable) {
         return queryFactory.selectFrom(recruitmentPost)
                 .where(recruitmentPost.activated.isTrue())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(recruitmentPost.createdDate.desc())
+                .fetch();
+    }
+
+    public List<RecruitmentPost> findAllByFilter(Pageable pageable, Long userId) {
+        return queryFactory.selectFrom(recruitmentPost)
+                .where(
+                        recruitmentPost.userId.eq(userId),
+                        recruitmentPost.activated.isTrue()
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(recruitmentPost.createdDate.desc())

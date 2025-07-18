@@ -4,9 +4,9 @@ import grep.neogul_coder.domain.recruitment.comment.RecruitmentPostComment;
 import grep.neogul_coder.domain.recruitment.comment.controller.dto.response.CommentsWithWriterInfo;
 import grep.neogul_coder.domain.recruitment.comment.repository.RecruitmentPostCommentQueryRepository;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostWithStudyInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostWithStudyInfo;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostQueryRepository;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostStatusUpdateServiceRequest;
@@ -53,8 +53,8 @@ public class RecruitmentPostService {
         return new RecruitmentPostInfo(postInfo, comments, applications.size());
     }
 
-    public RecruitmentPostPagingInfo getPagingInfo(Pageable pageable) {
-        List<RecruitmentPost> recruitmentPosts = postQueryRepository.findPaging(pageable);
+    public RecruitmentPostPagingInfo getPagingInfo(Pageable pageable, Long userId) {
+        List<RecruitmentPost> recruitmentPosts = findPostsFilteredByUser(pageable, userId);
         List<Long> recruitmentPostIds = extractId(recruitmentPosts);
 
         List<Study> studies = findConnectedStudiesFrom(recruitmentPosts);
@@ -95,6 +95,13 @@ public class RecruitmentPostService {
         List<CommentsWithWriterInfo> comments = commentQueryRepository.findCommentsWithWriterInfo(post.getId());
         List<CommentsWithWriterInfo> withdrawnUserComments = withdrawnUserChangeNameFrom(comments);
         return applyWithdrawnUserNameChanges(comments, withdrawnUserComments);
+    }
+
+    private List<RecruitmentPost> findPostsFilteredByUser(Pageable pageable, Long userId) {
+        if (userId == null) {
+            return postQueryRepository.findAllByFilter(pageable);
+        }
+        return postQueryRepository.findAllByFilter(pageable, userId);
     }
 
     private List<CommentsWithWriterInfo> withdrawnUserChangeNameFrom(List<CommentsWithWriterInfo> comments) {

@@ -24,7 +24,14 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
 
     @GetMapping
     public ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(@PageableDefault(size = 10) Pageable pageable) {
-        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(pageable);
+        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(pageable, null);
+        return ApiResponse.success(response);
+    }
+
+    @GetMapping("/me")
+    public ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(@PageableDefault(size = 10) Pageable pageable,
+                                                                      @AuthenticationPrincipal Principal userDetails) {
+        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(pageable, userDetails.getUserId());
         return ApiResponse.success(response);
     }
 
