@@ -27,5 +27,9 @@ public class PersonalCalendar extends BaseEntity {
     public PersonalCalendar() {
 
     }
+
+    public void delete() {
+        this.activated = false;
+    }
 }
 

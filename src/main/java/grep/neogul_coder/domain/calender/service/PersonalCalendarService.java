@@ -83,7 +83,7 @@ public class PersonalCalendarService {
         PersonalCalendar calendar = personalCalendarRepository.findById(personalCalendarId)
             .filter(pc -> pc.getUserId().equals(userId))
             .orElseThrow(() -> new NotFoundException(CALENDAR_NOT_FOUND));
-        personalCalendarRepository.delete(calendar);
+        calendar.delete();
     }
 
     // 공통 유효성 검증 메서드

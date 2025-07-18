@@ -83,7 +83,7 @@ public class TeamCalendarService {
             .filter(tc -> tc.getStudyId().equals(studyId) && tc.getUserId().equals(userId))
             // 예외처리
             .orElseThrow(() ->  new ValidationException(NOT_CALENDAR_OWNER));
-        teamCalendarRepository.delete(calendar);
+        calendar.delete();
     }
 
     // 공통 유효성 검증 메서드

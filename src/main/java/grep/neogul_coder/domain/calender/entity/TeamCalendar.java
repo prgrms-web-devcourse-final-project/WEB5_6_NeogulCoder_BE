@@ -33,5 +33,9 @@ public class TeamCalendar extends BaseEntity {
     public TeamCalendar() {
 
     }
+
+    public void delete() {
+        this.activated = false;
+    }
 }
 
