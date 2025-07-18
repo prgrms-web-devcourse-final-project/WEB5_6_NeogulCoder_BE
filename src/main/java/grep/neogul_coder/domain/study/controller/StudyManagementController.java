@@ -23,7 +23,8 @@ public class StudyManagementController implements StudyManagementSpecification {
 
     @GetMapping("/extension")
     public ApiResponse<StudyExtensionResponse> getStudyExtension(@PathVariable("studyId") Long studyId) {
-        return ApiResponse.success(new StudyExtensionResponse());
+        StudyExtensionResponse studyExtension = studyManagementService.getStudyExtension(studyId);
+        return ApiResponse.success(studyExtension);
     }
 
     @GetMapping("/extension/participations")

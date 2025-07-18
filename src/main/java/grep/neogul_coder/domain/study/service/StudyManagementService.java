@@ -3,6 +3,7 @@ package grep.neogul_coder.domain.study.service;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.controller.dto.response.ExtendParticipationResponse;
+import grep.neogul_coder.domain.study.controller.dto.response.StudyExtensionResponse;
 import grep.neogul_coder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
@@ -25,6 +26,14 @@ public class StudyManagementService {
     private final StudyRepository studyRepository;
     private final StudyMemberRepository studyMemberRepository;
     private final StudyMemberQueryRepository studyMemberQueryRepository;
+
+    public StudyExtensionResponse getStudyExtension(Long studyId) {
+        Study study = studyRepository.findById(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+
+        List<ExtendParticipationResponse> members = studyMemberQueryRepository.findExtendParticipation(studyId);
+        return StudyExtensionResponse.from(study, members);
+    }
 
     public List<ExtendParticipationResponse> getExtendParticipations(Long studyId) {
         Study study = studyRepository.findById(studyId)
