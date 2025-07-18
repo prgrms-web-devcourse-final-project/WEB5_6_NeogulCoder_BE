@@ -15,7 +15,7 @@ import java.util.Random;
 
 import static grep.neogul_coder.domain.study.exception.code.StudyErrorCode.*;
 
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class StudyManagementService {
@@ -23,6 +23,7 @@ public class StudyManagementService {
     private final StudyRepository studyRepository;
     private final StudyMemberRepository studyMemberRepository;
 
+    @Transactional
     public void leaveStudy(Long studyId, Long userId) {
         Study study = studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
@@ -46,6 +47,7 @@ public class StudyManagementService {
         study.decreaseMemberCount();
     }
 
+    @Transactional
     public void delegateLeader(Long studyId, Long userId, Long newLeaderId) {
         if (userId.equals(newLeaderId)) {
             throw new BusinessException(LEADER_CANNOT_DELEGATE_TO_SELF);
@@ -65,6 +67,7 @@ public class StudyManagementService {
         newLeader.changeRoleLeader();
     }
 
+    @Transactional
     public void deleteUserFromStudies(Long userId) {
         List<Study> studies = studyMemberRepository.findStudiesByUserId(userId);
 

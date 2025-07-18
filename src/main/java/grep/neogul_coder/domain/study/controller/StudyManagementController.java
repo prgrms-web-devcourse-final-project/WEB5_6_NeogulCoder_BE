@@ -2,6 +2,8 @@ package grep.neogul_coder.domain.study.controller;
 
 import grep.neogul_coder.domain.study.controller.dto.request.DelegateLeaderRequest;
 import grep.neogul_coder.domain.study.controller.dto.request.ExtendStudyRequest;
+import grep.neogul_coder.domain.study.controller.dto.response.ExtendParticipationResponse;
+import grep.neogul_coder.domain.study.controller.dto.response.StudyExtensionResponse;
 import grep.neogul_coder.domain.study.service.StudyManagementService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
@@ -16,6 +18,16 @@ import org.springframework.web.bind.annotation.*;
 public class StudyManagementController implements StudyManagementSpecification {
 
     private final StudyManagementService studyManagementService;
+
+    @GetMapping("/extension")
+    public ApiResponse<StudyExtensionResponse> getStudyExtension(@PathVariable("studyId") Long studyId) {
+        return ApiResponse.success(new StudyExtensionResponse());
+    }
+
+    @GetMapping("/extension/participations")
+    public ApiResponse<ExtendParticipationResponse> getExtendParticipations(@PathVariable("studyId") Long studyId) {
+        return ApiResponse.success(new ExtendParticipationResponse());
+    }
 
     @DeleteMapping("/me")
     public ApiResponse<Void> leaveStudy(@PathVariable("studyId") Long studyId,
@@ -32,14 +44,14 @@ public class StudyManagementController implements StudyManagementSpecification {
         return ApiResponse.noContent();
     }
 
-    @PostMapping("/extend")
+    @PostMapping("/extension")
     public ApiResponse<Void> extendStudy(@PathVariable("studyId") Long studyId,
                                          @RequestBody @Valid ExtendStudyRequest request) {
         return ApiResponse.noContent();
     }
 
-    @PostMapping("/join")
-    public ApiResponse<Void> joinExtendStudy(@PathVariable("studyId") Long studyId) {
+    @PostMapping("/extension/participations")
+    public ApiResponse<Void> registerExtensionParticipation(@PathVariable("studyId") Long studyId) {
         return ApiResponse.noContent();
     }
 }
