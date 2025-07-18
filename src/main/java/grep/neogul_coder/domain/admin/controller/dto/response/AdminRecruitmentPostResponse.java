@@ -8,19 +8,22 @@ import lombok.Data;
 @Data
 public class AdminRecruitmentPostResponse {
 
+    private Long id;
     private LocalDate expiredDate;
     private boolean activated;
 
     public static AdminRecruitmentPostResponse from(RecruitmentPost post) {
         return AdminRecruitmentPostResponse
             .builder()
+            .id(post.getId())
             .expiredDate(post.getExpiredDate())
             .activated(post.getActivated())
             .build();
     }
 
     @Builder
-    private AdminRecruitmentPostResponse(LocalDate expiredDate, boolean activated) {
+    private AdminRecruitmentPostResponse(Long id, LocalDate expiredDate, boolean activated) {
+        this.id = id;
         this.expiredDate = expiredDate;
         this.activated = activated;
     }

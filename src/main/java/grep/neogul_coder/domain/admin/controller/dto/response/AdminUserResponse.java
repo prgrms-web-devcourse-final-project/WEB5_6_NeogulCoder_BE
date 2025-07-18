@@ -7,12 +7,14 @@ import lombok.Data;
 @Data
 public class AdminUserResponse {
 
+    private Long id;
     private String email;
     private String nickname;
     private Boolean activated;
 
     @Builder
-    private AdminUserResponse(String email, String nickname, Boolean activated) {
+    private AdminUserResponse(Long id, String email, String nickname, Boolean activated) {
+        this.id = id;
         this.email = email;
         this.nickname = nickname;
         this.activated = activated;
@@ -20,6 +22,7 @@ public class AdminUserResponse {
 
     public static AdminUserResponse from(User user) {
         return new AdminUserResponse(
+            user.getId(),
             user.getEmail(),
             user.getNickname(),
             user.getActivated()

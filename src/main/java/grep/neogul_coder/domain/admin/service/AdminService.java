@@ -57,7 +57,6 @@ public class AdminService {
     public void deleteStudy(Long studyId){
         Study study = studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
-
         study.delete();
     }
 
