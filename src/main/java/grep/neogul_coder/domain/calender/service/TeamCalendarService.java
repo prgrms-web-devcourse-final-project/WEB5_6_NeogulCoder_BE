@@ -58,9 +58,8 @@ public class TeamCalendarService {
 
 
     public void create(Long studyId, Long userId, TeamCalendarRequest request) {
-        if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
-            throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
-        }
+        validateRequest(request);
+
         Calendar calendar = request.toCalendar();
         TeamCalendar teamCalendar = new TeamCalendar(studyId, userId, calendar);
         teamCalendarRepository.save(teamCalendar);
@@ -68,10 +67,8 @@ public class TeamCalendarService {
 
     @Transactional
     public void update(Long studyId, Long userId, Long teamCalendarId, TeamCalendarRequest request) {
+        validateRequest(request);
 
-        if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
-            throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
-        }
         TeamCalendar calendar = teamCalendarRepository.findById(teamCalendarId)
             // 본인이 작성한 일정만 수정할 수 있음
             .filter(tc -> tc.getStudyId().equals(studyId) && tc.getUserId().equals(userId))
@@ -87,6 +84,13 @@ public class TeamCalendarService {
             // 예외처리
             .orElseThrow(() ->  new ValidationException(NOT_CALENDAR_OWNER));
         teamCalendarRepository.delete(calendar);
+    }
+
+    // 공통 유효성 검증 메서드
+    private void validateRequest(TeamCalendarRequest request) {
+        if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
+            throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
+        }
     }
 
 }

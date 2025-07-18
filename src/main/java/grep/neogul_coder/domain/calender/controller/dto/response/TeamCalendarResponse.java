@@ -40,7 +40,7 @@ public class TeamCalendarResponse {
     private LocalDateTime endTime;
 
     @Builder
-    public TeamCalendarResponse(Long teamCalendarId, Long studyId, Long writerId, String writerNickname,
+    protected TeamCalendarResponse(Long teamCalendarId, Long studyId, Long writerId, String writerNickname,
         String writerProfileImageUrl, String title, String description, LocalDateTime startTime,
         LocalDateTime endTime) {
         this.teamCalendarId = teamCalendarId;

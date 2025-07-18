@@ -7,6 +7,8 @@ import grep.neogul_coder.domain.calender.entity.QPersonalCalendar;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import static grep.neogul_coder.domain.calender.entity.QCalendar.calendar;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -21,7 +23,6 @@ public class PersonalCalendarQueryRepository {
     public List<PersonalCalendar> findByUserIdAndDate(Long userId, LocalDate date) {
         // Q타입 : 쿼리DSL 에서 사용하는 엔티티 기반 쿼리 클래스
         QPersonalCalendar pc = QPersonalCalendar.personalCalendar;
-        QCalendar calendar = pc.calendar;
 
         // 조회 기준 : 하루의 시작과 끝 시간
         LocalDateTime start = date.atStartOfDay();          // 00:00:00
@@ -33,7 +34,7 @@ public class PersonalCalendarQueryRepository {
         // 종료 시간 >= 당일 시작시간인 일정들을 모두 조회
         return queryFactory
             .selectFrom(pc)
-            .join(pc.calendar, QCalendar.calendar).fetchJoin()
+            .join(pc.calendar, calendar).fetchJoin()
             .where(
                 pc.userId.eq(userId),
                 calendar.scheduledStart.loe(end),

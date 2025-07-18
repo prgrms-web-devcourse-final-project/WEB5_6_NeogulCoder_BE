@@ -57,9 +57,7 @@ public class PersonalCalendarService {
     // 개인 일정 생성
     public void create(Long userId, PersonalCalendarRequest request) {
         // 필수 필드  입력 안할 시 유효성 예외 발생
-        if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
-            throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
-        }
+        validateRequiredFields(request); // 메서드로 분리
 
         Calendar calendar = request.toCalendar();
         PersonalCalendar personalCalendar = new PersonalCalendar(userId, calendar);
@@ -70,10 +68,7 @@ public class PersonalCalendarService {
     @Transactional
     public void update(Long userId, Long personalCalendarId, PersonalCalendarRequest request) {
         // 필수 필드 검증
-        if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
-            throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
-        }
-
+        validateRequiredFields(request);  // 메서드로 분리
         // 해당 일정이 존재하고 본인이 소유한 일정인지 확인
         PersonalCalendar calendar = personalCalendarRepository.findById(personalCalendarId)
             .filter(pc -> pc.getUserId().equals(userId))
@@ -89,5 +84,12 @@ public class PersonalCalendarService {
             .filter(pc -> pc.getUserId().equals(userId))
             .orElseThrow(() -> new NotFoundException(CALENDAR_NOT_FOUND));
         personalCalendarRepository.delete(calendar);
+    }
+
+    // 공통 유효성 검증 메서드
+    private void validateRequiredFields(PersonalCalendarRequest request) {
+        if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
+            throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
+        }
     }
 }

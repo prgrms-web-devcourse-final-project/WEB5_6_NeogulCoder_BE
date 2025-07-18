@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+import static grep.neogul_coder.domain.calender.entity.QCalendar.calendar;
+
 @Repository
 @RequiredArgsConstructor
 public class TeamCalendarQueryRepository {
@@ -21,7 +23,6 @@ public class TeamCalendarQueryRepository {
     public List<TeamCalendar> findByStudyIdAndDate(Long studyId, LocalDate date) {
         // 쿼리DSL용 Q타입: 팀 캘린더
         QTeamCalendar tc = QTeamCalendar.teamCalendar;
-        QCalendar calendar = tc.calendar;
 
         LocalDateTime start = date.atStartOfDay();          // 00:00:00
         LocalDateTime end = date.atTime(LocalTime.MAX);     // 23:59:59.999...
@@ -32,7 +33,7 @@ public class TeamCalendarQueryRepository {
         // - 일정 종료가 하루 시작 이후
         return queryFactory
             .selectFrom(tc)
-            .join(tc.calendar, QCalendar.calendar).fetchJoin()
+            .join(tc.calendar, calendar).fetchJoin()
             .where(
                 tc.studyId.eq(studyId),
                 calendar.scheduledStart.loe(end),

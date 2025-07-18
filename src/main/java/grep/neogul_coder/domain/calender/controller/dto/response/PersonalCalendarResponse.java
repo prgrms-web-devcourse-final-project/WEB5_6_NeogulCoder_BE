@@ -38,7 +38,7 @@ public class PersonalCalendarResponse {
     private LocalDateTime endTime;
 
     @Builder
-    public PersonalCalendarResponse(Long personalCalendarId, Long userId, String writerNickname,
+    protected PersonalCalendarResponse(Long personalCalendarId, Long userId, String writerNickname,
         String writerProfileImageUrl, String title, String description,
         LocalDateTime startTime, LocalDateTime endTime) {
         this.personalCalendarId = personalCalendarId;
