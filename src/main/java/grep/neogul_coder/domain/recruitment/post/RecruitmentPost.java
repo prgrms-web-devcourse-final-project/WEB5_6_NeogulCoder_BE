@@ -2,12 +2,15 @@ package grep.neogul_coder.domain.recruitment.post;
 
 import grep.neogul_coder.domain.recruitment.RecruitmentPostStatus;
 import grep.neogul_coder.global.entity.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDate;
 
 @Getter
 @Entity
@@ -22,14 +25,14 @@ public class RecruitmentPost extends BaseEntity {
     private String subject;
     private String content;
     private int recruitmentCount;
-    private LocalDate expiredDate;
+    private LocalDateTime expiredDate;
 
     @Enumerated(EnumType.STRING)
     private RecruitmentPostStatus status;
 
     @Builder
     private RecruitmentPost(long studyId, String subject, String content, long userId,
-                           int recruitmentCount, LocalDate expiredDate, RecruitmentPostStatus status) {
+        int recruitmentCount, LocalDateTime expiredDate, RecruitmentPostStatus status) {
         this.studyId = studyId;
         this.userId = userId;
         this.subject = subject;
@@ -39,7 +42,8 @@ public class RecruitmentPost extends BaseEntity {
         this.status = status;
     }
 
-    protected RecruitmentPost() {}
+    protected RecruitmentPost() {
+    }
 
     public void update(String subject, String content, int recruitmentCount) {
         this.subject = subject;

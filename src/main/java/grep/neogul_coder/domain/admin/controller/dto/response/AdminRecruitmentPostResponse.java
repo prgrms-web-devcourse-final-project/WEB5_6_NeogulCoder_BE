@@ -3,6 +3,7 @@ package grep.neogul_coder.domain.admin.controller.dto.response;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,7 +18,7 @@ public class AdminRecruitmentPostResponse {
     private String subject;
 
     @Schema(description = "모집 마감일", example = "2025-08-01")
-    private LocalDate expiredDate;
+    private LocalDateTime expiredDate;
 
     @Schema(description = "활성화 여부", example = "true")
     private boolean activated;
@@ -33,7 +34,7 @@ public class AdminRecruitmentPostResponse {
     }
 
     @Builder
-    private AdminRecruitmentPostResponse(Long id, String subject, LocalDate expiredDate, boolean activated) {
+    private AdminRecruitmentPostResponse(Long id, String subject, LocalDateTime expiredDate, boolean activated) {
         this.id = id;
         this.subject = subject;
         this.expiredDate = expiredDate;
