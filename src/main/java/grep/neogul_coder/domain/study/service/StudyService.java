@@ -148,14 +148,14 @@ public class StudyService {
     private void validateStudyMember(Long studyId, Long userId) {
         boolean exists = studyMemberRepository.existsByStudyIdAndUserIdAndActivatedTrue(studyId, userId);
         if (!exists) {
-            throw new BusinessException(STUDY_NOT_MEMBER);
+            throw new BusinessException(STUDY_MEMBER_NOT_FOUND);
         }
     }
 
     private void validateStudyLeader(Long studyId, Long userId) {
         StudyMemberRole role = studyQueryRepository.findMyRole(studyId, userId);
         if (!role.equals(LEADER)) {
-            throw new BusinessException(STUDY_NOT_LEADER);
+            throw new BusinessException(NOT_STUDY_LEADER);
         }
     }
 

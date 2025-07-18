@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> {
     List<StudyMember> findByStudyId(long studyId);
@@ -25,4 +26,9 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> 
     @Modifying(clearAutomatically = true)
     @Query("update StudyMember m set m.activated = false where m.study.id = :studyId")
     void deactivateByStudyId(@Param("studyId") Long studyId);
+
+    Optional<StudyMember> findByStudyIdAndUserId(Long studyId, Long userId);
+
+    @Query("select m from StudyMember m where m.study.id = :studyId and m.role = 'MEMBER' and m.activated = true")
+    List<StudyMember> findAvailableNewLeaders(@Param("studyId") Long studyId);
 }

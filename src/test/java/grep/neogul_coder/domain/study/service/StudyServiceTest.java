@@ -25,7 +25,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static grep.neogul_coder.domain.study.enums.StudyMemberRole.*;
-import static grep.neogul_coder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_LEADER;
+import static grep.neogul_coder.domain.study.exception.code.StudyErrorCode.NOT_STUDY_LEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -155,7 +155,7 @@ class StudyServiceTest extends IntegrationTestSupport {
         // when then
         assertThatThrownBy(() ->
             studyService.updateStudy(studyId, request, userId))
-            .isInstanceOf(BusinessException.class).hasMessage(STUDY_NOT_LEADER.getMessage());
+            .isInstanceOf(BusinessException.class).hasMessage(NOT_STUDY_LEADER.getMessage());
     }
 
     @DisplayName("스터디장이 스터디를 삭제합니다.")

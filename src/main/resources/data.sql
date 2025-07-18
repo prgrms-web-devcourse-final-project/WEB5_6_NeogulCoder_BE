@@ -22,11 +22,11 @@ INSERT INTO comment (post_id, user_id, content) VALUES (3, 2, '관련된 블로�
 INSERT INTO comment (post_id, user_id, content) VALUES (2, 5, '정보 감사합니다!');
 INSERT INTO comment (post_id, user_id, content) VALUES (4, 1, '제육 돈까스');
 
-INSERT INTO study_member (study_id, user_id, role) VALUES (1, 3, 'LEADER');
-INSERT INTO study_member (study_id, user_id, role) VALUES (1, 4, 'MEMBER');
-INSERT INTO study_member (study_id, user_id, role) VALUES (2, 5, 'LEADER');
-INSERT INTO study_member (study_id, user_id, role) VALUES (3, 2, 'LEADER');
-INSERT INTO study_member (study_id, user_id, role) VALUES (3, 1, 'MEMBER');
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (1, 3, 'LEADER', FALSE);
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (1, 4, 'MEMBER', FALSE);
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (2, 5, 'LEADER', FALSE);
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (3, 2, 'LEADER', FALSE);
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (3, 1, 'MEMBER', NULL);
 
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status) VALUES (3, 1, '자바 스터디 모집', '이펙티브 자바 공부하실분 구해요!!', 3, '2025-04-19', 'COMPLETE');
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status) VALUES (2, 4, '면접 스터디 모집', '삼성 면접 1차 합격자 분들 같이 준비하실분들 찾습니다', 1, '2025-07-08', 'COMPLETE');
