@@ -8,6 +8,7 @@ import grep.neogul_coder.global.utils.upload.exception.FileUploadException;
 import grep.neogul_coder.global.utils.upload.AbstractFileManager;
 import grep.neogul_coder.global.utils.upload.exception.FileUploadErrorCode;
 import java.io.IOException;
+import java.io.InputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -27,13 +28,13 @@ public class GcpFileUploader extends AbstractFileManager {
   // GCP Cloud Storage 에 파일을 업로드
   @Override
   protected void uploadFile(MultipartFile file, String fullPath) throws IOException {
-    try {
+    try (InputStream inputStream = file.getInputStream()) {
       Storage storage = StorageOptions.getDefaultInstance().getService();
       BlobId blobId = BlobId.of(bucket, fullPath);
       BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
           .setContentType(file.getContentType())
           .build();
-      storage.create(blobInfo, file.getBytes());
+      storage.createFrom(blobInfo, inputStream);
     } catch (IOException e) {
       log.error("GCP 파일 업로드 실패 - 원본 파일명: {}", file.getOriginalFilename(), e);
       throw new FileUploadException(FileUploadErrorCode.GCP_UPLOAD_FAIL, e);

@@ -32,6 +32,11 @@ public abstract class AbstractFileManager {
       throw new FileUploadException(FileUploadErrorCode.FILE_EMPTY);
     }
 
+    String contentType = file.getContentType();
+    if(contentType == null || !ALLOWED_TYPES.contains(contentType)) {
+      throw new FileUploadException(FileUploadErrorCode.FILE_TYPE_INVALID);
+    }
+
     String originFileName = file.getOriginalFilename();
     if (originFileName == null) {
       throw new FileUploadException(FileUploadErrorCode.FILE_NAME_INVALID);
@@ -88,4 +93,9 @@ public abstract class AbstractFileManager {
   protected String buildFullPath(String savePath, String renameFileName) {
     return savePath + "/" + renameFileName;
   }
+
+  // MIME 타입 허용 목록 (이미지 파일만 허용)
+  protected static final List<String> ALLOWED_TYPES = List.of(
+      "image/png", "image/jpeg", "image/jpg", "image/gif", "image/webp"
+  );
 }
