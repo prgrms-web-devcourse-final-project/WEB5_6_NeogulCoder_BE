@@ -9,9 +9,14 @@ import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import grep.neogul_coder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogul_coder.domain.users.service.UserService;
+import grep.neogul_coder.global.utils.upload.AbstractFileManager;
+import grep.neogul_coder.global.utils.upload.FileUploadResponse;
+import grep.neogul_coder.global.utils.upload.FileUsageType;
 import jakarta.validation.Valid;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +26,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController implements UserSpecification {
 
     private final UserService usersService;
+    private final AbstractFileManager fileManager;
 
     @GetMapping("/me")
     public ApiResponse<UserResponse> get(@AuthenticationPrincipal Principal principal) {
@@ -43,10 +51,26 @@ public class UserController implements UserSpecification {
         return ApiResponse.success(userResponse);
     }
 
-    @PutMapping("/update/profile")
-    public ApiResponse<Void> updateProfile(@AuthenticationPrincipal Principal principal,
-        @RequestBody UpdateProfileRequest request) {
-        usersService.updateProfile(principal.getUserId(),request.getNickname(),request.getProfileImgUrl());
+    @PutMapping(value = "/update/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<Void> updateProfile(
+        @AuthenticationPrincipal Principal principal,
+        @RequestPart("nickname") String nickname,
+        @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
+    ) throws IOException {
+
+        String profileImageUrl = null;
+
+        if (profileImage != null && !profileImage.isEmpty()) {
+            FileUploadResponse response = fileManager.upload(
+                profileImage,
+                principal.getUserId(),
+                FileUsageType.PROFILE,
+                principal.getUserId()
+            );
+            profileImageUrl = response.fileUrl();
+        }
+
+        usersService.updateProfile(principal.getUserId(), nickname, profileImageUrl);
         return ApiResponse.noContent();
     }
 

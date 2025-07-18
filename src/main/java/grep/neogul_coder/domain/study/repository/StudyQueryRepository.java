@@ -2,10 +2,13 @@ package grep.neogul_coder.domain.study.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyItemResponse;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyMemberResponse;
+import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -122,5 +125,25 @@ public class StudyQueryRepository {
                 user.activated.isTrue()
             )
             .fetch();
+    }
+
+    public Page<Study> adminSearchStudy(String name, Category category, Pageable pageable) {
+        List<Study> content = queryFactory.selectFrom(study)
+            .where(
+                name != null ? study.name.containsIgnoreCase(name) : null,
+                category != null ? study.category.eq(category) : null
+            )
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        long total = queryFactory.selectFrom(study)
+            .where(
+                name != null ? study.name.containsIgnoreCase(name) : null,
+                category != null ? study.category.eq(category) : null
+            )
+            .fetchCount();
+
+        return new PageImpl<>(content, pageable, total);
     }
 }
