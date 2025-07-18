@@ -28,10 +28,11 @@ public class StudyMember extends BaseEntity {
     protected StudyMember() {}
 
     @Builder
-    public StudyMember(Study study, Long userId, StudyMemberRole role) {
+    public StudyMember(Study study, Long userId, StudyMemberRole role, Boolean isParticipated) {
         this.study = study;
         this.userId = userId;
         this.role = role;
+        this.isParticipated = isParticipated;
     }
 
     public void delete() {
