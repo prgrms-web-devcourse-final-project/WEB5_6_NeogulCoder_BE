@@ -79,7 +79,7 @@ public class StudyService {
 
     public StudyMemberInfoResponse getMyStudyMemberInfo(Long studyId, Long userId) {
         StudyMember studyMember = Optional.ofNullable(studyMemberQueryRepository.findByStudyIdAndUserId(studyId, userId))
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_MEMBER));
+            .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
 
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));

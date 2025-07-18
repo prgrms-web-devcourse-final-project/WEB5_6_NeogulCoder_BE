@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ADMIN')")
-public class AdminController {
+public class AdminController implements AdminSpecification {
 
     private final AdminService adminService;
 
