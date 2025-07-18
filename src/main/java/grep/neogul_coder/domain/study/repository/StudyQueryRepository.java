@@ -109,7 +109,8 @@ public class StudyQueryRepository {
                 StudyMemberResponse.class,
                 user.id,
                 user.nickname,
-                user.profileImageUrl
+                user.profileImageUrl,
+                studyMember.role
             ))
             .from(studyMember)
             .join(study).on(study.id.eq(studyMember.study.id))
