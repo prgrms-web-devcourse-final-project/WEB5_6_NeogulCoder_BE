@@ -31,7 +31,8 @@ public class ReviewController implements ReviewSpecification {
 
     @GetMapping("/studies/me")
     public ApiResponse<JoinedStudiesInfo> getJoinedStudiesInfo(@AuthenticationPrincipal Principal userDetails) {
-        return ApiResponse.success(new JoinedStudiesInfo());
+        JoinedStudiesInfo response = reviewService.getJoinedStudiesInfo(userDetails.getUserId());
+        return ApiResponse.success(response);
     }
 
     @PostMapping
