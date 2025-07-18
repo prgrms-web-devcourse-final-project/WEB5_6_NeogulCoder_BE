@@ -6,7 +6,6 @@ import grep.neogul_coder.domain.admin.controller.dto.response.AdminUserResponse;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
-import grep.neogul_coder.domain.study.service.StudyService;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.domain.users.service.UserService;
 import grep.neogul_coder.global.exception.business.NotFoundException;
@@ -49,19 +48,19 @@ public class AdminService {
     }
 
     @Transactional
-    public void deleteUser(Long userId){
+    public void deleteUser(Long userId) {
         userService.deleteUser(userId);
     }
 
     @Transactional
-    public void deleteStudy(Long studyId){
+    public void deleteStudy(Long studyId) {
         Study study = studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
         study.delete();
     }
 
     @Transactional
-    public void deleteRecruitmentPost(Long recruitmentPostId){
+    public void deleteRecruitmentPost(Long recruitmentPostId) {
         recruitmentPostRepository.deleteById(recruitmentPostId);
     }
 

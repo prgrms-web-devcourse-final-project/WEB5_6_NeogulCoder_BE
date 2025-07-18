@@ -26,14 +26,16 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/users")
-    public ApiResponse<Page<AdminUserResponse>> getUsers(@RequestParam(defaultValue = "0") int page) {
+    public ApiResponse<Page<AdminUserResponse>> getUsers(
+        @RequestParam(defaultValue = "0") int page) {
         int size = 10;
         Pageable pageable = PageRequest.of(page, size);
         return ApiResponse.success(adminService.getAllUsers(pageable));
     }
 
     @GetMapping("/studies")
-    public ApiResponse<Page<AdminStudyResponse>> getStudies(@RequestParam(defaultValue = "0") int page) {
+    public ApiResponse<Page<AdminStudyResponse>> getStudies(
+        @RequestParam(defaultValue = "0") int page) {
         return ApiResponse.success(adminService.getAllStudies(page));
     }
 
@@ -55,7 +57,6 @@ public class AdminController {
         adminService.deleteStudy(studyId);
         return ApiResponse.noContent();
     }
-
 
     @DeleteMapping("/recruitment-posts/{postId}")
     public ApiResponse<Void> deleteRecruitmentPost(@PathVariable Long postId) {

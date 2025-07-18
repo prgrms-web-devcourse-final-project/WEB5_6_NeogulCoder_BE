@@ -15,7 +15,8 @@ public class AdminStudyResponse {
     private boolean activated;
 
     @Builder
-    private AdminStudyResponse(Long id, String name, Category category, boolean isFinished, boolean activated) {
+    private AdminStudyResponse(Long id, String name, Category category, boolean isFinished,
+        boolean activated) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -24,7 +25,7 @@ public class AdminStudyResponse {
     }
 
     public static AdminStudyResponse from(Study study) {
-        return  AdminStudyResponse.builder()
+        return AdminStudyResponse.builder()
             .id(study.getId())
             .name(study.getName())
             .category(study.getCategory())
