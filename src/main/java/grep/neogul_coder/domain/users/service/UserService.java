@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.users.service;
 
+import grep.neogul_coder.domain.admin.controller.dto.response.AdminUserResponse;
 import grep.neogul_coder.domain.prtemplate.entity.Link;
 import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
 import grep.neogul_coder.domain.prtemplate.exception.code.PrTemplateErrorCode;
@@ -19,6 +20,8 @@ import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +70,7 @@ public class UserService {
 
     public void updateProfile(Long id, String nickname, String profileImageUrl) {
         User user = findUser(id);
+        isDuplicateNickname(nickname);
         user.updateProfile(nickname, profileImageUrl);
     }
 
