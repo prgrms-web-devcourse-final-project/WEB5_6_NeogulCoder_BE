@@ -84,11 +84,11 @@ dependencies {
 
 
 	// 배포 관련 의존성
-	// runtimeOnly 'org.postgresql:postgresql'
-	// implementation 'org.springframework.boot:spring-boot-devtools'
+//	 runtimeOnly 'org.postgresql:postgresql'
+	 implementation 'org.springframework.boot:spring-boot-devtools'
 
-	// implementation 'com.google.cloud:spring-cloud-gcp-starter-secretmanager:4.9.1'
-	// implementation 'com.google.cloud:google-cloud-storage:2.38.0'
+	 implementation 'com.google.cloud:spring-cloud-gcp-starter-secretmanager:4.9.1'
+	 implementation 'com.google.cloud:google-cloud-storage:2.38.0'
 }
 
 tasks.named('test') {
@@ -101,7 +101,7 @@ dependencyManagement {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 
 		// GCP 관련 스타터(BOM) 관리 - Secret Manager, GCS 등
-		// mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
+		mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
 	}
 }
 

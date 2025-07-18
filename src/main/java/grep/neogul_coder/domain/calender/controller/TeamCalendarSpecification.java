@@ -58,27 +58,27 @@ public interface TeamCalendarSpecification {
     @Operation(
         summary = "팀 일정 수정",
         description = "기존 팀 일정을 수정합니다.\n\n" +
-            "예: `/api/teams/{studyId}/calendar/{calendarId}`"
+            "예: `/api/teams/{studyId}/calendar/{teamCalendarId}`"
     )
     ApiResponse<Void> update(
         @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
         @Parameter(name = "studyId", description = "팀 ID", required = true, in = ParameterIn.PATH)
         @PathVariable("studyId") Long studyId,
-        @Parameter(name = "calendarId", description = "일정 ID", required = true, in = ParameterIn.PATH)
-        @PathVariable("calendarId") Long calendarId,
+        @Parameter(name = "teamCalendarId", description = "팀 캘린더 ID", required = true, in = ParameterIn.PATH)
+        @PathVariable("teamCalendarId") Long teamCalendarId,
         @RequestBody TeamCalendarRequest request
     );
 
     @Operation(
         summary = "팀 일정 삭제",
         description = "기존 팀 일정을 삭제합니다.\n\n" +
-            "예: `/api/teams/{studyId}/calendar/{calendarId}`"
+            "예: `/api/teams/{studyId}/calendar/{teamCalendarId}`"
     )
     ApiResponse<Void> delete(
         @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
         @Parameter(name = "studyId", description = "팀 ID", required = true, in = ParameterIn.PATH)
         @PathVariable("studyId") Long studyId,
-        @Parameter(name = "calendarId", description = "일정 ID", required = true, in = ParameterIn.PATH)
-        @PathVariable("calendarId") Long calendarId
+        @Parameter(name = "teamCalendarId", description = "팀 캘린더 ID", required = true, in = ParameterIn.PATH)
+        @PathVariable("teamCalendarId") Long teamCalendarId
     );
 }

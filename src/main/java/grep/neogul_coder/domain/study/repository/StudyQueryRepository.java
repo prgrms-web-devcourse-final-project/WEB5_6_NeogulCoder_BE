@@ -26,7 +26,7 @@ public class StudyQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public Page<StudyItemResponse> findMyStudies(Pageable pageable, Long userId) {
+    public Page<StudyItemResponse> findMyStudiesPaging(Pageable pageable, Long userId) {
         List<StudyItemResponse> studies = queryFactory
             .select(Projections.constructor(
                 StudyItemResponse.class,
@@ -47,25 +47,46 @@ public class StudyQueryRepository {
             .join(study).on(study.id.eq(studyMember.study.id))
             .where(
                 studyMember.userId.eq(userId),
-                studyMember.activated.isTrue(),
-                study.activated.isTrue()
+                studyMember.activated.isTrue()
             )
             .fetch();
 
         Long total = queryFactory
             .select(study.count())
             .from(studyMember)
-            .join(study).on(study.id.eq(studyMember.study.id))
             .where(
                 studyMember.userId.eq(userId),
-                studyMember.activated.eq(true),
-                study.activated.eq(true)
+                studyMember.activated.eq(true)
             )
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
             .fetchOne();
 
         return new PageImpl<>(studies, pageable, total);
+    }
+
+    public List<StudyItemResponse> findMyStudies(Long userId) {
+        return queryFactory
+            .select(Projections.constructor(
+                StudyItemResponse.class,
+                study.id,
+                study.name,
+                user.nickname,
+                study.capacity,
+                study.currentCount,
+                study.startDate,
+                study.imageUrl,
+                study.introduction,
+                study.category,
+                study.studyType,
+                study.isFinished
+            ))
+            .from(studyMember)
+            .join(user).on(user.id.eq(studyMember.userId))
+            .join(study).on(study.id.eq(studyMember.study.id))
+            .where(
+                studyMember.userId.eq(userId),
+                studyMember.activated.isTrue()
+            )
+            .fetch();
     }
 
     public StudyMemberRole findMyRole(Long studyId, Long userId) {

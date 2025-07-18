@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +28,7 @@ import static grep.neogul_coder.global.response.code.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TeamCalendarService {
 
     private final TeamCalendarRepository teamCalendarRepository;
@@ -34,7 +36,7 @@ public class TeamCalendarService {
     private final UserService userService;
 
     public List<TeamCalendarResponse> findAll(Long studyId) {
-        return teamCalendarRepository.findByStudyId(studyId).stream()
+        return teamCalendarRepository.findAllWithCalendarByStudyId(studyId).stream()
             .map(tc -> {
                 User user = userService.get(tc.getUserId());
                 return TeamCalendarResponse.from(tc, user);
@@ -55,22 +57,20 @@ public class TeamCalendarService {
             .toList();
     }
 
-
+    @Transactional
     public void create(Long studyId, Long userId, TeamCalendarRequest request) {
-        if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
-            throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
-        }
+        validateRequest(request);
+
         Calendar calendar = request.toCalendar();
         TeamCalendar teamCalendar = new TeamCalendar(studyId, userId, calendar);
         teamCalendarRepository.save(teamCalendar);
     }
 
-    public void update(Long studyId, Long userId, Long calendarId, TeamCalendarRequest request) {
+    @Transactional
+    public void update(Long studyId, Long userId, Long teamCalendarId, TeamCalendarRequest request) {
+        validateRequest(request);
 
-        if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
-            throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
-        }
-        TeamCalendar calendar = teamCalendarRepository.findById(calendarId)
+        TeamCalendar calendar = teamCalendarRepository.findById(teamCalendarId)
             // 본인이 작성한 일정만 수정할 수 있음
             .filter(tc -> tc.getStudyId().equals(studyId) && tc.getUserId().equals(userId))
             // 예외처리
@@ -78,13 +78,21 @@ public class TeamCalendarService {
         calendar.getCalendar().update(request.toCalendar());
     }
 
-    public void delete(Long studyId, Long userId, Long calendarId) {
-        TeamCalendar calendar = teamCalendarRepository.findById(calendarId)
+    @Transactional
+    public void delete(Long studyId, Long userId, Long teamCalendarId) {
+        TeamCalendar calendar = teamCalendarRepository.findById(teamCalendarId)
             // 본인이 작성한 일정만 삭제할 수 있음
             .filter(tc -> tc.getStudyId().equals(studyId) && tc.getUserId().equals(userId))
             // 예외처리
             .orElseThrow(() ->  new ValidationException(NOT_CALENDAR_OWNER));
-        teamCalendarRepository.delete(calendar);
+        calendar.delete();
+    }
+
+    // 공통 유효성 검증 메서드
+    private void validateRequest(TeamCalendarRequest request) {
+        if (request.getTitle() == null || request.getStartTime() == null || request.getEndTime() == null) {
+            throw new ValidationException(CalendarErrorCode.MISSING_REQUIRED_FIELDS);
+        }
     }
 
 }
