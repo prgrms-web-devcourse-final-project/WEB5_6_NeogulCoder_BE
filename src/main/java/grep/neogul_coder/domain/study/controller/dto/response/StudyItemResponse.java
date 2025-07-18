@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class StudyItemResponse {
@@ -28,7 +28,7 @@ public class StudyItemResponse {
     private int currentCount;
 
     @Schema(description = "시작일", example = "2025-07-15")
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @Schema(description = "대표 이미지", example = "http://localhost:8083/image.jpg")
     private String imageUrl;
@@ -46,7 +46,7 @@ public class StudyItemResponse {
     private boolean isFinished;
 
     @Builder
-    public StudyItemResponse(Long studyId, String name, String leaderNickname, int capacity, int currentCount, LocalDate startDate,
+    public StudyItemResponse(Long studyId, String name, String leaderNickname, int capacity, int currentCount, LocalDateTime startDate,
                              String imageUrl, String introduction, Category category, StudyType studyType, boolean isFinished) {
         this.studyId = studyId;
         this.name = name;
