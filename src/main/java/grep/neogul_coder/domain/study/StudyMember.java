@@ -23,16 +23,35 @@ public class StudyMember extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private StudyMemberRole role;
 
+    private Boolean isParticipated;
+
     protected StudyMember() {}
 
     @Builder
-    public StudyMember(Study study, Long userId, StudyMemberRole role) {
+    public StudyMember(Study study, Long userId, StudyMemberRole role, Boolean isParticipated) {
         this.study = study;
         this.userId = userId;
         this.role = role;
+        this.isParticipated = isParticipated;
     }
 
-    public boolean hasNotRoleReader(){
+    public void delete() {
+        this.activated = false;
+    }
+
+    public boolean isLeader() {
+        return this.role == StudyMemberRole.LEADER;
+    }
+
+    public boolean hasNotRoleLeader(){
         return this.role != StudyMemberRole.LEADER;
+    }
+
+    public void changeRoleLeader() {
+        this.role = StudyMemberRole.LEADER;
+    }
+
+    public void changeRoleMember() {
+        this.role = StudyMemberRole.MEMBER;
     }
 }

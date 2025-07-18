@@ -83,4 +83,8 @@ public class Study extends BaseEntity {
     public long calculateRemainSlots(long currentCount) {
         return this.capacity - currentCount;
     }
+
+    public void decreaseMemberCount() {
+        currentCount--;
+    }
 }

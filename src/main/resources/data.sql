@@ -22,11 +22,11 @@ INSERT INTO comment (post_id, user_id, content) VALUES (3, 2, '관련된 블로�
 INSERT INTO comment (post_id, user_id, content) VALUES (2, 5, '정보 감사합니다!');
 INSERT INTO comment (post_id, user_id, content) VALUES (4, 1, '제육 돈까스');
 
-INSERT INTO study_member (study_id, user_id, role) VALUES (1, 3, 'LEADER');
-INSERT INTO study_member (study_id, user_id, role) VALUES (1, 4, 'MEMBER');
-INSERT INTO study_member (study_id, user_id, role) VALUES (2, 5, 'LEADER');
-INSERT INTO study_member (study_id, user_id, role) VALUES (3, 2, 'LEADER');
-INSERT INTO study_member (study_id, user_id, role) VALUES (3, 1, 'MEMBER');
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (1, 3, 'LEADER', FALSE);
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (1, 4, 'MEMBER', FALSE);
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (2, 5, 'LEADER', FALSE);
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (3, 2, 'LEADER', FALSE);
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (3, 1, 'MEMBER', NULL);
 
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status) VALUES (3, 1, '자바 스터디 모집', '이펙티브 자바 공부하실분 구해요!!', 3, '2025-04-19', 'COMPLETE');
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status) VALUES (2, 4, '면접 스터디 모집', '삼성 면접 1차 합격자 분들 같이 준비하실분들 찾습니다', 1, '2025-07-08', 'COMPLETE');
@@ -84,11 +84,11 @@ INSERT INTO quiz (post_id, quiz_content, quiz_answer) VALUES (1, 'JPA는 SQL을 
 INSERT INTO quiz (post_id, quiz_content, quiz_answer) VALUES (2, 'React는 서버 사이드 렌더링만 지원한다.', FALSE);
 INSERT INTO quiz (post_id, quiz_content, quiz_answer) VALUES (5, '의존성 주입은 Spring의 핵심 기능 중 하나이다.', TRUE);
 
--- INSERT INTO upload_img (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('soluta.png', '63922d43-ee89-49ba-8a31-b658a59cd5f9.png', 'https://storage.googleapis.com/neogulcoder-wibby/post/2025/07/14/63922d43-ee89-49ba-8a31-b658a59cd5f9.png', 'post/2025/07/14/', 2, 'POST', 3);
--- INSERT INTO upload_img (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('accusantium.png', '37337416-66da-4ab9-890a-ad855cea1c49.png', 'https://storage.googleapis.com/neogulcoder-wibby/post/2025/07/14/37337416-66da-4ab9-890a-ad855cea1c49.png', 'post/2025/07/14/', 3, 'POST', 4);
--- INSERT INTO upload_img (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('ullam.png', 'e6225095-edd4-49bd-98ec-abe3f26c13e8.png', 'https://storage.googleapis.com/neogulcoder-wibby/post/2025/07/14/e6225095-edd4-49bd-98ec-abe3f26c13e8.png', 'post/2025/07/14/', 1, 'POST', 9);
--- INSERT INTO upload_img (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('aliquid.png', 'da163f7e-6a68-4e04-8aae-034cf8dd587c.png', 'https://storage.googleapis.com/neogulcoder-wibby/profile/2025/07/14/da163f7e-6a68-4e04-8aae-034cf8dd587c.png', 'profile/2025/07/14/', 1, 'PROFILE', 9);
--- INSERT INTO upload_img (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('earum.png', 'f65140dd-4cd2-49bb-9981-031e24a4e725.png', 'https://storage.googleapis.com/neogulcoder-wibby/profile/2025/07/14/f65140dd-4cd2-49bb-9981-031e24a4e725.png', 'profile/2025/07/14/', 1, 'PROFILE', 4);
+INSERT INTO upload_image (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('soluta.png', '63922d43-ee89-49ba-8a31-b658a59cd5f9.png', 'https://storage.googleapis.com/neogulcoder-wibby/post/2025/07/14/63922d43-ee89-49ba-8a31-b658a59cd5f9.png', 'post/2025/07/14/', 2, 'POST', 3);
+INSERT INTO upload_image (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('accusantium.png', '37337416-66da-4ab9-890a-ad855cea1c49.png', 'https://storage.googleapis.com/neogulcoder-wibby/post/2025/07/14/37337416-66da-4ab9-890a-ad855cea1c49.png', 'post/2025/07/14/', 3, 'POST', 4);
+INSERT INTO upload_image (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('ullam.png', 'e6225095-edd4-49bd-98ec-abe3f26c13e8.png', 'https://storage.googleapis.com/neogulcoder-wibby/post/2025/07/14/e6225095-edd4-49bd-98ec-abe3f26c13e8.png', 'post/2025/07/14/', 1, 'POST', 9);
+INSERT INTO upload_image (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('aliquid.png', 'da163f7e-6a68-4e04-8aae-034cf8dd587c.png', 'https://storage.googleapis.com/neogulcoder-wibby/profile/2025/07/14/da163f7e-6a68-4e04-8aae-034cf8dd587c.png', 'profile/2025/07/14/', 1, 'PROFILE', 9);
+INSERT INTO upload_image (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('earum.png', 'f65140dd-4cd2-49bb-9981-031e24a4e725.png', 'https://storage.googleapis.com/neogulcoder-wibby/profile/2025/07/14/f65140dd-4cd2-49bb-9981-031e24a4e725.png', 'profile/2025/07/14/', 1, 'PROFILE', 4);
 
 INSERT INTO buddy_energy (user_id, level) VALUES (1, 50);
 INSERT INTO buddy_energy (user_id, level) VALUES (2, 53);

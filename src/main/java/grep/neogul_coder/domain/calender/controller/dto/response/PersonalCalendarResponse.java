@@ -13,8 +13,8 @@ import lombok.Getter;
 @Schema(description = "개인 캘린더 응답 DTO")
 public class PersonalCalendarResponse {
 
-    @Schema(description = "일정 ID", example = "1001")
-    private Long calendarId;
+    @Schema(description = "개인 일정 ID (PersonalCalendar의 ID)", example = "1001")
+    private Long personalCalendarId;
 
     @Schema(description = "사용자 ID", example = "1")
     private Long userId;
@@ -38,10 +38,10 @@ public class PersonalCalendarResponse {
     private LocalDateTime endTime;
 
     @Builder
-    public PersonalCalendarResponse(Long calendarId, Long userId, String writerNickname,
+    protected PersonalCalendarResponse(Long personalCalendarId, Long userId, String writerNickname,
         String writerProfileImageUrl, String title, String description,
         LocalDateTime startTime, LocalDateTime endTime) {
-        this.calendarId = calendarId;
+        this.personalCalendarId = personalCalendarId;
         this.userId = userId;
         this.writerNickname = writerNickname;
         this.writerProfileImageUrl = writerProfileImageUrl;
@@ -54,7 +54,7 @@ public class PersonalCalendarResponse {
     public static PersonalCalendarResponse from(PersonalCalendar pc, User user) {
         Calendar calendar = pc.getCalendar();
         return PersonalCalendarResponse.builder()
-            .calendarId(calendar.getId())
+            .personalCalendarId(pc.getId())
             .userId(user.getId())
             .writerNickname(user.getNickname())
             .writerProfileImageUrl(user.getProfileImageUrl())
