@@ -1,6 +1,8 @@
 package grep.neogul_coder.domain.recruitment.post.repository;
 
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +16,6 @@ public interface RecruitmentPostRepository extends JpaRepository<RecruitmentPost
     @Modifying(clearAutomatically = true)
     @Query("update RecruitmentPost r set r.activated = false where r.studyId = :studyId")
     void deactivateByStudyId(@Param("studyId") Long studyId);
+
+    Page<RecruitmentPost> findBySubjectContainingIgnoreCase(String subject, Pageable pageable);
 }

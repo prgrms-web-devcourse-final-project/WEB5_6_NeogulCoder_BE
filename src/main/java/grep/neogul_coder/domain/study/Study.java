@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -33,9 +33,9 @@ public class Study extends BaseEntity {
 
     private String location;
 
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     private String introduction;
 
@@ -46,7 +46,7 @@ public class Study extends BaseEntity {
     protected Study() {}
 
     @Builder
-    private Study(String name, Category category, int capacity, StudyType studyType, String location, LocalDate startDate, LocalDate endDate, String introduction, String imageUrl) {
+    private Study(String name, Category category, int capacity, StudyType studyType, String location, LocalDateTime startDate, LocalDateTime endDate, String introduction, String imageUrl) {
         this.name = name;
         this.category = category;
         this.capacity = capacity;
@@ -61,7 +61,7 @@ public class Study extends BaseEntity {
     }
 
     public void update(String name, Category category, int capacity, StudyType studyType,
-                       String location, LocalDate startDate, String introduction, String imageUrl) {
+                       String location, LocalDateTime startDate, String introduction, String imageUrl) {
         this.name = name;
         this.category = category;
         this.capacity = capacity;
@@ -73,7 +73,7 @@ public class Study extends BaseEntity {
     }
 
     public boolean isStarted() {
-        return this.startDate.isBefore(LocalDate.now());
+        return this.startDate.isBefore(LocalDateTime.now());
     }
 
     public void delete() {

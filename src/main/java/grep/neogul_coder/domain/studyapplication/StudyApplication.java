@@ -33,4 +33,6 @@ public class StudyApplication extends BaseEntity {
         this.status = status;
         this.userId = userId;
     }
+
+    protected StudyApplication() {}
 }
