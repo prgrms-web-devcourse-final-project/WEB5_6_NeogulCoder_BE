@@ -36,18 +36,6 @@ public interface PersonalCalendarSpecification {
     );
 
     @Operation(
-        summary = "개인 일정 상세 조회",
-        description = "사용자의 특정 일정 상세정보를 조회합니다.\n\n예: `/api/users/{userId}/calendar/{calendarId}`"
-    )
-    ApiResponse<PersonalCalendarResponse> findOne(
-        @Parameter(name = "userId", description = "사용자 ID", required = true, in = ParameterIn.PATH)
-        @PathVariable("userId") Long userId,
-
-        @Parameter(name = "calendarId", description = "일정 ID", required = true, in = ParameterIn.PATH)
-        @PathVariable("calendarId") Long calendarId
-    );
-
-    @Operation(
         summary = "개인 일정 날짜별 조회",
         description = "특정 사용자 ID와 날짜에 해당하는 모든 개인 일정을 조회합니다.\n\n" +
             "예: `/api/users/{userId}/calendar/day?date=2025-07-17`"
@@ -63,27 +51,27 @@ public interface PersonalCalendarSpecification {
 
     @Operation(
         summary = "개인 일정 수정",
-        description = "사용자의 특정 일정을 수정합니다.\n\n예: `/api/users/{userId}/calendar/{calendarId}`"
+        description = "사용자의 특정 일정을 수정합니다.\n\n예: `/api/users/{userId}/calendar/{personalCalendarId}`"
     )
     ApiResponse<Void> update(
         @Parameter(name = "userId", description = "사용자 ID", required = true, in = ParameterIn.PATH)
         @PathVariable("userId") Long userId,
 
-        @Parameter(name = "calendarId", description = "일정 ID", required = true, in = ParameterIn.PATH)
-        @PathVariable("calendarId") Long calendarId,
+        @Parameter(name = "personalCalendarId", description = "개인 캘린더 ID", required = true, in = ParameterIn.PATH)
+        @PathVariable("personalCalendarId") Long personalCalendarId,
 
         @RequestBody PersonalCalendarRequest request
     );
 
     @Operation(
         summary = "개인 일정 삭제",
-        description = "사용자의 특정 일정을 삭제합니다.\n\n예: `/api/users/{userId}/calendar/{calendarId}`"
+        description = "사용자의 특정 일정을 삭제합니다.\n\n예: `/api/users/{userId}/calendar/{personalCalendarId}`"
     )
     ApiResponse<Void> delete(
         @Parameter(name = "userId", description = "사용자 ID", required = true, in = ParameterIn.PATH)
         @PathVariable("userId") Long userId,
 
-        @Parameter(name = "calendarId", description = "일정 ID", required = true, in = ParameterIn.PATH)
-        @PathVariable("calendarId") Long calendarId
+        @Parameter(name = "personalCalendarId", description = "개인 캘린더 ID", required = true, in = ParameterIn.PATH)
+        @PathVariable("personalCalendarId") Long personalCalendarId
     );
 }

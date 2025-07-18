@@ -6,6 +6,9 @@ import grep.neogul_coder.domain.study.controller.dto.response.StudyItemResponse;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyMemberResponse;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,6 +24,43 @@ public class StudyQueryRepository {
 
     public StudyQueryRepository(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
+    }
+
+    public Page<StudyItemResponse> findMyStudiesPaging(Pageable pageable, Long userId) {
+        List<StudyItemResponse> studies = queryFactory
+            .select(Projections.constructor(
+                StudyItemResponse.class,
+                study.id,
+                study.name,
+                user.nickname,
+                study.capacity,
+                study.currentCount,
+                study.startDate,
+                study.imageUrl,
+                study.introduction,
+                study.category,
+                study.studyType,
+                study.isFinished
+            ))
+            .from(studyMember)
+            .join(user).on(user.id.eq(studyMember.userId))
+            .join(study).on(study.id.eq(studyMember.study.id))
+            .where(
+                studyMember.userId.eq(userId),
+                studyMember.activated.isTrue()
+            )
+            .fetch();
+
+        Long total = queryFactory
+            .select(study.count())
+            .from(studyMember)
+            .where(
+                studyMember.userId.eq(userId),
+                studyMember.activated.eq(true)
+            )
+            .fetchOne();
+
+        return new PageImpl<>(studies, pageable, total);
     }
 
     public List<StudyItemResponse> findMyStudies(Long userId) {
@@ -42,7 +82,10 @@ public class StudyQueryRepository {
             .from(studyMember)
             .join(user).on(user.id.eq(studyMember.userId))
             .join(study).on(study.id.eq(studyMember.study.id))
-            .where(studyMember.userId.eq(userId))
+            .where(
+                studyMember.userId.eq(userId),
+                studyMember.activated.isTrue()
+            )
             .fetch();
     }
 
@@ -50,9 +93,12 @@ public class StudyQueryRepository {
         return queryFactory
             .select(studyMember.role)
             .from(studyMember)
+            .join(study).on(study.id.eq(studyMember.study.id))
             .where(
                 studyMember.study.id.eq(studyId),
-                studyMember.userId.eq(userId)
+                studyMember.userId.eq(userId),
+                studyMember.activated.isTrue(),
+                study.activated.isTrue()
             )
             .fetchOne();
     }
@@ -66,8 +112,14 @@ public class StudyQueryRepository {
                 user.profileImageUrl
             ))
             .from(studyMember)
-            .join(user).on(user.id.eq(studyMember.id))
-            .where(studyMember.study.id.eq(studyId))
+            .join(study).on(study.id.eq(studyMember.study.id))
+            .join(user).on(user.id.eq(studyMember.userId))
+            .where(
+                studyMember.study.id.eq(studyId),
+                studyMember.activated.isTrue(),
+                study.activated.isTrue(),
+                user.activated.isTrue()
+            )
             .fetch();
     }
 }

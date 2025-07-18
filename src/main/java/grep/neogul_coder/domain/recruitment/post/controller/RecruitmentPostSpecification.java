@@ -3,9 +3,9 @@ package grep.neogul_coder.domain.recruitment.post.controller;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostCommentPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,21 +19,52 @@ public interface RecruitmentPostSpecification {
     ApiResponse<RecruitmentPostInfo> get(long id);
 
     @Operation(summary = "모집 글 수정", description = "모집글을 수정 합니다.")
-    ApiResponse<Void> update(long recruitmentPostId, RecruitmentPostUpdateRequest request, Principal userDetails);
+    ApiResponse<Long> update(long recruitmentPostId, RecruitmentPostUpdateRequest request, Principal userDetails);
 
     @Operation(summary = "모집 글 삭제", description = "모집글을 삭제 합니다.")
     ApiResponse<Void> delete(long recruitmentPostId, Principal userDetails);
 
     @Operation(summary = "모집 상태 변경", description = "모집글의 상태를 변경 합니다.")
-    ApiResponse<Void> changeStatus(long recruitmentPostId, RecruitmentPostStatusUpdateRequest request, Principal userDetails);
+    ApiResponse<Long> changeStatus(long recruitmentPostId, RecruitmentPostStatusUpdateRequest request, Principal userDetails);
 
     @Operation(
             summary = "모집글 페이징 조회",
             description = """
-                    ✅ 요청 형식:
+                    특정 조건에 따라 모집글 목록을 페이징하여 조회합니다.
+                    
+                    ✅ 요청 예시:  
                     `GET /recruitment-posts?page=0&size=5`
-                    """)
-    ApiResponse<RecruitmentPagingInfo> getPagingInfo(Pageable pageable);
+                    
+                    ✅ 응답 예시:
+                    ```json
+                    {
+                      "data": {
+                        "postInfos": [
+                          {
+                            "subject": "자바 스터디 모집 합니다!",
+                            "content": "자바 스터디는 주 3회 오후 6시에 진행 됩니다.",
+                            "category": "IT",
+                            "studyType": "온라인",
+                            "status": "모집중",
+                            "commentCount": 3,
+                            "createAt": "2025-07-15"
+                          },
+                          {
+                            "subject": "이펙티브 자바 함께 읽어요",
+                            "content": "이펙티브 자바 3판을 함께 읽으며 토론하는 스터디입니다.",
+                            "category": "개발",
+                            "studyType": "오프라인",
+                            "status": "모집완료",
+                            "commentCount": 5,
+                            "createAt": "2025-07-10"
+                          }
+                        ]
+                      }
+                    }
+                    ```
+                    """
+    )
+    ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(Pageable pageable);
 
     @Operation(
             summary = "스터디 신청한 회원 목록 페이징 조회",

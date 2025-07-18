@@ -49,15 +49,15 @@ public class ReviewService {
     private final ReviewTagRepository reviewTagRepository;
 
     public ReviewTargetUsersInfo getReviewTargetUsersInfo(long studyId, String myNickname) {
-        Study study = findValidStudy(studyId);
         List<StudyMember> studyMembers = findValidStudyMember(studyId);
+        findValidStudy(studyId);
 
         List<User> targetUsers = findReviewTargetUsers(studyMembers, myNickname);
-        return ReviewTargetUsersInfo.of(study, targetUsers);
+        return ReviewTargetUsersInfo.of(targetUsers);
     }
 
     @Transactional
-    public void save(ReviewSaveServiceRequest request, long writeUserId) {
+    public long save(ReviewSaveServiceRequest request, long writeUserId) {
         if(isAlreadyWrittenReviewBy(request.getStudyId(), request.getTargetUserId(), writeUserId)){
             throw new BusinessException(ALREADY_REVIEW_WRITE_USER);
         }
@@ -68,7 +68,7 @@ public class ReviewService {
 
         Review review = request.toReview(reviewTags.getReviewTags(), reviewType, writeUserId);
         List<ReviewTagEntity> reviewTagEntities = mapToReviewTagEntities(reviewTags);
-        reviewRepository.save(ReviewEntity.from(review, reviewTagEntities, study.getId()));
+        return reviewRepository.save(ReviewEntity.from(review, reviewTagEntities, study.getId())).getId();
     }
 
     public MyReviewTagsInfo getMyReviewTags(long userId) {

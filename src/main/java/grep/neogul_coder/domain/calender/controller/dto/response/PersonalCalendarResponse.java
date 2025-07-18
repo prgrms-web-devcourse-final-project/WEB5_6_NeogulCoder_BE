@@ -1,16 +1,20 @@
 package grep.neogul_coder.domain.calender.controller.dto.response;
 
+import grep.neogul_coder.domain.calender.entity.Calendar;
+import grep.neogul_coder.domain.calender.entity.PersonalCalendar;
+import grep.neogul_coder.domain.users.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Schema(description = "개인 캘린더 응답 DTO")
 public class PersonalCalendarResponse {
 
-    @Schema(description = "일정 ID", example = "1001")
-    private Long calendarId;
+    @Schema(description = "개인 일정 ID (PersonalCalendar의 ID)", example = "1001")
+    private Long personalCalendarId;
 
     @Schema(description = "사용자 ID", example = "1")
     private Long userId;
@@ -32,5 +36,33 @@ public class PersonalCalendarResponse {
 
     @Schema(description = "종료 시간", example = "2025-07-10T10:00:00")
     private LocalDateTime endTime;
+
+    @Builder
+    protected PersonalCalendarResponse(Long personalCalendarId, Long userId, String writerNickname,
+        String writerProfileImageUrl, String title, String description,
+        LocalDateTime startTime, LocalDateTime endTime) {
+        this.personalCalendarId = personalCalendarId;
+        this.userId = userId;
+        this.writerNickname = writerNickname;
+        this.writerProfileImageUrl = writerProfileImageUrl;
+        this.title = title;
+        this.description = description;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public static PersonalCalendarResponse from(PersonalCalendar pc, User user) {
+        Calendar calendar = pc.getCalendar();
+        return PersonalCalendarResponse.builder()
+            .personalCalendarId(pc.getId())
+            .userId(user.getId())
+            .writerNickname(user.getNickname())
+            .writerProfileImageUrl(user.getProfileImageUrl())
+            .title(calendar.getTitle())
+            .description(calendar.getContent())
+            .startTime(calendar.getScheduledStart())
+            .endTime(calendar.getScheduledEnd())
+            .build();
+    }
 
 }

@@ -6,14 +6,14 @@ import grep.neogul_coder.domain.review.ReviewType;
 import grep.neogul_coder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
-import grep.neogul_coder.domain.review.service.ReviewService;
-import grep.neogul_coder.domain.review.service.request.ReviewSaveServiceRequest;
 import grep.neogul_coder.domain.review.entity.MyReviewTagEntity;
 import grep.neogul_coder.domain.review.entity.ReviewEntity;
 import grep.neogul_coder.domain.review.entity.ReviewTagEntity;
 import grep.neogul_coder.domain.review.repository.MyReviewTagRepository;
 import grep.neogul_coder.domain.review.repository.ReviewRepository;
 import grep.neogul_coder.domain.review.repository.ReviewTagRepository;
+import grep.neogul_coder.domain.review.service.ReviewService;
+import grep.neogul_coder.domain.review.service.request.ReviewSaveServiceRequest;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.enums.Category;
@@ -84,12 +84,9 @@ class ReviewServiceTest extends IntegrationTestSupport {
         assertThat(response.getUserInfos()).hasSize(2)
                 .extracting("nickname")
                 .containsExactlyInAnyOrder("테스터2", "테스터3");
-
-        assertThat(response.getStudyInfo()).isNotNull()
-                .extracting("studyName")
-                .isEqualTo("운영체제 스터디");
     }
 
+    //TODO REVIEW_TAG_INITIALIZER 수정 필요
     @DisplayName("리뷰 입력을 받아 리뷰를 저장 합니다.")
     @Test
     void save() {

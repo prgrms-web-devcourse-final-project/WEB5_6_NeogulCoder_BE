@@ -1,8 +1,8 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
-import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudyLoadInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudiesInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.request.save.RecruitmentPostCreateRequest;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.save.JoinedStudyLoadInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.save.JoinedStudiesInfo;
 import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostSaveService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
@@ -19,10 +19,10 @@ public class RecruitmentPostSaveController implements RecruitmentPostSaveSpecifi
     private final RecruitmentPostSaveService recruitmentPostService;
 
     @PostMapping
-    public ApiResponse<Void> save(@Valid @RequestBody RecruitmentPostCreateRequest request,
+    public ApiResponse<Long> save(@Valid @RequestBody RecruitmentPostCreateRequest request,
                                   @AuthenticationPrincipal Principal userDetails) {
-        recruitmentPostService.create(request.toServiceRequest(), userDetails.getUserId());
-        return ApiResponse.noContent();
+        long postId = recruitmentPostService.create(request.toServiceRequest(), userDetails.getUserId());
+        return ApiResponse.success(postId);
     }
 
     @GetMapping("/studies")

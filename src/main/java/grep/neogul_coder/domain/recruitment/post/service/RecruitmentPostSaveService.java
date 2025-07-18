@@ -1,7 +1,7 @@
 package grep.neogul_coder.domain.recruitment.post.service;
 
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudyLoadInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudiesInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.save.JoinedStudyLoadInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.save.JoinedStudiesInfo;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostCreateServiceRequest;
 import grep.neogul_coder.domain.study.Study;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static grep.neogul_coder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND_STUDY_MEMBER;
-import static grep.neogul_coder.domain.recruitment.RecruitmentErrorCode.NOT_STUDY_READER;
+import static grep.neogul_coder.domain.recruitment.RecruitmentErrorCode.NOT_STUDY_LEADER;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -30,8 +30,8 @@ public class RecruitmentPostSaveService {
     public long create(RecruitmentPostCreateServiceRequest request, long userId) {
         StudyMember studyMember = studyMemberRepository.findByStudyIdAndUserId(request.getStudyId(), userId);
 
-        if (studyMember.hasNotRoleReader()) {
-            throw new BusinessException(NOT_STUDY_READER);
+        if (studyMember.hasNotRoleLeader()) {
+            throw new BusinessException(NOT_STUDY_LEADER);
         }
 
         return recruitmentPostRepository.save(request.toEntity(userId)).getId();

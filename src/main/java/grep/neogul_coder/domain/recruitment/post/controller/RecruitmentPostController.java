@@ -3,9 +3,9 @@ package grep.neogul_coder.domain.recruitment.post.controller;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostCommentPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
@@ -24,21 +24,23 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
     private final RecruitmentPostService recruitmentPostService;
 
     @GetMapping
-    public ApiResponse<RecruitmentPagingInfo> getPagingInfo(Pageable pageable) {
-        return ApiResponse.success(new RecruitmentPagingInfo());
+    public ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(@PageableDefault(size = 10) Pageable pageable) {
+        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(pageable);
+        return ApiResponse.success(response);
     }
 
     @GetMapping("/{recruitment-post-id}")
     public ApiResponse<RecruitmentPostInfo> get(@PathVariable("recruitment-post-id") long recruitmentPostId) {
-        return ApiResponse.success(new RecruitmentPostInfo());
+        RecruitmentPostInfo response = recruitmentPostService.get(recruitmentPostId);
+        return ApiResponse.success(response);
     }
 
     @PutMapping("/{recruitment-post-id}")
-    public ApiResponse<Void> update(@PathVariable("recruitment-post-id") long recruitmentPostId,
+    public ApiResponse<Long> update(@PathVariable("recruitment-post-id") long recruitmentPostId,
                                     @Valid @RequestBody RecruitmentPostUpdateRequest request,
                                     @AuthenticationPrincipal Principal userDetails) {
-        recruitmentPostService.update(request.toServiceRequest(), recruitmentPostId, userDetails.getUserId());
-        return ApiResponse.noContent();
+        long postId = recruitmentPostService.update(request.toServiceRequest(), recruitmentPostId, userDetails.getUserId());
+        return ApiResponse.success(postId);
     }
 
     @DeleteMapping("/{recruitment-post-id}")
@@ -49,11 +51,11 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
     }
 
     @PostMapping("/{recruitment-post-id}/status")
-    public ApiResponse<Void> changeStatus(@PathVariable("recruitment-post-id") long recruitmentPostId,
+    public ApiResponse<Long> changeStatus(@PathVariable("recruitment-post-id") long recruitmentPostId,
                                           @RequestBody RecruitmentPostStatusUpdateRequest request,
                                           @AuthenticationPrincipal Principal userDetails) {
-        recruitmentPostService.updateStatus(request.toServiceRequest(), recruitmentPostId, userDetails.getUserId());
-        return ApiResponse.noContent();
+        long postId = recruitmentPostService.updateStatus(request.toServiceRequest(), recruitmentPostId, userDetails.getUserId());
+        return ApiResponse.success(postId);
     }
 
     @GetMapping("{recruitment-post-id}/applications")

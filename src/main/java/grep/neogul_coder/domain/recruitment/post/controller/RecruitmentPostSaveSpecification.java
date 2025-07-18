@@ -1,8 +1,8 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
-import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostCreateRequest;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudyLoadInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.JoinedStudiesInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.request.save.RecruitmentPostCreateRequest;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.save.JoinedStudyLoadInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.save.JoinedStudiesInfo;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface RecruitmentPostSaveSpecification {
 
     @Operation(summary = "모집글 저장", description = "스터디 모집 글을 저장 합니다.")
-    ApiResponse<Void> save(RecruitmentPostCreateRequest request, Principal userDetails);
+    ApiResponse<Long> save(RecruitmentPostCreateRequest request, Principal userDetails);
 
     @Operation(
             summary = "참여중인 스터디 목록 조회",

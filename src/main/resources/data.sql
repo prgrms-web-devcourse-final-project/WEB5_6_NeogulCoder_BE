@@ -22,11 +22,11 @@ INSERT INTO comment (post_id, user_id, content) VALUES (3, 2, '관련된 블로�
 INSERT INTO comment (post_id, user_id, content) VALUES (2, 5, '정보 감사합니다!');
 INSERT INTO comment (post_id, user_id, content) VALUES (4, 1, '제육 돈까스');
 
-INSERT INTO study_member (study_id, user_id, role) VALUES (1, 3, 'LEADER');
-INSERT INTO study_member (study_id, user_id, role) VALUES (1, 4, 'MEMBER');
-INSERT INTO study_member (study_id, user_id, role) VALUES (2, 5, 'LEADER');
-INSERT INTO study_member (study_id, user_id, role) VALUES (3, 2, 'LEADER');
-INSERT INTO study_member (study_id, user_id, role) VALUES (3, 1, 'MEMBER');
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (1, 3, 'LEADER', FALSE);
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (1, 4, 'MEMBER', FALSE);
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (2, 5, 'LEADER', FALSE);
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (3, 2, 'LEADER', FALSE);
+INSERT INTO study_member (study_id, user_id, role, is_participated) VALUES (3, 1, 'MEMBER', NULL);
 
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status) VALUES (3, 1, '자바 스터디 모집', '이펙티브 자바 공부하실분 구해요!!', 3, '2025-04-19', 'COMPLETE');
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status) VALUES (2, 4, '면접 스터디 모집', '삼성 면접 1차 합격자 분들 같이 준비하실분들 찾습니다', 1, '2025-07-08', 'COMPLETE');
@@ -34,11 +34,11 @@ INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_c
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status) VALUES (3, 5, '클라이밍 같이 하실분 모집 합니다', '클라이밍 좋아하시는 분들의 많은 관심 바랍니다!', 5, '2025-06-08', 'IN_PROGRESS');
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status) VALUES (2, 3, '토익 스터디', '토익 고수들의 많은 참여 부탁 드립니다', 2, '2025-03-31', 'IN_PROGRESS');
 
-INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (1, '자바 스터디에 참여하고 싶습니다.', FALSE, 'PENDING');
-INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (1, '열심히 참여하겠습니다.', TRUE, 'APPROVED');
-INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (3, '관심있어 지원합니다.', FALSE, 'PENDING');
-INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (2, '시간이 맞아 지원합니다.', FALSE, 'REJECTED');
-INSERT INTO study_application ( recruitment_post_id, application_reason, is_read, status) VALUES (3, '프로젝트 경험 쌓고 싶습니다.', TRUE, 'APPROVED');
+INSERT INTO study_application (user_id, recruitment_post_id, application_reason, is_read, status) VALUES (1, 1, '자바 스터디에 참여하고 싶습니다.', FALSE, 'APPLYING');
+INSERT INTO study_application (user_id, recruitment_post_id, application_reason, is_read, status) VALUES (2, 1, '열심히 참여하겠습니다.', TRUE, 'APPROVED');
+INSERT INTO study_application (user_id, recruitment_post_id, application_reason, is_read, status) VALUES (3, 3, '관심있어 지원합니다.', FALSE, 'APPLYING');
+INSERT INTO study_application (user_id, recruitment_post_id, application_reason, is_read, status) VALUES (4, 2, '시간이 맞아 지원합니다.', FALSE, 'REJECTED');
+INSERT INTO study_application (user_id, recruitment_post_id, application_reason, is_read, status) VALUES (5, 3, '프로젝트 경험 쌓고 싶습니다.', TRUE, 'APPROVED');
 
 INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-20 10:00:00', '2025-07-20 12:00:00', '스터디 회의', '진행 상황 공유');
 INSERT INTO calendar (scheduled_start, scheduled_end, title, content) VALUES ('2025-07-21 09:00:00', '2025-07-21 10:30:00', '모각코', '혼자 코딩하기');
@@ -52,11 +52,11 @@ INSERT INTO personal_calendar (user_id, calendar_id) VALUES (2, 3);
 INSERT INTO personal_calendar (user_id, calendar_id) VALUES (3, 4);
 INSERT INTO personal_calendar (user_id, calendar_id) VALUES (4, 5);
 
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (1, 1);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (2, 2);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (1, 3);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (3, 4);
-INSERT INTO team_calendar (study_id, calendar_id) VALUES (4, 5);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (1, 1, 1);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (2, 1, 2);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (1, 2, 3);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (3, 3, 4);
+INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (4, 4, 5);
 
 INSERT INTO time_vote_period (study_id, start_date, end_date) VALUES (2, '2025-07-15 00:00:00', '2025-07-22 00:00:00');
 
@@ -78,17 +78,17 @@ INSERT INTO time_vote_stat (period_id, start_time, end_time, vote_count) VALUES 
 -- INSERT INTO alarm (receive_user_id, alram_type, message, is_read, redirect_url) VALUES (1, 'TIME_VOTE', '스터디 모임 시간 투표가 시작되었습니다.', FALSE, '/studies/5/time-vote');
 -- INSERT INTO alarm (receive_user_id, alram_type, message, is_read, redirect_url) VALUES (4, 'APPLICATION_STATUS', '스터디 신청이 거절되었습니다.', TRUE, '/my/applications');
 
-INSERT INTO quiz (post_id, quiz, quiz_answer) VALUES (1, 'Java에서 List는 인터페이스다.', TRUE);
-INSERT INTO quiz (post_id, quiz, quiz_answer) VALUES (4, 'Spring Boot는 톰캣을 기본 내장하지 않는다.', FALSE);
-INSERT INTO quiz (post_id, quiz, quiz_answer) VALUES (1, 'JPA는 SQL을 직접 작성하지 않아도 된다.', TRUE);
-INSERT INTO quiz (post_id, quiz, quiz_answer) VALUES (2, 'React는 서버 사이드 렌더링만 지원한다.', FALSE);
-INSERT INTO quiz (post_id, quiz, quiz_answer) VALUES (5, '의존성 주입은 Spring의 핵심 기능 중 하나이다.', TRUE);
+INSERT INTO quiz (post_id, quiz_content, quiz_answer) VALUES (1, 'Java에서 List는 인터페이스다.', TRUE);
+INSERT INTO quiz (post_id, quiz_content, quiz_answer) VALUES (4, 'Spring Boot는 톰캣을 기본 내장하지 않는다.', FALSE);
+INSERT INTO quiz (post_id, quiz_content, quiz_answer) VALUES (1, 'JPA는 SQL을 직접 작성하지 않아도 된다.', TRUE);
+INSERT INTO quiz (post_id, quiz_content, quiz_answer) VALUES (2, 'React는 서버 사이드 렌더링만 지원한다.', FALSE);
+INSERT INTO quiz (post_id, quiz_content, quiz_answer) VALUES (5, '의존성 주입은 Spring의 핵심 기능 중 하나이다.', TRUE);
 
--- INSERT INTO upload_img (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('soluta.png', '63922d43-ee89-49ba-8a31-b658a59cd5f9.png', 'https://storage.googleapis.com/neogulcoder-wibby/post/2025/07/14/63922d43-ee89-49ba-8a31-b658a59cd5f9.png', 'post/2025/07/14/', 2, 'POST', 3);
--- INSERT INTO upload_img (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('accusantium.png', '37337416-66da-4ab9-890a-ad855cea1c49.png', 'https://storage.googleapis.com/neogulcoder-wibby/post/2025/07/14/37337416-66da-4ab9-890a-ad855cea1c49.png', 'post/2025/07/14/', 3, 'POST', 4);
--- INSERT INTO upload_img (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('ullam.png', 'e6225095-edd4-49bd-98ec-abe3f26c13e8.png', 'https://storage.googleapis.com/neogulcoder-wibby/post/2025/07/14/e6225095-edd4-49bd-98ec-abe3f26c13e8.png', 'post/2025/07/14/', 1, 'POST', 9);
--- INSERT INTO upload_img (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('aliquid.png', 'da163f7e-6a68-4e04-8aae-034cf8dd587c.png', 'https://storage.googleapis.com/neogulcoder-wibby/profile/2025/07/14/da163f7e-6a68-4e04-8aae-034cf8dd587c.png', 'profile/2025/07/14/', 1, 'PROFILE', 9);
--- INSERT INTO upload_img (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('earum.png', 'f65140dd-4cd2-49bb-9981-031e24a4e725.png', 'https://storage.googleapis.com/neogulcoder-wibby/profile/2025/07/14/f65140dd-4cd2-49bb-9981-031e24a4e725.png', 'profile/2025/07/14/', 1, 'PROFILE', 4);
+INSERT INTO upload_image (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('soluta.png', '63922d43-ee89-49ba-8a31-b658a59cd5f9.png', 'https://storage.googleapis.com/neogulcoder-wibby/post/2025/07/14/63922d43-ee89-49ba-8a31-b658a59cd5f9.png', 'post/2025/07/14/', 2, 'POST', 3);
+INSERT INTO upload_image (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('accusantium.png', '37337416-66da-4ab9-890a-ad855cea1c49.png', 'https://storage.googleapis.com/neogulcoder-wibby/post/2025/07/14/37337416-66da-4ab9-890a-ad855cea1c49.png', 'post/2025/07/14/', 3, 'POST', 4);
+INSERT INTO upload_image (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('ullam.png', 'e6225095-edd4-49bd-98ec-abe3f26c13e8.png', 'https://storage.googleapis.com/neogulcoder-wibby/post/2025/07/14/e6225095-edd4-49bd-98ec-abe3f26c13e8.png', 'post/2025/07/14/', 1, 'POST', 9);
+INSERT INTO upload_image (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('aliquid.png', 'da163f7e-6a68-4e04-8aae-034cf8dd587c.png', 'https://storage.googleapis.com/neogulcoder-wibby/profile/2025/07/14/da163f7e-6a68-4e04-8aae-034cf8dd587c.png', 'profile/2025/07/14/', 1, 'PROFILE', 9);
+INSERT INTO upload_image (origin_file_name, rename_file_name, file_url, save_path, uploader_id, usage_type, usage_ref_id) VALUES ('earum.png', 'f65140dd-4cd2-49bb-9981-031e24a4e725.png', 'https://storage.googleapis.com/neogulcoder-wibby/profile/2025/07/14/f65140dd-4cd2-49bb-9981-031e24a4e725.png', 'profile/2025/07/14/', 1, 'PROFILE', 4);
 
 INSERT INTO buddy_energy (user_id, level) VALUES (1, 50);
 INSERT INTO buddy_energy (user_id, level) VALUES (2, 53);
@@ -105,11 +105,11 @@ INSERT INTO pr_template (user_id, introduction, location) VALUES (2, '실용적�
 INSERT INTO pr_template (user_id, introduction, location) VALUES (4, '초심을 잃지 않는 프론트엔드 개발자입니다. Vue, React 기반 프로젝트 경험이 있으며, UI/UX에 대한 관심도 많습니다.', '대전시 유성구');
 INSERT INTO pr_template (user_id, introduction, location) VALUES (5, '문제를 해결하는 것이 즐거운 백엔드 개발자입니다. JPA, QueryDSL 기반의 안정적인 데이터 처리와 아키텍처 설계에 관심이 있습니다.', '인천시 연수구');
 
-INSERT INTO link (pr_id, pr_url, url_name) VALUES (1, 'https://github.com/yeongho', 'GitHub 포트폴리오');
-INSERT INTO link (pr_id, pr_url, url_name) VALUES (2, 'https://velog.io/@jiweon01', '기술 블로그 (Velog)');
-INSERT INTO link (pr_id, pr_url, url_name) VALUES (5, 'https://notion.so/dev-profile', '기술 이력서 (Notion)');
-INSERT INTO link (pr_id, pr_url, url_name) VALUES (5, 'https://toss.im/team/gimgim', '팀 프로젝트 소개');
-INSERT INTO link (pr_id, pr_url, url_name) VALUES (1, 'https://linkedin.com/in/eungyeong', 'LinkedIn 프로필');
+INSERT INTO link (user_id, pr_url, url_name) VALUES (1, 'https://github.com/yeongho', 'GitHub 포트폴리오');
+INSERT INTO link (user_id, pr_url, url_name) VALUES (2, 'https://velog.io/@jiweon01', '기술 블로그 (Velog)');
+INSERT INTO link (user_id, pr_url, url_name) VALUES (5, 'https://notion.so/dev-profile', '기술 이력서 (Notion)');
+INSERT INTO link (user_id, pr_url, url_name) VALUES (5, 'https://toss.im/team/gimgim', '팀 프로젝트 소개');
+INSERT INTO link (user_id, pr_url, url_name) VALUES (1, 'https://linkedin.com/in/eungyeong', 'LinkedIn 프로필');
 
 INSERT INTO attendance (study_id, user_id, attendance_date) VALUES (1, 3, '2025-07-01');
 INSERT INTO attendance (study_id, user_id, attendance_date) VALUES (1, 3, '2025-07-02');

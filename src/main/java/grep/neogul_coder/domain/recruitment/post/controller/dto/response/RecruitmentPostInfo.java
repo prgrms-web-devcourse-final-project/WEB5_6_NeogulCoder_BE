@@ -1,60 +1,27 @@
 package grep.neogul_coder.domain.recruitment.post.controller.dto.response;
 
+import grep.neogul_coder.domain.recruitment.comment.controller.dto.response.CommentsWithWriterInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 public class RecruitmentPostInfo {
 
-    @Schema(example = "너굴 코더 스터디를 모집 합니다", description = "제목")
-    private String subject;
-
-    @Schema(example = "이펙티브 자바를 정독 하는 것을 목표로 하는 스터디 입니다", description = "내용")
-    private String content;
-
-    @Schema(example = "2025-07-09", description = "생성 날짜")
-    private LocalDate createdDate;
-
-    @Schema(example = "닉네임", description = "회원 닉네임")
-    private String username;
-
-    @Schema(example = "2025-07-09", description = "스터디 시작 날짜")
-    private LocalDate startedDate;
-
-    @Schema(example = "2025-07-10", description = "스터디 종료 날짜")
-    private LocalDate endDate;
-
-    @Schema(example = "8", description = "모집 인원")
-    private int recruitmentCount;
-
-    @Schema(example = "IT", description = "카테고리")
-    private String category;
-
-    @Schema(example = "서울", description = "장소")
-    private String location;
-
-    @Schema(example = "오프라인", description = "진행 방식")
-    private String studyType;
+    @Schema(example = "{ category: IT, location: 서울, studyType: OFFLINE, startedDate: 2025-07-09, endDate: 2025-08-10... }")
+    private RecruitmentPostDetailsInfo postDetailsInfo;
 
     @Schema(example = "[ {nickname: 닉네임, imageUrl: www.., content: 댓글}, {nickname: 닉네임2, imageUrl: www.., content: 댓글2} ]")
-    private List<CommentsInfo> commentsInfos;
+    private List<CommentsWithWriterInfo> commentsWithWriterInfos;
 
     @Schema(example = "2", description = "신청 내역 수")
     private int applicationCount;
 
-    @Getter
-    static class CommentsInfo{
-
-        @Schema(example = "테스터", description = "닉네임")
-        private String nickname;
-
-        @Schema(example = "www.s3.com", description = "회원 이미지 접근 URL")
-        private String imageUrl;
-
-        @Schema(example = "참여 하고 싶습니다!", description = "댓글 내용")
-        private String content;
+    public RecruitmentPostInfo(RecruitmentPostDetailsInfo postInfo, List<CommentsWithWriterInfo> comments, int applicationCount) {
+        this.postDetailsInfo = postInfo;
+        this.commentsWithWriterInfos = comments;
+        this.applicationCount = applicationCount;
     }
+
 }
