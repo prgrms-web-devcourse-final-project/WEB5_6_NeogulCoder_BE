@@ -120,7 +120,7 @@ INSERT INTO attendance (study_id, user_id, attendance_date) VALUES (3, 2, '2025-
 INSERT INTO group_chat_room (study_id) VALUES (1);
 INSERT INTO group_chat_room (study_id) VALUES (2);
 
-INSERT INTO group_chat_message (room_id, user_id, meesage) VALUES (1, 1, '안녕하세요! 스터디 언제 시작하나요?');
+INSERT INTO group_chat_message (room_id, user_id, message) VALUES (1, 1, '안녕하세요! 스터디 언제 시작하나요?');
 INSERT INTO group_chat_message (room_id, user_id, message) VALUES (1, 2, '오늘 저녁 8시에 시작해요!');
 INSERT INTO group_chat_message (room_id, user_id, message) VALUES (2, 3, '파일 올렸어요. 확인 부탁드려요.');
 INSERT INTO group_chat_message (room_id, user_id, message) VALUES (2, 1, '네 확인했어요. 감사합니다!');

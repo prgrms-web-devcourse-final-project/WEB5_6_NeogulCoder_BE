@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "GroupChat-REST", description = "채팅 메시지 조회 API (무한 스크롤용)")
+@Tag(name = "GroupChat", description = "채팅 메시지 조회 API (무한 스크롤용)")
 public interface GroupChatRestSpecification {
 
     @Operation(

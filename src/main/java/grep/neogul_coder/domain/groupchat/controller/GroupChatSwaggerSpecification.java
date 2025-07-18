@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
-@Tag(name = "GroupChat-Swagger", description = "WebSocket 구조 설명용 Swagger 문서")
+@Tag(name = "GroupChat", description = "WebSocket 구조 설명용 Swagger 문서")
 public interface GroupChatSwaggerSpecification {
 
     @Operation(summary = "Pub 채팅 메시지 전송 구조 예시", description = "실제 채팅 전송은 WebSocket을 통해 `/pub/chat/message`로 전송됩니다.")
