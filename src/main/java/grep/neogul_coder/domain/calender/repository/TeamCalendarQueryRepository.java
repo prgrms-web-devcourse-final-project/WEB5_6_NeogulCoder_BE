@@ -36,6 +36,7 @@ public class TeamCalendarQueryRepository {
             .join(tc.calendar, calendar).fetchJoin()
             .where(
                 tc.studyId.eq(studyId),
+                tc.activated.eq(true),
                 calendar.scheduledStart.loe(end),
                 calendar.scheduledEnd.goe(start)
             )

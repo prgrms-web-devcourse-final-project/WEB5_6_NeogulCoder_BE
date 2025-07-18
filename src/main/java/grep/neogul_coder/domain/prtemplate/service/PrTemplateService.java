@@ -76,7 +76,7 @@ public class PrTemplateService {
 
         int buddyEnergy = buddyEnergyRepository.findByUserId(userId)
             .map(BuddyEnergy::getLevel)
-            .orElse(0);
+            .orElse(50);
 
         Map<String, Long> tagMap = reviews.stream()
             .flatMap(review -> review.getReviewTags().stream())

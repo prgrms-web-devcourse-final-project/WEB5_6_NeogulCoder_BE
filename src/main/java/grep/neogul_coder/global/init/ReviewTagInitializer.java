@@ -27,7 +27,8 @@ public class ReviewTagInitializer {
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void initReviewTags() {
-        if (reviewTagRepository.count() == 5) {
+        long count = reviewTagRepository.count();
+        if (count == 0 || count == 5) {
             List<ReviewTagEntity> reviewTagEntities = Stream.of(
                             GoodReviewTag.values(),
                             BadReviewTag.values(),

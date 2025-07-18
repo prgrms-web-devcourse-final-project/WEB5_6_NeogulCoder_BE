@@ -37,6 +37,7 @@ public class PersonalCalendarQueryRepository {
             .join(pc.calendar, calendar).fetchJoin()
             .where(
                 pc.userId.eq(userId),
+                pc.activated.eq(true),
                 calendar.scheduledStart.loe(end),
                 calendar.scheduledEnd.goe(start)
             )
