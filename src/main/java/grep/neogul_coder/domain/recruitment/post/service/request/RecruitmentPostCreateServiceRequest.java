@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class RecruitmentPostCreateServiceRequest {
@@ -15,11 +16,11 @@ public class RecruitmentPostCreateServiceRequest {
     private String subject;
     private String content;
     private int recruitmentCount;
-    private LocalDate expiredDate;
+    private LocalDateTime expiredDate;
 
     @Builder
     private RecruitmentPostCreateServiceRequest(long studyId, String subject, String content,
-                                                int recruitmentCount, LocalDate expiredDate) {
+                                                int recruitmentCount, LocalDateTime expiredDate) {
         this.studyId = studyId;
         this.subject = subject;
         this.content = content;

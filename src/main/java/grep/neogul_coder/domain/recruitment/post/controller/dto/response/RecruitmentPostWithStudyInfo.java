@@ -33,7 +33,7 @@ public class RecruitmentPostWithStudyInfo {
     private LocalDateTime createdDate;
 
     @Schema(example = "2025-07-17", description = "모집 마감일")
-    private LocalDate expiredDate;
+    private LocalDateTime expiredDate;
 
     @Schema(example = "IT", description = "스터디 카테고리")
     private String category;
@@ -53,7 +53,7 @@ public class RecruitmentPostWithStudyInfo {
     @QueryProjection
     public RecruitmentPostWithStudyInfo(String nickname, long recruitmentPostId, String subject,
                                         String content, int recruitmentCount, LocalDateTime createdDate,
-                                        LocalDate expiredDate, Category category, String location,
+                                        LocalDateTime expiredDate, Category category, String location,
                                         StudyType studyType, LocalDateTime startedDate, LocalDateTime endDate) {
         this.nickname = nickname;
         this.recruitmentPostId = recruitmentPostId;
