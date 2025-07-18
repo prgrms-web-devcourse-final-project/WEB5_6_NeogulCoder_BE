@@ -3,6 +3,7 @@ package grep.neogul_coder.domain.recruitment.post;
 import grep.neogul_coder.domain.recruitment.RecruitmentPostStatus;
 import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
