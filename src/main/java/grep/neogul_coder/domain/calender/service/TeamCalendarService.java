@@ -13,11 +13,11 @@ import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.service.UserService;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import grep.neogul_coder.global.exception.validation.ValidationException;
-import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
