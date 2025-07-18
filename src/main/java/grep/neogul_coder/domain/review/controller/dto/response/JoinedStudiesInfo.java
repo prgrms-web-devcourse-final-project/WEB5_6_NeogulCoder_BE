@@ -1,18 +1,29 @@
 package grep.neogul_coder.domain.review.controller.dto.response;
 
+import grep.neogul_coder.domain.study.Study;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.util.List;
 
+@ToString
 @Getter
 public class JoinedStudiesInfo {
 
     @Schema(example = "[ { studyId: 2, studyName: 자바 스터디, imageUrl: www.s3.com } ]")
-    private List<StudyInfo> studiesInfo;
+    private List<StudyInfo> studies;
 
-    public JoinedStudiesInfo() {
+    public JoinedStudiesInfo(List<StudyInfo> studies) {
+        this.studies = studies;
+    }
+
+    public static JoinedStudiesInfo of(List<Study> studies) {
+        List<StudyInfo> studiesInfo = studies.stream()
+                .map(study -> new StudyInfo(study.getId(), study.getName(), study.getImageUrl()))
+                .toList();
+
+        return new JoinedStudiesInfo(studiesInfo);
     }
 
     @ToString

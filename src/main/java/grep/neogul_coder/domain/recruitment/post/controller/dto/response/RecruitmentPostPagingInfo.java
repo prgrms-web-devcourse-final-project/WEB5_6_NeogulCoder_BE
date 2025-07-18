@@ -5,12 +5,14 @@ import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.study.Study;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+@ToString
 @Getter
 public class RecruitmentPostPagingInfo {
 
@@ -34,8 +36,12 @@ public class RecruitmentPostPagingInfo {
         return new RecruitmentPostPagingInfo(postInfos);
     }
 
+    @ToString
     @Getter
     static class RecruitmentPostInfo {
+
+        @Schema(example = "3", description = "모집글 식별자")
+        private long recruitmentPostId;
 
         @Schema(example = "자바 스터디 모집 합니다!", description = "제목")
         private String subject;
@@ -59,6 +65,7 @@ public class RecruitmentPostPagingInfo {
         private LocalDate createAt;
 
         private RecruitmentPostInfo(RecruitmentPost post, Study study, List<RecruitmentPostComment> comments) {
+            this.recruitmentPostId = post.getId();
             this.subject = post.getSubject();
             this.content = post.getContent();
             this.category = study.getCategory().name();

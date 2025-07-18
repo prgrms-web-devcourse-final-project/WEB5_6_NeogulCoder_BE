@@ -12,10 +12,13 @@ import java.time.LocalDateTime;
 
 @ToString
 @Getter
-public class RecruitmentPostDetailsInfo {
+public class RecruitmentPostWithStudyInfo {
 
     @Schema(example = "닉네임", description = "작성자 회원 닉네임")
     private String nickname;
+
+    @Schema(example = "3", description = "모집글 식별자")
+    private final long recruitmentPostId;
 
     @Schema(example = "너굴 코더 스터디를 모집 합니다", description = "제목")
     private String subject;
@@ -48,11 +51,12 @@ public class RecruitmentPostDetailsInfo {
     private LocalDateTime endDate;
 
     @QueryProjection
-    public RecruitmentPostDetailsInfo(String nickname, String subject, String content,
-                                      int recruitmentCount, LocalDateTime createdDate, LocalDate expiredDate,
-                                      Category category, String location, StudyType studyType,
-                                      LocalDateTime startedDate, LocalDateTime endDate) {
+    public RecruitmentPostWithStudyInfo(String nickname, long recruitmentPostId, String subject,
+                                        String content, int recruitmentCount, LocalDateTime createdDate,
+                                        LocalDate expiredDate, Category category, String location,
+                                        StudyType studyType, LocalDateTime startedDate, LocalDateTime endDate) {
         this.nickname = nickname;
+        this.recruitmentPostId = recruitmentPostId;
         this.subject = subject;
         this.content = content;
         this.recruitmentCount = recruitmentCount;

@@ -3,7 +3,6 @@ package grep.neogul_coder.domain.main.controller;
 import grep.neogul_coder.domain.main.controller.dto.response.MainResponse;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostService;
-import grep.neogul_coder.domain.study.controller.StudySpecification;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyItemResponse;
 import grep.neogul_coder.domain.study.service.StudyService;
 import grep.neogul_coder.global.auth.Principal;
@@ -28,11 +27,11 @@ public class MainController implements MainSpecification {
 
     @GetMapping
     public ApiResponse<MainResponse> getMain(@PageableDefault(size = 10) Pageable pageable,
-                               @AuthenticationPrincipal Principal userDetails) {
+                                             @AuthenticationPrincipal Principal userDetails) {
         Long userId = userDetails.getUserId();
 
         List<StudyItemResponse> myStudies = studyService.getMyStudies(userId);
-        RecruitmentPostPagingInfo recruitingStudies = recruitmentPostService.getPagingInfo(pageable);
+        RecruitmentPostPagingInfo recruitingStudies = recruitmentPostService.getPagingInfo(pageable, null);
         MainResponse response = MainResponse.from(myStudies, recruitingStudies);
 
         return ApiResponse.success(response);

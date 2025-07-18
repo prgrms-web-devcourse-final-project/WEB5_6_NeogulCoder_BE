@@ -1,6 +1,7 @@
 package grep.neogul_coder.domain.review.service;
 
 import grep.neogul_coder.domain.review.*;
+import grep.neogul_coder.domain.review.controller.dto.response.JoinedStudiesInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
@@ -14,6 +15,7 @@ import grep.neogul_coder.domain.review.repository.ReviewRepository;
 import grep.neogul_coder.domain.review.repository.ReviewTagRepository;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
+import grep.neogul_coder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.domain.users.entity.User;
@@ -41,6 +43,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final StudyRepository studyRepository;
     private final StudyMemberRepository studyMemberRepository;
+    private final StudyMemberQueryRepository studyMemberQueryRepository;
 
     private final ReviewTagFinder reviewTagFinder;
     private final ReviewRepository reviewRepository;
@@ -54,6 +57,11 @@ public class ReviewService {
 
         List<User> targetUsers = findReviewTargetUsers(studyMembers, myNickname);
         return ReviewTargetUsersInfo.of(targetUsers);
+    }
+
+    public JoinedStudiesInfo getJoinedStudiesInfo(long userId) {
+        List<StudyMember> studyMembers = studyMemberQueryRepository.findAllFetchStudyByUserId(userId);
+        return JoinedStudiesInfo.of(convertToStudiesFrom(studyMembers));
     }
 
     @Transactional
@@ -111,6 +119,12 @@ public class ReviewService {
         List<User> users = userRepository.findByIdIn(userIds);
         return users.stream()
                 .filter(user -> user.isNotEqualsNickname(myNickname))
+                .toList();
+    }
+
+    private List<Study> convertToStudiesFrom(List<StudyMember> studyMembers) {
+        return studyMembers.stream()
+                .map(StudyMember::getStudy)
                 .toList();
     }
 
