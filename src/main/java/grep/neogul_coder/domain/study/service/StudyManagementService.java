@@ -2,6 +2,8 @@ package grep.neogul_coder.domain.study.service;
 
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
+import grep.neogul_coder.domain.study.controller.dto.response.ExtendParticipationResponse;
+import grep.neogul_coder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
@@ -22,6 +24,14 @@ public class StudyManagementService {
 
     private final StudyRepository studyRepository;
     private final StudyMemberRepository studyMemberRepository;
+    private final StudyMemberQueryRepository studyMemberQueryRepository;
+
+    public List<ExtendParticipationResponse> getExtendParticipations(Long studyId) {
+        Study study = studyRepository.findById(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+
+        return studyMemberQueryRepository.findExtendParticipation(studyId);
+    }
 
     @Transactional
     public void leaveStudy(Long studyId, Long userId) {
