@@ -119,6 +119,14 @@ public class StudyService {
         recruitmentPostRepository.deactivateByStudyId(studyId);
     }
 
+    @Transactional
+    public void deleteStudyByAdmin(Long studyId) {
+        Study study = studyRepository.findById(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+
+        study.delete();
+    }
+
     private static void validateLocation(StudyType studyType, String location) {
         if ((studyType == StudyType.OFFLINE || studyType == StudyType.HYBRID) && (location == null || location.isBlank())) {
             throw new BusinessException(STUDY_LOCATION_REQUIRED);

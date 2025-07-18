@@ -92,12 +92,19 @@ public class UserService {
 
     public void deleteUser(Long userId, String password) {
         User user = findUser(userId);
-        PrTemplate prTemplate = prTemplateRepository.findByUserId((user.getId()))
-            .orElseThrow(() -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
 
         if (isNotMatchCurrentPassword(password, user.getPassword())) {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
+
+        prTemplateService.deleteByUserId(user.getId());
+        linkService.deleteByUserId(userId);
+
+        user.delete();
+    }
+
+    public void deleteUser(Long userId) {
+        User user = findUser(userId);
 
         prTemplateService.deleteByUserId(user.getId());
         linkService.deleteByUserId(userId);
