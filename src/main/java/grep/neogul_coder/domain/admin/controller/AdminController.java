@@ -27,10 +27,11 @@ public class AdminController implements AdminSpecification {
 
     @GetMapping("/users")
     public ApiResponse<Page<AdminUserResponse>> getUsers(
-        @RequestParam(defaultValue = "0") int page) {
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(required = false) String email) {
         int size = 10;
         Pageable pageable = PageRequest.of(page, size);
-        return ApiResponse.success(adminService.getAllUsers(pageable));
+        return ApiResponse.success(adminService.getAllUsers(pageable, email));
     }
 
     @GetMapping("/studies")

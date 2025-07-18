@@ -28,7 +28,11 @@ public class AdminService {
     private final RecruitmentPostRepository recruitmentPostRepository;
 
     @Transactional(readOnly = true)
-    public Page<AdminUserResponse> getAllUsers(Pageable pageable) {
+    public Page<AdminUserResponse> getAllUsers(Pageable pageable, String email) {
+        if(IsContainEmail(email)) {
+            return userRepository.findByEmailContainingIgnoreCase(email,pageable)
+                .map(AdminUserResponse::from);
+        }
         return userRepository.findAll(pageable)
             .map(AdminUserResponse::from);
     }
@@ -62,6 +66,10 @@ public class AdminService {
     @Transactional
     public void deleteRecruitmentPost(Long recruitmentPostId) {
         recruitmentPostRepository.deleteById(recruitmentPostId);
+    }
+
+    private Boolean IsContainEmail(String email) {
+        return email != null && !email.isEmpty();
     }
 
 }

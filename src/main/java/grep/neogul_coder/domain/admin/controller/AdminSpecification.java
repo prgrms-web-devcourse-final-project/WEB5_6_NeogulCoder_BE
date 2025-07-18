@@ -20,7 +20,7 @@ public interface AdminSpecification {
     @GetMapping("/admin/users")
     ApiResponse<Page<AdminUserResponse>> getUsers(
         @Parameter(description = "페이지 번호 (0부터 시작)", example = "0")
-        @RequestParam(defaultValue = "0") int page
+        @RequestParam(defaultValue = "0") int page, @RequestParam(required = false) String email
     );
 
     @Operation(summary = "전체 스터디 조회", description = "관리자가 전체 스터디 목록을 페이지 단위로 조회합니다.")
