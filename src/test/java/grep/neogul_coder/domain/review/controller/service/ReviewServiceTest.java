@@ -3,6 +3,7 @@ package grep.neogul_coder.domain.review.controller.service;
 import grep.neogul_coder.domain.IntegrationTestSupport;
 import grep.neogul_coder.domain.review.Review;
 import grep.neogul_coder.domain.review.ReviewType;
+import grep.neogul_coder.domain.review.controller.dto.response.JoinedStudiesInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
@@ -86,7 +87,30 @@ class ReviewServiceTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrder("테스터2", "테스터3");
     }
 
-    //TODO REVIEW_TAG_INITIALIZER 수정 필요
+    @DisplayName("내가 참여한 스터디 정보들을 조회 합니다.")
+    @Test
+    void getJoinedStudiesInfo() {
+        //given
+        User user = createUser("테스터");
+        userRepository.save(user);
+
+        Study study1 = createStudy("운영체제 스터디", Category.IT);
+        Study study2 = createStudy("클라이밍 동아리", Category.HOBBY);
+        studyRepository.saveAll(List.of(study1, study2));
+
+        StudyMember studyMember1 = createStudyMember(study1, user.getId());
+        StudyMember studyMember2 = createStudyMember(study2, user.getId());
+        studyMemberRepository.saveAll(List.of(studyMember1, studyMember2));
+
+        //when
+        JoinedStudiesInfo response = reviewService.getJoinedStudiesInfo(user.getId());
+
+        //then
+        assertThat(response.getStudies())
+                .extracting("studyName")
+                .containsExactlyInAnyOrder("운영체제 스터디", "클라이밍 동아리");
+    }
+
     @DisplayName("리뷰 입력을 받아 리뷰를 저장 합니다.")
     @Test
     void save() {
