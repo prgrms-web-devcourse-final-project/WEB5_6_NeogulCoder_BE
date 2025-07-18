@@ -12,7 +12,6 @@ public enum FileUploadErrorCode implements ErrorCode {
   FILE_UPLOAD_FAIL("UPLOAD_003", HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드 중 오류가 발생했습니다."),
   FILE_TYPE_INVALID("UPLOAD_004", HttpStatus.BAD_REQUEST, "지원하지 않는 파일 타입입니다."),
   FILE_NOT_FOUND("UPLOAD_005", HttpStatus.NOT_FOUND, "파일을 찾을 수 없습니다."),
-  THUMBNAIL_CREATE_FAIL("UPLOAD_006", HttpStatus.INTERNAL_SERVER_ERROR, "썸네일 생성 중 오류가 발생했습니다."),
 
   GCP_UPLOAD_FAIL("UPLOAD_GCP_001", HttpStatus.INTERNAL_SERVER_ERROR, "GCP 업로드 중 오류가 발생했습니다."),
   LOCAL_UPLOAD_FAIL("UPLOAD_LOCAL_001", HttpStatus.INTERNAL_SERVER_ERROR, "로컬 업로드 중 오류가 발생했습니다.");
