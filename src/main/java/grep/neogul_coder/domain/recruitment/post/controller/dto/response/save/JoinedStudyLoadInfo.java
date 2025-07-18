@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class JoinedStudyLoadInfo {
@@ -20,10 +20,10 @@ public class JoinedStudyLoadInfo {
     private String studyType;
 
     @Schema(example = "2025-07-13", description = "스터디 시작 날짜")
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @Schema(example = "2025-07-14", description = "스터디 종료 날짜")
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @Schema(example = "3", description = "남은 모집 인원")
     private long remainSlots;
