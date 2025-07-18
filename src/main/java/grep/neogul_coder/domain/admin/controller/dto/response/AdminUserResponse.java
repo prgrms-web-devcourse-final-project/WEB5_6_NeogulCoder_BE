@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 public class AdminUserResponse {
 
-    String email;
-    String nickname;
-    Boolean activated;
+    private String email;
+    private String nickname;
+    private Boolean activated;
 
     @Builder
     private AdminUserResponse(String email, String nickname, Boolean activated) {
