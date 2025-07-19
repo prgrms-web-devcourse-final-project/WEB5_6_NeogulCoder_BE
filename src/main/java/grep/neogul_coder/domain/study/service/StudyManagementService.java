@@ -2,6 +2,7 @@ package grep.neogul_coder.domain.study.service;
 
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
+import grep.neogul_coder.domain.study.controller.dto.request.ExtendStudyRequest;
 import grep.neogul_coder.domain.study.controller.dto.response.ExtendParticipationResponse;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyExtensionResponse;
 import grep.neogul_coder.domain.study.repository.StudyMemberQueryRepository;
@@ -13,9 +14,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
+import static grep.neogul_coder.domain.study.enums.StudyMemberRole.LEADER;
 import static grep.neogul_coder.domain.study.exception.code.StudyErrorCode.*;
 
 @Transactional(readOnly = true)
@@ -28,27 +32,23 @@ public class StudyManagementService {
     private final StudyMemberQueryRepository studyMemberQueryRepository;
 
     public StudyExtensionResponse getStudyExtension(Long studyId) {
-        Study study = studyRepository.findById(studyId)
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+        Study study = findValidStudy(studyId);
 
         List<ExtendParticipationResponse> members = studyMemberQueryRepository.findExtendParticipation(studyId);
         return StudyExtensionResponse.from(study, members);
     }
 
     public List<ExtendParticipationResponse> getExtendParticipations(Long studyId) {
-        Study study = studyRepository.findById(studyId)
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+        Study study = findValidStudy(studyId);
 
         return studyMemberQueryRepository.findExtendParticipation(studyId);
     }
 
     @Transactional
     public void leaveStudy(Long studyId, Long userId) {
-        Study study = studyRepository.findById(studyId)
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+        Study study = findValidStudy(studyId);
 
-        StudyMember studyMember = studyMemberRepository.findByStudyIdAndUserId(studyId, userId)
-            .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
+        StudyMember studyMember = findValidStudyMember(studyId, userId);
 
         if (studyMember.isLeader()) {
             int activatedMemberCount = studyMemberRepository.countByStudyIdAndActivatedTrue(studyId);
@@ -72,15 +72,11 @@ public class StudyManagementService {
             throw new BusinessException(LEADER_CANNOT_DELEGATE_TO_SELF);
         }
 
-        StudyMember currentLeader = studyMemberRepository.findByStudyIdAndUserId(studyId, userId)
-            .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
+        StudyMember currentLeader = findValidStudyMember(studyId, userId);
 
-        if (!currentLeader.isLeader()) {
-            throw new BusinessException(NOT_STUDY_LEADER);
-        }
+        isLeader(currentLeader);
 
-        StudyMember newLeader = studyMemberRepository.findByStudyIdAndUserId(studyId, newLeaderId)
-            .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
+        StudyMember newLeader = findValidStudyMember(studyId, newLeaderId);
 
         currentLeader.changeRoleMember();
         newLeader.changeRoleLeader();
@@ -91,8 +87,7 @@ public class StudyManagementService {
         List<Study> studies = studyMemberRepository.findStudiesByUserId(userId);
 
         for (Study study : studies) {
-            StudyMember studyMember = studyMemberRepository.findByStudyIdAndUserId(study.getId(), userId)
-                .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
+            StudyMember studyMember = findValidStudyMember(study.getId(), userId);
 
             boolean isLeader = studyMember.isLeader();
             int activatedMemberCount = studyMemberRepository.countByStudyIdAndActivatedTrue(study.getId());
@@ -112,11 +107,39 @@ public class StudyManagementService {
         }
     }
 
+    @Transactional
+    public void extendStudy(Long studyId, ExtendStudyRequest request, Long userId) {
+        Study originStudy = findValidStudy(studyId);
+
+        StudyMember leader = findValidStudyMember(studyId, userId);
+        isLeader(leader);
+
+        validateStudyExtendable(originStudy, request.getNewEndDate());
+
+        Study extendedStudy = request.toEntity(originStudy);
+        studyRepository.save(extendedStudy);
+
+        StudyMember extendedLeader = StudyMember.builder()
+            .study(extendedStudy)
+            .userId(userId)
+            .role(LEADER)
+            .build();
+        studyMemberRepository.save(extendedLeader);
+    }
+
+    private Study findValidStudy(Long studyId) {
+        return studyRepository.findById(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+    }
+
+    private StudyMember findValidStudyMember(Long studyId, Long userId) {
+        return studyMemberRepository.findByStudyIdAndUserId(studyId, userId)
+            .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
+    }
+
     private void randomDelegateLeader(Long studyId, StudyMember currentLeader) {
 
-        if (!currentLeader.isLeader()) {
-            throw new BusinessException(NOT_STUDY_LEADER);
-        }
+        isLeader(currentLeader);
 
         List<StudyMember> studyMembers = studyMemberRepository.findAvailableNewLeaders(studyId);
 
@@ -128,5 +151,21 @@ public class StudyManagementService {
 
         currentLeader.changeRoleMember();
         newLeader.changeRoleLeader();
+    }
+
+    private void isLeader(StudyMember studyMember) {
+        if (!studyMember.isLeader()) {
+            throw new BusinessException(NOT_STUDY_LEADER);
+        }
+    }
+
+    private void validateStudyExtendable(Study study, LocalDateTime endDate) {
+        if (study.getEndDate().toLocalDate().isAfter(LocalDate.now().plusDays(7))) {
+            throw new BusinessException(STUDY_EXTENSION_NOT_AVAILABLE);
+        }
+
+        if (endDate.toLocalDate().isBefore(study.getEndDate().toLocalDate())) {
+            throw new BusinessException(END_DATE_BEFORE_ORIGIN_STUDY);
+        }
     }
 }
