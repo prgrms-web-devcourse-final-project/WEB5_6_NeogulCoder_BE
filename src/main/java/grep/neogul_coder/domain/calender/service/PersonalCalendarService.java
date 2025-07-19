@@ -46,9 +46,6 @@ public class PersonalCalendarService {
     public List<PersonalCalendarResponse> findByDate(Long userId, LocalDate date) {
         User user = userService.get(userId);
 
-        LocalDateTime startOfDay = date.atStartOfDay();                 // 00:00:00
-        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);            // 23:59:59.999999999
-
         return personalCalendarQueryRepository
             .findByUserIdAndDate(userId, date).stream()
             .map(pc -> PersonalCalendarResponse.from(pc, user))

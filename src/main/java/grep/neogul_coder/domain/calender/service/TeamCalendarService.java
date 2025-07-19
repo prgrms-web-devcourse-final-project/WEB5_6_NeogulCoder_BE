@@ -45,8 +45,6 @@ public class TeamCalendarService {
     }
 
     public List<TeamCalendarResponse> findByDate(Long studyId, LocalDate date) {
-        LocalDateTime startOfDay = date.atStartOfDay();
-        LocalDateTime endOfDay = date.atTime(LocalTime.MAX); // 23:59:59.999..
 
         return teamCalendarQueryRepository
             .findByStudyIdAndDate(studyId, date).stream()
