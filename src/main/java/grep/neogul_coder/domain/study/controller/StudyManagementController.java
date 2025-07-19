@@ -57,7 +57,9 @@ public class StudyManagementController implements StudyManagementSpecification {
     }
 
     @PostMapping("/extension/participations")
-    public ApiResponse<Void> registerExtensionParticipation(@PathVariable("studyId") Long studyId) {
+    public ApiResponse<Void> registerExtensionParticipation(@PathVariable("studyId") Long studyId,
+                                                            @AuthenticationPrincipal Principal userDetails) {
+        studyManagementService.registerExtensionParticipation(studyId, userDetails.getUserId());
         return ApiResponse.noContent();
     }
 }

@@ -30,5 +30,5 @@ public interface StudyManagementSpecification {
     ApiResponse<Void> extendStudy(Long studyId, ExtendStudyRequest request, Principal userDetails);
 
     @Operation(summary = "연장 스터디 참여", description = "스터디원이 연장된 스터디에 참여합니다.")
-    ApiResponse<Void> registerExtensionParticipation(Long studyId);
+    ApiResponse<Void> registerExtensionParticipation(Long studyId, Principal userDetails);
 }

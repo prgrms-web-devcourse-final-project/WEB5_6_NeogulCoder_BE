@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface StudyRepository extends JpaRepository<Study, Long> {
     List<Study> findByIdIn(List<Long> studyIds);
+
     Optional<Study> findByIdAndActivatedTrue(Long studyId);
 
+    Optional<Study> findByOriginStudyIdAndActivatedTrue(Long originStudyId);
 }

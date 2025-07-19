@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
-import static grep.neogul_coder.domain.study.enums.StudyMemberRole.LEADER;
+import static grep.neogul_coder.domain.study.enums.StudyMemberRole.*;
 import static grep.neogul_coder.domain.study.exception.code.StudyErrorCode.*;
 
 @Transactional(readOnly = true)
@@ -119,6 +119,7 @@ public class StudyManagementService {
         Study extendedStudy = request.toEntity(originStudy);
         studyRepository.save(extendedStudy);
         originStudy.extend();
+        leader.participate();
 
         StudyMember extendedLeader = StudyMember.builder()
             .study(extendedStudy)
@@ -126,6 +127,28 @@ public class StudyManagementService {
             .role(LEADER)
             .build();
         studyMemberRepository.save(extendedLeader);
+    }
+
+    @Transactional
+    public void registerExtensionParticipation(Long studyId, Long userId) {
+        Study originStudy = findValidStudy(studyId);
+        StudyMember studyMember = findValidStudyMember(studyId, userId);
+
+        if (studyMember.isParticipated()) {
+            throw new BusinessException(ALREADY_REGISTERED_PARTICIPATION);
+        }
+
+        studyMember.participate();
+
+        Study extendedStudy = studyRepository.findByOriginStudyIdAndActivatedTrue(studyId)
+            .orElseThrow(() -> new BusinessException(EXTENDED_STUDY_NOT_FOUND));
+
+        StudyMember extendMember = StudyMember.builder()
+            .study(extendedStudy)
+            .userId(userId)
+            .role(MEMBER)
+            .build();
+        studyMemberRepository.save(extendMember);
     }
 
     private Study findValidStudy(Long studyId) {
