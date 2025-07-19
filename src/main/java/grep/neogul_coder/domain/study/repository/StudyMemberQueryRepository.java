@@ -63,6 +63,7 @@ public class StudyMemberQueryRepository {
                 ExtendParticipationResponse.class,
                 studyMember.userId,
                 user.nickname,
+                studyMember.role,
                 studyMember.participated
             ))
             .from(studyMember)
