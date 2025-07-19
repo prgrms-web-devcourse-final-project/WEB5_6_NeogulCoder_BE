@@ -118,6 +118,7 @@ public class StudyManagementService {
 
         Study extendedStudy = request.toEntity(originStudy);
         studyRepository.save(extendedStudy);
+        originStudy.extend();
 
         StudyMember extendedLeader = StudyMember.builder()
             .study(extendedStudy)
@@ -160,6 +161,10 @@ public class StudyManagementService {
     }
 
     private void validateStudyExtendable(Study study, LocalDateTime endDate) {
+        if (study.alreadyExtended()) {
+            throw new BusinessException(ALREADY_EXTENDED_STUDY);
+        }
+
         if (study.getEndDate().toLocalDate().isAfter(LocalDate.now().plusDays(7))) {
             throw new BusinessException(STUDY_EXTENSION_NOT_AVAILABLE);
         }

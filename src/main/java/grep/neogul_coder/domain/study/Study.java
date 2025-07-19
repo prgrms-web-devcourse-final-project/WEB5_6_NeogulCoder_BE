@@ -43,6 +43,8 @@ public class Study extends BaseEntity {
 
     private boolean isFinished;
 
+    private boolean isExtended;
+
     protected Study() {}
 
     @Builder
@@ -60,6 +62,7 @@ public class Study extends BaseEntity {
         this.introduction = introduction;
         this.imageUrl = imageUrl;
         this.isFinished = false;
+        this.isExtended = false;
     }
 
     public void update(String name, Category category, int capacity, StudyType studyType,
@@ -88,5 +91,13 @@ public class Study extends BaseEntity {
 
     public void decreaseMemberCount() {
         currentCount--;
+    }
+
+    public boolean alreadyExtended() {
+        return this.isExtended;
+    }
+
+    public void extend() {
+        this.isExtended = true;
     }
 }

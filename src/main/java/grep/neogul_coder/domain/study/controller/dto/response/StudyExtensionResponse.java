@@ -29,7 +29,7 @@ public class StudyExtensionResponse {
     public static StudyExtensionResponse from(Study study, List<ExtendParticipationResponse> members) {
         return StudyExtensionResponse.builder()
             .studyId(study.getId())
-            .isExtended(study.getOriginStudyId() != null)
+            .isExtended(study.isExtended())
             .members(members)
             .build();
     }
