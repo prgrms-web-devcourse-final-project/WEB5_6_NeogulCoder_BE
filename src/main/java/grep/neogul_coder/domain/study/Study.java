@@ -41,7 +41,7 @@ public class Study extends BaseEntity {
 
     private String imageUrl;
 
-    private boolean isExtended;
+    private boolean extended;
 
     protected Study() {}
 
@@ -59,7 +59,7 @@ public class Study extends BaseEntity {
         this.endDate = endDate;
         this.introduction = introduction;
         this.imageUrl = imageUrl;
-        this.isExtended = false;
+        this.extended = false;
     }
 
     public void update(String name, Category category, int capacity, StudyType studyType,
@@ -91,10 +91,10 @@ public class Study extends BaseEntity {
     }
 
     public boolean alreadyExtended() {
-        return this.isExtended;
+        return this.extended;
     }
 
     public void extend() {
-        this.isExtended = true;
+        this.extended = true;
     }
 }

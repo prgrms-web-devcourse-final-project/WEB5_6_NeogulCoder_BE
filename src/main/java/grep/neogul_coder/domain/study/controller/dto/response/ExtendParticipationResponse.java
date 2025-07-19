@@ -15,20 +15,20 @@ public class ExtendParticipationResponse {
     private String nickname;
 
     @Schema(description = "참여 여부", example = "true")
-    private boolean isParticipated;
+    private boolean participated;
 
     @Builder
-    public ExtendParticipationResponse(Long userId, String nickname, boolean isParticipated) {
+    public ExtendParticipationResponse(Long userId, String nickname, boolean participated) {
         this.userId = userId;
         this.nickname = nickname;
-        this.isParticipated = isParticipated;
+        this.participated = participated;
     }
 
     public static ExtendParticipationResponse from(StudyMember studyMember, String nickname) {
         return ExtendParticipationResponse.builder()
             .userId(studyMember.getUserId())
             .nickname(nickname)
-            .isParticipated(studyMember.isParticipated())
+            .participated(studyMember.isParticipated())
             .build();
     }
 }

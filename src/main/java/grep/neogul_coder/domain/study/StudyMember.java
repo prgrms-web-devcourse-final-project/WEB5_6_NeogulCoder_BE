@@ -23,7 +23,7 @@ public class StudyMember extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private StudyMemberRole role;
 
-    private boolean isParticipated;
+    private boolean participated;
 
     protected StudyMember() {}
 
@@ -32,7 +32,7 @@ public class StudyMember extends BaseEntity {
         this.study = study;
         this.userId = userId;
         this.role = role;
-        this.isParticipated = false;
+        this.participated = false;
     }
 
     public void delete() {
@@ -56,10 +56,10 @@ public class StudyMember extends BaseEntity {
     }
 
     public boolean isParticipated() {
-        return this.isParticipated;
+        return this.participated;
     }
 
     public void participate() {
-        this.isParticipated = true;
+        this.participated = true;
     }
 }
