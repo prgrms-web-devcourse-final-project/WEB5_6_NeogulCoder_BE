@@ -41,8 +41,6 @@ public class Study extends BaseEntity {
 
     private String imageUrl;
 
-    private boolean isFinished;
-
     private boolean isExtended;
 
     protected Study() {}
@@ -61,7 +59,6 @@ public class Study extends BaseEntity {
         this.endDate = endDate;
         this.introduction = introduction;
         this.imageUrl = imageUrl;
-        this.isFinished = false;
         this.isExtended = false;
     }
 

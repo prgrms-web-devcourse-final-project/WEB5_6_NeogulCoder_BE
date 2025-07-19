@@ -42,8 +42,7 @@ public class StudyQueryRepository {
                 study.imageUrl,
                 study.introduction,
                 study.category,
-                study.studyType,
-                study.isFinished
+                study.studyType
             ))
             .from(studyMember)
             .join(user).on(user.id.eq(studyMember.userId))
@@ -79,8 +78,7 @@ public class StudyQueryRepository {
                 study.imageUrl,
                 study.introduction,
                 study.category,
-                study.studyType,
-                study.isFinished
+                study.studyType
             ))
             .from(studyMember)
             .join(user).on(user.id.eq(studyMember.userId))
