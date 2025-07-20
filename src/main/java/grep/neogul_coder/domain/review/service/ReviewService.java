@@ -1,5 +1,7 @@
 package grep.neogul_coder.domain.review.service;
 
+import grep.neogul_coder.domain.buddy.enums.BuddyEnergyReason;
+import grep.neogul_coder.domain.buddy.service.BuddyEnergyService;
 import grep.neogul_coder.domain.review.*;
 import grep.neogul_coder.domain.review.controller.dto.response.JoinedStudiesInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.MyReviewTagsInfo;
@@ -51,6 +53,8 @@ public class ReviewService {
     private final MyReviewTagRepository myReviewTagRepository;
     private final ReviewTagRepository reviewTagRepository;
 
+    private final BuddyEnergyService buddyEnergyService;
+
     public ReviewTargetUsersInfo getReviewTargetUsersInfo(long studyId, String myNickname) {
         List<StudyMember> studyMembers = findValidStudyMember(studyId);
         findValidStudy(studyId);
@@ -76,6 +80,13 @@ public class ReviewService {
 
         Review review = request.toReview(reviewTags.getReviewTags(), reviewType, writeUserId);
         List<ReviewTagEntity> reviewTagEntities = mapToReviewTagEntities(reviewTags);
+
+        if (reviewType == ReviewType.GOOD || reviewType == ReviewType.EXCELLENT) {
+            buddyEnergyService.updateEnergy(request.getTargetUserId(), BuddyEnergyReason.POSITIVE_REVIEW);
+        } else if (reviewType == ReviewType.BAD) {
+            buddyEnergyService.updateEnergy(request.getTargetUserId(), BuddyEnergyReason.NEGATIVE_REVIEW);
+        }
+
         return reviewRepository.save(ReviewEntity.from(review, reviewTagEntities, study.getId())).getId();
     }
 
