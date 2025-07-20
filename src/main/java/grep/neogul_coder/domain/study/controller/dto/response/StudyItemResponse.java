@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.study.controller.dto.response;
 
+import com.querydsl.core.annotations.QueryProjection;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyType;
@@ -31,6 +32,9 @@ public class StudyItemResponse {
     @Schema(description = "시작일", example = "2025-07-15")
     private LocalDateTime startDate;
 
+    @Schema(description = "종료일", example = "2025-07-28")
+    private LocalDateTime endDate;
+
     @Schema(description = "대표 이미지", example = "http://localhost:8083/image.jpg")
     private String imageUrl;
 
@@ -44,37 +48,23 @@ public class StudyItemResponse {
     private StudyType studyType;
 
     @Schema(description = "종료 여부", example = "false")
-    private boolean isFinished;
+    public boolean isFinished() {
+        return endDate.toLocalDate().isBefore(LocalDate.now());
+    }
 
-    @Builder
+    @QueryProjection
     public StudyItemResponse(Long studyId, String name, String leaderNickname, int capacity, int currentCount, LocalDateTime startDate,
-                             String imageUrl, String introduction, Category category, StudyType studyType, boolean isFinished) {
+                             LocalDateTime endDate, String imageUrl, String introduction, Category category, StudyType studyType) {
         this.studyId = studyId;
         this.name = name;
         this.leaderNickname = leaderNickname;
         this.capacity = capacity;
         this.currentCount = currentCount;
         this.startDate = startDate;
+        this.endDate = endDate;
         this.imageUrl = imageUrl;
         this.introduction = introduction;
         this.category = category;
         this.studyType = studyType;
-        this.isFinished = isFinished;
-    }
-
-    public static StudyItemResponse from(Study study, String leaderNickname) {
-        return StudyItemResponse.builder()
-            .studyId(study.getId())
-            .name(study.getName())
-            .leaderNickname(leaderNickname)
-            .capacity(study.getCapacity())
-            .currentCount(study.getCurrentCount())
-            .startDate(study.getStartDate())
-            .imageUrl(study.getImageUrl())
-            .introduction(study.getIntroduction())
-            .category(study.getCategory())
-            .studyType(study.getStudyType())
-            .isFinished(study.getEndDate().toLocalDate().isBefore(LocalDate.now()))
-            .build();
     }
 }
