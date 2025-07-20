@@ -2,15 +2,18 @@ package grep.neogul_coder.domain.attendance;
 
 import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+@Getter
 @Entity
 public class Attendance extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long attendanceId;
+    private Long id;
 
     @Column(nullable = false)
     private Long studyId;
@@ -19,5 +22,22 @@ public class Attendance extends BaseEntity {
     private Long userId;
 
     @Column(nullable = false)
-    private LocalDate attendanceDate;
+    private LocalDateTime attendanceDate;
+
+    protected Attendance() {}
+
+    @Builder
+    private Attendance(Long studyId, Long userId, LocalDateTime attendanceDate) {
+        this.studyId = studyId;
+        this.userId = userId;
+        this.attendanceDate = attendanceDate;
+    }
+
+    public static Attendance create(Long studyId, Long userId) {
+        return Attendance.builder()
+            .studyId(studyId)
+            .userId(userId)
+            .attendanceDate(LocalDateTime.now())
+            .build();
+    }
 }

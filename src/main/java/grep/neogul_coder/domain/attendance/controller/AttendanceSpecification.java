@@ -1,6 +1,7 @@
 package grep.neogul_coder.domain.attendance.controller;
 
 import grep.neogul_coder.domain.attendance.controller.dto.response.AttendanceResponse;
+import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,5 +15,5 @@ public interface AttendanceSpecification {
     ApiResponse<List<AttendanceResponse>> getAttendances();
 
     @Operation(summary = "출석 체크", description = "스터디에 출석을 합니다.")
-    ApiResponse<Void> createAttendance();
+    ApiResponse<Long> createAttendance(Long studyId, Principal userDetails);
 }
