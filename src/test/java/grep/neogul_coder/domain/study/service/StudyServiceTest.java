@@ -21,10 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static grep.neogul_coder.domain.study.enums.StudyMemberRole.*;
+import static grep.neogul_coder.domain.study.enums.StudyMemberRole.LEADER;
+import static grep.neogul_coder.domain.study.enums.StudyMemberRole.MEMBER;
 import static grep.neogul_coder.domain.study.exception.code.StudyErrorCode.NOT_STUDY_LEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -58,16 +59,16 @@ class StudyServiceTest extends IntegrationTestSupport {
     void createStudy() {
         // given
         StudyCreateRequest request = StudyCreateRequest.builder()
-            .name("스터디")
-            .category(Category.IT)
-            .capacity(5)
-            .studyType(StudyType.OFFLINE)
-            .location("서울")
-            .startDate(LocalDate.of(2025, 7, 20))
-            .endDate(LocalDate.of(2025, 7, 28))
-            .introduction("스터디입니다.")
-            .imageUrl("http://localhost:8083/image.url")
-            .build();
+                .name("스터디")
+                .category(Category.IT)
+                .capacity(5)
+                .studyType(StudyType.OFFLINE)
+                .location("서울")
+                .startDate(LocalDateTime.of(2025, 7, 20, 0, 0, 0))
+                .endDate(LocalDateTime.of(2025, 7, 28, 0, 0, 0))
+                .introduction("스터디입니다.")
+                .imageUrl("http://localhost:8083/image.url")
+                .build();
 
         // when
         Long id = studyService.createStudy(request, userId);
@@ -83,8 +84,8 @@ class StudyServiceTest extends IntegrationTestSupport {
         // given
         Pageable pageable = PageRequest.of(0, 12);
 
-        Study study = createStudy("스터디", Category.IT, 3, StudyType.OFFLINE, "서울", LocalDate.of(2025, 7, 18),
-            LocalDate.of(2025, 7, 28), "스터디입니다.", "http://localhost:8083/image.url");
+        Study study = createStudy("스터디", Category.IT, 3, StudyType.OFFLINE, "서울", LocalDateTime.of(2025, 7, 18, 0, 0, 0),
+                LocalDateTime.of(2025, 7, 28, 0, 0, 0), "스터디입니다.", "http://localhost:8083/image.url");
         studyRepository.save(study);
         Long studyId = study.getId();
 
@@ -102,8 +103,8 @@ class StudyServiceTest extends IntegrationTestSupport {
     @Test
     void updateStudy() {
         // given
-        Study study = createStudy("스터디", Category.IT, 3, StudyType.OFFLINE, "서울", LocalDate.of(2025, 7, 18),
-            LocalDate.of(2025, 7, 28), "스터디입니다.", "http://localhost:8083/image.url");
+        Study study = createStudy("스터디", Category.IT, 3, StudyType.OFFLINE, "서울", LocalDateTime.of(2025, 7, 18, 0, 0, 0),
+                LocalDateTime.of(2025, 7, 28, 0, 0, 0), "스터디입니다.", "http://localhost:8083/image.url");
         studyRepository.save(study);
         Long studyId = study.getId();
 
@@ -111,15 +112,15 @@ class StudyServiceTest extends IntegrationTestSupport {
         studyMemberRepository.save(studyMember);
 
         StudyUpdateRequest request = StudyUpdateRequest.builder()
-            .name("스터디 수정")
-            .category(Category.DESIGN)
-            .capacity(8)
-            .studyType(StudyType.OFFLINE)
-            .location("서울")
-            .startDate(LocalDate.now())
-            .introduction("Updated")
-            .imageUrl("http://localhost:8083/image.url")
-            .build();
+                .name("스터디 수정")
+                .category(Category.DESIGN)
+                .capacity(8)
+                .studyType(StudyType.OFFLINE)
+                .location("서울")
+                .startDate(LocalDateTime.now())
+                .introduction("Updated")
+                .imageUrl("http://localhost:8083/image.url")
+                .build();
 
         // when
         studyService.updateStudy(studyId, request, userId);
@@ -133,8 +134,8 @@ class StudyServiceTest extends IntegrationTestSupport {
     @Test
     void updateStudyFail() {
         // given
-        Study study = createStudy("스터디", Category.IT, 3, StudyType.OFFLINE, "서울", LocalDate.of(2025, 7, 18),
-            LocalDate.of(2025, 7, 28), "스터디입니다.", "http://localhost:8083/image.url");
+        Study study = createStudy("스터디", Category.IT, 3, StudyType.OFFLINE, "서울", LocalDateTime.of(2025, 7, 18, 0, 0, 0),
+                LocalDateTime.of(2025, 7, 28, 0, 0, 0), "스터디입니다.", "http://localhost:8083/image.url");
         studyRepository.save(study);
         Long studyId = study.getId();
 
@@ -142,28 +143,28 @@ class StudyServiceTest extends IntegrationTestSupport {
         studyMemberRepository.save(studyMember);
 
         StudyUpdateRequest request = StudyUpdateRequest.builder()
-            .name("스터디 수정")
-            .category(Category.DESIGN)
-            .capacity(8)
-            .studyType(StudyType.OFFLINE)
-            .location("서울")
-            .startDate(LocalDate.now())
-            .introduction("Updated")
-            .imageUrl("http://localhost:8083/image.url")
-            .build();
+                .name("스터디 수정")
+                .category(Category.DESIGN)
+                .capacity(8)
+                .studyType(StudyType.OFFLINE)
+                .location("서울")
+                .startDate(LocalDateTime.now())
+                .introduction("Updated")
+                .imageUrl("http://localhost:8083/image.url")
+                .build();
 
         // when then
         assertThatThrownBy(() ->
-            studyService.updateStudy(studyId, request, userId))
-            .isInstanceOf(BusinessException.class).hasMessage(NOT_STUDY_LEADER.getMessage());
+                studyService.updateStudy(studyId, request, userId))
+                .isInstanceOf(BusinessException.class).hasMessage(NOT_STUDY_LEADER.getMessage());
     }
 
     @DisplayName("스터디장이 스터디를 삭제합니다.")
     @Test
     void deleteStudy() {
         // given
-        Study study = createStudy("스터디", Category.IT, 3, StudyType.OFFLINE, "서울", LocalDate.of(2025, 7, 18),
-            LocalDate.of(2025, 7, 28), "스터디입니다.", "http://localhost:8083/image.url");
+        Study study = createStudy("스터디", Category.IT, 3, StudyType.OFFLINE, "서울", LocalDateTime.of(2025, 7, 18, 0, 0, 0),
+                LocalDateTime.of(2025, 7, 28, 0, 0, 0), "스터디입니다.", "http://localhost:8083/image.url");
         studyRepository.save(study);
         Long studyId = study.getId();
 
@@ -179,30 +180,30 @@ class StudyServiceTest extends IntegrationTestSupport {
 
     private static User createUser(String nickname) {
         return User.builder()
-            .nickname(nickname)
-            .build();
+                .nickname(nickname)
+                .build();
     }
 
     private Study createStudy(String name, Category category, int capacity, StudyType studyType,
-                              String location, LocalDate startDate, LocalDate endDate, String introduction, String imageUrl) {
+                              String location, LocalDateTime startDate, LocalDateTime endDate, String introduction, String imageUrl) {
         return Study.builder()
-            .name(name)
-            .category(category)
-            .capacity(capacity)
-            .studyType(studyType)
-            .location(location)
-            .startDate(startDate)
-            .endDate(endDate)
-            .introduction(introduction)
-            .imageUrl(imageUrl)
-            .build();
+                .name(name)
+                .category(category)
+                .capacity(capacity)
+                .studyType(studyType)
+                .location(location)
+                .startDate(startDate)
+                .endDate(endDate)
+                .introduction(introduction)
+                .imageUrl(imageUrl)
+                .build();
     }
 
     private StudyMember createStudyMember(Study study, Long userId, StudyMemberRole role) {
         return StudyMember.builder()
-            .study(study)
-            .userId(userId)
-            .role(role)
-            .build();
+                .study(study)
+                .userId(userId)
+                .role(role)
+                .build();
     }
 }
