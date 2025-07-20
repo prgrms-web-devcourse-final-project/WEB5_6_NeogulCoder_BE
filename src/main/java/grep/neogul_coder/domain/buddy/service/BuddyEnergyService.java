@@ -3,12 +3,16 @@ package grep.neogul_coder.domain.buddy.service;
 import grep.neogul_coder.domain.buddy.entity.BuddyEnergy;
 import grep.neogul_coder.domain.buddy.entity.BuddyLog;
 import grep.neogul_coder.domain.buddy.enums.BuddyEnergyReason;
+import grep.neogul_coder.domain.buddy.exception.BuddyEnergyNotFoundException;
+import grep.neogul_coder.domain.buddy.exception.code.BuddyEnergyErrorCode;
 import grep.neogul_coder.domain.buddy.repository.BuddyEnergyLogRepository;
 import grep.neogul_coder.domain.buddy.repository.BuddyEnergyRepository;
 import grep.neogul_coder.domain.buddy.controller.dto.response.BuddyEnergyResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import static grep.neogul_coder.domain.buddy.exception.code.BuddyEnergyErrorCode.BUDDY_ENERGY_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +25,7 @@ public class BuddyEnergyService {
     @Transactional
     public BuddyEnergyResponse getBuddyEnergy(Long userId) {
         BuddyEnergy energy = buddyEnergyRepository.findByUserId(userId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 유저의 버디 에너지를 찾을 수 없습니다."));
+            .orElseThrow(() -> new BuddyEnergyNotFoundException(BUDDY_ENERGY_NOT_FOUND));
         return BuddyEnergyResponse.from(energy);
     }
 
@@ -29,7 +33,7 @@ public class BuddyEnergyService {
     @Transactional
     public BuddyEnergyResponse updateEnergy(Long userId, BuddyEnergyReason reason) {
         BuddyEnergy energy = buddyEnergyRepository.findByUserId(userId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 유저의 버디 에너지를 찾을 수 없습니다."));
+            .orElseThrow(() -> new BuddyEnergyNotFoundException(BUDDY_ENERGY_NOT_FOUND));
 
         int newLevel = energy.getLevel() + reason.getPoint();
         energy.updateLevel(newLevel);
