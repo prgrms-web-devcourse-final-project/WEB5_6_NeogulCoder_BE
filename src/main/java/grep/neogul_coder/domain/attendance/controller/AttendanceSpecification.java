@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.attendance.controller;
 
+import grep.neogul_coder.domain.attendance.controller.dto.response.AttendanceInfoResponse;
 import grep.neogul_coder.domain.attendance.controller.dto.response.AttendanceResponse;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
@@ -12,7 +13,7 @@ import java.util.List;
 public interface AttendanceSpecification {
 
     @Operation(summary = "출석 조회", description = "일주일 단위로 출석을 조회합니다.")
-    ApiResponse<List<AttendanceResponse>> getAttendances();
+    ApiResponse<AttendanceInfoResponse> getAttendances(Long studyId, Principal userDetails);
 
     @Operation(summary = "출석 체크", description = "스터디에 출석을 합니다.")
     ApiResponse<Long> createAttendance(Long studyId, Principal userDetails);
