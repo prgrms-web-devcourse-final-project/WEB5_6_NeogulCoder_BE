@@ -3,7 +3,6 @@ package grep.neogul_coder.domain.recruitment.post.controller;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostCommentPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostService;
@@ -25,7 +24,14 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
 
     @GetMapping
     public ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(@PageableDefault(size = 10) Pageable pageable) {
-        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(pageable);
+        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(pageable, null);
+        return ApiResponse.success(response);
+    }
+
+    @GetMapping("/me")
+    public ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(@PageableDefault(size = 10) Pageable pageable,
+                                                                      @AuthenticationPrincipal Principal userDetails) {
+        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(pageable, userDetails.getUserId());
         return ApiResponse.success(response);
     }
 
@@ -64,9 +70,4 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
         return ApiResponse.success(new RecruitmentApplicationPagingInfo());
     }
 
-    @GetMapping("{recruitment-post-id}/comments")
-    public ApiResponse<RecruitmentPostCommentPagingInfo> getComments(@PageableDefault(size = 5) Pageable pageable,
-                                                                     @PathVariable("recruitment-post-id") long recruitmentPostId) {
-        return ApiResponse.success(new RecruitmentPostCommentPagingInfo());
-    }
 }

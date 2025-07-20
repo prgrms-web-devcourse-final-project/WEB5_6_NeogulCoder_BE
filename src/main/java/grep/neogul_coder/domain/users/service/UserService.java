@@ -2,11 +2,11 @@ package grep.neogul_coder.domain.users.service;
 
 import grep.neogul_coder.domain.prtemplate.entity.Link;
 import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
-import grep.neogul_coder.domain.prtemplate.exception.code.PrTemplateErrorCode;
 import grep.neogul_coder.domain.prtemplate.repository.LinkRepository;
 import grep.neogul_coder.domain.prtemplate.repository.PrTemplateRepository;
 import grep.neogul_coder.domain.prtemplate.service.LinkService;
 import grep.neogul_coder.domain.prtemplate.service.PrTemplateService;
+import grep.neogul_coder.domain.study.service.StudyManagementService;
 import grep.neogul_coder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
 import grep.neogul_coder.domain.users.entity.User;
@@ -16,7 +16,6 @@ import grep.neogul_coder.domain.users.exception.PasswordNotMatchException;
 import grep.neogul_coder.domain.users.exception.UserNotFoundException;
 import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
 import grep.neogul_coder.domain.users.repository.UserRepository;
-import grep.neogul_coder.global.exception.business.NotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +32,8 @@ public class UserService {
     private final PrTemplateService prTemplateService;
     private final LinkRepository linkRepository;
     private final LinkService linkService;
+    private final StudyManagementService studyManagementService;
+
 
     public User get(Long id) {
         User user = findUser(id);
@@ -67,6 +68,7 @@ public class UserService {
 
     public void updateProfile(Long id, String nickname, String profileImageUrl) {
         User user = findUser(id);
+        isDuplicateNickname(nickname);
         user.updateProfile(nickname, profileImageUrl);
     }
 
@@ -88,12 +90,20 @@ public class UserService {
 
     public void deleteUser(Long userId, String password) {
         User user = findUser(userId);
-        PrTemplate prTemplate = prTemplateRepository.findByUserId((user.getId()))
-            .orElseThrow(() -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
 
         if (isNotMatchCurrentPassword(password, user.getPassword())) {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
+
+        studyManagementService.deleteUserFromStudies(userId);
+        prTemplateService.deleteByUserId(user.getId());
+        linkService.deleteByUserId(userId);
+
+        user.delete();
+    }
+
+    public void deleteUser(Long userId) {
+        User user = findUser(userId);
 
         prTemplateService.deleteByUserId(user.getId());
         linkService.deleteByUserId(userId);

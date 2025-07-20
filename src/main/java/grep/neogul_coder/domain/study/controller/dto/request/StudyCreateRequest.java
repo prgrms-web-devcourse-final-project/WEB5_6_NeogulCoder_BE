@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class StudyCreateRequest {
@@ -36,11 +36,11 @@ public class StudyCreateRequest {
 
     @NotNull
     @Schema(description = "시작일", example = "2025-07-15")
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @NotNull
     @Schema(description = "종료일", example = "2025-07-28")
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @Schema(description = "스터디 소개", example = "자바 스터디입니다.")
     private String introduction;
@@ -53,7 +53,7 @@ public class StudyCreateRequest {
 
     @Builder
     private StudyCreateRequest(String name, Category category, int capacity, StudyType studyType, String location,
-                               LocalDate startDate, LocalDate endDate, String introduction, String imageUrl) {
+                               LocalDateTime startDate, LocalDateTime endDate, String introduction, String imageUrl) {
         this.name = name;
         this.category = category;
         this.capacity = capacity;

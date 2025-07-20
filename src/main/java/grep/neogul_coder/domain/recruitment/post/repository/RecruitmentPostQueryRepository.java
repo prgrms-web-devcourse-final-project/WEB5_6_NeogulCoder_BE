@@ -2,8 +2,8 @@ package grep.neogul_coder.domain.recruitment.post.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.QRecruitmentPostDetailsInfo;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostDetailsInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.QRecruitmentPostWithStudyInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostWithStudyInfo;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -25,10 +25,11 @@ public class RecruitmentPostQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public RecruitmentPostDetailsInfo findPostDetailsInfo(Long recruitmentPostId) {
+    public RecruitmentPostWithStudyInfo findPostWithStudyInfo(Long recruitmentPostId) {
         return queryFactory.select(
-                        new QRecruitmentPostDetailsInfo(
+                        new QRecruitmentPostWithStudyInfo(
                                 user.nickname,
+                                recruitmentPost.id,
                                 recruitmentPost.subject,
                                 recruitmentPost.content,
                                 recruitmentPost.recruitmentCount,
@@ -50,9 +51,21 @@ public class RecruitmentPostQueryRepository {
                 ).fetchOne();
     }
 
-    public List<RecruitmentPost> findPaging(Pageable pageable) {
+    public List<RecruitmentPost> findAllByFilter(Pageable pageable) {
         return queryFactory.selectFrom(recruitmentPost)
                 .where(recruitmentPost.activated.isTrue())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(recruitmentPost.createdDate.desc())
+                .fetch();
+    }
+
+    public List<RecruitmentPost> findAllByFilter(Pageable pageable, Long userId) {
+        return queryFactory.selectFrom(recruitmentPost)
+                .where(
+                        recruitmentPost.userId.eq(userId),
+                        recruitmentPost.activated.isTrue()
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(recruitmentPost.createdDate.desc())

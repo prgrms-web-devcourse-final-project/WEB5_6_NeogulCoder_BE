@@ -12,10 +12,13 @@ import java.time.LocalDateTime;
 
 @ToString
 @Getter
-public class RecruitmentPostDetailsInfo {
+public class RecruitmentPostWithStudyInfo {
 
     @Schema(example = "닉네임", description = "작성자 회원 닉네임")
     private String nickname;
+
+    @Schema(example = "3", description = "모집글 식별자")
+    private final long recruitmentPostId;
 
     @Schema(example = "너굴 코더 스터디를 모집 합니다", description = "제목")
     private String subject;
@@ -27,10 +30,10 @@ public class RecruitmentPostDetailsInfo {
     private int recruitmentCount;
 
     @Schema(example = "2025-07-09", description = "생성 날짜")
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
 
     @Schema(example = "2025-07-17", description = "모집 마감일")
-    private LocalDate expiredDate;
+    private LocalDateTime expiredDate;
 
     @Schema(example = "IT", description = "스터디 카테고리")
     private String category;
@@ -42,21 +45,22 @@ public class RecruitmentPostDetailsInfo {
     private String studyType;
 
     @Schema(example = "2025-07-09", description = "스터디 시작 날짜")
-    private LocalDate startedDate;
+    private LocalDateTime startedDate;
 
     @Schema(example = "2025-07-10", description = "스터디 종료 날짜")
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @QueryProjection
-    public RecruitmentPostDetailsInfo(String nickname, String subject, String content,
-                                      int recruitmentCount, LocalDateTime createdDate, LocalDate expiredDate,
-                                      Category category, String location, StudyType studyType,
-                                      LocalDate startedDate, LocalDate endDate) {
+    public RecruitmentPostWithStudyInfo(String nickname, long recruitmentPostId, String subject,
+                                        String content, int recruitmentCount, LocalDateTime createdDate,
+                                        LocalDateTime expiredDate, Category category, String location,
+                                        StudyType studyType, LocalDateTime startedDate, LocalDateTime endDate) {
         this.nickname = nickname;
+        this.recruitmentPostId = recruitmentPostId;
         this.subject = subject;
         this.content = content;
         this.recruitmentCount = recruitmentCount;
-        this.createdDate = createdDate.toLocalDate();
+        this.createdDate = createdDate;
         this.expiredDate = expiredDate;
         this.category = category.name();
         this.location = location;

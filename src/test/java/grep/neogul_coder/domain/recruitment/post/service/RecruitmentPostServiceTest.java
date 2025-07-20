@@ -103,6 +103,7 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
 
         //when
         RecruitmentPostInfo response = recruitmentPostService.get(post.getId());
+        System.out.println("response = " + response);
 
         //then
         assertThat(response.getApplicationCount()).isEqualTo(2);
@@ -139,7 +140,8 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
         commentRepository.saveAll(comments);
 
         user1.delete();
-        em.flush(); em.clear();
+        em.flush();
+        em.clear();
 
         //when
         RecruitmentPostInfo response = recruitmentPostService.get(post.getId());
@@ -175,8 +177,7 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
 
         //when
         PageRequest pageable = PageRequest.of(0, 2);
-        RecruitmentPostPagingInfo result = recruitmentPostService.getPagingInfo(pageable);
-        System.out.println("result = " + result);
+        RecruitmentPostPagingInfo result = recruitmentPostService.getPagingInfo(pageable, null);
 
         //then
         assertThat(result.getPostInfos()).hasSize(2)
@@ -184,6 +185,44 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrder(
                         Tuple.tuple(Category.IT.name(), "모집글 제목1", 1),
                         Tuple.tuple(Category.HOBBY.name(), "모집글 제목2", 2)
+                );
+    }
+
+    @DisplayName("내가 작성한 모집글과 관련된 정보들을 페이징 조회 합니다.")
+    @Test
+    void getPagingInfo_WhenWrittenByUser() {
+        //given
+        User myUser = createUser("myNickname");
+        User user2 = createUser("회원");
+        userRepository.saveAll(List.of(myUser, user2));
+
+        Study study1 = createStudy("자바 스터디", Category.IT, ONLINE);
+        Study study2 = createStudy("클라이밍 동아리", Category.HOBBY, OFFLINE);
+        studyRepository.saveAll(List.of(study1, study2));
+
+        RecruitmentPost post1 = createRecruitmentPost(study1.getId(), user2.getId(), "모집글 제목1", "내용1", IN_PROGRESS);
+        RecruitmentPost post2 = createRecruitmentPost(study2.getId(), myUser.getId(), "모집글 제목2", "내용2", IN_PROGRESS);
+        RecruitmentPost post3 = createRecruitmentPost(study2.getId(), myUser.getId(), "모집글 제목3", "내용3", IN_PROGRESS);
+        recruitmentPostRepository.saveAll(List.of(post1, post2, post3));
+
+        List<RecruitmentPostComment> comments = List.of(
+                createPostComment(post1, user2.getId(), "댓글1"),
+                createPostComment(post2, user2.getId(), "댓글2"),
+                createPostComment(post2, userId, "댓글3")
+        );
+        commentRepository.saveAll(comments);
+
+        //when
+        PageRequest pageable = PageRequest.of(0, 2);
+        RecruitmentPostPagingInfo result = recruitmentPostService.getPagingInfo(pageable, myUser.getId());
+        System.out.println("result = " + result);
+
+        //then
+        assertThat(result.getPostInfos()).hasSize(2)
+                .extracting("category", "subject", "commentCount")
+                .containsExactlyInAnyOrder(
+                        Tuple.tuple(Category.HOBBY.name(), "모집글 제목2", 2),
+                        Tuple.tuple(Category.HOBBY.name(), "모집글 제목3", 0)
                 );
     }
 
