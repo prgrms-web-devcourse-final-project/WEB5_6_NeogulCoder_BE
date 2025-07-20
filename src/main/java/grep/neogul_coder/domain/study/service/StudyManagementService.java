@@ -50,16 +50,14 @@ public class StudyManagementService {
 
         StudyMember studyMember = findValidStudyMember(studyId, userId);
 
-        if (studyMember.isLeader()) {
-            int activatedMemberCount = studyMemberRepository.countByStudyIdAndActivatedTrue(studyId);
+        if (isLastMember(study)) {
+            study.delete();
+            studyMember.delete();
+            return;
+        }
 
-            if (activatedMemberCount == 1) {
-                study.delete();
-                studyMember.delete();
-                return;
-            } else {
-                randomDelegateLeader(studyId, studyMember);
-            }
+        if (studyMember.isLeader()) {
+            randomDelegateLeader(studyId, studyMember);
         }
 
         studyMember.delete();
@@ -73,7 +71,6 @@ public class StudyManagementService {
         }
 
         StudyMember currentLeader = findValidStudyMember(studyId, userId);
-
         isLeader(currentLeader);
 
         StudyMember newLeader = findValidStudyMember(studyId, newLeaderId);
@@ -89,17 +86,14 @@ public class StudyManagementService {
         for (Study study : studies) {
             StudyMember studyMember = findValidStudyMember(study.getId(), userId);
 
-            boolean isLeader = studyMember.isLeader();
-            int activatedMemberCount = studyMemberRepository.countByStudyIdAndActivatedTrue(study.getId());
+            if (isLastMember(study)) {
+                study.delete();
+                studyMember.delete();
+                continue;
+            }
 
-            if (isLeader) {
-                if (activatedMemberCount == 1) {
-                    study.delete();
-                    studyMember.delete();
-                    continue;
-                } else {
-                    randomDelegateLeader(study.getId(), studyMember);
-                }
+            if (studyMember.isLeader()) {
+                randomDelegateLeader(study.getId(), studyMember);
             }
 
             studyMember.delete();
@@ -159,6 +153,11 @@ public class StudyManagementService {
     private StudyMember findValidStudyMember(Long studyId, Long userId) {
         return studyMemberRepository.findByStudyIdAndUserId(studyId, userId)
             .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
+    }
+
+    private boolean isLastMember(Study study) {
+        int activatedMemberCount = studyMemberRepository.countByStudyIdAndActivatedTrue(study.getId());
+        return activatedMemberCount == 1;
     }
 
     private void randomDelegateLeader(Long studyId, StudyMember currentLeader) {
