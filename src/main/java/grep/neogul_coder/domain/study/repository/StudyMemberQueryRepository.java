@@ -63,7 +63,8 @@ public class StudyMemberQueryRepository {
                 ExtendParticipationResponse.class,
                 studyMember.userId,
                 user.nickname,
-                studyMember.isParticipated
+                studyMember.role,
+                studyMember.participated
             ))
             .from(studyMember)
             .join(user).on(user.id.eq(studyMember.userId))

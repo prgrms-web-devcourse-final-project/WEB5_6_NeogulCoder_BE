@@ -134,7 +134,7 @@ public class StudyService {
         validateStudyLeader(studyId, userId);
         validateStudyDeletable(studyId);
 
-        study.delete();
+        studyRepository.deactivateByStudyId(studyId);
         studyMemberRepository.deactivateByStudyId(studyId);
         recruitmentPostRepository.deactivateByStudyId(studyId);
     }

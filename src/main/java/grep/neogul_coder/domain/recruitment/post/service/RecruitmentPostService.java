@@ -4,6 +4,7 @@ import grep.neogul_coder.domain.recruitment.comment.RecruitmentPostComment;
 import grep.neogul_coder.domain.recruitment.comment.controller.dto.response.CommentsWithWriterInfo;
 import grep.neogul_coder.domain.recruitment.comment.repository.RecruitmentPostCommentQueryRepository;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.request.PagingCondition;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostWithStudyInfo;
@@ -18,7 +19,7 @@ import grep.neogul_coder.domain.studyapplication.repository.StudyApplicationRepo
 import grep.neogul_coder.global.exception.business.BusinessException;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,17 +54,21 @@ public class RecruitmentPostService {
         return new RecruitmentPostInfo(postInfo, comments, applications.size());
     }
 
-    public RecruitmentPostPagingInfo getPagingInfo(Pageable pageable, Long userId) {
-        List<RecruitmentPost> recruitmentPosts = findPostsFilteredByUser(pageable, userId);
-        List<Long> recruitmentPostIds = extractId(recruitmentPosts);
+    public RecruitmentPostPagingInfo getPagingInfo(PagingCondition condition, Long userId) {
+        Page<RecruitmentPost> pages = findPostsFilteredByUser(condition, userId);
+        List<RecruitmentPost> content = pages.getContent();
+        List<Long> recruitmentPostIds = extractId(content);
 
-        List<Study> studies = findConnectedStudiesFrom(recruitmentPosts);
+        List<Study> studies = findConnectedStudiesFrom(content);
         Map<Long, Study> studyIdMap = groupedStudyIdMapFrom(studies);
 
         List<RecruitmentPostComment> comments = commentQueryRepository.findByPostIdIn(recruitmentPostIds);
         Map<Long, List<RecruitmentPostComment>> postIdMap = groupedPostIdBy(comments);
 
-        return RecruitmentPostPagingInfo.of(recruitmentPosts, studyIdMap, postIdMap);
+        return RecruitmentPostPagingInfo.of(
+                content, studyIdMap, postIdMap,
+                pages.getTotalPages(), pages.getTotalElements(), pages.hasNext()
+        );
     }
 
     @Transactional
@@ -97,11 +102,11 @@ public class RecruitmentPostService {
         return applyWithdrawnUserNameChanges(comments, withdrawnUserComments);
     }
 
-    private List<RecruitmentPost> findPostsFilteredByUser(Pageable pageable, Long userId) {
+    private Page<RecruitmentPost> findPostsFilteredByUser(PagingCondition condition, Long userId) {
         if (userId == null) {
-            return postQueryRepository.findAllByFilter(pageable);
+            return postQueryRepository.findAllByFilter(condition);
         }
-        return postQueryRepository.findAllByFilter(pageable, userId);
+        return postQueryRepository.findAllByFilter(condition, userId);
     }
 
     private List<CommentsWithWriterInfo> withdrawnUserChangeNameFrom(List<CommentsWithWriterInfo> comments) {
