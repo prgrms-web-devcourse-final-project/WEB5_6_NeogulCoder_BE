@@ -3,13 +3,15 @@ package grep.neogul_coder.domain.studyapplication;
 import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class StudyApplication extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long studyApplicationId;
+    private Long id;
 
     @Column(nullable = false)
     private Long recruitmentPostId;
