@@ -10,9 +10,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequestMapping("/api/studies")
@@ -65,10 +68,11 @@ public class StudyController implements StudySpecification {
         return ApiResponse.success(studyService.getMyStudyMemberInfo(studyId, userId));
     }
 
-    @PostMapping
-    public ApiResponse<Long> createStudy(@RequestBody @Valid StudyCreateRequest request,
-                                         @AuthenticationPrincipal Principal userDetails) {
-        Long id = studyService.createStudy(request, userDetails.getUserId());
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<Long> createStudy(@RequestPart("request") @Valid StudyCreateRequest request,
+                                         @RequestPart(value = "image", required = false) MultipartFile image,
+                                         @AuthenticationPrincipal Principal userDetails) throws IOException {
+        Long id = studyService.createStudy(request, userDetails.getUserId(), image);
         return ApiResponse.success(id);
     }
 
