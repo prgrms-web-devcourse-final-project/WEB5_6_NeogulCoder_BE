@@ -14,6 +14,7 @@ import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,6 +35,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class StudyServiceTest extends IntegrationTestSupport {
+
+    @Autowired
+    private EntityManager em;
 
     @Autowired
     private UserRepository userRepository;
@@ -56,30 +61,6 @@ class StudyServiceTest extends IntegrationTestSupport {
         userId = user1.getId();
     }
 
-    @DisplayName("스터디를 생성합니다.")
-    @Test
-    void createStudy() {
-        // given
-        StudyCreateRequest request = StudyCreateRequest.builder()
-                .name("스터디")
-                .category(Category.IT)
-                .capacity(5)
-                .studyType(StudyType.OFFLINE)
-                .location("서울")
-                .startDate(LocalDateTime.of(2025, 7, 20, 0, 0, 0))
-                .endDate(LocalDateTime.of(2025, 7, 28, 0, 0, 0))
-                .introduction("스터디입니다.")
-                .imageUrl("http://localhost:8083/image.url")
-                .build();
-
-        // when
-        Long id = studyService.createStudy(request, userId);
-
-        // then
-        Study findStudy = studyRepository.findByIdAndActivatedTrue(id).orElseThrow();
-        assertThat(findStudy.getName()).isEqualTo("스터디");
-    }
-
     @DisplayName("가입한 스터디 목록을 페이징 조회합니다.")
     @Test
     void getStudies() {
@@ -87,7 +68,7 @@ class StudyServiceTest extends IntegrationTestSupport {
         Pageable pageable = PageRequest.of(0, 12);
 
         Study study = createStudy("스터디", Category.IT, 3, StudyType.OFFLINE, "서울", LocalDateTime.of(2025, 7, 18, 0, 0, 0),
-                LocalDateTime.of(2025, 7, 28, 0, 0, 0), "스터디입니다.", "http://localhost:8083/image.url");
+            LocalDateTime.of(2025, 7, 28, 0, 0, 0), "스터디입니다.", "http://localhost:8083/image.url");
         studyRepository.save(study);
         Long studyId = study.getId();
 
@@ -101,11 +82,36 @@ class StudyServiceTest extends IntegrationTestSupport {
         assertThat(response.getStudies().getFirst().getName()).isEqualTo("스터디");
     }
 
+    @DisplayName("스터디를 생성합니다.")
+    @Test
+    void createStudy() throws IOException {
+        // given
+        StudyCreateRequest request = StudyCreateRequest.builder()
+                .name("스터디")
+                .category(Category.IT)
+                .capacity(5)
+                .studyType(StudyType.OFFLINE)
+                .location("서울")
+                .startDate(LocalDateTime.of(2025, 7, 20, 0, 0, 0))
+                .endDate(LocalDateTime.of(2025, 7, 28, 0, 0, 0))
+                .introduction("스터디입니다.")
+                .imageUrl("http://localhost:8083/image.url")
+                .build();
+        MultipartFile image = null;
+
+        // when
+        Long id = studyService.createStudy(request, userId, image);
+
+        // then
+        Study findStudy = studyRepository.findByIdAndActivatedTrue(id).orElseThrow();
+        assertThat(findStudy.getName()).isEqualTo("스터디");
+    }
+
     @DisplayName("스터디장이 스터디를 수정합니다.")
     @Test
-    void updateStudy() {
+    void updateStudy() throws IOException {
         // given
-        Study study = createStudy("스터디", Category.IT, 3, StudyType.OFFLINE, "서울", LocalDateTime.of(2025, 7, 18, 0, 0, 0),
+        Study study = createStudy("스터디", Category.IT, 3, StudyType.OFFLINE, "서울", LocalDateTime.of(2026, 7, 18, 0, 0, 0),
                 LocalDateTime.of(2025, 7, 28, 0, 0, 0), "스터디입니다.", "http://localhost:8083/image.url");
         studyRepository.save(study);
         Long studyId = study.getId();
@@ -119,13 +125,15 @@ class StudyServiceTest extends IntegrationTestSupport {
                 .capacity(8)
                 .studyType(StudyType.OFFLINE)
                 .location("서울")
-                .startDate(LocalDateTime.now())
+                .startDate(LocalDateTime.of(2026, 7, 20, 0, 0, 0))
                 .introduction("Updated")
-                .imageUrl("http://localhost:8083/image.url")
                 .build();
+        MultipartFile image = null;
 
         // when
-        studyService.updateStudy(studyId, request, userId);
+        studyService.updateStudy(studyId, request, userId, image);
+        em.flush();
+        em.clear();
 
         // then
         Study findStudy = studyRepository.findByIdAndActivatedTrue(studyId).orElseThrow();
@@ -154,10 +162,11 @@ class StudyServiceTest extends IntegrationTestSupport {
                 .introduction("Updated")
                 .imageUrl("http://localhost:8083/image.url")
                 .build();
+        MultipartFile image = null;
 
         // when then
         assertThatThrownBy(() ->
-                studyService.updateStudy(studyId, request, userId))
+                studyService.updateStudy(studyId, request, userId, image))
                 .isInstanceOf(BusinessException.class).hasMessage(NOT_STUDY_LEADER.getMessage());
     }
 
@@ -175,9 +184,13 @@ class StudyServiceTest extends IntegrationTestSupport {
 
         // when
         studyService.deleteStudy(studyId, userId);
+        em.flush();
+        em.clear();
+
+        Study deletedStudy = studyRepository.findById(studyId).orElseThrow();
 
         // then
-        assertThat(study.getActivated()).isFalse();
+        assertThat(deletedStudy.getActivated()).isFalse();
     }
 
     private static User createUser(String nickname) {
