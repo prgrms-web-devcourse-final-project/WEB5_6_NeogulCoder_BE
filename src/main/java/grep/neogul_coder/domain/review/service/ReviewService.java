@@ -81,12 +81,7 @@ public class ReviewService {
         Review review = request.toReview(reviewTags.getReviewTags(), reviewType, writeUserId);
         List<ReviewTagEntity> reviewTagEntities = mapToReviewTagEntities(reviewTags);
 
-        // 긍정 리뷰 작성 시 에너지 +1 부정 리뷰 작성 시 에너지 -1
-        if (reviewType == ReviewType.GOOD || reviewType == ReviewType.EXCELLENT) {
-            buddyEnergyService.updateEnergy(request.getTargetUserId(), BuddyEnergyReason.POSITIVE_REVIEW);
-        } else if (reviewType == ReviewType.BAD) {
-            buddyEnergyService.updateEnergy(request.getTargetUserId(), BuddyEnergyReason.NEGATIVE_REVIEW);
-        }
+        buddyEnergyService.updateEnergyByReview(request.getTargetUserId(), reviewType);
 
         return reviewRepository.save(ReviewEntity.from(review, reviewTagEntities, study.getId())).getId();
     }

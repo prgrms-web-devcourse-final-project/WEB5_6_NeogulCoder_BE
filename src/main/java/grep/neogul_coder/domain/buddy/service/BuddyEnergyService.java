@@ -8,6 +8,7 @@ import grep.neogul_coder.domain.buddy.exception.code.BuddyEnergyErrorCode;
 import grep.neogul_coder.domain.buddy.repository.BuddyEnergyLogRepository;
 import grep.neogul_coder.domain.buddy.repository.BuddyEnergyRepository;
 import grep.neogul_coder.domain.buddy.controller.dto.response.BuddyEnergyResponse;
+import grep.neogul_coder.domain.review.ReviewType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,16 +30,16 @@ public class BuddyEnergyService {
         return BuddyEnergyResponse.from(energy);
     }
 
-    // 버디 에너지 업데이트
+    // ReviewType 기반 업데이트 //
     @Transactional
-    public BuddyEnergyResponse updateEnergy(Long userId, BuddyEnergyReason reason) {
+    public BuddyEnergyResponse updateEnergyByReview(Long userId, ReviewType reviewType) {
         BuddyEnergy energy = buddyEnergyRepository.findByUserId(userId)
             .orElseThrow(() -> new BuddyEnergyNotFoundException(BUDDY_ENERGY_NOT_FOUND));
 
-        int newLevel = energy.getLevel() + reason.getPoint();
-        energy.updateLevel(newLevel);
+        // ReviewType에 따른 에너지 증감
+        energy.updateEnergy(reviewType);
 
-        buddyEnergyLogRepository.save(BuddyLog.of(energy, reason));
+        buddyEnergyLogRepository.save(BuddyLog.of(energy, toBuddyEnergyReason(reviewType)));
         buddyEnergyRepository.save(energy);
 
         return BuddyEnergyResponse.from(energy);
@@ -52,5 +53,14 @@ public class BuddyEnergyService {
 
         buddyEnergyLogRepository.save(BuddyLog.of(saved, BuddyEnergyReason.SIGN_UP));
         return BuddyEnergyResponse.from(saved);
+    }
+
+
+    // ReviewType → BuddyEnergyReason 매핑 메서드
+    private BuddyEnergyReason toBuddyEnergyReason(ReviewType reviewType) {
+        return switch (reviewType) {
+            case GOOD, EXCELLENT -> BuddyEnergyReason.POSITIVE_REVIEW;
+            case BAD -> BuddyEnergyReason.NEGATIVE_REVIEW;
+        };
     }
 }
