@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -33,20 +33,22 @@ public class Study extends BaseEntity {
 
     private String location;
 
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     private String introduction;
 
     private String imageUrl;
 
-    private boolean isFinished;
+    private boolean extended;
 
     protected Study() {}
 
     @Builder
-    private Study(String name, Category category, int capacity, StudyType studyType, String location, LocalDate startDate, LocalDate endDate, String introduction, String imageUrl) {
+    private Study(Long originStudyId, String name, Category category, int capacity, StudyType studyType, String location,
+                  LocalDateTime startDate, LocalDateTime endDate, String introduction, String imageUrl) {
+        this.originStudyId = originStudyId;
         this.name = name;
         this.category = category;
         this.capacity = capacity;
@@ -57,11 +59,11 @@ public class Study extends BaseEntity {
         this.endDate = endDate;
         this.introduction = introduction;
         this.imageUrl = imageUrl;
-        this.isFinished = false;
+        this.extended = false;
     }
 
     public void update(String name, Category category, int capacity, StudyType studyType,
-                       String location, LocalDate startDate, String introduction, String imageUrl) {
+                       String location, LocalDateTime startDate, String introduction, String imageUrl) {
         this.name = name;
         this.category = category;
         this.capacity = capacity;
@@ -73,7 +75,7 @@ public class Study extends BaseEntity {
     }
 
     public boolean isStarted() {
-        return this.startDate.isBefore(LocalDate.now());
+        return this.startDate.isBefore(LocalDateTime.now());
     }
 
     public void delete() {
@@ -86,5 +88,13 @@ public class Study extends BaseEntity {
 
     public void decreaseMemberCount() {
         currentCount--;
+    }
+
+    public boolean alreadyExtended() {
+        return this.extended;
+    }
+
+    public void extend() {
+        this.extended = true;
     }
 }

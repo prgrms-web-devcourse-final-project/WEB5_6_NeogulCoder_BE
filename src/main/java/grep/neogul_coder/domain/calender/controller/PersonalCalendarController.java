@@ -20,11 +20,11 @@ public class PersonalCalendarController implements PersonalCalendarSpecification
 
     // 사용자 개인 일정 등록 API
     @PostMapping
-    public ApiResponse<Void> create(
+    public ApiResponse<Long> create(
         @PathVariable("userId") Long userId,
         @Valid @RequestBody PersonalCalendarRequest request) {
-        personalCalendarService.create(userId, request);
-        return ApiResponse.noContent();
+        Long calendarId = personalCalendarService.create(userId, request);
+        return ApiResponse.success(calendarId);  // 생성된 일정 ID 반환
     }
 
     // 사용자 개인 일정 전체 조회 API

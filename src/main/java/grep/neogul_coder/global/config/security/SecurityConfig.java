@@ -93,7 +93,7 @@ public class SecurityConfig {
             )
             .oauth2Login(oauth2 -> oauth2
                 .authorizationEndpoint(config -> config
-                    .authorizationRequestResolver(customResolver) // 여기!
+                    .authorizationRequestResolver(customResolver)
                 )
                 .successHandler(oAuthSuccessHandler)
                 .failureHandler(oAuthFailureHandler)

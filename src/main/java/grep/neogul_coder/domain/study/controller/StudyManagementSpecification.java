@@ -9,6 +9,8 @@ import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import java.util.List;
+
 @Tag(name = "StudyManagement", description = "스터디 관리 API")
 public interface StudyManagementSpecification {
 
@@ -16,7 +18,7 @@ public interface StudyManagementSpecification {
     ApiResponse<StudyExtensionResponse> getStudyExtension(Long studyId);
 
     @Operation(summary = "연장 스터디 참여 멤버 목록 조회", description = "연장 스터디에 참여하는 멤버 목록을 조회합니다.")
-    ApiResponse<ExtendParticipationResponse> getExtendParticipations(Long studyId);
+    ApiResponse<List<ExtendParticipationResponse>> getExtendParticipations(Long studyId);
 
     @Operation(summary = "스터디 탈퇴", description = "스터디를 탈퇴합니다.")
     ApiResponse<Void> leaveStudy(Long studyId, Principal userDetails);
@@ -25,8 +27,8 @@ public interface StudyManagementSpecification {
     ApiResponse<Void> delegateLeader(Long studyId, DelegateLeaderRequest request, Principal userDetails);
 
     @Operation(summary = "스터디 연장", description = "스터디장이 스터디를 연장합니다.")
-    ApiResponse<Void> extendStudy(Long studyId, ExtendStudyRequest request);
+    ApiResponse<Void> extendStudy(Long studyId, ExtendStudyRequest request, Principal userDetails);
 
     @Operation(summary = "연장 스터디 참여", description = "스터디원이 연장된 스터디에 참여합니다.")
-    ApiResponse<Void> registerExtensionParticipation(Long studyId);
+    ApiResponse<Void> registerExtensionParticipation(Long studyId, Principal userDetails);
 }

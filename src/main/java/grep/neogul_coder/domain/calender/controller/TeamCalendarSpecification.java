@@ -48,7 +48,7 @@ public interface TeamCalendarSpecification {
         description = "특정 팀 ID에 새로운 일정을 생성합니다.\n\n" +
             "예: `/api/teams/{studyId}/calendar`"
     )
-    ApiResponse<Void> create(
+    ApiResponse<Long> create(
         @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
         @Parameter(name = "studyId", description = "일정을 생성할 팀 ID", required = true, in = ParameterIn.PATH)
         @PathVariable("studyId") Long studyId,

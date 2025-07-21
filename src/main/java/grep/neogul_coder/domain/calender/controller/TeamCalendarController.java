@@ -23,13 +23,13 @@ public class TeamCalendarController implements TeamCalendarSpecification {
 
     // 팀 일정 생성
     @PostMapping
-    public ApiResponse<Void> create(
+    public ApiResponse<Long> create(
         @AuthenticationPrincipal(expression = "userId") Long userId,              // 인증된 사용자의 ID를 자동 주입받음
         @PathVariable("studyId") Long studyId,
         @Valid @RequestBody TeamCalendarRequest request
     ) {
-        teamCalendarService.create(studyId, userId, request);
-        return ApiResponse.noContent();
+        Long calendarId = teamCalendarService.create(studyId, userId, request);
+        return ApiResponse.success(calendarId);  // 생성된 일정 ID 반환
     }
 
     // 전체 일정 조회 API

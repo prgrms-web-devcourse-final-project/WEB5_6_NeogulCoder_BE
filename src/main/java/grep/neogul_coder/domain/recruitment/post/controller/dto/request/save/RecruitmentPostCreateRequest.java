@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class RecruitmentPostCreateRequest {
@@ -32,14 +33,14 @@ public class RecruitmentPostCreateRequest {
 
     @Schema(example = "2025-07-10", description = "모집 마감일")
     @FutureOrPresent(message = "모집 마감일은 현재 날짜 이전으로 설정이 불가능 합니다.")
-    private LocalDate expiredDate;
+    private LocalDateTime expiredDate;
 
     private RecruitmentPostCreateRequest() {
     }
 
     @Builder
     private RecruitmentPostCreateRequest(long studyId, String subject, String content,
-                                         int recruitmentCount, LocalDate expiredDate) {
+                                         int recruitmentCount, LocalDateTime expiredDate) {
         this.studyId = studyId;
         this.subject = subject;
         this.content = content;

@@ -1,7 +1,9 @@
 package grep.neogul_coder.domain.study.repository;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import grep.neogul_coder.domain.study.StudyMember;
+import grep.neogul_coder.domain.study.controller.dto.response.ExtendParticipationResponse;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +11,7 @@ import java.util.List;
 
 import static grep.neogul_coder.domain.study.QStudy.study;
 import static grep.neogul_coder.domain.study.QStudyMember.studyMember;
+import static grep.neogul_coder.domain.users.entity.QUser.user;
 
 @Repository
 public class StudyMemberQueryRepository {
@@ -52,5 +55,20 @@ public class StudyMemberQueryRepository {
                         studyMember.activated.isTrue()
                 )
                 .fetchOne();
+    }
+
+    public List<ExtendParticipationResponse> findExtendParticipation(Long studyId) {
+        return queryFactory
+            .select(Projections.constructor(
+                ExtendParticipationResponse.class,
+                studyMember.userId,
+                user.nickname,
+                studyMember.role,
+                studyMember.participated
+            ))
+            .from(studyMember)
+            .join(user).on(user.id.eq(studyMember.userId))
+            .where(studyMember.study.id.eq(studyId))
+            .fetch();
     }
 }

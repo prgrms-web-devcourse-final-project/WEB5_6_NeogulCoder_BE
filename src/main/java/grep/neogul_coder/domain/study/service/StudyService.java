@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.study.service;
 
+import grep.neogul_coder.domain.buddy.service.BuddyEnergyService;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
@@ -40,6 +41,7 @@ public class StudyService {
     private final RecruitmentPostRepository recruitmentPostRepository;
     private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final UserRepository userRepository;
+    private final BuddyEnergyService buddyEnergyService;
 
     public StudyItemPagingResponse getMyStudiesPaging(Pageable pageable, Long userId) {
         Page<StudyItemResponse> page = studyQueryRepository.findMyStudiesPaging(pageable, userId);
@@ -134,9 +136,17 @@ public class StudyService {
         validateStudyLeader(studyId, userId);
         validateStudyDeletable(studyId);
 
-        study.delete();
+        studyRepository.deactivateByStudyId(studyId);
         studyMemberRepository.deactivateByStudyId(studyId);
         recruitmentPostRepository.deactivateByStudyId(studyId);
+    }
+
+    @Transactional
+    public void deleteStudyByAdmin(Long studyId) {
+        Study study = studyRepository.findById(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+
+        study.delete();
     }
 
     private static void validateLocation(StudyType studyType, String location) {

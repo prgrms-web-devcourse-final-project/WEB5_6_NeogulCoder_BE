@@ -2,7 +2,7 @@ package grep.neogul_coder.domain.recruitment.post.repository;
 
 import grep.neogul_coder.domain.IntegrationTestSupport;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostDetailsInfo;
+import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostWithStudyInfo;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyType;
@@ -31,7 +31,7 @@ class RecruitmentPostQueryRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("모집글과 연관된 스터디 정보를 같이 조회 합니다.")
     @Test
-    void findPostDetailsInfo() {
+    void findPostWithStudyInfo() {
         //given
         User user = createUser("테스터");
         userRepository.save(user);
@@ -43,7 +43,7 @@ class RecruitmentPostQueryRepositoryTest extends IntegrationTestSupport {
         recruitmentPostRepository.save(recruitmentPost);
 
         //when
-        RecruitmentPostDetailsInfo response = postQueryRepository.findPostDetailsInfo(recruitmentPost.getId());
+        RecruitmentPostWithStudyInfo response = postQueryRepository.findPostWithStudyInfo(recruitmentPost.getId());
 
         //then
         assertThat(response)

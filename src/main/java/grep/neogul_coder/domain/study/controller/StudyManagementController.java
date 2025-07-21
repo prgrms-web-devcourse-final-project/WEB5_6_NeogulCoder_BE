@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/api/studies/{studyId}")
 @RequiredArgsConstructor
 @RestController
@@ -21,12 +23,14 @@ public class StudyManagementController implements StudyManagementSpecification {
 
     @GetMapping("/extension")
     public ApiResponse<StudyExtensionResponse> getStudyExtension(@PathVariable("studyId") Long studyId) {
-        return ApiResponse.success(new StudyExtensionResponse());
+        StudyExtensionResponse studyExtension = studyManagementService.getStudyExtension(studyId);
+        return ApiResponse.success(studyExtension);
     }
 
     @GetMapping("/extension/participations")
-    public ApiResponse<ExtendParticipationResponse> getExtendParticipations(@PathVariable("studyId") Long studyId) {
-        return ApiResponse.success(new ExtendParticipationResponse());
+    public ApiResponse<List<ExtendParticipationResponse>> getExtendParticipations(@PathVariable("studyId") Long studyId) {
+        List<ExtendParticipationResponse> extendParticipations = studyManagementService.getExtendParticipations(studyId);
+        return ApiResponse.success(extendParticipations);
     }
 
     @DeleteMapping("/me")
@@ -46,12 +50,16 @@ public class StudyManagementController implements StudyManagementSpecification {
 
     @PostMapping("/extension")
     public ApiResponse<Void> extendStudy(@PathVariable("studyId") Long studyId,
-                                         @RequestBody @Valid ExtendStudyRequest request) {
+                                         @RequestBody @Valid ExtendStudyRequest request,
+                                         @AuthenticationPrincipal Principal userDetails) {
+        studyManagementService.extendStudy(studyId, request, userDetails.getUserId());
         return ApiResponse.noContent();
     }
 
     @PostMapping("/extension/participations")
-    public ApiResponse<Void> registerExtensionParticipation(@PathVariable("studyId") Long studyId) {
+    public ApiResponse<Void> registerExtensionParticipation(@PathVariable("studyId") Long studyId,
+                                                            @AuthenticationPrincipal Principal userDetails) {
+        studyManagementService.registerExtensionParticipation(studyId, userDetails.getUserId());
         return ApiResponse.noContent();
     }
 }

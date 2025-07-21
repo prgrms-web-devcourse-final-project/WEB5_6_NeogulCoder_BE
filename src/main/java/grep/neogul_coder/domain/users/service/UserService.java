@@ -1,12 +1,13 @@
 package grep.neogul_coder.domain.users.service;
 
+import grep.neogul_coder.domain.buddy.service.BuddyEnergyService;
 import grep.neogul_coder.domain.prtemplate.entity.Link;
 import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
-import grep.neogul_coder.domain.prtemplate.exception.code.PrTemplateErrorCode;
 import grep.neogul_coder.domain.prtemplate.repository.LinkRepository;
 import grep.neogul_coder.domain.prtemplate.repository.PrTemplateRepository;
 import grep.neogul_coder.domain.prtemplate.service.LinkService;
 import grep.neogul_coder.domain.prtemplate.service.PrTemplateService;
+import grep.neogul_coder.domain.study.service.StudyManagementService;
 import grep.neogul_coder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
 import grep.neogul_coder.domain.users.entity.User;
@@ -16,11 +17,18 @@ import grep.neogul_coder.domain.users.exception.PasswordNotMatchException;
 import grep.neogul_coder.domain.users.exception.UserNotFoundException;
 import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
 import grep.neogul_coder.domain.users.repository.UserRepository;
-import grep.neogul_coder.global.exception.business.NotFoundException;
+import grep.neogul_coder.global.utils.upload.FileUploadResponse;
+import grep.neogul_coder.global.utils.upload.FileUsageType;
+import grep.neogul_coder.global.utils.upload.uploader.GcpFileUploader;
+import grep.neogul_coder.global.utils.upload.uploader.LocalFileUploader;
 import jakarta.transaction.Transactional;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Transactional
 @Service
@@ -33,6 +41,18 @@ public class UserService {
     private final PrTemplateService prTemplateService;
     private final LinkRepository linkRepository;
     private final LinkService linkService;
+    private final StudyManagementService studyManagementService;
+    private final BuddyEnergyService buddyEnergyService;
+
+    @Autowired(required = false)
+    private GcpFileUploader gcpFileUploader;
+
+    @Autowired(required = false)
+    private LocalFileUploader localFileUploader;
+
+    @Autowired
+    private Environment environment;
+
 
     public User get(Long id) {
         User user = findUser(id);
@@ -63,11 +83,29 @@ public class UserService {
 
         linkRepository.save(Link.LinkInit(user.getId(), null, null));
         linkRepository.save(Link.LinkInit(user.getId(), null, null));
+
+        // 회원가입 시 버디 에너지 +50 생성
+        buddyEnergyService.createDefaultEnergy(user.getId());
     }
 
-    public void updateProfile(Long id, String nickname, String profileImageUrl) {
-        User user = findUser(id);
-        user.updateProfile(nickname, profileImageUrl);
+    @Transactional
+    public void updateProfile(Long userId, String nickname, MultipartFile profileImage)
+        throws IOException {
+
+        User user = findUser(userId);
+        isDuplicateNickname(nickname);
+
+        String uploadedImageUrl;
+        if (isProfileImgExists(profileImage)) {
+            FileUploadResponse response = isProductionEnvironment()
+                ? gcpFileUploader.upload(profileImage, userId, FileUsageType.PROFILE, userId)
+                : localFileUploader.upload(profileImage, userId, FileUsageType.PROFILE, userId);
+            uploadedImageUrl = response.fileUrl();
+        } else {
+            uploadedImageUrl = user.getProfileImageUrl();
+        }
+
+        user.updateProfile(nickname, uploadedImageUrl);
     }
 
     public void updatePassword(Long id, String password, String newPassword,
@@ -88,12 +126,20 @@ public class UserService {
 
     public void deleteUser(Long userId, String password) {
         User user = findUser(userId);
-        PrTemplate prTemplate = prTemplateRepository.findByUserId((user.getId()))
-            .orElseThrow(() -> new NotFoundException(PrTemplateErrorCode.TEMPLATE_NOT_FOUND));
 
         if (isNotMatchCurrentPassword(password, user.getPassword())) {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
+
+        studyManagementService.deleteUserFromStudies(userId);
+        prTemplateService.deleteByUserId(user.getId());
+        linkService.deleteByUserId(userId);
+
+        user.delete();
+    }
+
+    public void deleteUser(Long userId) {
+        User user = findUser(userId);
 
         prTemplateService.deleteByUserId(user.getId());
         linkService.deleteByUserId(userId);
@@ -152,6 +198,20 @@ public class UserService {
     private boolean isNotMatchPasswordCheck(String password, String passwordCheck) {
         return !password.equals(passwordCheck);
     }
+
+    private boolean isProductionEnvironment() {
+        for (String profile : environment.getActiveProfiles()) {
+            if ("prod".equals(profile)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isProfileImgExists(MultipartFile profileImage) {
+        return profileImage != null && !profileImage.isEmpty();
+    }
+
 }
 
 

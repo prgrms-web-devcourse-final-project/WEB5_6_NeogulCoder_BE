@@ -1,6 +1,9 @@
 package grep.neogul_coder.domain.review.service;
 
+import grep.neogul_coder.domain.buddy.enums.BuddyEnergyReason;
+import grep.neogul_coder.domain.buddy.service.BuddyEnergyService;
 import grep.neogul_coder.domain.review.*;
+import grep.neogul_coder.domain.review.controller.dto.response.JoinedStudiesInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
 import grep.neogul_coder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
@@ -14,6 +17,7 @@ import grep.neogul_coder.domain.review.repository.ReviewRepository;
 import grep.neogul_coder.domain.review.repository.ReviewTagRepository;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
+import grep.neogul_coder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.domain.users.entity.User;
@@ -41,6 +45,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final StudyRepository studyRepository;
     private final StudyMemberRepository studyMemberRepository;
+    private final StudyMemberQueryRepository studyMemberQueryRepository;
 
     private final ReviewTagFinder reviewTagFinder;
     private final ReviewRepository reviewRepository;
@@ -48,12 +53,19 @@ public class ReviewService {
     private final MyReviewTagRepository myReviewTagRepository;
     private final ReviewTagRepository reviewTagRepository;
 
+    private final BuddyEnergyService buddyEnergyService;
+
     public ReviewTargetUsersInfo getReviewTargetUsersInfo(long studyId, String myNickname) {
         List<StudyMember> studyMembers = findValidStudyMember(studyId);
         findValidStudy(studyId);
 
         List<User> targetUsers = findReviewTargetUsers(studyMembers, myNickname);
         return ReviewTargetUsersInfo.of(targetUsers);
+    }
+
+    public JoinedStudiesInfo getJoinedStudiesInfo(long userId) {
+        List<StudyMember> studyMembers = studyMemberQueryRepository.findAllFetchStudyByUserId(userId);
+        return JoinedStudiesInfo.of(convertToStudiesFrom(studyMembers));
     }
 
     @Transactional
@@ -68,6 +80,9 @@ public class ReviewService {
 
         Review review = request.toReview(reviewTags.getReviewTags(), reviewType, writeUserId);
         List<ReviewTagEntity> reviewTagEntities = mapToReviewTagEntities(reviewTags);
+
+        buddyEnergyService.updateEnergyByReview(request.getTargetUserId(), reviewType);
+
         return reviewRepository.save(ReviewEntity.from(review, reviewTagEntities, study.getId())).getId();
     }
 
@@ -111,6 +126,12 @@ public class ReviewService {
         List<User> users = userRepository.findByIdIn(userIds);
         return users.stream()
                 .filter(user -> user.isNotEqualsNickname(myNickname))
+                .toList();
+    }
+
+    private List<Study> convertToStudiesFrom(List<StudyMember> studyMembers) {
+        return studyMembers.stream()
+                .map(StudyMember::getStudy)
                 .toList();
     }
 
