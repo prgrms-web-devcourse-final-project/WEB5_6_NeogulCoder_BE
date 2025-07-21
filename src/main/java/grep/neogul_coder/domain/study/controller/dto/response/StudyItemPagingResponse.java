@@ -19,6 +19,7 @@ public class StudyItemPagingResponse {
             "\"capacity\": 4," +
             "\"currentCount\": 1," +
             "\"startDate\": \"2025-07-15\"," +
+            "\"endDate\": \"2025-07-28\"," +
             "\"imageUrl\": \"http://localhost:8083/image.jpg\"," +
             "\"introduction\": \"자바 스터디입니다.\"," +
             "\"category\": \"IT\"," +

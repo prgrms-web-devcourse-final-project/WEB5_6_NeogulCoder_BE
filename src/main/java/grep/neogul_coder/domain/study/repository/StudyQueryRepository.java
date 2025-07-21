@@ -3,12 +3,12 @@ package grep.neogul_coder.domain.study.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import grep.neogul_coder.domain.study.Study;
+import grep.neogul_coder.domain.study.controller.dto.response.QStudyItemResponse;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyItemResponse;
 import grep.neogul_coder.domain.study.controller.dto.response.StudyMemberResponse;
 import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +17,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static grep.neogul_coder.domain.study.QStudy.study;
-import static grep.neogul_coder.domain.study.QStudyMember.*;
-import static grep.neogul_coder.domain.users.entity.QUser.*;
+import static grep.neogul_coder.domain.study.QStudyMember.studyMember;
+import static grep.neogul_coder.domain.users.entity.QUser.user;
 
 @Repository
 public class StudyQueryRepository {
@@ -31,19 +31,18 @@ public class StudyQueryRepository {
 
     public Page<StudyItemResponse> findMyStudiesPaging(Pageable pageable, Long userId) {
         List<StudyItemResponse> studies = queryFactory
-            .select(Projections.constructor(
-                StudyItemResponse.class,
+            .select(new QStudyItemResponse(
                 study.id,
                 study.name,
                 user.nickname,
                 study.capacity,
                 study.currentCount,
                 study.startDate,
+                study.endDate,
                 study.imageUrl,
                 study.introduction,
                 study.category,
-                study.studyType,
-                study.isFinished
+                study.studyType
             ))
             .from(studyMember)
             .join(user).on(user.id.eq(studyMember.userId))
@@ -68,19 +67,18 @@ public class StudyQueryRepository {
 
     public List<StudyItemResponse> findMyStudies(Long userId) {
         return queryFactory
-            .select(Projections.constructor(
-                StudyItemResponse.class,
+            .select(new QStudyItemResponse(
                 study.id,
                 study.name,
                 user.nickname,
                 study.capacity,
                 study.currentCount,
                 study.startDate,
+                study.endDate,
                 study.imageUrl,
                 study.introduction,
                 study.category,
-                study.studyType,
-                study.isFinished
+                study.studyType
             ))
             .from(studyMember)
             .join(user).on(user.id.eq(studyMember.userId))

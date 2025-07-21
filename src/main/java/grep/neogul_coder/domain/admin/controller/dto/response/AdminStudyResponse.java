@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 @Schema(description = "관리자용 스터디 응답 DTO")
 public class AdminStudyResponse {
@@ -40,7 +42,7 @@ public class AdminStudyResponse {
             .id(study.getId())
             .name(study.getName())
             .category(study.getCategory())
-            .isFinished(study.isFinished())
+            .isFinished(study.getEndDate().toLocalDate().isBefore(LocalDate.now()))
             .activated(study.getActivated())
             .build();
     }
