@@ -33,9 +33,9 @@ public class StudyPostController implements StudyPostSpecification {
         return ApiResponse.success(response);
     }
 
-    @GetMapping("/studies/{study-id}")
+    @PostMapping("/studies/{study-id}")
     public ApiResponse<PostPagingResult> findPagingInfo(@PathVariable("study-id") Long studyId,
-                                                        @RequestBody StudyPostPagingCondition condition) {
+                                                        @RequestBody @Valid StudyPostPagingCondition condition) {
         PostPagingResult response = studyPostService.findPagingInfo(condition, studyId);
         return ApiResponse.success(response);
     }
