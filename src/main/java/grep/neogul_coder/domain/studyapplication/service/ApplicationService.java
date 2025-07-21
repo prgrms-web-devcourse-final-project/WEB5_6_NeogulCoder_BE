@@ -6,6 +6,8 @@ import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.studyapplication.StudyApplication;
 import grep.neogul_coder.domain.studyapplication.controller.dto.request.ApplicationCreateRequest;
+import grep.neogul_coder.domain.studyapplication.controller.dto.response.MyApplicationResponse;
+import grep.neogul_coder.domain.studyapplication.repository.ApplicationQueryRepository;
 import grep.neogul_coder.domain.studyapplication.repository.ApplicationRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
 import grep.neogul_coder.global.exception.business.NotFoundException;
@@ -13,8 +15,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogul_coder.domain.recruitment.RecruitmentErrorCode.*;
-import static grep.neogul_coder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
+import java.util.List;
+
+import static grep.neogul_coder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
+import static grep.neogul_coder.domain.studyapplication.exception.code.ApplicationErrorCode.ALREADY_APPLICATION;
+import static grep.neogul_coder.domain.studyapplication.exception.code.ApplicationErrorCode.LEADER_CANNOT_APPLY;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -22,8 +27,13 @@ import static grep.neogul_coder.domain.studyapplication.exception.code.Applicati
 public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
+    private final ApplicationQueryRepository applicationQueryRepository;
     private final RecruitmentPostRepository recruitmentPostRepository;
     private final StudyMemberRepository studyMemberRepository;
+
+    public List<MyApplicationResponse> getMyStudyApplications(Long userId) {
+        return applicationQueryRepository.findMyApplications(userId);
+    }
 
     @Transactional
     public Long createApplication(ApplicationCreateRequest request) {

@@ -3,9 +3,11 @@ package grep.neogul_coder.domain.studyapplication.controller;
 import grep.neogul_coder.domain.studyapplication.controller.dto.request.ApplicationCreateRequest;
 import grep.neogul_coder.domain.studyapplication.controller.dto.response.MyApplicationResponse;
 import grep.neogul_coder.domain.studyapplication.service.ApplicationService;
+import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,9 +19,9 @@ public class ApplicationController implements ApplicationSpecification {
 
     private final ApplicationService applicationService;
 
-    @GetMapping("/me")
-    public ApiResponse<List<MyApplicationResponse>> getMyStudyApplications() {
-        return ApiResponse.success(List.of(new MyApplicationResponse()));
+    @GetMapping
+    public ApiResponse<List<MyApplicationResponse>> getMyStudyApplications(@AuthenticationPrincipal Principal userDetails) {
+        return ApiResponse.success(applicationService.getMyStudyApplications(userDetails.getUserId()));
     }
 
     @PostMapping
