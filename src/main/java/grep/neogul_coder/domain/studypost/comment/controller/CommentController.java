@@ -1,7 +1,7 @@
-package grep.neogul_coder.domain.comment.controller;
+package grep.neogul_coder.domain.studypost.comment.controller;
 
-import grep.neogul_coder.domain.comment.dto.CommentRequest;
-import grep.neogul_coder.domain.comment.dto.CommentResponse;
+import grep.neogul_coder.domain.studypost.comment.dto.CommentRequest;
+import grep.neogul_coder.domain.studypost.comment.dto.CommentResponse;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;

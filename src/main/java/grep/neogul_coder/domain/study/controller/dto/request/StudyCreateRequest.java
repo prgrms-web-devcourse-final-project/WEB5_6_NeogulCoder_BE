@@ -45,7 +45,6 @@ public class StudyCreateRequest {
     @Schema(description = "스터디 소개", example = "자바 스터디입니다.")
     private String introduction;
 
-    @NotBlank
     @Schema(description = "대표 이미지", example = "http://localhost:8083/image.jpg")
     private String imageUrl;
 
@@ -65,7 +64,7 @@ public class StudyCreateRequest {
         this.imageUrl = imageUrl;
     }
 
-    public Study toEntity() {
+    public Study toEntity(String imageUrl) {
         return Study.builder()
             .name(this.name)
             .category(this.category)
@@ -75,7 +74,7 @@ public class StudyCreateRequest {
             .startDate(this.startDate)
             .endDate(this.endDate)
             .introduction(this.introduction)
-            .imageUrl(this.imageUrl)
+            .imageUrl(imageUrl)
             .build();
     }
 }

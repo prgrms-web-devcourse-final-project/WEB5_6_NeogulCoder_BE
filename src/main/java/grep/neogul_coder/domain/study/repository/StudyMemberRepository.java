@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,9 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> 
 
     @Query("select m from StudyMember m where m.study.id = :studyId and m.role = 'MEMBER' and m.activated = true")
     List<StudyMember> findAvailableNewLeaders(@Param("studyId") Long studyId);
+
+    @Query("select m.createdDate from StudyMember m where m.study.id = :studyId and m.userId = :userId and m.activated = true")
+    LocalDateTime findCreatedDateByStudyIdAndUserId(@Param("studyId") Long studyId, @Param("userId") Long userId);
 
     boolean existsByStudyIdAndUserId(Long studyId, Long id);
 }

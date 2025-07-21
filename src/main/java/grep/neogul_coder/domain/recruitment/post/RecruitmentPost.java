@@ -45,10 +45,11 @@ public class RecruitmentPost extends BaseEntity {
     protected RecruitmentPost() {
     }
 
-    public void update(String subject, String content, int recruitmentCount) {
+    public void update(String subject, String content, int recruitmentCount, LocalDateTime expiredDateTime) {
         this.subject = subject;
         this.content = content;
         this.recruitmentCount = recruitmentCount;
+        this.expiredDate = expiredDateTime;
     }
 
     public boolean isNotOwnedBy(long userId) {
