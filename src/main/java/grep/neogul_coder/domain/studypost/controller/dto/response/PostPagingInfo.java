@@ -1,15 +1,17 @@
-package grep.neogul_coder.domain.studypost.controller.dto;
+package grep.neogul_coder.domain.studypost.controller.dto.response;
 
+import com.querydsl.core.annotations.QueryProjection;
 import grep.neogul_coder.domain.studypost.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 import lombok.Getter;
+import lombok.ToString;
 
+import java.time.LocalDateTime;
+
+@ToString
 @Getter
-@Schema(description = "스터디 게시글 페이징 조회")
-public class StudyPostListResponse {
+public class PostPagingInfo {
 
-  static class PostPagingInfo {
     @Schema(description = "게시글 ID", example = "12")
     private Long id;
 
@@ -26,6 +28,16 @@ public class StudyPostListResponse {
     private LocalDateTime createdDate;
 
     @Schema(description = "댓글 수", example = "3")
-    private int commentCount;
-  }
+    private long commentCount;
+
+    @QueryProjection
+    public PostPagingInfo(Long id, String title, Category category,
+                          String content, LocalDateTime createdDate, long commentCount) {
+        this.id = id;
+        this.title = title;
+        this.category = category;
+        this.content = content;
+        this.createdDate = createdDate;
+        this.commentCount = commentCount;
+    }
 }

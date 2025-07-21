@@ -4,16 +4,16 @@ import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogul_coder.domain.studypost.StudyPost;
-import grep.neogul_coder.domain.studypost.comment.repository.StudyCommentQueryRepository;
+import grep.neogul_coder.domain.studypost.comment.repository.StudyPostCommentQueryRepository;
+import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostPagingCondition;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostSaveRequest;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostUpdateRequest;
-import grep.neogul_coder.domain.studypost.controller.dto.response.CommentInfo;
-import grep.neogul_coder.domain.studypost.controller.dto.response.PostInfo;
-import grep.neogul_coder.domain.studypost.controller.dto.response.StudyPostDetailResponse;
+import grep.neogul_coder.domain.studypost.controller.dto.response.*;
 import grep.neogul_coder.domain.studypost.repository.StudyPostQueryRepository;
 import grep.neogul_coder.domain.studypost.repository.StudyPostRepository;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,12 +32,18 @@ public class StudyPostService {
     private final StudyPostRepository studyPostRepository;
     private final StudyPostQueryRepository studyPostQueryRepository;
 
-    private final StudyCommentQueryRepository commentQueryRepository;
+    private final StudyPostCommentQueryRepository commentQueryRepository;
 
     public StudyPostDetailResponse findOne(Long postId) {
         PostInfo postInfo = studyPostQueryRepository.findPostWriterInfo(postId);
         List<CommentInfo> commentInfos = commentQueryRepository.findWriterInfosByPostId(postId);
         return new StudyPostDetailResponse(postInfo, commentInfos, commentInfos.size());
+    }
+
+    public PostPagingResult findPagingInfo(StudyPostPagingCondition condition, Long studyId) {
+        Page<PostPagingInfo> pages = studyPostQueryRepository.findPagingFilteredBy(condition, studyId);
+        List<NoticePostInfo> noticeInfos = studyPostQueryRepository.findLatestNoticeInfoBy(studyId);
+        return new PostPagingResult(noticeInfos, pages);
     }
 
     @Transactional

@@ -1,8 +1,9 @@
 package grep.neogul_coder.domain.studypost.controller;
 
-import grep.neogul_coder.domain.studypost.controller.dto.StudyPostListResponse;
+import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostPagingCondition;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostSaveRequest;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostUpdateRequest;
+import grep.neogul_coder.domain.studypost.controller.dto.response.PostPagingResult;
 import grep.neogul_coder.domain.studypost.controller.dto.response.StudyPostDetailResponse;
 import grep.neogul_coder.domain.studypost.service.StudyPostService;
 import grep.neogul_coder.global.auth.Principal;
@@ -11,8 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
@@ -34,12 +33,11 @@ public class StudyPostController implements StudyPostSpecification {
         return ApiResponse.success(response);
     }
 
-    @GetMapping("/all")
-    public ApiResponse<List<StudyPostListResponse>> findAllWithoutPagination(
-            @PathVariable("studyId") Long studyId
-    ) {
-        List<StudyPostListResponse> content = List.of(new StudyPostListResponse());
-        return ApiResponse.success(content);
+    @GetMapping("/studies/{study-id}")
+    public ApiResponse<PostPagingResult> findPagingInfo(@PathVariable("study-id") Long studyId,
+                                                        @RequestBody StudyPostPagingCondition condition) {
+        PostPagingResult response = studyPostService.findPagingInfo(condition, studyId);
+        return ApiResponse.success(response);
     }
 
     @PutMapping("/{postId}")

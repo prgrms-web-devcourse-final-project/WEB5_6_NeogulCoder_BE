@@ -1,15 +1,30 @@
 package grep.neogul_coder.domain.studypost.repository;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import grep.neogul_coder.domain.studypost.Category;
 import grep.neogul_coder.domain.studypost.QStudyPost;
 import grep.neogul_coder.domain.studypost.StudyPost;
-import grep.neogul_coder.domain.studypost.controller.dto.response.PostInfo;
-import grep.neogul_coder.domain.studypost.controller.dto.response.QPostInfo;
+import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostPagingCondition;
+import grep.neogul_coder.domain.studypost.controller.dto.response.*;
+import grep.neogul_coder.global.exception.validation.ValidationException;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
+import static grep.neogul_coder.domain.studypost.Category.NOTICE;
+import static grep.neogul_coder.domain.studypost.StudyPostErrorCode.NOT_VALID_CONDITION;
+import static grep.neogul_coder.domain.studypost.comment.QStudyPostComment.studyPostComment;
 import static grep.neogul_coder.domain.users.entity.QUser.user;
 
 @Repository
@@ -17,6 +32,8 @@ public class StudyPostQueryRepository {
 
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
+
+    public static final int NOTICE_POST_LIMIT = 2;
 
     private final QStudyPost studyPost = QStudyPost.studyPost;
 
@@ -57,5 +74,103 @@ public class StudyPostQueryRepository {
                 .fetchOne();
 
         return Optional.ofNullable(findStudyPost);
+    }
+
+    public Page<PostPagingInfo> findPagingFilteredBy(StudyPostPagingCondition condition, Long studyId) {
+        Pageable pageable = condition.toPageable();
+
+        JPAQuery<PostPagingInfo> query = queryFactory.select(
+                        new QPostPagingInfo(
+                                studyPost.id,
+                                studyPost.title,
+                                studyPost.category,
+                                studyPost.content,
+                                studyPost.createdDate,
+                                studyPostComment.countDistinct()
+                        )
+                )
+                .from(studyPost)
+                .leftJoin(studyPostComment).on(studyPost.id.eq(studyPostComment.postId))
+                .where(
+                        studyPost.activated.isTrue(),
+                        studyPost.study.id.eq(studyId),
+                        likeContent(condition.getContent()),
+                        equalsCategory(condition.getCategory())
+                )
+                .groupBy(studyPost.id)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        OrderSpecifier<?> orderSpecifier = resolveOrderSpecifier(condition.getAttributeName(), condition.getSort());
+        if (orderSpecifier != null) {
+            query.orderBy(orderSpecifier);
+        }
+
+        Long count = queryFactory.select(studyPost.count())
+                .from(studyPost)
+                .where(
+                        studyPost.activated.isTrue(),
+                        studyPost.study.id.eq(studyId),
+                        likeContent(condition.getContent()),
+                        equalsCategory(condition.getCategory())
+                )
+                .fetchOne();
+
+        return new PageImpl<>(query.fetch(), pageable, count == null ? 0 : count);
+    }
+
+    public List<NoticePostInfo> findLatestNoticeInfoBy(Long studyId) {
+        return queryFactory.select(
+                        new QNoticePostInfo(
+                                studyPost.id,
+                                studyPost.category,
+                                studyPost.title,
+                                studyPost.createdDate
+                        )
+                )
+                .from(studyPost)
+                .where(
+                        studyPost.activated.isTrue(),
+                        studyPost.study.id.eq(studyId),
+                        studyPost.category.eq(NOTICE)
+                )
+                .orderBy(studyPost.createdDate.desc())
+                .limit(NOTICE_POST_LIMIT)
+                .fetch();
+    }
+
+    private OrderSpecifier<?> resolveOrderSpecifier(String attributeName, String direction) {
+        if (attributeName == null || direction == null) {
+            return null;
+        }
+
+        boolean isAsc = "ASC".equals(direction);
+
+        if (attributeName.equalsIgnoreCase("commentCount")) {
+            NumberExpression<Long> commentCount = studyPostComment.id.countDistinct();
+            return isAsc ? commentCount.asc() : commentCount.desc();
+        }
+
+        if (attributeName.equalsIgnoreCase("createDateTime")) {
+            return isAsc ? studyPost.createdDate.asc() : studyPost.createdDate.desc();
+        }
+
+        throw new ValidationException(NOT_VALID_CONDITION);
+    }
+
+    private BooleanBuilder likeContent(String content) {
+        return nullSafeBuilder(() -> studyPost.content.contains(content));
+    }
+
+    private BooleanBuilder equalsCategory(Category category) {
+        return nullSafeBuilder(() -> studyPost.category.eq(category));
+    }
+
+    private BooleanBuilder nullSafeBuilder(Supplier<BooleanExpression> supplier) {
+        try {
+            return new BooleanBuilder(supplier.get());
+        } catch (Exception e) {
+            return new BooleanBuilder();
+        }
     }
 }
