@@ -20,13 +20,9 @@ public class PersonalCalendarQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<PersonalCalendar> findByUserIdAndDate(Long userId, LocalDate date) {
+    public List<PersonalCalendar> findByUserIdAndDate(Long userId, LocalDateTime start, LocalDateTime end) {
         // Q타입 : 쿼리DSL 에서 사용하는 엔티티 기반 쿼리 클래스
         QPersonalCalendar pc = QPersonalCalendar.personalCalendar;
-
-        // 조회 기준 : 하루의 시작과 끝 시간
-        LocalDateTime start = date.atStartOfDay();          // 00:00:00
-        LocalDateTime end = date.atTime(LocalTime.MAX);     // 23:59:59.999
 
         // 쿼리 실행:
         // 해당 유저의 일정 중
@@ -38,7 +34,7 @@ public class PersonalCalendarQueryRepository {
             .where(
                 pc.userId.eq(userId),
                 pc.activated.eq(true),
-                calendar.scheduledStart.loe(end),
+                calendar.scheduledStart.lt(end),
                 calendar.scheduledEnd.goe(start)
             )
             .fetch();

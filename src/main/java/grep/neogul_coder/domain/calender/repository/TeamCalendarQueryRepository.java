@@ -20,12 +20,9 @@ public class TeamCalendarQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<TeamCalendar> findByStudyIdAndDate(Long studyId, LocalDate date) {
+    public List<TeamCalendar> findByStudyIdAndDate(Long studyId, LocalDateTime start, LocalDateTime end) {
         // 쿼리DSL용 Q타입: 팀 캘린더
         QTeamCalendar tc = QTeamCalendar.teamCalendar;
-
-        LocalDateTime start = date.atStartOfDay();          // 00:00:00
-        LocalDateTime end = date.atTime(LocalTime.MAX);     // 23:59:59.999...
 
         // 쿼리:
         // - 해당 studyId인 팀 일정 중
@@ -37,7 +34,7 @@ public class TeamCalendarQueryRepository {
             .where(
                 tc.studyId.eq(studyId),
                 tc.activated.eq(true),
-                calendar.scheduledStart.loe(end),
+                calendar.scheduledStart.lt(end),
                 calendar.scheduledEnd.goe(start)
             )
             .fetch();
