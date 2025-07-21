@@ -16,4 +16,8 @@ public enum Category {
   public String toJson() {
     return korean;
   }
+
+  public String getKorean() {
+    return korean;
+  }
 }

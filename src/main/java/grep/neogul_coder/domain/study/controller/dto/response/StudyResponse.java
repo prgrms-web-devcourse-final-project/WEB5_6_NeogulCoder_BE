@@ -2,7 +2,7 @@ package grep.neogul_coder.domain.study.controller.dto.response;
 
 import grep.neogul_coder.domain.attendance.controller.dto.response.AttendanceResponse;
 import grep.neogul_coder.domain.calender.controller.dto.response.TeamCalendarResponse;
-import grep.neogul_coder.domain.studypost.dto.StudyPostListResponse;
+import grep.neogul_coder.domain.studypost.controller.dto.StudyPostListResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
