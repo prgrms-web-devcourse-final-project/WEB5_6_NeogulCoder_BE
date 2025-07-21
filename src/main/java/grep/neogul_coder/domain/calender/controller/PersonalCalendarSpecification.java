@@ -20,7 +20,7 @@ public interface PersonalCalendarSpecification {
         summary = "개인 일정 생성",
         description = "사용자의 개인 일정을 생성합니다.\n\n예: `/api/users/{userId}/calendar`"
     )
-    ApiResponse<Void> create(
+    ApiResponse<Long> create(
         @Parameter(name = "userId", description = "사용자 ID", required = true, in = ParameterIn.PATH)
         @PathVariable("userId") Long userId,
         @RequestBody PersonalCalendarRequest request

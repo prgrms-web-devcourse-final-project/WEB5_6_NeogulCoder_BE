@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.users.service;
 
+import grep.neogul_coder.domain.buddy.service.BuddyEnergyService;
 import grep.neogul_coder.domain.prtemplate.entity.Link;
 import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
 import grep.neogul_coder.domain.prtemplate.repository.LinkRepository;
@@ -41,6 +42,7 @@ public class UserService {
     private final LinkRepository linkRepository;
     private final LinkService linkService;
     private final StudyManagementService studyManagementService;
+    private final BuddyEnergyService buddyEnergyService;
 
     @Autowired(required = false)
     private GcpFileUploader gcpFileUploader;
@@ -81,6 +83,9 @@ public class UserService {
 
         linkRepository.save(Link.LinkInit(user.getId(), null, null));
         linkRepository.save(Link.LinkInit(user.getId(), null, null));
+
+        // 회원가입 시 버디 에너지 +50 생성
+        buddyEnergyService.createDefaultEnergy(user.getId());
     }
 
     @Transactional
