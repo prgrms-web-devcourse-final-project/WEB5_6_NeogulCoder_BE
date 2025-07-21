@@ -1,4 +1,4 @@
-package grep.neogul_coder.domain.comment.dto;
+package grep.neogul_coder.domain.studypost.comment.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package grep.neogul_coder.domain.comment;
+package grep.neogul_coder.domain.studypost.comment;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-public class Comment {
+public class StudyPostComment {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
