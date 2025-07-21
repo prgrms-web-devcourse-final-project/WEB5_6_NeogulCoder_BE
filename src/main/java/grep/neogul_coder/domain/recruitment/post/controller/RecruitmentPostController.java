@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
+import grep.neogul_coder.domain.recruitment.post.controller.dto.request.PagingCondition;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
@@ -23,15 +24,15 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
     private final RecruitmentPostService recruitmentPostService;
 
     @GetMapping
-    public ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(@PageableDefault(size = 10) Pageable pageable) {
-        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(pageable, null);
+    public ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(@RequestBody PagingCondition condition) {
+        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(condition, null);
         return ApiResponse.success(response);
     }
 
     @GetMapping("/me")
-    public ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(@PageableDefault(size = 10) Pageable pageable,
+    public ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(@RequestBody PagingCondition condition,
                                                                       @AuthenticationPrincipal Principal userDetails) {
-        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(pageable, userDetails.getUserId());
+        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(condition, userDetails.getUserId());
         return ApiResponse.success(response);
     }
 
