@@ -78,7 +78,8 @@ public class RecruitmentPostService {
         recruitmentPost.update(
                 request.getSubject(),
                 request.getContent(),
-                request.getRecruitmentCount()
+                request.getRecruitmentCount(),
+                request.getExpiredDateTime()
         );
         return recruitmentPost.getId();
     }
