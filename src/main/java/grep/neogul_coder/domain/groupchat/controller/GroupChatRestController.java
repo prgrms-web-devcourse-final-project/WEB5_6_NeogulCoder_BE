@@ -26,7 +26,6 @@ public class GroupChatRestController implements GroupChatRestSpecification {
         PageResponse<GroupChatMessageResponseDto> pageResponse =
             groupChatService.getMessages(roomId, page, size);
 
-        // 공통 응답 형식에 맞게 반환
         return ApiResponse.success(pageResponse);
     }
 }
