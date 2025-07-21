@@ -100,7 +100,7 @@ public class UserService {
             FileUploadResponse response = isProductionEnvironment()
                 ? gcpFileUploader.upload(profileImage, userId, FileUsageType.PROFILE, userId)
                 : localFileUploader.upload(profileImage, userId, FileUsageType.PROFILE, userId);
-            uploadedImageUrl = response.fileUrl();
+            uploadedImageUrl = response.getFileUrl();
         } else {
             uploadedImageUrl = user.getProfileImageUrl();
         }

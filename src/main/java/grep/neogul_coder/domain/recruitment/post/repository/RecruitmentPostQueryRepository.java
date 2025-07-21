@@ -3,6 +3,7 @@ package grep.neogul_coder.domain.recruitment.post.repository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import grep.neogul_coder.domain.recruitment.post.QRecruitmentPost;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.PagingCondition;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.QRecruitmentPostWithStudyInfo;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static grep.neogul_coder.domain.recruitment.post.QRecruitmentPost.recruitmentPost;
@@ -121,6 +123,17 @@ public class RecruitmentPostQueryRepository {
                 .fetchOne();
 
         return new PageImpl<>(content, condition.toPageable(), count == null ? 0 : count);
+    }
+
+    public Optional<RecruitmentPost> findMyPostBy(long postId, long userId) {
+        RecruitmentPost findRecruitmentPost = queryFactory.selectFrom(recruitmentPost)
+                .where(
+                        recruitmentPost.activated.isTrue(),
+                        recruitmentPost.userId.eq(userId),
+                        recruitmentPost.id.eq(postId)
+                )
+                .fetchOne();
+        return Optional.ofNullable(findRecruitmentPost);
     }
 
     private BooleanBuilder equalsStudyType(StudyType studyType) {
