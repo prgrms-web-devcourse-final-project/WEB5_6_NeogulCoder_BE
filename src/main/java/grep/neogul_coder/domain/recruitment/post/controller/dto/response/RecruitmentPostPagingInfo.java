@@ -17,14 +17,20 @@ import java.util.Map;
 public class RecruitmentPostPagingInfo {
 
     private List<RecruitmentPostInfo> postInfos;
+    private int totalPage;
+    private long totalElementCount;
+    private boolean hasNext;
 
-    public RecruitmentPostPagingInfo(List<RecruitmentPostInfo> postInfos) {
+    public RecruitmentPostPagingInfo(List<RecruitmentPostInfo> postInfos, int totalPage, long totalElementCount, boolean hasNext) {
         this.postInfos = postInfos;
+        this.totalPage = totalPage;
+        this.totalElementCount = totalElementCount;
+        this.hasNext = hasNext;
     }
 
     public static RecruitmentPostPagingInfo of(List<RecruitmentPost> recruitmentPosts,
-                                               Map<Long, Study> studyIdMap,
-                                               Map<Long, List<RecruitmentPostComment>> postIdMap) {
+                                               Map<Long, Study> studyIdMap, Map<Long, List<RecruitmentPostComment>> postIdMap,
+                                               int totalPages, long totalElements, boolean hasNext) {
 
         List<RecruitmentPostInfo> postInfos = recruitmentPosts.stream()
                 .map(post -> new RecruitmentPostInfo(
@@ -33,7 +39,7 @@ public class RecruitmentPostPagingInfo {
                         postIdMap.getOrDefault(post.getId(), Collections.emptyList())))
                 .toList();
 
-        return new RecruitmentPostPagingInfo(postInfos);
+        return new RecruitmentPostPagingInfo(postInfos, totalPages, totalElements, hasNext);
     }
 
     @ToString

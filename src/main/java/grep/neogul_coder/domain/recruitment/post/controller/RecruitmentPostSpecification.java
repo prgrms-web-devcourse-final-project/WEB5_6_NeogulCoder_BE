@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
+import grep.neogul_coder.domain.recruitment.post.controller.dto.request.PagingCondition;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
@@ -10,6 +11,7 @@ import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "Recruitment-Post", description = "모집 글 API")
 public interface RecruitmentPostSpecification {
@@ -63,7 +65,7 @@ public interface RecruitmentPostSpecification {
                     ```
                     """
     )
-    ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(Pageable pageable, Principal userDetails);
+    ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(@RequestBody PagingCondition condition, Principal userDetails);
 
     @Operation(
             summary = "모집글 페이징 조회",
@@ -102,7 +104,7 @@ public interface RecruitmentPostSpecification {
                     ```
                     """
     )
-    ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(Pageable pageable);
+    ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(PagingCondition condition);
 
     @Operation(
             summary = "스터디 신청한 회원 목록 페이징 조회",
