@@ -29,6 +29,4 @@ public class GroupChatSwaggerResponse {
 
     @Schema(description = "보낸 시간", example = "2025-07-07T17:45:00")
     private LocalDateTime sentAt;
-
-
 }

@@ -37,7 +37,7 @@ public class Link extends BaseEntity {
             .prId(prId)
             .prUrl(prUrl)
             .urlName(urlName)
-            .activated(true)
+            .activated(false)
             .build();
     }
 
