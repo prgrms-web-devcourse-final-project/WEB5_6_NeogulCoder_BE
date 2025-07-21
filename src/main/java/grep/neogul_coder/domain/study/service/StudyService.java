@@ -125,7 +125,7 @@ public class StudyService {
     }
 
     @Transactional
-    public void updateStudy(Long studyId, StudyUpdateRequest request, Long userId) {
+    public void updateStudy(Long studyId, StudyUpdateRequest request, Long userId, MultipartFile image) throws IOException {
         Study study = studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
@@ -133,6 +133,8 @@ public class StudyService {
         validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
         validateStudyStartDate(request, study);
+
+        String imageUrl = createImageUrl(userId, image);
 
         study.update(
             request.getName(),
@@ -142,7 +144,7 @@ public class StudyService {
             request.getLocation(),
             request.getStartDate(),
             request.getIntroduction(),
-            request.getImageUrl()
+            imageUrl
         );
     }
 

@@ -41,7 +41,7 @@ public interface StudySpecification {
     ApiResponse<Long> createStudy(StudyCreateRequest request, MultipartFile image, Principal userDetails) throws IOException;
 
     @Operation(summary = "스터디 수정", description = "스터디를 수정합니다.")
-    ApiResponse<Void> updateStudy(Long studyId, StudyUpdateRequest request, Principal userDetails);
+    ApiResponse<Void> updateStudy(Long studyId, StudyUpdateRequest request, MultipartFile image, Principal userDetails) throws IOException;
 
     @Operation(summary = "스터디 삭제", description = "스터디를 삭제합니다.")
     ApiResponse<Void> deleteStudy(Long studyId, Principal userDetails);

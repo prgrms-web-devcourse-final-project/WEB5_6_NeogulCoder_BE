@@ -78,9 +78,10 @@ public class StudyController implements StudySpecification {
 
     @PutMapping("/{studyId}")
     public ApiResponse<Void> updateStudy(@PathVariable("studyId") Long studyId,
-                                         @RequestBody @Valid StudyUpdateRequest request,
-                                         @AuthenticationPrincipal Principal userDetails) {
-        studyService.updateStudy(studyId, request, userDetails.getUserId());
+                                         @RequestPart @Valid StudyUpdateRequest request,
+                                         @RequestPart(value = "image", required = false) MultipartFile image,
+                                         @AuthenticationPrincipal Principal userDetails) throws IOException {
+        studyService.updateStudy(studyId, request, userDetails.getUserId(), image);
         return ApiResponse.noContent();
     }
 
