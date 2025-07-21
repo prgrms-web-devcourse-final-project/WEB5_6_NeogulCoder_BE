@@ -8,8 +8,11 @@ import lombok.Getter;
 @Schema(description = "스터디 게시글 댓글 응답 DTO")
 public class CommentResponse {
 
-  @Schema(description = "댓글 ID", example = "100")
+  @Schema(description = "댓글 ID", example = "3")
   private Long id;
+
+  @Schema(description = "회원 ID", example = "3")
+  private Long userId;
 
   @Schema(description = "작성자 닉네임", example = "너굴코더")
   private String nickname;

@@ -1,9 +1,9 @@
 package grep.neogul_coder.domain.studypost.controller;
 
-import grep.neogul_coder.domain.studypost.controller.dto.StudyPostDetailResponse;
 import grep.neogul_coder.domain.studypost.controller.dto.StudyPostListResponse;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostSaveRequest;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostUpdateRequest;
+import grep.neogul_coder.domain.studypost.controller.dto.response.StudyPostDetailResponse;
 import grep.neogul_coder.domain.studypost.service.StudyPostService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
@@ -30,8 +30,8 @@ public class StudyPostController implements StudyPostSpecification {
 
     @GetMapping("/{postId}")
     public ApiResponse<StudyPostDetailResponse> findOne(@PathVariable("postId") Long postId) {
-        studyPostService.findOne(postId);
-        return ApiResponse.success(new StudyPostDetailResponse());
+        StudyPostDetailResponse response = studyPostService.findOne(postId);
+        return ApiResponse.success(response);
     }
 
     @GetMapping("/all")

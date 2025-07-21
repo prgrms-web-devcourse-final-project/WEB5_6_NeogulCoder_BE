@@ -3,6 +3,7 @@ package grep.neogul_coder.domain.studypost.controller.dto.request;
 import grep.neogul_coder.domain.studypost.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -22,5 +23,12 @@ public class StudyPostUpdateRequest {
     private String content;
 
     private StudyPostUpdateRequest() {
+    }
+
+    @Builder
+    private StudyPostUpdateRequest(String title, Category category, String content) {
+        this.title = title;
+        this.category = category;
+        this.content = content;
     }
 }

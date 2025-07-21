@@ -31,6 +31,9 @@ public class StudyPost extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
+    protected StudyPost() {
+    }
+
     @Builder
     private StudyPost(Long userId, String title, Category category, String content) {
         this.userId = userId;

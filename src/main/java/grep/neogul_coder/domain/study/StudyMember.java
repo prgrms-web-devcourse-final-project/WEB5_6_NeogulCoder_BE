@@ -25,7 +25,8 @@ public class StudyMember extends BaseEntity {
 
     private Boolean isParticipated;
 
-    protected StudyMember() {}
+    protected StudyMember() {
+    }
 
     @Builder
     public StudyMember(Study study, Long userId, StudyMemberRole role, Boolean isParticipated) {
@@ -43,7 +44,7 @@ public class StudyMember extends BaseEntity {
         return this.role == StudyMemberRole.LEADER;
     }
 
-    public boolean hasNotRoleLeader(){
+    public boolean hasNotRoleLeader() {
         return this.role != StudyMemberRole.LEADER;
     }
 

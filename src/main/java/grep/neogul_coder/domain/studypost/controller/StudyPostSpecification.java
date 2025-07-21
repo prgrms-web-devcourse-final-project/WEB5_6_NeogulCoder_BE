@@ -1,6 +1,6 @@
 package grep.neogul_coder.domain.studypost.controller;
 
-import grep.neogul_coder.domain.studypost.controller.dto.StudyPostDetailResponse;
+import grep.neogul_coder.domain.studypost.controller.dto.response.StudyPostDetailResponse;
 import grep.neogul_coder.domain.studypost.controller.dto.StudyPostListResponse;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostSaveRequest;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostUpdateRequest;

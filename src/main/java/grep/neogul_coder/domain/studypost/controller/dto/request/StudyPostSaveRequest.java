@@ -6,6 +6,7 @@ import grep.neogul_coder.domain.studypost.StudyPost;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -29,6 +30,14 @@ public class StudyPostSaveRequest {
     private String content;
 
     private StudyPostSaveRequest() {
+    }
+
+    @Builder
+    private StudyPostSaveRequest(long studyId, String title, Category category, String content) {
+        this.studyId = studyId;
+        this.title = title;
+        this.category = category;
+        this.content = content;
     }
 
     public StudyPost toEntity(Study study, long userId) {

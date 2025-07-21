@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum StudyPostErrorCode implements ErrorCode {
-    NOT_FOUND_STUDY(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.name(), "해당 스터디를 찾지 못했습니다."),
+    NOT_JOINED_STUDY_USER(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.name(), "해당 스터디에 참여 하고 있지 않은 회원 입니다."),
     NOT_FOUND_POST(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.name(), "해당 스터디 게시글을 찾지 못했습니다.");
 
     private static final String BASIC_ERROR_NAME = "STUDY_POST";
