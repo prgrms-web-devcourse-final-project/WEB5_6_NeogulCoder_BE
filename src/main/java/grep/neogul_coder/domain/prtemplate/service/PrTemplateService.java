@@ -91,15 +91,13 @@ public class PrTemplateService {
     }
 
     private List<PrPageResponse.UserLocationAndLink> getUserLocationAndLinks(List<Link> links, PrTemplate prTemplate) {
-        return links.stream()
-                .map(link -> PrPageResponse.UserLocationAndLink.builder()
-                        .location(prTemplate.getLocation())
-                        .links(LinkInfo(links))
-                        .build())
-                .toList();
+        return List.of(PrPageResponse.UserLocationAndLink.builder()
+                .location(prTemplate.getLocation())
+                .links(toLinkInfoList(links))
+                .build());
     }
 
-    private List<PrPageResponse.UserLocationAndLink.LinkInfo> LinkInfo(List<Link> links) {
+    private List<PrPageResponse.UserLocationAndLink.LinkInfo> toLinkInfoList(List<Link> links) {
         return links.stream()
                 .map(link -> PrPageResponse.UserLocationAndLink.LinkInfo.builder()
                         .linkName(link.getUrlName())
