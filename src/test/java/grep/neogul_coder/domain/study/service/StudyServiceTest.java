@@ -101,6 +101,8 @@ class StudyServiceTest extends IntegrationTestSupport {
 
         // when
         Long id = studyService.createStudy(request, userId, image);
+        em.flush();
+        em.clear();
 
         // then
         Study findStudy = studyRepository.findByIdAndActivatedTrue(id).orElseThrow();
