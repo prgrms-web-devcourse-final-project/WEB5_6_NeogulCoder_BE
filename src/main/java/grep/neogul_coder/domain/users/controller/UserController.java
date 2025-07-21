@@ -7,9 +7,6 @@ import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
 import grep.neogul_coder.domain.users.service.UserService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
-import grep.neogul_coder.global.utils.upload.FileUploadResponse;
-import grep.neogul_coder.global.utils.upload.FileUsageType;
-import grep.neogul_coder.global.utils.upload.uploader.GcpFileUploader;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +23,6 @@ import java.io.IOException;
 public class UserController implements UserSpecification {
 
     private final UserService usersService;
-//    private final GcpFileUploader fileManager;
 
     @GetMapping("/me")
     public ApiResponse<UserResponse> get(@AuthenticationPrincipal Principal principal) {
@@ -46,20 +42,7 @@ public class UserController implements UserSpecification {
             @RequestPart("nickname") String nickname,
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
     ) throws IOException {
-
-//        String profileImageUrl = null;
-//
-//        if (profileImage != null && !profileImage.isEmpty()) {
-//            FileUploadResponse response = fileManager.upload(
-//                    profileImage,
-//                    principal.getUserId(),
-//                    FileUsageType.PROFILE,
-//                    principal.getUserId()
-//            );
-//            profileImageUrl = response.fileUrl();
-//        }
-//
-//        usersService.updateProfile(principal.getUserId(), nickname, profileImageUrl);
+        usersService.updateProfile(principal.getUserId(), nickname, profileImage);
         return ApiResponse.noContent();
     }
 
