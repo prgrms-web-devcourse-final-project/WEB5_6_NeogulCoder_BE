@@ -52,8 +52,8 @@ public abstract class AbstractFileManager {
         originFileName,
         renameFileName,
         usageType,
-        fileUrl,
         savePath,
+        fileUrl,
         uploaderId,
         usageRefId
     );

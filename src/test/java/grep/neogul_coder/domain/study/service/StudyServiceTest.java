@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -70,8 +72,12 @@ class StudyServiceTest extends IntegrationTestSupport {
                 .imageUrl("http://localhost:8083/image.url")
                 .build();
 
+        MultipartFile image = new MockMultipartFile(
+
+        )
+
         // when
-        Long id = studyService.createStudy(request, userId);
+        Long id = studyService.createStudy(request, userId, image);
 
         // then
         Study findStudy = studyRepository.findByIdAndActivatedTrue(id).orElseThrow();

@@ -134,7 +134,7 @@ public class StudyService {
         validateStudyLeader(studyId, userId);
         validateStudyStartDate(request, study);
 
-        String imageUrl = createImageUrl(userId, image);
+        String imageUrl = updateImageUrl(userId, image, study.getImageUrl());
 
         study.update(
             request.getName(),
@@ -222,6 +222,17 @@ public class StudyService {
         }
         return imageUrl;
     }
+
+    private String updateImageUrl(Long userId, MultipartFile image, String originalImageUrl) throws IOException {
+        if (isImgExists(image)) {
+            FileUploadResponse uploadResult = isProductionEnvironment()
+                ? gcpFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId)
+                : localFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
+            return uploadResult.fileUrl();
+        }
+        return originalImageUrl;
+    }
+
 
     private boolean isImgExists(MultipartFile image) {
         return image != null && !image.isEmpty();
