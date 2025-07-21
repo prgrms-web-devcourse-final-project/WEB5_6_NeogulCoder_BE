@@ -105,11 +105,11 @@ INSERT INTO pr_template (user_id, introduction, location) VALUES (2, '실용적�
 INSERT INTO pr_template (user_id, introduction, location) VALUES (4, '초심을 잃지 않는 프론트엔드 개발자입니다. Vue, React 기반 프로젝트 경험이 있으며, UI/UX에 대한 관심도 많습니다.', '대전시 유성구');
 INSERT INTO pr_template (user_id, introduction, location) VALUES (5, '문제를 해결하는 것이 즐거운 백엔드 개발자입니다. JPA, QueryDSL 기반의 안정적인 데이터 처리와 아키텍처 설계에 관심이 있습니다.', '인천시 연수구');
 
-INSERT INTO link (user_id, pr_url, url_name) VALUES (1, 'https://github.com/yeongho', 'GitHub 포트폴리오');
-INSERT INTO link (user_id, pr_url, url_name) VALUES (2, 'https://velog.io/@jiweon01', '기술 블로그 (Velog)');
-INSERT INTO link (user_id, pr_url, url_name) VALUES (5, 'https://notion.so/dev-profile', '기술 이력서 (Notion)');
-INSERT INTO link (user_id, pr_url, url_name) VALUES (5, 'https://toss.im/team/gimgim', '팀 프로젝트 소개');
-INSERT INTO link (user_id, pr_url, url_name) VALUES (1, 'https://linkedin.com/in/eungyeong', 'LinkedIn 프로필');
+INSERT INTO link (user_id, pr_url, url_name, activated) VALUES (1, 'https://github.com/yeongho', 'GitHub 포트폴리오', true);
+INSERT INTO link (user_id, pr_url, url_name, activated) VALUES (2, 'https://velog.io/@jiweon01', '기술 블로그 (Velog)', true);
+INSERT INTO link (user_id, pr_url, url_name, activated) VALUES (5, 'https://notion.so/dev-profile', '기술 이력서 (Notion)', true);
+INSERT INTO link (user_id, pr_url, url_name, activated) VALUES (5, 'https://toss.im/team/gimgim', '팀 프로젝트 소개', true);
+INSERT INTO link (user_id, pr_url, url_name, activated) VALUES (1, 'https://linkedin.com/in/eungyeong', 'LinkedIn 프로필', true);
 
 INSERT INTO attendance (study_id, user_id, attendance_date) VALUES (1, 3, '2025-07-01');
 INSERT INTO attendance (study_id, user_id, attendance_date) VALUES (1, 3, '2025-07-02');
