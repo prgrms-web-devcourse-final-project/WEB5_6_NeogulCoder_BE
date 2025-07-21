@@ -17,12 +17,20 @@ import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
 import grep.neogul_coder.global.exception.business.NotFoundException;
+import grep.neogul_coder.global.utils.upload.FileUploadResponse;
+import grep.neogul_coder.global.utils.upload.FileUsageType;
+import grep.neogul_coder.global.utils.upload.uploader.GcpFileUploader;
+import grep.neogul_coder.global.utils.upload.uploader.LocalFileUploader;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +50,15 @@ public class StudyService {
     private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final UserRepository userRepository;
     private final BuddyEnergyService buddyEnergyService;
+
+    @Autowired(required = false)
+    private GcpFileUploader gcpFileUploader;
+
+    @Autowired(required = false)
+    private LocalFileUploader localFileUploader;
+
+    @Autowired
+    private Environment environment;
 
     public StudyItemPagingResponse getMyStudiesPaging(Pageable pageable, Long userId) {
         Page<StudyItemResponse> page = studyQueryRepository.findMyStudiesPaging(pageable, userId);
@@ -90,10 +107,12 @@ public class StudyService {
     }
 
     @Transactional
-    public Long createStudy(StudyCreateRequest request, Long userId) {
+    public Long createStudy(StudyCreateRequest request, Long userId, MultipartFile image) throws IOException {
         validateLocation(request.getStudyType(), request.getLocation());
 
-        Study study = studyRepository.save(request.toEntity());
+        String imageUrl = createImageUrl(userId, image);
+
+        Study study = studyRepository.save(request.toEntity(imageUrl));
 
         StudyMember leader = StudyMember.builder()
             .study(study)
@@ -106,7 +125,7 @@ public class StudyService {
     }
 
     @Transactional
-    public void updateStudy(Long studyId, StudyUpdateRequest request, Long userId) {
+    public void updateStudy(Long studyId, StudyUpdateRequest request, Long userId, MultipartFile image) throws IOException {
         Study study = studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
@@ -114,6 +133,8 @@ public class StudyService {
         validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
         validateStudyStartDate(request, study);
+
+        String imageUrl = updateImageUrl(userId, image, study.getImageUrl());
 
         study.update(
             request.getName(),
@@ -123,7 +144,7 @@ public class StudyService {
             request.getLocation(),
             request.getStartDate(),
             request.getIntroduction(),
-            request.getImageUrl()
+            imageUrl
         );
     }
 
@@ -180,5 +201,40 @@ public class StudyService {
         if (memberCount != 1) {
             throw new BusinessException(STUDY_DELETE_NOT_ALLOWED);
         }
+    }
+
+    private boolean isProductionEnvironment() {
+        for (String profile : environment.getActiveProfiles()) {
+            if ("prod".equals(profile)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String createImageUrl(Long userId, MultipartFile image) throws IOException {
+        String imageUrl = null;
+        if (isImgExists(image)) {
+            FileUploadResponse uploadResult = isProductionEnvironment()
+                ? gcpFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId)
+                : localFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
+            imageUrl = uploadResult.getFileUrl();
+        }
+        return imageUrl;
+    }
+
+    private String updateImageUrl(Long userId, MultipartFile image, String originalImageUrl) throws IOException {
+        if (isImgExists(image)) {
+            FileUploadResponse uploadResult = isProductionEnvironment()
+                ? gcpFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId)
+                : localFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
+            return uploadResult.getFileUrl();
+        }
+        return originalImageUrl;
+    }
+
+
+    private boolean isImgExists(MultipartFile image) {
+        return image != null && !image.isEmpty();
     }
 }

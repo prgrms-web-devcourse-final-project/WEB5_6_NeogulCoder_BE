@@ -8,7 +8,9 @@ import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "Study", description = "스터디 API")
@@ -36,10 +38,10 @@ public interface StudySpecification {
     ApiResponse<StudyMemberInfoResponse> getMyStudyMemberInfo(Long studyId, Principal userDetails);
 
     @Operation(summary = "스터디 생성", description = "새로운 스터디를 생성합니다.")
-    ApiResponse<Long> createStudy(StudyCreateRequest request, Principal userDetails);
+    ApiResponse<Long> createStudy(StudyCreateRequest request, MultipartFile image, Principal userDetails) throws IOException;
 
     @Operation(summary = "스터디 수정", description = "스터디를 수정합니다.")
-    ApiResponse<Void> updateStudy(Long studyId, StudyUpdateRequest request, Principal userDetails);
+    ApiResponse<Void> updateStudy(Long studyId, StudyUpdateRequest request, MultipartFile image, Principal userDetails) throws IOException;
 
     @Operation(summary = "스터디 삭제", description = "스터디를 삭제합니다.")
     ApiResponse<Void> deleteStudy(Long studyId, Principal userDetails);
