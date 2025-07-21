@@ -48,15 +48,15 @@ public abstract class AbstractFileManager {
 
     uploadFile(file, buildFullPath(savePath, renameFileName)); // 실제 파일 업로드(구현체에서 구현)
 
-    return new FileUploadResponse(
-        originFileName,
-        renameFileName,
-        usageType,
-        savePath,
-        fileUrl,
-        uploaderId,
-        usageRefId
-    );
+    return FileUploadResponse.builder()
+        .originFileName(originFileName)
+        .renameFileName(renameFileName)
+        .usageType(usageType)
+        .savePath(savePath)
+        .fileUrl(fileUrl)
+        .uploaderId(uploaderId)
+        .usageRefId(usageRefId)
+        .build();
   }
 
   // 실제 파일 업로드를 수행

@@ -72,12 +72,8 @@ class StudyServiceTest extends IntegrationTestSupport {
                 .imageUrl("http://localhost:8083/image.url")
                 .build();
 
-        MultipartFile image = new MockMultipartFile(
-
-        )
-
         // when
-        Long id = studyService.createStudy(request, userId, image);
+        Long id = studyService.createStudy(request, userId);
 
         // then
         Study findStudy = studyRepository.findByIdAndActivatedTrue(id).orElseThrow();

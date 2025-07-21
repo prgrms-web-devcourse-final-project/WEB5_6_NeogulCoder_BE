@@ -218,7 +218,7 @@ public class StudyService {
             FileUploadResponse uploadResult = isProductionEnvironment()
                 ? gcpFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId)
                 : localFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
-            imageUrl = uploadResult.fileUrl();
+            imageUrl = uploadResult.getFileUrl();
         }
         return imageUrl;
     }
@@ -228,7 +228,7 @@ public class StudyService {
             FileUploadResponse uploadResult = isProductionEnvironment()
                 ? gcpFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId)
                 : localFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
-            return uploadResult.fileUrl();
+            return uploadResult.getFileUrl();
         }
         return originalImageUrl;
     }
