@@ -14,22 +14,22 @@ public class StudyExtensionResponse {
     private Long studyId;
 
     @Schema(description = "연장 여부", example = "true")
-    private boolean isExtended;
+    private boolean extended;
 
     @Schema(description = "연장 스터디 참여 여부 목록")
     private List<ExtendParticipationResponse> members;
 
     @Builder
-    private StudyExtensionResponse(Long studyId, boolean isExtended, List<ExtendParticipationResponse> members) {
+    private StudyExtensionResponse(Long studyId, boolean extended, List<ExtendParticipationResponse> members) {
         this.studyId = studyId;
-        this.isExtended = isExtended;
+        this.extended = extended;
         this.members = members;
     }
 
     public static StudyExtensionResponse from(Study study, List<ExtendParticipationResponse> members) {
         return StudyExtensionResponse.builder()
             .studyId(study.getId())
-            .isExtended(study.getOriginStudyId() != null)
+            .extended(study.isExtended())
             .members(members)
             .build();
     }
