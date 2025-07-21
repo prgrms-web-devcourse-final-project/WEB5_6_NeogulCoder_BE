@@ -46,8 +46,11 @@ public class TeamCalendarService {
 
     public List<TeamCalendarResponse> findByDate(Long studyId, LocalDate date) {
 
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
         return teamCalendarQueryRepository
-            .findByStudyIdAndDate(studyId, date).stream()
+            .findByStudyIdAndDate(studyId, start, end).stream()
             .map(tc -> {
                 User user = userService.get(tc.getUserId());
                 return TeamCalendarResponse.from(tc, user);
@@ -56,12 +59,14 @@ public class TeamCalendarService {
     }
 
     @Transactional
-    public void create(Long studyId, Long userId, TeamCalendarRequest request) {
+    public Long create(Long studyId, Long userId, TeamCalendarRequest request) {
         validateRequest(request);
 
         Calendar calendar = request.toCalendar();
         TeamCalendar teamCalendar = new TeamCalendar(studyId, userId, calendar);
         teamCalendarRepository.save(teamCalendar);
+
+        return calendar.getId();
     }
 
     @Transactional

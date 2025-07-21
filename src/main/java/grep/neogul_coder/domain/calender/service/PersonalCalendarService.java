@@ -45,22 +45,25 @@ public class PersonalCalendarService {
     // 특정 날짜의 일정 필터링해서 조회
     public List<PersonalCalendarResponse> findByDate(Long userId, LocalDate date) {
         User user = userService.get(userId);
+        LocalDateTime start = date.atStartOfDay();                      // 2025-07-23 00:00
+        LocalDateTime end = date.plusDays(1).atStartOfDay();   // 2025-07-24 00:00
 
         return personalCalendarQueryRepository
-            .findByUserIdAndDate(userId, date).stream()
+            .findByUserIdAndDate(userId, start, end).stream()
             .map(pc -> PersonalCalendarResponse.from(pc, user))
             .toList();
     }
 
     // 개인 일정 생성
     @Transactional
-    public void create(Long userId, PersonalCalendarRequest request) {
+    public Long create(Long userId, PersonalCalendarRequest request) {
         // 필수 필드  입력 안할 시 유효성 예외 발생
         validateRequiredFields(request); // 메서드로 분리
 
         Calendar calendar = request.toCalendar();
         PersonalCalendar personalCalendar = new PersonalCalendar(userId, calendar);
         personalCalendarRepository.save(personalCalendar);
+        return calendar.getId();
     }
 
     // 개인 일정 수정
