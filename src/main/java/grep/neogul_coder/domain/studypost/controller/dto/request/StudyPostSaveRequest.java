@@ -5,17 +5,12 @@ import grep.neogul_coder.domain.studypost.Category;
 import grep.neogul_coder.domain.studypost.StudyPost;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Schema(description = "스터디 게시글 저장 요청 DTO")
 public class StudyPostSaveRequest {
-
-    @Schema(description = "3", example = "스터디 ID")
-    @NotNull
-    private long studyId;
 
     @Schema(description = "제목", example = "스터디 공지")
     @NotBlank
@@ -33,8 +28,7 @@ public class StudyPostSaveRequest {
     }
 
     @Builder
-    private StudyPostSaveRequest(long studyId, String title, Category category, String content) {
-        this.studyId = studyId;
+    private StudyPostSaveRequest(String title, Category category, String content) {
         this.title = title;
         this.category = category;
         this.content = content;

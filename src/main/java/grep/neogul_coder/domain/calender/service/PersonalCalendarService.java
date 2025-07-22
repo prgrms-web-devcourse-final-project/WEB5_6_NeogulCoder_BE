@@ -63,7 +63,7 @@ public class PersonalCalendarService {
         Calendar calendar = request.toCalendar();
         PersonalCalendar personalCalendar = new PersonalCalendar(userId, calendar);
         personalCalendarRepository.save(personalCalendar);
-        return calendar.getId();
+        return personalCalendar.getId();
     }
 
     // 개인 일정 수정

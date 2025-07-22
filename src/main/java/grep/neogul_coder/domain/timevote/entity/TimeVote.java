@@ -1,6 +1,5 @@
 package grep.neogul_coder.domain.timevote.entity;
 
-import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +10,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
+import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class TimeVote extends BaseEntity {
 
@@ -19,16 +21,22 @@ public class TimeVote extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long voteId;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "period_id", nullable = false)
   private TimeVotePeriod period;
 
-  @Column(nullable = false)
+  @Column(name = "study_member_id", nullable = false)
   private Long studyMemberId;
 
   @Column(nullable = false)
-  private LocalDateTime startTime;
+  private LocalDateTime timeSlot;
 
-  @Column(nullable = false)
-  private LocalDateTime endTime;
+  protected TimeVote() {};
+
+  @Builder
+  public TimeVote(TimeVotePeriod period, Long studyMemberId, LocalDateTime timeSlot) {
+    this.period = period;
+    this.studyMemberId = studyMemberId;
+    this.timeSlot = timeSlot;
+  }
 }

@@ -66,7 +66,7 @@ public class TeamCalendarService {
         TeamCalendar teamCalendar = new TeamCalendar(studyId, userId, calendar);
         teamCalendarRepository.save(teamCalendar);
 
-        return calendar.getId();
+        return teamCalendar.getId();
     }
 
     @Transactional
