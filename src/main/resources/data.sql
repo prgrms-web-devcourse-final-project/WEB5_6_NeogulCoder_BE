@@ -16,11 +16,11 @@ INSERT INTO study_post (study_id, user_id, title, category, content) VALUES (4, 
 INSERT INTO study_post (study_id, user_id, title, category, content) VALUES (2, 2, '개발 유튜브 공유', 'FREE', '재미니의 개발실무 ( 토스 ); 개발바닥');
 INSERT INTO study_post (study_id, user_id, title, category, content) VALUES (5, 5, '점심 메뉴 추천', 'FREE', '오늘 점심 뭐먹을지 추천 받습니다!');
 
-INSERT INTO comment (post_id, user_id, content) VALUES (5, 4, '확인 했습니다!');
-INSERT INTO comment (post_id, user_id, content) VALUES (5, 4, '좋은 정보 감사합니다!');
-INSERT INTO comment (post_id, user_id, content) VALUES (3, 2, '관련된 블로그 공유 드립니다!');
-INSERT INTO comment (post_id, user_id, content) VALUES (2, 5, '정보 감사합니다!');
-INSERT INTO comment (post_id, user_id, content) VALUES (4, 1, '제육 돈까스');
+-- INSERT INTO comment (post_id, user_id, content) VALUES (5, 4, '확인 했습니다!');
+-- INSERT INTO comment (post_id, user_id, content) VALUES (5, 4, '좋은 정보 감사합니다!');
+-- INSERT INTO comment (post_id, user_id, content) VALUES (3, 2, '관련된 블로그 공유 드립니다!');
+-- INSERT INTO comment (post_id, user_id, content) VALUES (2, 5, '정보 감사합니다!');
+-- INSERT INTO comment (post_id, user_id, content) VALUES (4, 1, '제육 돈까스');
 
 INSERT INTO study_member (study_id, user_id, role, participated) VALUES (1, 3, 'LEADER', FALSE);
 INSERT INTO study_member (study_id, user_id, role, participated) VALUES (1, 4, 'MEMBER', FALSE);
