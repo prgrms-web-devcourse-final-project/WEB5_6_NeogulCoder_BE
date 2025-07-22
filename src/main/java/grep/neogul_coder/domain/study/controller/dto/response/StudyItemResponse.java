@@ -1,11 +1,9 @@
 package grep.neogul_coder.domain.study.controller.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
-import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -48,13 +46,11 @@ public class StudyItemResponse {
     private StudyType studyType;
 
     @Schema(description = "종료 여부", example = "false")
-    public boolean isFinished() {
-        return endDate.toLocalDate().isBefore(LocalDate.now());
-    }
+    private boolean finished;
 
     @QueryProjection
     public StudyItemResponse(Long studyId, String name, String leaderNickname, int capacity, int currentCount, LocalDateTime startDate,
-                             LocalDateTime endDate, String imageUrl, String introduction, Category category, StudyType studyType) {
+                             LocalDateTime endDate, String imageUrl, String introduction, Category category, StudyType studyType, boolean finished) {
         this.studyId = studyId;
         this.name = name;
         this.leaderNickname = leaderNickname;
@@ -66,5 +62,6 @@ public class StudyItemResponse {
         this.introduction = introduction;
         this.category = category;
         this.studyType = studyType;
+        this.finished = finished;
     }
 }
