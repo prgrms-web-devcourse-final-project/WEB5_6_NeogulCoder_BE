@@ -115,7 +115,7 @@ public class ApplicationService {
 
     private static void validateStatusIsApplying(StudyApplication application) {
         if (application.getStatus() != ApplicationStatus.APPLYING) {
-            throw new BusinessException(ALREADY_APPLYING);
+            throw new BusinessException(APPLICATION_NOT_APPLYING);
         }
     }
 
