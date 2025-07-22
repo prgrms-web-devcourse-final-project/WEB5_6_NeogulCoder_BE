@@ -18,7 +18,7 @@ public interface PersonalCalendarSpecification {
 
     @Operation(
         summary = "개인 일정 생성",
-        description = "사용자의 개인 일정을 생성합니다.\n\n예: `/api/users/{userId}/calendar`"
+        description = "사용자의 개인 일정을 생성하고, 생성된 개인 일정 ID를 반환합니다. \n\n예: `/api/users/{userId}/calendar`"
     )
     ApiResponse<Long> create(
         @Parameter(name = "userId", description = "사용자 ID", required = true, in = ParameterIn.PATH)
