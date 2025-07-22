@@ -1,5 +1,7 @@
 package grep.neogul_coder.domain.groupchat.controller.dto.response;
 
+import grep.neogul_coder.domain.groupchat.entity.GroupChatMessage;
+import grep.neogul_coder.domain.users.entity.User;
 import io.swagger.v3.oas.annotations.Hidden;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -16,10 +18,7 @@ public class GroupChatMessageResponseDto {
     private String message;             // 메시지 내용
     private LocalDateTime sentAt;       // 보낸 시간
 
-    public GroupChatMessageResponseDto() {
-    }
-
-    public GroupChatMessageResponseDto(Long id, Long roomId, Long senderId,
+    private GroupChatMessageResponseDto(Long id, Long roomId, Long senderId,
         String senderNickname, String profileImageUrl,
         String message, LocalDateTime sentAt) {
         this.id = id;
@@ -31,31 +30,15 @@ public class GroupChatMessageResponseDto {
         this.sentAt = sentAt;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setRoomId(Long roomId) {
-        this.roomId = roomId;
-    }
-
-    public void setSenderId(Long senderId) {
-        this.senderId = senderId;
-    }
-
-    public void setSenderNickname(String senderNickname) {
-        this.senderNickname = senderNickname;
-    }
-
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public void setSentAt(LocalDateTime sentAt) {
-        this.sentAt = sentAt;
+    public static GroupChatMessageResponseDto from(GroupChatMessage message, User sender) {
+        return new GroupChatMessageResponseDto(
+            message.getMessageId(),
+            message.getGroupChatRoom().getRoomId(),
+            sender.getId(),
+            sender.getNickname(),
+            sender.getProfileImageUrl(),
+            message.getMessage(),
+            message.getSentAt()
+        );
     }
 }
