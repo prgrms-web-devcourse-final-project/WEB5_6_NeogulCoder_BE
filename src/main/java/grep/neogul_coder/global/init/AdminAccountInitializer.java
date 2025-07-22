@@ -24,6 +24,7 @@ public class AdminAccountInitializer {
         }
 
         User admin = User.builder()
+            .activated(true)
             .email(adminEmail)
             .password(passwordEncoder.encode("admin1234"))
             .nickname("관리자")
