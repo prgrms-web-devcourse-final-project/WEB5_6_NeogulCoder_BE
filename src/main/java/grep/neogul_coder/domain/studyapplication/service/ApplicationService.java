@@ -41,13 +41,13 @@ public class ApplicationService {
     }
 
     @Transactional
-    public Long createApplication(ApplicationCreateRequest request) {
-        RecruitmentPost recruitmentPost = findValidRecruimentPost(request.getRecruitmentPostId());
+    public Long createApplication(Long recruitmentPostId, ApplicationCreateRequest request, Long userId) {
+        RecruitmentPost recruitmentPost = findValidRecruimentPost(recruitmentPostId);
 
-        validateNotLeaderApply(request, recruitmentPost);
-        validateNotAlreadyApplied(request);
+        validateNotLeaderApply(recruitmentPost, userId);
+        validateNotAlreadyApplied(recruitmentPostId, userId);
 
-        StudyApplication application = request.toEntity();
+        StudyApplication application = request.toEntity(recruitmentPostId, userId);
         applicationRepository.save(application);
 
         return application.getId();
@@ -59,7 +59,7 @@ public class ApplicationService {
         RecruitmentPost post = findValidRecruimentPost(application.getRecruitmentPostId());
         Study study = findValidStudy(post);
 
-        validateOnlyLeaderCanApproved(study, userId);
+        validateOnlyLeaderCanApprove(study, userId);
         validateStatusIsApplying(application);
 
         application.approve();
@@ -75,7 +75,7 @@ public class ApplicationService {
         RecruitmentPost post = findValidRecruimentPost(application.getRecruitmentPostId());
         Study study = findValidStudy(post);
 
-        validateOnlyLeaderCanRejected(study, userId);
+        validateOnlyLeaderCanReject(study, userId);
         validateStatusIsApplying(application);
 
         application.reject();
@@ -93,21 +93,21 @@ public class ApplicationService {
         return application;
     }
 
-    private RecruitmentPost findValidRecruimentPost(Long applicationId) {
-        RecruitmentPost post = recruitmentPostRepository.findByIdAndActivatedTrue(applicationId)
+    private RecruitmentPost findValidRecruimentPost(Long recruitmentPostId) {
+        RecruitmentPost post = recruitmentPostRepository.findByIdAndActivatedTrue(recruitmentPostId)
             .orElseThrow(() -> new NotFoundException(NOT_FOUND));
         return post;
     }
 
-    private void validateNotLeaderApply(ApplicationCreateRequest request, RecruitmentPost recruitmentPost) {
-        boolean isLeader = studyMemberRepository.existsByStudyIdAndUserIdAndRole(recruitmentPost.getStudyId(), request.getUserId(), StudyMemberRole.LEADER);
+    private void validateNotLeaderApply(RecruitmentPost recruitmentPost, Long userId) {
+        boolean isLeader = studyMemberRepository.existsByStudyIdAndUserIdAndRole(recruitmentPost.getStudyId(), userId, StudyMemberRole.LEADER);
         if (isLeader) {
             throw new BusinessException(LEADER_CANNOT_APPLY);
         }
     }
 
-    private void validateNotAlreadyApplied(ApplicationCreateRequest request) {
-        boolean alreadyApplied = applicationRepository.existsByRecruitmentPostIdAndUserId(request.getRecruitmentPostId(), request.getUserId());
+    private void validateNotAlreadyApplied(Long recruitmentPostId, Long userId) {
+        boolean alreadyApplied = applicationRepository.existsByRecruitmentPostIdAndUserId(recruitmentPostId, userId);
         if (alreadyApplied) {
             throw new BusinessException(ALREADY_APPLICATION);
         }
@@ -119,14 +119,14 @@ public class ApplicationService {
         }
     }
 
-    private void validateOnlyLeaderCanApproved(Study study, Long userId) {
+    private void validateOnlyLeaderCanApprove(Study study, Long userId) {
         boolean isLeader = studyMemberRepository.existsByStudyIdAndUserIdAndRole(study.getId(), userId, StudyMemberRole.LEADER);
         if (!isLeader) {
             throw new BusinessException(LEADER_ONLY_APPROVED);
         }
     }
 
-    private void validateOnlyLeaderCanRejected(Study study, Long userId) {
+    private void validateOnlyLeaderCanReject(Study study, Long userId) {
         boolean isLeader = studyMemberRepository.existsByStudyIdAndUserIdAndRole(study.getId(), userId, StudyMemberRole.LEADER);
         if (!isLeader) {
             throw new BusinessException(LEADER_ONLY_REJECTED);

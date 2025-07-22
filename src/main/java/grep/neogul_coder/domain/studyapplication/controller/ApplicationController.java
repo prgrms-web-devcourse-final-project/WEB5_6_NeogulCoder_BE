@@ -12,32 +12,35 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/api/studies")
+@RequestMapping("/api/recruitment-posts")
 @RequiredArgsConstructor
 @RestController
 public class ApplicationController implements ApplicationSpecification {
 
     private final ApplicationService applicationService;
 
-    @GetMapping("/{studyId}/applications")
-    public ApiResponse<List<MyApplicationResponse>> getMyStudyApplications(@AuthenticationPrincipal Principal userDetails) {
+    @GetMapping("/{recruitment-post-id}/applications")
+    public ApiResponse<List<MyApplicationResponse>> getMyStudyApplications(@PathVariable("recruitment-post-id") Long recruitmentPostId,
+                                                                           @AuthenticationPrincipal Principal userDetails) {
         return ApiResponse.success(applicationService.getMyStudyApplications(userDetails.getUserId()));
     }
 
-    @PostMapping("/{studyId}/applications")
-    public ApiResponse<Long> createApplication(@RequestBody @Valid ApplicationCreateRequest request) {
-        Long id = applicationService.createApplication(request);
+    @PostMapping("/{recruitment-post-id}/applications")
+    public ApiResponse<Long> createApplication(@PathVariable("recruitment-post-id") Long recruitmentPostId,
+                                               @RequestBody @Valid ApplicationCreateRequest request,
+                                               @AuthenticationPrincipal Principal userDetails) {
+        Long id = applicationService.createApplication(recruitmentPostId, request, userDetails.getUserId());
         return ApiResponse.success(id);
     }
 
-    @PostMapping("/{applicationId}/approve")
+    @PostMapping("/applications/{applicationId}/approve")
     public ApiResponse<Void> approveApplication(@PathVariable("applicationId") Long applicationId,
                                                 @AuthenticationPrincipal Principal userDetails) {
         applicationService.approveApplication(applicationId, userDetails.getUserId());
         return ApiResponse.noContent();
     }
 
-    @PostMapping("/{applicationId}/reject")
+    @PostMapping("/applications/{applicationId}/reject")
     public ApiResponse<Void> rejectApplication(@PathVariable("applicationId") Long applicationId,
                                                @AuthenticationPrincipal Principal userDetails) {
         applicationService.rejectApplication(applicationId, userDetails.getUserId());

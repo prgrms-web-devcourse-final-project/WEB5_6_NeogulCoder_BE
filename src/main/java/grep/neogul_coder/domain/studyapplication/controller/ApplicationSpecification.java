@@ -13,10 +13,10 @@ import java.util.List;
 public interface ApplicationSpecification {
 
     @Operation(summary = "내 스터디 신청 목록 조회", description = "내가 신청한 스터디의 목록을 조회합니다.")
-    ApiResponse<List<MyApplicationResponse>> getMyStudyApplications(Principal userDetails);
+    ApiResponse<List<MyApplicationResponse>> getMyStudyApplications(Long recruitmentPostId, Principal userDetails);
 
     @Operation(summary = "스터디 신청 생성", description = "스터디를 신청합니다.")
-    ApiResponse<Long> createApplication(ApplicationCreateRequest request);
+    ApiResponse<Long> createApplication(Long recruitmentPostId, ApplicationCreateRequest request, Principal userDetails);
 
     @Operation(summary = "스터디 신청 승인", description = "스터디장이 스터디 신청을 승인합니다.")
     ApiResponse<Void> approveApplication(Long applicationId, Principal userDetails);

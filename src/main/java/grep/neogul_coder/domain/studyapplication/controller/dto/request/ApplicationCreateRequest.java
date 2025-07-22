@@ -12,13 +12,6 @@ import lombok.Getter;
 @Getter
 public class ApplicationCreateRequest {
 
-    @Schema(description = "모집글 번호", example = "1")
-    private Long recruitmentPostId;
-
-    @NotNull
-    @Schema(description = "유저 번호", example = "1")
-    private Long userId;
-
     @NotBlank
     @Schema(description = "스터디 신청 지원 동기", example = "자바를 더 공부하고싶어 지원하였습니다.")
     private String applicationReason;
@@ -27,16 +20,14 @@ public class ApplicationCreateRequest {
     }
 
     @Builder
-    private ApplicationCreateRequest(Long recruitmentPostId, Long userId, String applicationReason) {
-        this.recruitmentPostId = recruitmentPostId;
-        this.userId = userId;
+    private ApplicationCreateRequest(String applicationReason) {
         this.applicationReason = applicationReason;
     }
 
-    public StudyApplication toEntity() {
+    public StudyApplication toEntity(Long recruitmentPostId, Long userId) {
         return StudyApplication.builder()
-            .recruitmentPostId(this.recruitmentPostId)
-            .userId(this.userId)
+            .recruitmentPostId(recruitmentPostId)
+            .userId(userId)
             .applicationReason(this.applicationReason)
             .isRead(false)
             .status(ApplicationStatus.APPLYING)
