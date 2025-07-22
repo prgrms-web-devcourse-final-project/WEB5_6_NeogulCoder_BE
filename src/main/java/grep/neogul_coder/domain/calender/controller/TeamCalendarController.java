@@ -28,8 +28,8 @@ public class TeamCalendarController implements TeamCalendarSpecification {
         @PathVariable("studyId") Long studyId,
         @Valid @RequestBody TeamCalendarRequest request
     ) {
-        Long calendarId = teamCalendarService.create(studyId, userId, request);
-        return ApiResponse.success(calendarId);  // 생성된 일정 ID 반환
+        Long teamCalendarId = teamCalendarService.create(studyId, userId, request);
+        return ApiResponse.success(teamCalendarId);  // 생성된 일정 ID 반환
     }
 
     // 전체 일정 조회 API

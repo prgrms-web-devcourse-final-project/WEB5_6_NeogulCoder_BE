@@ -45,7 +45,7 @@ public interface TeamCalendarSpecification {
 
     @Operation(
         summary = "팀 일정 생성",
-        description = "특정 팀 ID에 새로운 일정을 생성합니다.\n\n" +
+        description = "팀 일정을 생성하고 생성된 팀 일정 ID를 반환합니다.\n\n" +
             "예: `/api/teams/{studyId}/calendar`"
     )
     ApiResponse<Long> create(

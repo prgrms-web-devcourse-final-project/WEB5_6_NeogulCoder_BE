@@ -8,9 +8,6 @@ import lombok.Getter;
 @Schema(description = "스터디 모임 일정 조율 - 팀장이 요청한 가능 시간 투표 기간 정보를 응답할 때 사용하는 DTO")
 public class TimeVotePeriodResponse {
 
-  @Schema(description = "기간 ID", example = "5")
-  private Long periodId;
-
   @Schema(description = "스터디 ID", example = "1")
   private Long studyId;
 
