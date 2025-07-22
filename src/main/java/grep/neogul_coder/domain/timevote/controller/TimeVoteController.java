@@ -8,7 +8,6 @@ import grep.neogul_coder.domain.timevote.dto.response.TimeVotePeriodResponse;
 import grep.neogul_coder.domain.timevote.dto.response.TimeVoteResponse;
 import grep.neogul_coder.domain.timevote.dto.response.TimeVoteStatListResponse;
 import grep.neogul_coder.domain.timevote.dto.response.TimeVoteSubmissionStatusResponse;
-import grep.neogul_coder.domain.timevote.service.TimeVotePeriodService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
@@ -29,8 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/studies/{studyId}/time-vote")
 public class TimeVoteController implements TimeVoteSpecification {
-
-  private final TimeVotePeriodService timeVotePeriodService;
 
   @PostMapping("/periods")
   public ApiResponse<TimeVotePeriodResponse> createPeriod(
