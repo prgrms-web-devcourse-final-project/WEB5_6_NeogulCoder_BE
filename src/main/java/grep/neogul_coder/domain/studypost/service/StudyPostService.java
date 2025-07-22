@@ -12,11 +12,16 @@ import grep.neogul_coder.domain.studypost.controller.dto.response.*;
 import grep.neogul_coder.domain.studypost.repository.StudyPostQueryRepository;
 import grep.neogul_coder.domain.studypost.repository.StudyPostRepository;
 import grep.neogul_coder.global.exception.business.NotFoundException;
+import grep.neogul_coder.global.utils.upload.AbstractFileManager;
+import grep.neogul_coder.global.utils.upload.FileUploadResponse;
+import grep.neogul_coder.global.utils.upload.FileUsageType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import static grep.neogul_coder.domain.studypost.StudyPostErrorCode.NOT_FOUND_POST;
@@ -27,11 +32,11 @@ import static grep.neogul_coder.domain.studypost.StudyPostErrorCode.NOT_JOINED_S
 @RequiredArgsConstructor
 public class StudyPostService {
 
+    private final AbstractFileManager fileUploader;
     private final StudyMemberQueryRepository studyQueryRepository;
 
     private final StudyPostRepository studyPostRepository;
     private final StudyPostQueryRepository studyPostQueryRepository;
-
     private final StudyPostCommentQueryRepository commentQueryRepository;
 
     public StudyPostDetailResponse findOne(Long postId) {
@@ -47,9 +52,9 @@ public class StudyPostService {
     }
 
     @Transactional
-    public long create(StudyPostSaveRequest request, long userId) {
+    public long create(StudyPostSaveRequest request, long studyId, long userId) {
         List<StudyMember> myStudies = studyQueryRepository.findAllFetchStudyByUserId(userId);
-        Study study = extractTargetStudyById(myStudies, request.getStudyId());
+        Study study = extractTargetStudyById(myStudies, studyId);
         return studyPostRepository.save(request.toEntity(study, userId)).getId();
     }
 
@@ -79,5 +84,10 @@ public class StudyPostService {
                 .filter(study -> studyId == study.getId())
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException(NOT_JOINED_STUDY_USER));
+    }
+
+    public String uploadPostImage(MultipartFile file, long userId) throws IOException {
+        FileUploadResponse response = fileUploader.upload(file, userId, FileUsageType.POST, userId);
+        return response.getFileUrl();
     }
 }
