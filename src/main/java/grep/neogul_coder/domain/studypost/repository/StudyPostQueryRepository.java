@@ -159,7 +159,7 @@ public class StudyPostQueryRepository {
     }
 
     private BooleanBuilder likeContent(String content) {
-        return nullSafeBuilder(() -> studyPost.content.contains(content));
+        return nullSafeBuilder(() -> studyPost.content.contains(content).or(studyPost.title.contains(content)));
     }
 
     private BooleanBuilder equalsCategory(Category category) {
