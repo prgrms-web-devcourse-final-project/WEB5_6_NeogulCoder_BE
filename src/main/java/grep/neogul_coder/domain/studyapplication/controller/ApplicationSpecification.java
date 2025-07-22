@@ -22,5 +22,5 @@ public interface ApplicationSpecification {
     ApiResponse<Void> approveApplication(Long applicationId, Principal userDetails);
 
     @Operation(summary = "스터디 신청 거절", description = "스터디장이 스터디 신청을 거절합니다.")
-    ApiResponse<Void> rejectApplication(Long applicationId);
+    ApiResponse<Void> rejectApplication(Long applicationId, Principal userDetails);
 }

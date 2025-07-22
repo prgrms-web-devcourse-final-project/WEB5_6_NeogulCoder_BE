@@ -60,14 +60,25 @@ public class ApplicationService {
         Study study = findValidStudy(post);
 
         validateOnlyLeaderCanApproved(study, userId);
-        validateAlreadyApproved(application);
+        validateStatusIsApplying(application);
 
         application.approve();
 
         StudyMember studyMember = StudyMember.createMember(study, application.getUserId());
         studyMemberRepository.save(studyMember);
-
         study.increaseMemberCount();
+    }
+
+    @Transactional
+    public void rejectApplication(Long applicationId, Long userId) {
+        StudyApplication application = findValidApplication(applicationId);
+        RecruitmentPost post = findValidRecruimentPost(application.getRecruitmentPostId());
+        Study study = findValidStudy(post);
+
+        validateOnlyLeaderCanRejected(study, userId);
+        validateStatusIsApplying(application);
+
+        application.reject();
     }
 
     private Study findValidStudy(RecruitmentPost post) {
@@ -102,9 +113,9 @@ public class ApplicationService {
         }
     }
 
-    private static void validateAlreadyApproved(StudyApplication application) {
-        if (application.getStatus() == ApplicationStatus.APPROVED) {
-            throw new BusinessException(ALREADY_APPROVED);
+    private static void validateStatusIsApplying(StudyApplication application) {
+        if (application.getStatus() != ApplicationStatus.APPLYING) {
+            throw new BusinessException(ALREADY_APPLYING);
         }
     }
 
@@ -112,6 +123,13 @@ public class ApplicationService {
         boolean isLeader = studyMemberRepository.existsByStudyIdAndUserIdAndRole(study.getId(), userId, StudyMemberRole.LEADER);
         if (!isLeader) {
             throw new BusinessException(LEADER_ONLY_APPROVED);
+        }
+    }
+
+    private void validateOnlyLeaderCanRejected(Study study, Long userId) {
+        boolean isLeader = studyMemberRepository.existsByStudyIdAndUserIdAndRole(study.getId(), userId, StudyMemberRole.LEADER);
+        if (!isLeader) {
+            throw new BusinessException(LEADER_ONLY_REJECTED);
         }
     }
 }

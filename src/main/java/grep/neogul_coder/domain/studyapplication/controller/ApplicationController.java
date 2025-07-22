@@ -38,7 +38,9 @@ public class ApplicationController implements ApplicationSpecification {
     }
 
     @PostMapping("/{applicationId}/reject")
-    public ApiResponse<Void> rejectApplication(@PathVariable("applicationId") Long applicationId) {
+    public ApiResponse<Void> rejectApplication(@PathVariable("applicationId") Long applicationId,
+                                               @AuthenticationPrincipal Principal userDetails) {
+        applicationService.rejectApplication(applicationId, userDetails.getUserId());
         return ApiResponse.noContent();
     }
 }

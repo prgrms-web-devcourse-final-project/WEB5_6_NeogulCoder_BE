@@ -41,4 +41,8 @@ public class StudyApplication extends BaseEntity {
     public void approve() {
         this.status = ApplicationStatus.APPROVED;
     }
+
+    public void reject() {
+        this.status = ApplicationStatus.REJECTED;
+    }
 }
