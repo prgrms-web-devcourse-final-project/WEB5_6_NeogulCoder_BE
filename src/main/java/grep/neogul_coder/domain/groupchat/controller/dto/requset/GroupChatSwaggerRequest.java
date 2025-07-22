@@ -15,11 +15,4 @@ public class GroupChatSwaggerRequest {
 
     @Schema(description = "보낼 메시지", example = "안녕하세요!")
     private String message;
-
-
-    public void setSenderId(Long senderId) { this.senderId = senderId; }
-
-    public void setRoomId(Long roomId) { this.roomId = roomId; }
-
-    public void setMessage(String message) { this.message = message; }
 }

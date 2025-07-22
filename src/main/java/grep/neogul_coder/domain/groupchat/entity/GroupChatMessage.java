@@ -27,23 +27,14 @@ public class GroupChatMessage extends BaseEntity {
 
     private LocalDateTime sentAt;
 
-    public void setMessageId(Long messageId) {
-        this.messageId = messageId;
-    }
-
-    public void setGroupChatRoom(GroupChatRoom groupChatRoom) {
-        this.groupChatRoom = groupChatRoom;
-    }
-
-    public void setUserId(Long userId) {
+    public GroupChatMessage(GroupChatRoom room, Long userId, String message, LocalDateTime sentAt) {
+        this.groupChatRoom = room;
         this.userId = userId;
-    }
-
-    public void setMessage(String message) {
         this.message = message;
+        this.sentAt = sentAt;
     }
 
-    public void setSentAt(LocalDateTime sentAt) {
-        this.sentAt = sentAt;
+    protected GroupChatMessage() {
+
     }
 }
