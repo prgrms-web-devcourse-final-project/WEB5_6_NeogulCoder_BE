@@ -1,10 +1,15 @@
 package grep.neogul_coder.global.auth.service;
 
+import grep.neogul_coder.domain.buddy.service.BuddyEnergyService;
+import grep.neogul_coder.domain.prtemplate.entity.Link;
+import grep.neogul_coder.domain.prtemplate.entity.PrTemplate;
+import grep.neogul_coder.domain.prtemplate.repository.LinkRepository;
+import grep.neogul_coder.domain.prtemplate.repository.PrTemplateRepository;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.exception.UnActivatedUserException;
+import grep.neogul_coder.domain.users.exception.UserNotFoundException;
 import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
 import grep.neogul_coder.domain.users.repository.UserRepository;
-import grep.neogul_coder.domain.users.service.UserService;
 import grep.neogul_coder.global.auth.code.Role;
 import grep.neogul_coder.global.auth.entity.RefreshToken;
 import grep.neogul_coder.global.auth.jwt.JwtTokenProvider;
@@ -38,7 +43,9 @@ public class AuthService {
     private final RefreshTokenService refreshTokenService;
     private final UserBlackListRepository userBlackListRepository;
     private final UserRepository usersRepository;
-    private final UserService userService;
+    private final LinkRepository linkRepository;
+    private final PrTemplateRepository prTemplateRepository;
+    private final BuddyEnergyService buddyEnergyService;
 
     public TokenDto signin(LoginRequest loginRequest) {
 
@@ -60,10 +67,6 @@ public class AuthService {
         String roles = String.join(",", authentication.getAuthorities().stream().map(
             GrantedAuthority::getAuthority).toList());
         return processTokenSignin(authentication.getName(), roles);
-    }
-
-    private boolean isUnactivatedUser(String email) {
-        return !userService.getByEmail(email).getActivated();
     }
 
     public TokenDto processTokenSignin(String email, String roles) {
@@ -98,13 +101,23 @@ public class AuthService {
                     .oauthId(userInfo.getProviderId())
                     .password(dummyPassword)
                     .role(Role.ROLE_USER)
+                    .activated(true)
                     .build();
 
                 User savedUser = usersRepository.save(newUser);
-                userService.initializeUserData(savedUser.getId());
+                prTemplateRepository.save(PrTemplate.PrTemplateInit(savedUser.getId(), null, null));
+                linkRepository.save(Link.LinkInit(savedUser.getId(), null, null));
+                linkRepository.save(Link.LinkInit(savedUser.getId(), null, null));
+                buddyEnergyService.createDefaultEnergy(savedUser.getId());
 
                 return processTokenSignin(savedUser.getEmail(), savedUser.getRole().name());
             });
+    }
+
+    private boolean isUnactivatedUser(String email) {
+        return !usersRepository.findByEmail(email)
+            .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND))
+            .getActivated();
     }
 
     private boolean isGoogleUser(String email) {

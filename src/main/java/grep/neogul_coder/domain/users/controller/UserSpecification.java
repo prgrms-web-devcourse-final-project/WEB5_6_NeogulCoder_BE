@@ -7,10 +7,12 @@ import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,4 +38,19 @@ public interface UserSpecification {
     @Operation(summary = "회원 상태 삭제로 변경", description = "회원 상태를 삭제로 변경합니다.")
     ApiResponse<Void> delete(@AuthenticationPrincipal Principal principal,
         @RequestBody PasswordRequest request);
+
+    @Operation(summary = "이메일 인증 코드 발송", description = "입력한 이메일 주소로 인증 코드를 발송합니다.")
+    ApiResponse<Void> sendCode(
+        @Parameter(description = "인증 코드를 보낼 이메일 주소", required = true, example = "user@example.com")
+        @RequestParam String email
+    );
+
+    @Operation(summary = "이메일 인증 코드 검증", description = "사용자가 입력한 인증 코드가 올바른지 검증합니다.")
+    ApiResponse<Void> verifyCode(
+        @Parameter(description = "인증 요청한 이메일 주소", required = true, example = "user@example.com")
+        @RequestParam String email,
+
+        @Parameter(description = "사용자가 입력한 인증 코드", required = true, example = "123456")
+        @RequestParam String code
+    );
 }

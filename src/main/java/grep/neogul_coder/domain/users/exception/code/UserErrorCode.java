@@ -12,7 +12,8 @@ public enum UserErrorCode implements ErrorCode {
     PASSWORD_UNCHECKED("U003", HttpStatus.BAD_REQUEST, "비밀번호와 비밀번호 확인이 다릅니다"),
     IS_DUPLICATED_MALI("U004", HttpStatus.BAD_REQUEST,"이미 존재하는 이메일입니다."),
     IS_DUPLICATED_NICKNAME("U005", HttpStatus.BAD_REQUEST,"이미 존재하는 닉네임입니다."),
-    UNACTIVATED_USER("U006", HttpStatus.BAD_REQUEST,"탈퇴된 회원입니다.");
+    UNACTIVATED_USER("U006", HttpStatus.BAD_REQUEST,"탈퇴된 회원입니다."),
+    NOT_VERIFIED_EMAIL("U007", HttpStatus.BAD_REQUEST, "메일 인증이 되지 않은 이메일입니다.");
 
 
     private final String code;

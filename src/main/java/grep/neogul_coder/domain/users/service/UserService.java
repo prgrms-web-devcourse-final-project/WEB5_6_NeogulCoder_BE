@@ -13,6 +13,7 @@ import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.exception.EmailDuplicationException;
 import grep.neogul_coder.domain.users.exception.NicknameDuplicatedException;
+import grep.neogul_coder.domain.users.exception.NotVerifiedEmailException;
 import grep.neogul_coder.domain.users.exception.PasswordNotMatchException;
 import grep.neogul_coder.domain.users.exception.UserNotFoundException;
 import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
@@ -44,6 +45,7 @@ public class UserService {
     private final LinkService linkService;
     private final StudyManagementService studyManagementService;
     private final BuddyEnergyService buddyEnergyService;
+    private final EmailVerificationService verificationService;
 
     @Autowired(required = false)
     private GcpFileUploader gcpFileUploader;
@@ -69,6 +71,10 @@ public class UserService {
 
         duplicationCheck(request.getEmail(), request.getNickname());
 
+        if (verificationService.isNotEmailVerified(request.getEmail())) {
+            throw new NotVerifiedEmailException(UserErrorCode.NOT_VERIFIED_EMAIL);
+        }
+
         if (isNotMatchPasswordCheck(request.getPassword(), request.getPasswordCheck())) {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
@@ -78,8 +84,9 @@ public class UserService {
             User.UserInit(request.getEmail(), encodedPassword, request.getNickname()));
 
         User user = findUser(request.getEmail());
-
         initializeUserData(user.getId());
+
+        verificationService.clearVerifiedStatus(request.getEmail());
     }
 
     @Transactional

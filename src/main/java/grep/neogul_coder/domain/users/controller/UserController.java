@@ -4,6 +4,7 @@ import grep.neogul_coder.domain.users.controller.dto.request.PasswordRequest;
 import grep.neogul_coder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogul_coder.domain.users.controller.dto.request.UpdatePasswordRequest;
 import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
+import grep.neogul_coder.domain.users.service.EmailVerificationService;
 import grep.neogul_coder.domain.users.service.UserService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController implements UserSpecification {
 
     private final UserService usersService;
+    private final EmailVerificationService verificationService;
 
     @GetMapping("/me")
     public ApiResponse<UserResponse> get(@AuthenticationPrincipal Principal principal) {
@@ -75,4 +78,22 @@ public class UserController implements UserSpecification {
         usersService.signUp(request);
         return ApiResponse.noContent();
     }
+
+    @PostMapping("/mail/send")
+    public ApiResponse<Void> sendCode(@RequestParam String email) {
+        verificationService.sendVerificationEmail(email);
+        return ApiResponse.noContent();
+    }
+
+    @PostMapping("/mail/verify")
+    public ApiResponse<Void> verifyCode(
+        @RequestParam String email,
+        @RequestParam String code
+    ) {
+        boolean result = verificationService.verifyCode(email, code);
+        return result ?
+            ApiResponse.noContent() :
+            ApiResponse.badRequest();
+    }
+
 }
