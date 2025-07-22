@@ -24,4 +24,14 @@ public class StudySchedulerService {
 
         return studyRepository.findStudiesEndingIn7Days(endDateStart, endDateEnd);
     }
+
+    @Transactional
+    public void finalizeStudies() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Study> studiesToBeFinished = studyRepository.findStudiesToBeFinished(now);
+
+        for (Study study : studiesToBeFinished) {
+            study.finish();
+        }
+    }
 }

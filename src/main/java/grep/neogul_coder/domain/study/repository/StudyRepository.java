@@ -23,4 +23,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     @Query("select s from Study s where s.endDate >= :endDateStart and s.endDate < :endDateEnd and s.finished = false and s.activated = true")
     List<Study> findStudiesEndingIn7Days(@Param("endDateStart") LocalDateTime endDateStart, @Param("endDateEnd") LocalDateTime endDateEnd);
+
+    @Query("select s from Study s where s.endDate < :now and s.finished = false and s.activated = true")
+    List<Study> findStudiesToBeFinished(@Param("now") LocalDateTime now);
 }

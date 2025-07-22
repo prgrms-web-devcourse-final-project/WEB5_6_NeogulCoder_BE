@@ -17,5 +17,7 @@ public class StudyScheduler {
     @Scheduled(cron = "0 0 0 * * *")
     public void processEndingStudies() {
         List<Study> studiesEndingIn7Days = studySchedulerService.findStudiesEndingIn7Days();
+
+        studySchedulerService.finalizeStudies();
     }
 }

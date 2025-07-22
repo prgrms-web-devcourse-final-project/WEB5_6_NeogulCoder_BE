@@ -100,4 +100,8 @@ public class Study extends BaseEntity {
     public void extend() {
         this.extended = true;
     }
+
+    public void finish() {
+        this.finished = true;
+    }
 }
