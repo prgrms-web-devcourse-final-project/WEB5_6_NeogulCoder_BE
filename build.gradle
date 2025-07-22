@@ -91,6 +91,9 @@ dependencies {
 
     // WebSocket + STOMP 통신용
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	// 이메일 전송 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {

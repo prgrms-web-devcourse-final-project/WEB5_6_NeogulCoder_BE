@@ -88,7 +88,9 @@ public class SecurityConfig {
                         "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**",
                         "/webjars/**",
                         "/favicon.ico",
-                        "/error").permitAll()
+                        "/error"
+                        ).permitAll()
+
                     .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2

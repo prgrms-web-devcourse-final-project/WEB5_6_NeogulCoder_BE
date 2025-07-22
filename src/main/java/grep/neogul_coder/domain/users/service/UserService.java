@@ -13,6 +13,7 @@ import grep.neogul_coder.domain.users.controller.dto.response.UserResponse;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.exception.EmailDuplicationException;
 import grep.neogul_coder.domain.users.exception.NicknameDuplicatedException;
+import grep.neogul_coder.domain.users.exception.NotVerifiedEmailException;
 import grep.neogul_coder.domain.users.exception.PasswordNotMatchException;
 import grep.neogul_coder.domain.users.exception.UserNotFoundException;
 import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
@@ -22,6 +23,7 @@ import grep.neogul_coder.global.utils.upload.FileUsageType;
 import grep.neogul_coder.global.utils.upload.uploader.GcpFileUploader;
 import grep.neogul_coder.global.utils.upload.uploader.LocalFileUploader;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotBlank;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,7 @@ public class UserService {
     private final LinkService linkService;
     private final StudyManagementService studyManagementService;
     private final BuddyEnergyService buddyEnergyService;
+    private final EmailVerificationService verificationService;
 
     @Autowired(required = false)
     private GcpFileUploader gcpFileUploader;
@@ -68,6 +71,10 @@ public class UserService {
 
         duplicationCheck(request.getEmail(), request.getNickname());
 
+        if (verificationService.isNotEmailVerified(request.getEmail())) {
+            throw new NotVerifiedEmailException(UserErrorCode.NOT_VERIFIED_EMAIL);
+        }
+
         if (isNotMatchPasswordCheck(request.getPassword(), request.getPasswordCheck())) {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
@@ -77,15 +84,9 @@ public class UserService {
             User.UserInit(request.getEmail(), encodedPassword, request.getNickname()));
 
         User user = findUser(request.getEmail());
+        initializeUserData(user.getId());
 
-        prTemplateRepository.save(
-            PrTemplate.PrTemplateInit(user.getId(), null, null));
-
-        linkRepository.save(Link.LinkInit(user.getId(), null, null));
-        linkRepository.save(Link.LinkInit(user.getId(), null, null));
-
-        // 회원가입 시 버디 에너지 +50 생성
-        buddyEnergyService.createDefaultEnergy(user.getId());
+        verificationService.clearVerifiedStatus(request.getEmail());
     }
 
     @Transactional
@@ -93,7 +94,9 @@ public class UserService {
         throws IOException {
 
         User user = findUser(userId);
-        isDuplicateNickname(nickname);
+        if(isDuplicateNickname(nickname)){
+            throw new NicknameDuplicatedException(UserErrorCode.IS_DUPLICATED_NICKNAME);
+        }
 
         String uploadedImageUrl;
         if (isProfileImgExists(profileImage)) {
@@ -147,6 +150,13 @@ public class UserService {
         user.delete();
     }
 
+    public void initializeUserData(Long userId) {
+        prTemplateRepository.save(PrTemplate.PrTemplateInit(userId, null, null));
+        linkRepository.save(Link.LinkInit(userId, null, null));
+        linkRepository.save(Link.LinkInit(userId, null, null));
+        buddyEnergyService.createDefaultEnergy(userId);
+    }
+
     public UserResponse getUserResponse(Long userId) {
         User user = get(userId);
         return UserResponse.toUserResponse(
@@ -154,6 +164,7 @@ public class UserService {
             user.getEmail(),
             user.getNickname(),
             user.getProfileImageUrl(),
+            user.getOauthProvider(),
             user.getRole());
     }
 
@@ -211,7 +222,6 @@ public class UserService {
     private boolean isProfileImgExists(MultipartFile profileImage) {
         return profileImage != null && !profileImage.isEmpty();
     }
-
 }
 
 

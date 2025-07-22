@@ -2,6 +2,7 @@ package grep.neogul_coder.domain.users.exception.advice;
 
 import grep.neogul_coder.domain.users.exception.EmailDuplicationException;
 import grep.neogul_coder.domain.users.exception.NicknameDuplicatedException;
+import grep.neogul_coder.domain.users.exception.NotVerifiedEmailException;
 import grep.neogul_coder.domain.users.exception.PasswordNotMatchException;
 import grep.neogul_coder.domain.users.exception.PasswordUncheckException;
 import grep.neogul_coder.domain.users.exception.UserNotFoundException;
@@ -48,6 +49,13 @@ public class UserAdvice {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(ApiResponse.errorWithoutData(UserErrorCode.IS_DUPLICATED_NICKNAME));
+    }
+
+    @ ExceptionHandler(NotVerifiedEmailException.class)
+    public ResponseEntity<ApiResponse<Void>> notVerifiedEmailException(NotVerifiedEmailException ex) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ApiResponse.errorWithoutData(UserErrorCode.NOT_VERIFIED_EMAIL));
     }
 
 }
