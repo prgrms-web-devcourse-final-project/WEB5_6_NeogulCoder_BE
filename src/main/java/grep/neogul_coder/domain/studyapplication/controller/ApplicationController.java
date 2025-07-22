@@ -12,19 +12,19 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/api/applications")
+@RequestMapping("/api/studies")
 @RequiredArgsConstructor
 @RestController
 public class ApplicationController implements ApplicationSpecification {
 
     private final ApplicationService applicationService;
 
-    @GetMapping
+    @GetMapping("/{studyId}/applications")
     public ApiResponse<List<MyApplicationResponse>> getMyStudyApplications(@AuthenticationPrincipal Principal userDetails) {
         return ApiResponse.success(applicationService.getMyStudyApplications(userDetails.getUserId()));
     }
 
-    @PostMapping
+    @PostMapping("/{studyId}/applications")
     public ApiResponse<Long> createApplication(@RequestBody @Valid ApplicationCreateRequest request) {
         Long id = applicationService.createApplication(request);
         return ApiResponse.success(id);
