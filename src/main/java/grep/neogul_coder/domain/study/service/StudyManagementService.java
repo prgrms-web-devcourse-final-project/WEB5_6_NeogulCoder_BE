@@ -19,7 +19,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
-import static grep.neogul_coder.domain.study.enums.StudyMemberRole.*;
+import static grep.neogul_coder.domain.study.enums.StudyMemberRole.LEADER;
+import static grep.neogul_coder.domain.study.enums.StudyMemberRole.MEMBER;
 import static grep.neogul_coder.domain.study.exception.code.StudyErrorCode.*;
 
 @Transactional(readOnly = true)
