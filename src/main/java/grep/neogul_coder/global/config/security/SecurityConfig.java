@@ -88,7 +88,9 @@ public class SecurityConfig {
                         "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**",
                         "/webjars/**",
                         "/favicon.ico",
-                        "/error"
+                        "/error",
+                        "/ws-stomp/**",
+                        "/Chat-Test.html"
                         ).permitAll()
 
                     .anyRequest().authenticated()
