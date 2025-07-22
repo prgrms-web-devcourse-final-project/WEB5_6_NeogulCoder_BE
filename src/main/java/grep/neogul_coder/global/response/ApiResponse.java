@@ -25,6 +25,10 @@ public class ApiResponse<T> {
         return ApiResponse.of(CommonCode.OK.getCode(), CommonCode.OK.getMessage(), data);
     }
 
+    public static <T> ApiResponse<T> success(String message) {
+        return ApiResponse.of(CommonCode.OK.getCode(), message, null);
+    }
+
     public static <T> ApiResponse<T> successWithCode(T data){
         return ApiResponse.of(CommonCode.OK.getCode(), CommonCode.OK.getMessage(), data);
     }

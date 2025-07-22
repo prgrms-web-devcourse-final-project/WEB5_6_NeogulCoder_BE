@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface GroupChatMessageRepository extends JpaRepository<GroupChatMessage, Long> {
 
-
     // 채팅방(roomId)에 속한 메시지를 전송 시간 내림차순으로 페이징 조회
     @Query("SELECT m FROM GroupChatMessage m " +
         "WHERE m.groupChatRoom.roomId = :roomId " +

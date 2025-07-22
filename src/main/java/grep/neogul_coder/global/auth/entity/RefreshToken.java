@@ -12,9 +12,6 @@ public class RefreshToken {
     private String token = UUID.randomUUID().toString();
     private Long ttl = 3600 * 24 * 7L;
 
-    public RefreshToken() {
-    }
-
     public RefreshToken(String atId){
         this.atId = atId;
     }

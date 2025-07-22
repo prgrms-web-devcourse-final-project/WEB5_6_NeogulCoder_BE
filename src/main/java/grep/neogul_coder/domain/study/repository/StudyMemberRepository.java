@@ -2,6 +2,7 @@ package grep.neogul_coder.domain.study.repository;
 
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
+import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -37,4 +38,6 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> 
     LocalDateTime findCreatedDateByStudyIdAndUserId(@Param("studyId") Long studyId, @Param("userId") Long userId);
 
     boolean existsByStudyIdAndUserId(Long studyId, Long id);
+
+    boolean existsByStudyIdAndUserIdAndRole(Long studyId, Long userId, StudyMemberRole role);
 }
