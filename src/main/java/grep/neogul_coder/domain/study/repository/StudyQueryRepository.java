@@ -52,6 +52,8 @@ public class StudyQueryRepository {
                 studyMember.userId.eq(userId),
                 studyMember.activated.isTrue()
             )
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
             .fetch();
 
         Long total = queryFactory
@@ -63,7 +65,7 @@ public class StudyQueryRepository {
             )
             .fetchOne();
 
-        return new PageImpl<>(studies, pageable, total);
+        return new PageImpl<>(studies, pageable, total == null ? 0 : total);
     }
 
     public List<StudyItemResponse> findMyStudies(Long userId) {
