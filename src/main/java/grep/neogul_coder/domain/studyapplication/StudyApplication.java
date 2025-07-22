@@ -37,4 +37,8 @@ public class StudyApplication extends BaseEntity {
     }
 
     protected StudyApplication() {}
+
+    public void approve() {
+        this.status = ApplicationStatus.APPROVED;
+    }
 }

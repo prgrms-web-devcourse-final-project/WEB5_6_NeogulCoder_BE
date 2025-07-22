@@ -86,6 +86,10 @@ public class Study extends BaseEntity {
         return this.capacity - currentCount;
     }
 
+    public void increaseMemberCount() {
+        currentCount++;
+    }
+
     public void decreaseMemberCount() {
         currentCount--;
     }

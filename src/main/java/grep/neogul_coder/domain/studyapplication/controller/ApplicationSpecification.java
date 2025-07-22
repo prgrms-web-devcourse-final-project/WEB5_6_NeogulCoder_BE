@@ -19,7 +19,7 @@ public interface ApplicationSpecification {
     ApiResponse<Long> createApplication(ApplicationCreateRequest request);
 
     @Operation(summary = "스터디 신청 승인", description = "스터디장이 스터디 신청을 승인합니다.")
-    ApiResponse<Void> approveApplication(Long applicationId);
+    ApiResponse<Void> approveApplication(Long applicationId, Principal userDetails);
 
     @Operation(summary = "스터디 신청 거절", description = "스터디장이 스터디 신청을 거절합니다.")
     ApiResponse<Void> rejectApplication(Long applicationId);

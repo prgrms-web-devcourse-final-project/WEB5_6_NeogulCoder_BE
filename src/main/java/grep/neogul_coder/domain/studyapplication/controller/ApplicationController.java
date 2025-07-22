@@ -31,7 +31,9 @@ public class ApplicationController implements ApplicationSpecification {
     }
 
     @PostMapping("/{applicationId}/approve")
-    public ApiResponse<Void> approveApplication(@PathVariable("applicationId") Long applicationId) {
+    public ApiResponse<Void> approveApplication(@PathVariable("applicationId") Long applicationId,
+                                                @AuthenticationPrincipal Principal userDetails) {
+        applicationService.approveApplication(applicationId, userDetails.getUserId());
         return ApiResponse.noContent();
     }
 
