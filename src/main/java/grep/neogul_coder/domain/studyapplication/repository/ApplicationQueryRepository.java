@@ -1,7 +1,6 @@
 package grep.neogul_coder.domain.studyapplication.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import grep.neogul_coder.domain.studyapplication.controller.dto.response.MyApplicationResponse;
 import grep.neogul_coder.domain.studyapplication.controller.dto.response.QMyApplicationResponse;
 import jakarta.persistence.EntityManager;
@@ -12,7 +11,7 @@ import java.util.List;
 import static grep.neogul_coder.domain.recruitment.post.QRecruitmentPost.recruitmentPost;
 import static grep.neogul_coder.domain.study.QStudy.study;
 import static grep.neogul_coder.domain.study.QStudyMember.studyMember;
-import static grep.neogul_coder.domain.study.enums.StudyMemberRole.*;
+import static grep.neogul_coder.domain.study.enums.StudyMemberRole.LEADER;
 import static grep.neogul_coder.domain.studyapplication.QStudyApplication.studyApplication;
 import static grep.neogul_coder.domain.users.entity.QUser.user;
 

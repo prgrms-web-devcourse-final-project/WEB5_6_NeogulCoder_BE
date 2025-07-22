@@ -1,11 +1,9 @@
 package grep.neogul_coder.domain.studyapplication.controller.dto.request;
 
-import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.studyapplication.ApplicationStatus;
 import grep.neogul_coder.domain.studyapplication.StudyApplication;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
