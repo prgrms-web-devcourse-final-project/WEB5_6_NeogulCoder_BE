@@ -1,7 +1,10 @@
 package grep.neogul_coder.global.auth.service;
 
 import grep.neogul_coder.domain.users.entity.User;
+import grep.neogul_coder.domain.users.exception.UnActivatedUserException;
+import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
 import grep.neogul_coder.domain.users.repository.UserRepository;
+import grep.neogul_coder.domain.users.service.UserService;
 import grep.neogul_coder.global.auth.code.Role;
 import grep.neogul_coder.global.auth.entity.RefreshToken;
 import grep.neogul_coder.global.auth.jwt.JwtTokenProvider;
@@ -12,6 +15,7 @@ import grep.neogul_coder.global.auth.payload.LoginRequest;
 import grep.neogul_coder.global.auth.repository.UserBlackListRepository;
 import grep.neogul_coder.global.exception.GoogleUserLoginException;
 import grep.neogul_coder.global.response.code.CommonCode;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,8 +26,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +38,7 @@ public class AuthService {
     private final RefreshTokenService refreshTokenService;
     private final UserBlackListRepository userBlackListRepository;
     private final UserRepository usersRepository;
+    private final UserService userService;
 
     public TokenDto signin(LoginRequest loginRequest) {
 
@@ -43,16 +46,24 @@ public class AuthService {
             throw new GoogleUserLoginException(CommonCode.SECURITY_INCIDENT);
         }
 
+        if (isUnactivatedUser(loginRequest.getEmail())) {
+            throw new UnActivatedUserException(UserErrorCode.UNACTIVATED_USER);
+        }
+
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
-                        loginRequest.getPassword());
+            new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
+                loginRequest.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject()
-                .authenticate(authenticationToken);
+            .authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String roles = String.join(",", authentication.getAuthorities().stream().map(
-                GrantedAuthority::getAuthority).toList());
+            GrantedAuthority::getAuthority).toList());
         return processTokenSignin(authentication.getName(), roles);
+    }
+
+    private boolean isUnactivatedUser(String email) {
+        return !userService.getByEmail(email).getActivated();
     }
 
     public TokenDto processTokenSignin(String email, String roles) {
@@ -63,40 +74,42 @@ public class AuthService {
         RefreshToken refreshToken = refreshTokenService.saveWithAtId(accessToken.getJti());
 
         return TokenDto.builder()
-                .atId(accessToken.getJti())
-                .accessToken(accessToken.getToken())
-                .refreshToken(refreshToken.getToken())
-                .grantType("Bearer")
-                .refreshExpiresIn(jwtTokenProvider.getRefreshTokenExpiration())
-                .expiresIn(jwtTokenProvider.getAccessTokenExpiration())
-                .build();
+            .atId(accessToken.getJti())
+            .accessToken(accessToken.getToken())
+            .refreshToken(refreshToken.getToken())
+            .grantType("Bearer")
+            .refreshExpiresIn(jwtTokenProvider.getRefreshTokenExpiration())
+            .expiresIn(jwtTokenProvider.getAccessTokenExpiration())
+            .build();
     }
 
     @Transactional
     public TokenDto processOAuthSignin(OAuth2UserInfo userInfo, String roles) {
         String email = userInfo.getEmail();
-
         String dummyPassword = UUID.randomUUID().toString();
 
-        User user = usersRepository.findByEmail(email)
-                .orElseGet(() -> {
-                    User newUser = User.builder()
-                            .email(email)
-                            .nickname(userInfo.getName())
-                            .oauthProvider(userInfo.getProvider())
-                            .oauthId(userInfo.getProviderId())
-                            .password(dummyPassword)
-                            .role(Role.ROLE_USER)
-                            .build();
-                    return usersRepository.save(newUser);
-                });
+        return usersRepository.findByEmail(email)
+            .map(user -> processTokenSignin(user.getEmail(), user.getRole().name()))
+            .orElseGet(() -> {
+                User newUser = User.builder()
+                    .email(email)
+                    .nickname(userInfo.getName())
+                    .oauthProvider(userInfo.getProvider())
+                    .oauthId(userInfo.getProviderId())
+                    .password(dummyPassword)
+                    .role(Role.ROLE_USER)
+                    .build();
 
-        return processTokenSignin(user.getEmail(), user.getRole().name());
+                User savedUser = usersRepository.save(newUser);
+                userService.initializeUserData(savedUser.getId());
+
+                return processTokenSignin(savedUser.getEmail(), savedUser.getRole().name());
+            });
     }
 
     private boolean isGoogleUser(String email) {
         User user = usersRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 이메일의 유저가 없습니다."));
+            .orElseThrow(() -> new UsernameNotFoundException("해당 이메일의 유저가 없습니다."));
 
         return "Google".equals(user.getOauthProvider());
     }

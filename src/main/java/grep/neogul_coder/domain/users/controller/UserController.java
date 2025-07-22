@@ -8,14 +8,22 @@ import grep.neogul_coder.domain.users.service.UserService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,9 +46,9 @@ public class UserController implements UserSpecification {
 
     @PutMapping(value = "/update/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<Void> updateProfile(
-            @AuthenticationPrincipal Principal principal,
-            @RequestPart("nickname") String nickname,
-            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
+        @AuthenticationPrincipal Principal principal,
+        @RequestPart("nickname") String nickname,
+        @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
     ) throws IOException {
         usersService.updateProfile(principal.getUserId(), nickname, profileImage);
         return ApiResponse.noContent();
@@ -48,14 +56,15 @@ public class UserController implements UserSpecification {
 
     @PutMapping("/update/password")
     public ApiResponse<Void> updatePassword(@AuthenticationPrincipal Principal principal,
-                                            @Valid @RequestBody UpdatePasswordRequest request) {
-        usersService.updatePassword(principal.getUserId(), request.getPassword(), request.getNewPassword(), request.getNewPasswordCheck());
+        @Valid @RequestBody UpdatePasswordRequest request) {
+        usersService.updatePassword(principal.getUserId(), request.getPassword(),
+            request.getNewPassword(), request.getNewPasswordCheck());
         return ApiResponse.noContent();
     }
 
     @DeleteMapping("/delete/me")
     public ApiResponse<Void> delete(@AuthenticationPrincipal Principal principal,
-                                    @RequestBody @Valid PasswordRequest request) {
+        @RequestBody @Valid PasswordRequest request) {
         usersService.deleteUser(principal.getUserId(), request.getPassword());
         return ApiResponse.noContent();
     }
@@ -66,5 +75,4 @@ public class UserController implements UserSpecification {
         usersService.signUp(request);
         return ApiResponse.noContent();
     }
-
 }

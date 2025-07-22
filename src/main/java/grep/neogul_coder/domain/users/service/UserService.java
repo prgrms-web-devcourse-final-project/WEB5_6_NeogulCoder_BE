@@ -22,6 +22,7 @@ import grep.neogul_coder.global.utils.upload.FileUsageType;
 import grep.neogul_coder.global.utils.upload.uploader.GcpFileUploader;
 import grep.neogul_coder.global.utils.upload.uploader.LocalFileUploader;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotBlank;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,14 +79,7 @@ public class UserService {
 
         User user = findUser(request.getEmail());
 
-        prTemplateRepository.save(
-            PrTemplate.PrTemplateInit(user.getId(), null, null));
-
-        linkRepository.save(Link.LinkInit(user.getId(), null, null));
-        linkRepository.save(Link.LinkInit(user.getId(), null, null));
-
-        // 회원가입 시 버디 에너지 +50 생성
-        buddyEnergyService.createDefaultEnergy(user.getId());
+        initializeUserData(user.getId());
     }
 
     @Transactional
@@ -93,7 +87,9 @@ public class UserService {
         throws IOException {
 
         User user = findUser(userId);
-        isDuplicateNickname(nickname);
+        if(isDuplicateNickname(nickname)){
+            throw new NicknameDuplicatedException(UserErrorCode.IS_DUPLICATED_NICKNAME);
+        }
 
         String uploadedImageUrl;
         if (isProfileImgExists(profileImage)) {
@@ -147,6 +143,13 @@ public class UserService {
         user.delete();
     }
 
+    public void initializeUserData(Long userId) {
+        prTemplateRepository.save(PrTemplate.PrTemplateInit(userId, null, null));
+        linkRepository.save(Link.LinkInit(userId, null, null));
+        linkRepository.save(Link.LinkInit(userId, null, null));
+        buddyEnergyService.createDefaultEnergy(userId);
+    }
+
     public UserResponse getUserResponse(Long userId) {
         User user = get(userId);
         return UserResponse.toUserResponse(
@@ -154,6 +157,7 @@ public class UserService {
             user.getEmail(),
             user.getNickname(),
             user.getProfileImageUrl(),
+            user.getOauthProvider(),
             user.getRole());
     }
 
@@ -211,7 +215,6 @@ public class UserService {
     private boolean isProfileImgExists(MultipartFile profileImage) {
         return profileImage != null && !profileImage.isEmpty();
     }
-
 }
 
 
