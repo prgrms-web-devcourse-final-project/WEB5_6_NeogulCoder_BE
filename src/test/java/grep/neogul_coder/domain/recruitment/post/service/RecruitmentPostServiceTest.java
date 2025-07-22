@@ -19,7 +19,7 @@ import grep.neogul_coder.domain.study.enums.StudyType;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.domain.studyapplication.StudyApplication;
-import grep.neogul_coder.domain.studyapplication.repository.StudyApplicationRepository;
+import grep.neogul_coder.domain.studyapplication.repository.ApplicationRepository;
 import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
@@ -62,7 +62,7 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
     private RecruitmentPostCommentRepository commentRepository;
 
     @Autowired
-    private StudyApplicationRepository studyApplicationRepository;
+    private ApplicationRepository applicationRepository;
 
     private long userId;
     private long recruitmentPostId;
@@ -99,7 +99,7 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
 
         StudyApplication application1 = createStudyApplication(post.getId(), user1.getId(), "신청 사유");
         StudyApplication application2 = createStudyApplication(post.getId(), user2.getId(), "신청 사유2");
-        studyApplicationRepository.saveAll(List.of(application1, application2));
+        applicationRepository.saveAll(List.of(application1, application2));
 
         //when
         RecruitmentPostInfo response = recruitmentPostService.get(post.getId());

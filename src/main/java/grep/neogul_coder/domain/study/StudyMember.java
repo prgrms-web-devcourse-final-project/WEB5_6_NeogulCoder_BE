@@ -36,6 +36,14 @@ public class StudyMember extends BaseEntity {
         this.participated = false;
     }
 
+    public static StudyMember createMember(Study study, Long userId) {
+        return StudyMember.builder()
+            .study(study)
+            .userId(userId)
+            .role(StudyMemberRole.MEMBER)
+            .build();
+    }
+
     public void delete() {
         this.activated = false;
     }

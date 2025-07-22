@@ -15,7 +15,7 @@ import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPost
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.domain.studyapplication.StudyApplication;
-import grep.neogul_coder.domain.studyapplication.repository.StudyApplicationRepository;
+import grep.neogul_coder.domain.studyapplication.repository.ApplicationRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class RecruitmentPostService {
     private final RecruitmentPostRepository postRepository;
     private final RecruitmentPostQueryRepository postQueryRepository;
 
-    private final StudyApplicationRepository studyApplicationRepository;
+    private final ApplicationRepository applicationRepository;
     private final RecruitmentPostCommentQueryRepository commentQueryRepository;
 
     public RecruitmentPostInfo get(long recruitmentPostId) {
@@ -49,7 +49,7 @@ public class RecruitmentPostService {
 
         RecruitmentPostWithStudyInfo postInfo = postQueryRepository.findPostWithStudyInfo(post.getId());
         List<CommentsWithWriterInfo> comments = findCommentsWithWriterInfo(post);
-        List<StudyApplication> applications = studyApplicationRepository.findByRecruitmentPostId(post.getId());
+        List<StudyApplication> applications = applicationRepository.findByRecruitmentPostId(post.getId());
 
         return new RecruitmentPostInfo(postInfo, comments, applications.size());
     }
