@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static grep.neogul_coder.domain.studypost.QStudyPost.studyPost;
 import static grep.neogul_coder.domain.studypost.comment.QStudyPostComment.studyPostComment;
@@ -62,5 +63,15 @@ public class StudyPostCommentQueryRepository {
                         studyPostComment.postId.in(postIds)
                 )
                 .fetch();
+    }
+
+    public Optional<StudyPostComment> findById(long commentId, long userId) {
+        StudyPostComment comment = queryFactory.selectFrom(studyPostComment)
+                .where(
+                        studyPostComment.activated.isTrue(),
+                        studyPostComment.id.eq(commentId),
+                        studyPostComment.userId.eq(userId)
+                ).fetchOne();
+        return Optional.ofNullable(comment);
     }
 }

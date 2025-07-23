@@ -76,7 +76,7 @@ public class StudyService {
 
     public StudyHeaderResponse getStudyHeader(Long studyId) {
         Study study = studyRepository.findByIdAndActivatedTrue(studyId)
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
         return StudyHeaderResponse.from(study);
     }
@@ -85,13 +85,13 @@ public class StudyService {
         List<Study> myStudiesImage = studyMemberRepository.findStudiesByUserId(userId);
 
         return myStudiesImage.stream()
-            .map(StudyImageResponse::from)
-            .toList();
+                .map(StudyImageResponse::from)
+                .toList();
     }
 
     public StudyInfoResponse getMyStudyContent(Long studyId, Long userId) {
         Study study = studyRepository.findByIdAndActivatedTrue(studyId)
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
         validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
@@ -103,10 +103,10 @@ public class StudyService {
 
     public StudyMemberInfoResponse getMyStudyMemberInfo(Long studyId, Long userId) {
         StudyMember studyMember = Optional.ofNullable(studyMemberQueryRepository.findByStudyIdAndUserId(studyId, userId))
-            .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
 
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         return StudyMemberInfoResponse.from(studyMember, user);
     }
@@ -120,10 +120,10 @@ public class StudyService {
         Study study = studyRepository.save(request.toEntity(imageUrl));
 
         StudyMember leader = StudyMember.builder()
-            .study(study)
-            .userId(userId)
-            .role(LEADER)
-            .build();
+                .study(study)
+                .userId(userId)
+                .role(LEADER)
+                .build();
         studyMemberRepository.save(leader);
 
         return study.getId();
@@ -132,7 +132,7 @@ public class StudyService {
     @Transactional
     public void updateStudy(Long studyId, StudyUpdateRequest request, Long userId, MultipartFile image) throws IOException {
         Study study = studyRepository.findById(studyId)
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
         validateLocation(request.getStudyType(), request.getLocation());
         validateStudyMember(studyId, userId);
@@ -142,21 +142,21 @@ public class StudyService {
         String imageUrl = updateImageUrl(userId, image, study.getImageUrl());
 
         study.update(
-            request.getName(),
-            request.getCategory(),
-            request.getCapacity(),
-            request.getStudyType(),
-            request.getLocation(),
-            request.getStartDate(),
-            request.getIntroduction(),
-            imageUrl
+                request.getName(),
+                request.getCategory(),
+                request.getCapacity(),
+                request.getStudyType(),
+                request.getLocation(),
+                request.getStartDate(),
+                request.getIntroduction(),
+                imageUrl
         );
     }
 
     @Transactional
     public void deleteStudy(Long studyId, Long userId) {
         Study study = studyRepository.findById(studyId)
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
         validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
@@ -170,7 +170,7 @@ public class StudyService {
     @Transactional
     public void deleteStudyByAdmin(Long studyId) {
         Study study = studyRepository.findById(studyId)
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
 
         study.delete();
     }
@@ -221,8 +221,8 @@ public class StudyService {
         String imageUrl = null;
         if (isImgExists(image)) {
             FileUploadResponse uploadResult = isProductionEnvironment()
-                ? gcpFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId)
-                : localFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
+                    ? gcpFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId)
+                    : localFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
             imageUrl = uploadResult.getFileUrl();
         }
         return imageUrl;
@@ -231,8 +231,8 @@ public class StudyService {
     private String updateImageUrl(Long userId, MultipartFile image, String originalImageUrl) throws IOException {
         if (isImgExists(image)) {
             FileUploadResponse uploadResult = isProductionEnvironment()
-                ? gcpFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId)
-                : localFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
+                    ? gcpFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId)
+                    : localFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
             return uploadResult.getFileUrl();
         }
         return originalImageUrl;

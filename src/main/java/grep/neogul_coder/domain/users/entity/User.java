@@ -44,7 +44,6 @@ public class User extends BaseEntity {
             .password(password)
             .nickname(nickname)
             .role(Role.ROLE_USER)
-            .activated(true)
             .build();
     }
 
@@ -65,7 +64,7 @@ public class User extends BaseEntity {
 
     @Builder
     private User(Long id, String oauthId, String oauthProvider, String email, String password,
-        String nickname, String profileImageUrl, Boolean activated, Role role) {
+        String nickname, String profileImageUrl, Role role) {
         this.id = id;
         this.oauthId = oauthId;
         this.oauthProvider = oauthProvider;
@@ -73,7 +72,6 @@ public class User extends BaseEntity {
         this.password = password;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
-        this.activated = activated;
         this.role = role;
     }
 

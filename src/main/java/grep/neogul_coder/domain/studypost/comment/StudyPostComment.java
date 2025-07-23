@@ -33,4 +33,12 @@ public class StudyPostComment extends BaseEntity {
         this.userId = userId;
         this.content = content;
     }
+
+    public void update(String content) {
+        this.content = content;
+    }
+
+    public void delete() {
+        this.activated = false;
+    }
 }

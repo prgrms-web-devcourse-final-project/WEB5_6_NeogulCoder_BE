@@ -101,7 +101,6 @@ public class AuthService {
                     .oauthId(userInfo.getProviderId())
                     .password(dummyPassword)
                     .role(Role.ROLE_USER)
-                    .activated(true)
                     .build();
 
                 User savedUser = usersRepository.save(newUser);
@@ -117,7 +116,7 @@ public class AuthService {
     private boolean isUnactivatedUser(String email) {
         return !usersRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND))
-            .getActivated();
+            .isActivated();
     }
 
     private boolean isGoogleUser(String email) {

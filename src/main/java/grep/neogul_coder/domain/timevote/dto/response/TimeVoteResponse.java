@@ -1,10 +1,10 @@
 package grep.neogul_coder.domain.timevote.dto.response;
 
-import grep.neogul_coder.domain.timevote.dto.request.TimeVoteCreateRequest;
 import grep.neogul_coder.domain.timevote.entity.TimeVote;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,7 +17,24 @@ public class TimeVoteResponse {
 
   @Schema(
       description = "시간대 리스트",
-      example = "[\"2025-07-16T10:00:00\", \"2025-07-16T11:00:00\", \"2025-07-16T13:00:00\", \"2025-07-18T11:00:00\"]"
+      example = "[\"2025-07-26T10:00:00\", \"2025-07-26T11:00:00\", \"2025-07-26T13:00:00\", \"2025-07-28T11:00:00\"]"
   )
   private List<LocalDateTime> timeSlots;
+
+  @Builder
+  private TimeVoteResponse(Long studyMemberId, List<LocalDateTime> timeSlots) {
+    this.studyMemberId = studyMemberId;
+    this.timeSlots = timeSlots;
+  }
+
+  public static TimeVoteResponse from(Long studyMemberId, List<TimeVote> votes) {
+    List<LocalDateTime> timeSlots = votes.stream()
+        .map(TimeVote::getTimeSlot)
+        .collect(Collectors.toList());
+
+    return TimeVoteResponse.builder()
+        .studyMemberId(studyMemberId)
+        .timeSlots(timeSlots)
+        .build();
+  }
 }

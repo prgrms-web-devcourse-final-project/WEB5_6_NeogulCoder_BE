@@ -39,6 +39,7 @@ public class RecruitmentPostCommentQueryRepository {
                                 user.id,
                                 user.nickname,
                                 user.profileImageUrl.as("imageUrl"),
+                                recruitmentPostComment.id,
                                 recruitmentPostComment.content,
                                 recruitmentPostComment.createdDate,
                                 user.activated

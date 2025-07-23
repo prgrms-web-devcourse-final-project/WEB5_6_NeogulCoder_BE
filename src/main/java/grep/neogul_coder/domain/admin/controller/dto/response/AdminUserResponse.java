@@ -34,7 +34,7 @@ public class AdminUserResponse {
             user.getId(),
             user.getEmail(),
             user.getNickname(),
-            user.getActivated()
+            user.isActivated()
         );
     }
 
