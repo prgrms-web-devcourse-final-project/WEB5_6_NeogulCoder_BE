@@ -1,6 +1,7 @@
 package grep.neogul_coder.domain.recruitment.post.repository;
 
 import grep.neogul_coder.domain.IntegrationTestSupport;
+import grep.neogul_coder.domain.recruitment.RecruitmentPostStatus;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostWithStudyInfo;
 import grep.neogul_coder.domain.study.Study;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static grep.neogul_coder.domain.recruitment.RecruitmentPostStatus.IN_PROGRESS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RecruitmentPostQueryRepositoryTest extends IntegrationTestSupport {
@@ -39,7 +41,7 @@ class RecruitmentPostQueryRepositoryTest extends IntegrationTestSupport {
         Study study = createStudy("자바 스터디", Category.IT, StudyType.ONLINE);
         studyRepository.save(study);
 
-        RecruitmentPost recruitmentPost = createRecruitmentPost(study.getId(), user.getId(), "제목", "내용");
+        RecruitmentPost recruitmentPost = createRecruitmentPost(study.getId(), user.getId(), "제목", "내용", IN_PROGRESS);
         recruitmentPostRepository.save(recruitmentPost);
 
         //when
@@ -72,6 +74,16 @@ class RecruitmentPostQueryRepositoryTest extends IntegrationTestSupport {
                 .userId(userId)
                 .subject(subject)
                 .content(content)
+                .build();
+    }
+
+    private RecruitmentPost createRecruitmentPost(long studyId, long userId, String subject, String content, RecruitmentPostStatus status) {
+        return RecruitmentPost.builder()
+                .studyId(studyId)
+                .userId(userId)
+                .subject(subject)
+                .content(content)
+                .status(status)
                 .build();
     }
 

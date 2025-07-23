@@ -4,7 +4,6 @@ import grep.neogul_coder.domain.recruitment.comment.RecruitmentPostComment;
 import grep.neogul_coder.domain.recruitment.comment.controller.dto.response.CommentsWithWriterInfo;
 import grep.neogul_coder.domain.recruitment.comment.repository.RecruitmentPostCommentQueryRepository;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.request.PagingCondition;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostWithStudyInfo;
@@ -13,6 +12,8 @@ import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepos
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostStatusUpdateServiceRequest;
 import grep.neogul_coder.domain.recruitment.post.service.request.RecruitmentPostUpdateServiceRequest;
 import grep.neogul_coder.domain.study.Study;
+import grep.neogul_coder.domain.study.enums.Category;
+import grep.neogul_coder.domain.study.enums.StudyType;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.domain.studyapplication.StudyApplication;
 import grep.neogul_coder.domain.studyapplication.repository.ApplicationRepository;
@@ -20,6 +21,7 @@ import grep.neogul_coder.global.exception.business.BusinessException;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,8 +56,8 @@ public class RecruitmentPostService {
         return new RecruitmentPostInfo(postInfo, comments, applications.size());
     }
 
-    public RecruitmentPostPagingInfo getPagingInfo(PagingCondition condition, Long userId) {
-        Page<RecruitmentPost> pages = findPostsFilteredByUser(condition, userId);
+    public RecruitmentPostPagingInfo getPagingInfo(Pageable pageable, Category category, StudyType studyType, String keyword, Long userId) {
+        Page<RecruitmentPost> pages = findPostsFilteredByUser(pageable, category, studyType, keyword, userId);
         List<RecruitmentPost> content = pages.getContent();
         List<Long> recruitmentPostIds = extractId(content);
 
@@ -103,11 +105,12 @@ public class RecruitmentPostService {
         return applyWithdrawnUserNameChanges(comments, withdrawnUserComments);
     }
 
-    private Page<RecruitmentPost> findPostsFilteredByUser(PagingCondition condition, Long userId) {
+    private Page<RecruitmentPost> findPostsFilteredByUser(Pageable pageable, Category category, StudyType studyType,
+                                                          String keyword, Long userId) {
         if (userId == null) {
-            return postQueryRepository.findAllByFilter(condition);
+            return postQueryRepository.findAllByFilter(pageable, category, studyType, keyword);
         }
-        return postQueryRepository.findAllByFilter(condition, userId);
+        return postQueryRepository.findAllByFilter(pageable, category, studyType, keyword, userId);
     }
 
     private List<CommentsWithWriterInfo> withdrawnUserChangeNameFrom(List<CommentsWithWriterInfo> comments) {

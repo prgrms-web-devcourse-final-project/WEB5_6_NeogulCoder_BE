@@ -1,6 +1,5 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
-import grep.neogul_coder.domain.recruitment.post.controller.dto.request.PagingCondition;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
@@ -11,7 +10,6 @@ import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "Recruitment-Post", description = "모집 글 API")
 public interface RecruitmentPostSpecification {
@@ -36,6 +34,25 @@ public interface RecruitmentPostSpecification {
                     ✅ 요청 예시:  
                     `GET /recruitment-posts/me?page=0&size=5`
                     
+                    ✅ studyType (스터디 방식): \s
+                            - `온라인` \s
+                            - `오프라인` \s
+                            - `병행`
+                    
+                    ✅ category (스터디 카테고리): \s
+                            - `어학` \s
+                            - `IT` \s
+                            - `고시/자격증` \s
+                            - `금융` \s
+                            - `경영` \s
+                            - `디자인` \s
+                            - `예술` \s
+                            - `사진/영상` \s
+                            - `뷰티` \s
+                            - `스포츠` \s
+                            - `취미` \s
+                            - `기타`
+                                                
                     ✅ 응답 예시:
                     ```json
                     {
@@ -65,7 +82,8 @@ public interface RecruitmentPostSpecification {
                     ```
                     """
     )
-    ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(@RequestBody PagingCondition condition, Principal userDetails);
+    ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(Pageable pageable, String category, String studyType,
+                                                               String keyword, Principal userDetails);
 
     @Operation(
             summary = "모집글 페이징 조회",
@@ -75,6 +93,25 @@ public interface RecruitmentPostSpecification {
                     ✅ 요청 예시:  
                     `GET /recruitment-posts?page=0&size=5`
                     
+                    ✅ studyType (스터디 방식): \s
+                            - `온라인` \s
+                            - `오프라인` \s
+                            - `병행`
+                    
+                    ✅ category (스터디 카테고리): \s
+                            - `어학` \s
+                            - `IT` \s
+                            - `고시/자격증` \s
+                            - `금융` \s
+                            - `경영` \s
+                            - `디자인` \s
+                            - `예술` \s
+                            - `사진/영상` \s
+                            - `뷰티` \s
+                            - `스포츠` \s
+                            - `취미` \s
+                            - `기타`
+                            
                     ✅ 응답 예시:
                     ```json
                     {
@@ -104,7 +141,7 @@ public interface RecruitmentPostSpecification {
                     ```
                     """
     )
-    ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(PagingCondition condition);
+    ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(Pageable pageable, String category, String studyType, String keyword);
 
     @Operation(
             summary = "스터디 신청한 회원 목록 페이징 조회",

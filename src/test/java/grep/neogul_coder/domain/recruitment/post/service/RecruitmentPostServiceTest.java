@@ -5,7 +5,6 @@ import grep.neogul_coder.domain.recruitment.RecruitmentPostStatus;
 import grep.neogul_coder.domain.recruitment.comment.RecruitmentPostComment;
 import grep.neogul_coder.domain.recruitment.comment.repository.RecruitmentPostCommentRepository;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.request.PagingCondition;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
@@ -27,6 +26,7 @@ import jakarta.persistence.EntityManager;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.Collection;
 import java.util.List;
@@ -176,8 +176,8 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
         commentRepository.saveAll(comments);
 
         //when
-        PagingCondition condition = new PagingCondition(0, 2, Category.IT, ONLINE, null);
-        RecruitmentPostPagingInfo result = recruitmentPostService.getPagingInfo(condition, null);
+        RecruitmentPostPagingInfo result = recruitmentPostService.getPagingInfo(PageRequest.of(0, 2),
+                Category.IT, ONLINE, null, null);
         System.out.println("result = " + result);
 
         //then
@@ -213,8 +213,8 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
         commentRepository.saveAll(comments);
 
         //when
-        PagingCondition condition = new PagingCondition(0, 2, Category.HOBBY, OFFLINE, null);
-        RecruitmentPostPagingInfo result = recruitmentPostService.getPagingInfo(condition, myUser.getId());
+        RecruitmentPostPagingInfo result = recruitmentPostService.getPagingInfo(PageRequest.of(0, 2),
+                Category.HOBBY, OFFLINE, null, myUser.getId());
         System.out.println("result = " + result);
 
         //then
