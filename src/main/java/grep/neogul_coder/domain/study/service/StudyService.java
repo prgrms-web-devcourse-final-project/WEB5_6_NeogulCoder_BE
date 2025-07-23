@@ -1,6 +1,5 @@
 package grep.neogul_coder.domain.study.service;
 
-import grep.neogul_coder.domain.buddy.service.BuddyEnergyService;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
@@ -17,13 +16,10 @@ import grep.neogul_coder.domain.users.entity.User;
 import grep.neogul_coder.domain.users.repository.UserRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
 import grep.neogul_coder.global.exception.business.NotFoundException;
+import grep.neogul_coder.global.utils.upload.AbstractFileManager;
 import grep.neogul_coder.global.utils.upload.FileUploadResponse;
 import grep.neogul_coder.global.utils.upload.FileUsageType;
-import grep.neogul_coder.global.utils.upload.uploader.GcpFileUploader;
-import grep.neogul_coder.global.utils.upload.uploader.LocalFileUploader;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,22 +39,13 @@ import static grep.neogul_coder.domain.users.exception.code.UserErrorCode.USER_N
 @Service
 public class StudyService {
 
+    private final AbstractFileManager fileUploader;
     private final StudyRepository studyRepository;
     private final StudyMemberRepository studyMemberRepository;
     private final StudyQueryRepository studyQueryRepository;
     private final RecruitmentPostRepository recruitmentPostRepository;
     private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final UserRepository userRepository;
-    private final BuddyEnergyService buddyEnergyService;
-
-    @Autowired(required = false)
-    private GcpFileUploader gcpFileUploader;
-
-    @Autowired(required = false)
-    private LocalFileUploader localFileUploader;
-
-    @Autowired
-    private Environment environment;
 
     public StudyItemPagingResponse getMyStudiesPaging(Pageable pageable, Long userId) {
         Page<StudyItemResponse> page = studyQueryRepository.findMyStudiesPaging(pageable, userId);
@@ -203,38 +190,25 @@ public class StudyService {
         }
     }
 
-    private boolean isProductionEnvironment() {
-        for (String profile : environment.getActiveProfiles()) {
-            if ("prod".equals(profile)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private String createImageUrl(Long userId, MultipartFile image) throws IOException {
-        String imageUrl = null;
+        FileUploadResponse response = null;
         if (isImgExists(image)) {
-            FileUploadResponse uploadResult = isProductionEnvironment()
-                    ? gcpFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId)
-                    : localFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
-            imageUrl = uploadResult.getFileUrl();
+            response = fileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
+            return response.getFileUrl();
         }
-        return imageUrl;
+        return null;
     }
 
     private String updateImageUrl(Long userId, MultipartFile image, String originalImageUrl) throws IOException {
         if (isImgExists(image)) {
-            FileUploadResponse uploadResult = isProductionEnvironment()
-                    ? gcpFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId)
-                    : localFileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
-            return uploadResult.getFileUrl();
+            FileUploadResponse response = fileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
+            return response.getFileUrl();
         }
         return originalImageUrl;
     }
 
-
     private boolean isImgExists(MultipartFile image) {
         return image != null && !image.isEmpty();
     }
+
 }
