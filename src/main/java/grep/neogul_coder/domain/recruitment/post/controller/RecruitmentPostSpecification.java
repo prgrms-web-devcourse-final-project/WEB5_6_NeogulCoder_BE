@@ -5,6 +5,8 @@ import grep.neogul_coder.domain.recruitment.post.controller.dto.request.Recruitm
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
+import grep.neogul_coder.domain.study.enums.Category;
+import grep.neogul_coder.domain.study.enums.StudyType;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,24 +37,24 @@ public interface RecruitmentPostSpecification {
                     `GET /recruitment-posts/me?page=0&size=5`
                     
                     ✅ studyType (스터디 방식): \s
-                            - `온라인` \s
-                            - `오프라인` \s
-                            - `병행`
+                            - `ONLINE("온라인")` \s
+                            - `OFFLINE("오프라인")` \s
+                            - `HYBRID("병행")`
                     
                     ✅ category (스터디 카테고리): \s
-                            - `어학` \s
-                            - `IT` \s
-                            - `고시/자격증` \s
-                            - `금융` \s
-                            - `경영` \s
-                            - `디자인` \s
-                            - `예술` \s
-                            - `사진/영상` \s
-                            - `뷰티` \s
-                            - `스포츠` \s
-                            - `취미` \s
-                            - `기타`
-                                                
+                            - `LANGUAGE("어학")` \s
+                            - `IT("IT")` \s
+                            - `EXAM("고시/자격증")` \s
+                            - `FINANCE("금융")` \s
+                            - `MANAGEMENT("경영")` \s
+                            - `DESIGN("디자인")` \s
+                            - `ART("예술")` \s
+                            - `PHOTO_VIDEO("사진/영상")` \s
+                            - `BEAUTY("뷰티")` \s
+                            - `SPORTS("스포츠")` \s
+                            - `HOBBY("취미")` \s
+                            - `ETC("기타")`
+                    
                     ✅ 응답 예시:
                     ```json
                     {
@@ -82,7 +84,7 @@ public interface RecruitmentPostSpecification {
                     ```
                     """
     )
-    ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(Pageable pageable, String category, String studyType,
+    ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(Pageable pageable, Category category, StudyType studyType,
                                                                String keyword, Principal userDetails);
 
     @Operation(
@@ -94,24 +96,24 @@ public interface RecruitmentPostSpecification {
                     `GET /recruitment-posts?page=0&size=5`
                     
                     ✅ studyType (스터디 방식): \s
-                            - `온라인` \s
-                            - `오프라인` \s
-                            - `병행`
+                            - `ONLINE("온라인")` \s
+                            - `OFFLINE("오프라인")` \s
+                            - `HYBRID("병행")`
                     
                     ✅ category (스터디 카테고리): \s
-                            - `어학` \s
-                            - `IT` \s
-                            - `고시/자격증` \s
-                            - `금융` \s
-                            - `경영` \s
-                            - `디자인` \s
-                            - `예술` \s
-                            - `사진/영상` \s
-                            - `뷰티` \s
-                            - `스포츠` \s
-                            - `취미` \s
-                            - `기타`
-                            
+                            - `LANGUAGE("어학")` \s
+                            - `IT("IT")` \s
+                            - `EXAM("고시/자격증")` \s
+                            - `FINANCE("금융")` \s
+                            - `MANAGEMENT("경영")` \s
+                            - `DESIGN("디자인")` \s
+                            - `ART("예술")` \s
+                            - `PHOTO_VIDEO("사진/영상")` \s
+                            - `BEAUTY("뷰티")` \s
+                            - `SPORTS("스포츠")` \s
+                            - `HOBBY("취미")` \s
+                            - `ETC("기타")`
+                    
                     ✅ 응답 예시:
                     ```json
                     {
@@ -141,7 +143,7 @@ public interface RecruitmentPostSpecification {
                     ```
                     """
     )
-    ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(Pageable pageable, String category, String studyType, String keyword);
+    ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(Pageable pageable, Category category, StudyType studyType, String keyword);
 
     @Operation(
             summary = "스터디 신청한 회원 목록 페이징 조회",

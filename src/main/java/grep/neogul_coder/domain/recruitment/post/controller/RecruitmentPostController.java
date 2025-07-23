@@ -26,25 +26,23 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
 
     @GetMapping
     public ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(@PageableDefault(size = 10) Pageable pageable,
-                                                                @RequestParam("category") String category,
-                                                                @RequestParam("studyType") String studyType,
+                                                                @RequestParam("category") Category category,
+                                                                @RequestParam("studyType") StudyType studyType,
                                                                 @RequestParam("keyword") String keyword) {
-
         RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(
-                pageable, Category.fromDescription(category), StudyType.fromDescription(studyType),
-                keyword, null
+                pageable, category, studyType, keyword, null
         );
         return ApiResponse.success(response);
     }
 
     @GetMapping("/me")
     public ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(@PageableDefault(size = 10) Pageable pageable,
-                                                                      @RequestParam("category") String category,
-                                                                      @RequestParam("studyType") String studyType,
+                                                                      @RequestParam("category") Category category,
+                                                                      @RequestParam("studyType") StudyType studyType,
                                                                       @RequestParam("keyword") String keyword,
                                                                       @AuthenticationPrincipal Principal userDetails) {
         RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(
-                pageable, Category.fromDescription(category), StudyType.fromDescription(studyType),
+                pageable, category, studyType,
                 keyword, userDetails.getUserId()
         );
         return ApiResponse.success(response);
