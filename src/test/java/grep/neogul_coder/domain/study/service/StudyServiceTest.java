@@ -61,7 +61,7 @@ class StudyServiceTest extends IntegrationTestSupport {
         userId = user1.getId();
     }
 
-    @DisplayName("가입한 스터디 목록을 페이징 조회합니다.")
+    @DisplayName("가입한 스터디 목록을 조회합니다.")
     @Test
     void getStudies() {
         // given
@@ -76,7 +76,7 @@ class StudyServiceTest extends IntegrationTestSupport {
         studyMemberRepository.save(studyMember);
 
         // when
-        StudyItemPagingResponse response = studyService.getMyStudiesPaging(pageable, userId);
+        StudyItemPagingResponse response = studyService.getMyStudiesPaging(pageable, userId, false);
 
         // then
         assertThat(response.getStudies().getFirst().getName()).isEqualTo("스터디");
