@@ -21,6 +21,12 @@ public interface TimeVoteSpecification {
       Principal userDetails
   );
 
+  @Operation(summary = "사용자가 제출한 시간 목록 조회", description = "해당 사용자가 이전에 제출한 시간대 목록을 조회합니다.")
+  ApiResponse<TimeVoteResponse> getMyVotes(
+      @Parameter(description = "스터디 ID", example = "1") Long studyId,
+      Principal userDetails
+  );
+
   @Operation(summary = "사용자 가능 시간대 제출", description = "스터디 멤버가 가능 시간을 제출합니다.")
   ApiResponse<TimeVoteResponse> submitVote(
       @Parameter(description = "스터디 ID", example = "1") Long studyId,
@@ -38,7 +44,6 @@ public interface TimeVoteSpecification {
   @Operation(summary = "사용자 전체 시간 삭제", description = "사용자가 제출한 시간 전체를 삭제합니다.")
   ApiResponse<Void> deleteAllVotes(
       @Parameter(description = "스터디 ID", example = "1") Long studyId,
-      @RequestBody @Valid TimeVoteDeleteRequest request,
       Principal userDetails
   );
 

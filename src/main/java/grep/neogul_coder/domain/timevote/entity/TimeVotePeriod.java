@@ -18,7 +18,7 @@ public class TimeVotePeriod extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long periodId;
 
-  @Column(nullable = false)
+  @Column(name = "study_id", nullable = false)
   private Long studyId;
 
   @Column(nullable = false)

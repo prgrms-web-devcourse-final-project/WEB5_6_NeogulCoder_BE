@@ -45,6 +45,27 @@ public class BuddyEnergyService {
         return BuddyEnergyResponse.from(energy);
     }
 
+    // 스터디 종료 시 +1, 리더면 +2
+    @Transactional
+    public BuddyEnergyResponse updateEnergyByStudy(Long userId, boolean isLeader) {
+        BuddyEnergy energy = buddyEnergyRepository.findByUserId(userId)
+            .orElseThrow(() -> new BuddyEnergyNotFoundException(BUDDY_ENERGY_NOT_FOUND));
+
+        int points = BuddyEnergyReason.STUDY_DONE.getPoint();
+        BuddyEnergyReason reason = BuddyEnergyReason.STUDY_DONE;
+
+        if (isLeader) {
+            points += BuddyEnergyReason.TEAM_LEADER_BONUS.getPoint();
+            reason = BuddyEnergyReason.TEAM_LEADER_BONUS;
+        }
+
+        energy.updateLevel(energy.getLevel() + points);
+        buddyEnergyLogRepository.save(BuddyLog.of(energy, reason));
+        buddyEnergyRepository.save(energy);
+
+        return BuddyEnergyResponse.from(energy);
+    }
+
     // 회원가입 시 기본 에너지 생성
     @Transactional
     public BuddyEnergyResponse createDefaultEnergy(Long userId) {
