@@ -35,11 +35,15 @@ public class StudyItemPagingResponse {
     @Schema(description = "총 요소 개수", example = "10")
     private int totalElementCount;
 
+    @Schema(example = "false", description = "다음 페이지 여부")
+    private boolean hasNext;
+
     @Builder
     private StudyItemPagingResponse(Page<StudyItemResponse> page) {
         this.studies = page.getContent();
         this.totalPage = page.getTotalPages();
         this.totalElementCount = (int) page.getTotalElements();
+        this.hasNext = page.hasNext();
     }
 
     public static StudyItemPagingResponse of(Page<StudyItemResponse> page) {
