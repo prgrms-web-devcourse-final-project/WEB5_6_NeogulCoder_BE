@@ -8,7 +8,7 @@ import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.domain.studypost.Category;
 import grep.neogul_coder.domain.studypost.StudyPost;
 import grep.neogul_coder.domain.studypost.comment.StudyPostComment;
-import grep.neogul_coder.domain.studypost.comment.repository.StudyCommentRepository;
+import grep.neogul_coder.domain.studypost.comment.repository.StudyPostCommentRepository;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostSaveRequest;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostUpdateRequest;
 import grep.neogul_coder.domain.studypost.controller.dto.response.StudyPostDetailResponse;
@@ -53,7 +53,7 @@ class StudyPostServiceTest extends IntegrationTestSupport {
     private StudyPostRepository studyPostRepository;
 
     @Autowired
-    private StudyCommentRepository studycommentRepository;
+    private StudyPostCommentRepository studyPostCommentRepository;
 
     @DisplayName("게시글을 조회 합니다.")
     @Test
@@ -74,7 +74,7 @@ class StudyPostServiceTest extends IntegrationTestSupport {
                 createPostComment(post.getId(), user.getId(), "댓글2"),
                 createPostComment(post.getId(), user.getId(), "댓글3")
         );
-        studycommentRepository.saveAll(comments);
+        studyPostCommentRepository.saveAll(comments);
 
         //when
         StudyPostDetailResponse response = studyPostService.findOne(post.getId());
