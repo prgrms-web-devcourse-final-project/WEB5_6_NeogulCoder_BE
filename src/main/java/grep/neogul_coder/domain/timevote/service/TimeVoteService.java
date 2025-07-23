@@ -61,6 +61,7 @@ public class TimeVoteService {
     StudyMember studyMember = getValidStudyMember(studyId, userId);
     TimeVotePeriod period = getValidTimeVotePeriod(studyId);
 
+    validateAlreadySubmitted(period, studyMember.getId());
     validateVoteWithinPeriod(period, request.getTimeSlots());
 
     timeVoteRepository.deleteAllByPeriodAndStudyMemberId(period, studyMember.getId());
@@ -114,6 +115,13 @@ public class TimeVoteService {
     boolean alreadySubmitted = timeVoteRepository.existsByPeriodAndStudyMemberId(period, studyMemberId);
     if (alreadySubmitted) {
       throw new BusinessException(TIME_VOTE_ALREADY_SUBMITTED);
+    }
+  }
+
+  private void validateAlreadySubmitted(TimeVotePeriod period, Long studyMemberId) {
+    boolean alreadySubmitted = timeVoteRepository.existsByPeriodAndStudyMemberId(period, studyMemberId);
+    if (!alreadySubmitted) {
+      throw new BusinessException(TIME_VOTE_NOT_FOUND);
     }
   }
 }
