@@ -23,12 +23,11 @@ public class PrTemplate extends BaseEntity {
     private String location;
 
     @Builder
-    private PrTemplate(Long templateId, Long userId, String introduction, String location, Boolean activated) {
+    private PrTemplate(Long templateId, Long userId, String introduction, String location) {
         this.id = templateId;
         this.userId = userId;
         this.introduction = introduction;
         this.location = location;
-        this.activated = activated;
     }
 
     public static PrTemplate PrTemplateInit(Long userId, String introduction, String location) {
