@@ -12,11 +12,11 @@ import lombok.Getter;
 public class TimeVotePeriodCreateRequest {
 
   @NotNull
-  @Schema(description = "시작일", example = "2025-07-13T00:00:00")
+  @Schema(description = "시작일", example = "2025-07-25T00:00:00")
   private LocalDateTime startDate;
 
   @NotNull
-  @Schema(description = "종료일", example = "2025-07-20T23:59:59")
+  @Schema(description = "종료일", example = "2025-07-30T23:59:59")
   private LocalDateTime endDate;
 
   private TimeVotePeriodCreateRequest() {}
@@ -27,10 +27,11 @@ public class TimeVotePeriodCreateRequest {
     this.endDate = endDate;
   }
 
-  public TimeVotePeriod toEntity() {
+  public TimeVotePeriod toEntity(Long studyId) {
     return TimeVotePeriod.builder()
         .startDate(this.startDate)
         .endDate(this.endDate)
+        .studyId(studyId)
         .build();
   }
 }
