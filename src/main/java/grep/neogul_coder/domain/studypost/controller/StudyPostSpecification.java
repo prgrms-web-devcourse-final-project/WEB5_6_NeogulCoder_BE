@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.studypost.controller;
 
+import grep.neogul_coder.domain.study.controller.dto.response.StudyMemberInfoResponse;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostPagingCondition;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostSaveRequest;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostUpdateRequest;
@@ -17,6 +18,9 @@ import java.io.IOException;
 
 @Tag(name = "Study-Post", description = "스터디 게시판 API")
 public interface StudyPostSpecification {
+
+    @Operation(summary = "스터디 내가 쓴 게시글 조회", description = "스터디에서 내가 쓴 게시글을 조회합니다.")
+    ApiResponse<StudyMemberInfoResponse> getMyStudyContent(Long studyId, Principal userDetails);
 
     @Operation(summary = "게시글 생성", description = "스터디에 새로운 게시글을 작성합니다.")
     ApiResponse<Long> create(long studyId, StudyPostSaveRequest request, Principal userDetails);

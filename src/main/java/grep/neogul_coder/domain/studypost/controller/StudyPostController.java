@@ -1,5 +1,6 @@
 package grep.neogul_coder.domain.studypost.controller;
 
+import grep.neogul_coder.domain.study.controller.dto.response.StudyMemberInfoResponse;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostPagingCondition;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostSaveRequest;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostUpdateRequest;
@@ -23,6 +24,12 @@ import java.io.IOException;
 public class StudyPostController implements StudyPostSpecification {
 
     private final StudyPostService studyPostService;
+
+    @GetMapping("/{studyId}/posts/me")
+    public ApiResponse<StudyMemberInfoResponse> getMyStudyContent(@PathVariable("studyId") Long studyId,
+                                                                  @AuthenticationPrincipal Principal userDetails) {
+        return ApiResponse.success(null);
+    }
 
     @PostMapping("/{study-id}/posts")
     public ApiResponse<Long> create(@PathVariable("study-id") long studyId,
