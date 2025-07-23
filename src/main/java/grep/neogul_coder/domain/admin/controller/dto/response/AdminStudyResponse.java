@@ -43,7 +43,7 @@ public class AdminStudyResponse {
             .name(study.getName())
             .category(study.getCategory())
             .isFinished(study.isFinished())
-            .activated(study.getActivated())
+            .activated(study.isActivated())
             .build();
     }
 

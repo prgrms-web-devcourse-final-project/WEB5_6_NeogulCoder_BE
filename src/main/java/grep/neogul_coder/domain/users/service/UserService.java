@@ -190,7 +190,7 @@ public class UserService {
         }
     }
 
-    public boolean isDuplicateEmail(String email) {
+    private boolean isDuplicateEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
 
