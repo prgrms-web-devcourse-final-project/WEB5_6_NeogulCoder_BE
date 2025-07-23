@@ -31,7 +31,6 @@ public class StudySchedulerService {
         return studyRepository.findStudiesEndingIn7Days(endDateStart, endDateEnd);
     }
 
-    @Scheduled(cron = "0 0 * * * *")
     @Transactional
     public void finalizeStudies() {
         LocalDateTime now = LocalDateTime.now();
