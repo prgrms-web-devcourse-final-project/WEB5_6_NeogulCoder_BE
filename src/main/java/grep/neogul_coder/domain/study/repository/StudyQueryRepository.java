@@ -62,8 +62,10 @@ public class StudyQueryRepository {
             .fetch();
 
         Long total = queryFactory
-            .select(study.count())
+            .select(study.id.count())
             .from(studyMember)
+            .join(user).on(user.id.eq(studyMember.userId))
+            .join(study).on(study.id.eq(studyMember.study.id))
             .where(
                 studyMember.userId.eq(userId),
                 studyMember.activated.eq(true),
@@ -71,7 +73,7 @@ public class StudyQueryRepository {
             )
             .fetchOne();
 
-        return new PageImpl<>(studies, pageable, total);
+        return new PageImpl<>(studies, pageable, total == null ? 0 : total);
     }
 
     public List<StudyItemResponse> findMyStudies(Long userId) {
