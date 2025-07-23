@@ -12,4 +12,6 @@ public interface TimeVoteRepository extends JpaRepository<TimeVote, Long> {
   List<TimeVote> findByPeriodAndStudyMemberId(TimeVotePeriod period, Long userId);
 
   void deleteAllByPeriodAndStudyMemberId(TimeVotePeriod period, Long studyMemberId);
+
+  boolean existsByPeriodAndStudyMemberId(TimeVotePeriod period, Long studyMemberId);
 }

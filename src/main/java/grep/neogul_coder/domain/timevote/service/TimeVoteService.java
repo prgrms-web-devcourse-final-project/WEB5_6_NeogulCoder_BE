@@ -14,6 +14,7 @@ import grep.neogul_coder.domain.timevote.repository.TimeVotePeriodRepository;
 import grep.neogul_coder.domain.timevote.repository.TimeVoteRepository;
 import grep.neogul_coder.domain.timevote.repository.TimeVoteQueryRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,8 +32,8 @@ public class TimeVoteService {
 
   @Transactional(readOnly = true)
   public TimeVoteResponse getMyVotes(Long studyId, Long userId) {
+    StudyMember studyMember = getValidStudyMember(studyId, userId);
     TimeVotePeriod period = getValidTimeVotePeriod(studyId);
-    StudyMember studyMember = getvalidateStudyMember(studyId, userId);
 
     List<TimeVote> votes = timeVoteRepository.findByPeriodAndStudyMemberId(period,
         studyMember.getId());
@@ -40,8 +41,11 @@ public class TimeVoteService {
   }
 
   public TimeVoteResponse submitVotes(TimeVoteCreateRequest request, Long studyId, Long userId) {
+    StudyMember studyMember = getValidStudyMember(studyId, userId);
     TimeVotePeriod period = getValidTimeVotePeriod(studyId);
-    StudyMember studyMember = getvalidateStudyMember(studyId, userId);
+
+    validateNotAlreadySubmitted(period, studyMember.getId());
+    validateVoteWithinPeriod(period, request.getTimeSlots());
 
     List<TimeVote> votes = request.toEntities(period, studyMember.getId());
     timeVoteRepository.saveAll(votes);
@@ -54,8 +58,10 @@ public class TimeVoteService {
   }
 
   public TimeVoteResponse updateVote(TimeVoteUpdateRequest request, Long studyId, Long userId) {
+    StudyMember studyMember = getValidStudyMember(studyId, userId);
     TimeVotePeriod period = getValidTimeVotePeriod(studyId);
-    StudyMember studyMember = getvalidateStudyMember(studyId, userId);
+
+    validateVoteWithinPeriod(period, request.getTimeSlots());
 
     timeVoteRepository.deleteAllByPeriodAndStudyMemberId(period, studyMember.getId());
 
@@ -70,8 +76,8 @@ public class TimeVoteService {
   }
 
   public void deleteAllVotes(Long studyId, Long userId) {
+    StudyMember studyMember = getValidStudyMember(studyId, userId);
     TimeVotePeriod period = getValidTimeVotePeriod(studyId);
-    StudyMember studyMember = getvalidateStudyMember(studyId, userId);
 
     timeVoteRepository.deleteAllByPeriodAndStudyMemberId(period, studyMember.getId());
 
@@ -79,10 +85,16 @@ public class TimeVoteService {
   }
 
   public List<TimeVoteSubmissionStatusResponse> getSubmissionStatusList(Long studyId, Long userId) {
+    getValidStudyMember(studyId, userId);
     TimeVotePeriod period = getValidTimeVotePeriod(studyId);
-    validateStudyMember(studyId, userId);
 
     return timeVoteQueryRepository.findSubmissionStatuses(studyId, period.getPeriodId());
+  }
+
+  // 검증 로직
+  private StudyMember getValidStudyMember(Long studyId, Long userId) {
+    return studyMemberRepository.findByStudyIdAndUserIdAndActivatedTrue(studyId, userId)
+        .orElseThrow(() -> new BusinessException(STUDY_MEMBER_NOT_FOUND));
   }
 
   private TimeVotePeriod getValidTimeVotePeriod(Long studyId) {
@@ -90,15 +102,18 @@ public class TimeVoteService {
         .orElseThrow(() -> new BusinessException(TIME_VOTE_PERIOD_NOT_FOUND));
   }
 
-  private StudyMember getvalidateStudyMember(Long studyId, Long userId) {
-    return studyMemberRepository.findByStudyIdAndUserIdAndActivatedTrue(studyId, userId)
-        .orElseThrow(() -> new BusinessException(STUDY_MEMBER_NOT_FOUND));
+  private void validateVoteWithinPeriod(TimeVotePeriod period, List<LocalDateTime> dateTimes) {
+    for (LocalDateTime dateTime : dateTimes) {
+      if (dateTime.isBefore(period.getStartDate()) || dateTime.isAfter(period.getEndDate())) {
+        throw new BusinessException(TIME_VOTE_OUT_OF_RANGE);
+      }
+    }
   }
 
-  private void validateStudyMember(Long studyId, Long userId) {
-    boolean isMember = studyMemberRepository.existsByStudyIdAndUserIdAndActivatedTrue(studyId, userId);
-    if (!isMember) {
-      throw new BusinessException(STUDY_MEMBER_NOT_FOUND);
+  private void validateNotAlreadySubmitted(TimeVotePeriod period, Long studyMemberId) {
+    boolean alreadySubmitted = timeVoteRepository.existsByPeriodAndStudyMemberId(period, studyMemberId);
+    if (alreadySubmitted) {
+      throw new BusinessException(TIME_VOTE_ALREADY_SUBMITTED);
     }
   }
 }
