@@ -39,4 +39,20 @@ public class TeamCalendarQueryRepository {
             )
             .fetch();
     }
+
+    // 특정 월 구간 조회
+    public List<TeamCalendar> findByStudyIdAndMonth(Long studyId, LocalDateTime start, LocalDateTime end) {
+        QTeamCalendar tc = QTeamCalendar.teamCalendar;
+
+        return queryFactory
+            .selectFrom(tc)
+            .join(tc.calendar, calendar).fetchJoin()
+            .where(
+                tc.studyId.eq(studyId),
+                tc.activated.eq(true),
+                calendar.scheduledStart.lt(end),
+                calendar.scheduledEnd.goe(start)
+            )
+            .fetch();
+    }
 }
