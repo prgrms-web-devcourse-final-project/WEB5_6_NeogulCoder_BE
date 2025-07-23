@@ -1,12 +1,15 @@
 package grep.neogul_coder.domain.studyapplication.controller;
 
 import grep.neogul_coder.domain.studyapplication.controller.dto.request.ApplicationCreateRequest;
+import grep.neogul_coder.domain.studyapplication.controller.dto.response.MyApplicationPagingResponse;
 import grep.neogul_coder.domain.studyapplication.controller.dto.response.MyApplicationResponse;
 import grep.neogul_coder.domain.studyapplication.service.ApplicationService;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +23,10 @@ public class ApplicationController implements ApplicationSpecification {
     private final ApplicationService applicationService;
 
     @GetMapping("/{recruitment-post-id}/applications")
-    public ApiResponse<List<MyApplicationResponse>> getMyStudyApplications(@PathVariable("recruitment-post-id") Long recruitmentPostId,
+    public ApiResponse<MyApplicationPagingResponse> getMyStudyApplications(@PathVariable("recruitment-post-id") Long recruitmentPostId,
+                                                                           @PageableDefault(size = 12) Pageable pageable,
                                                                            @AuthenticationPrincipal Principal userDetails) {
-        return ApiResponse.success(applicationService.getMyStudyApplications(userDetails.getUserId()));
+        return ApiResponse.success(applicationService.getMyStudyApplicationsPaging(pageable, userDetails.getUserId()));
     }
 
     @PostMapping("/{recruitment-post-id}/applications")
