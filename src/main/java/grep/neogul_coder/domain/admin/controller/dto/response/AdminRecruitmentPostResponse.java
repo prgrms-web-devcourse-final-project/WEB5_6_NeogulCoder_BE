@@ -29,7 +29,7 @@ public class AdminRecruitmentPostResponse {
             .id(post.getId())
             .subject(post.getSubject())
             .expiredDate(post.getExpiredDate())
-            .activated(post.getActivated())
+            .activated(post.isActivated())
             .build();
     }
 

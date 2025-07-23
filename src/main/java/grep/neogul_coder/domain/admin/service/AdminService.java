@@ -3,6 +3,7 @@ package grep.neogul_coder.domain.admin.service;
 import grep.neogul_coder.domain.admin.controller.dto.response.AdminRecruitmentPostResponse;
 import grep.neogul_coder.domain.admin.controller.dto.response.AdminStudyResponse;
 import grep.neogul_coder.domain.admin.controller.dto.response.AdminUserResponse;
+import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.enums.Category;
@@ -72,7 +73,8 @@ public class AdminService {
 
     @Transactional
     public void deleteRecruitmentPost(Long recruitmentPostId) {
-        recruitmentPostRepository.deleteById(recruitmentPostId);
+        RecruitmentPost recruitmentPost = recruitmentPostRepository.findById(recruitmentPostId).orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+        recruitmentPost.delete();
     }
 
     private Boolean isContainEmail(String email) {
