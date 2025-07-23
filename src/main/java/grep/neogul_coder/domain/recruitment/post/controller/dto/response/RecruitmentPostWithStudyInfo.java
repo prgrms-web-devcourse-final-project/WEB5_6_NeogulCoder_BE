@@ -1,13 +1,13 @@
 package grep.neogul_coder.domain.recruitment.post.controller.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
+import grep.neogul_coder.domain.recruitment.RecruitmentPostStatus;
 import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @ToString
@@ -28,6 +28,9 @@ public class RecruitmentPostWithStudyInfo {
 
     @Schema(example = "8", description = "모집 인원")
     private int recruitmentCount;
+
+    @Schema(example = "IN_PROGRESS, COMPLETE", description = "모집 상태")
+    private String status;
 
     @Schema(example = "2025-07-09", description = "생성 날짜")
     private LocalDateTime createdDate;
@@ -52,14 +55,15 @@ public class RecruitmentPostWithStudyInfo {
 
     @QueryProjection
     public RecruitmentPostWithStudyInfo(String nickname, long recruitmentPostId, String subject,
-                                        String content, int recruitmentCount, LocalDateTime createdDate,
-                                        LocalDateTime expiredDate, Category category, String location,
+                                        String content, int recruitmentCount, RecruitmentPostStatus status,
+                                        LocalDateTime createdDate, LocalDateTime expiredDate, Category category, String location,
                                         StudyType studyType, LocalDateTime startedDate, LocalDateTime endDate) {
         this.nickname = nickname;
         this.recruitmentPostId = recruitmentPostId;
         this.subject = subject;
         this.content = content;
         this.recruitmentCount = recruitmentCount;
+        this.status = status.getDescription();
         this.createdDate = createdDate;
         this.expiredDate = expiredDate;
         this.category = category.name();
