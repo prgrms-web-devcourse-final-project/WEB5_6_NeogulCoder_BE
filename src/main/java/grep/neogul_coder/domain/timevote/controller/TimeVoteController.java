@@ -79,7 +79,7 @@ public class TimeVoteController implements TimeVoteSpecification {
       @AuthenticationPrincipal Principal userDetails
   ) {
     timeVoteService.deleteAllVotes(studyId, userDetails.getUserId());
-    return ApiResponse.noContent();
+    return ApiResponse.success("성공적으로 투표를 삭제했습니다.");
   }
 
   @GetMapping("/periods/submissions")
