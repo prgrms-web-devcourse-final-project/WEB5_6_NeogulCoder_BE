@@ -9,7 +9,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import grep.neogul_coder.domain.studypost.Category;
 import grep.neogul_coder.domain.studypost.QStudyPost;
 import grep.neogul_coder.domain.studypost.StudyPost;
-import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostPagingCondition;
 import grep.neogul_coder.domain.studypost.controller.dto.response.*;
 import grep.neogul_coder.global.exception.validation.ValidationException;
 import jakarta.persistence.EntityManager;
@@ -19,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -76,8 +76,7 @@ public class StudyPostQueryRepository {
         return Optional.ofNullable(findStudyPost);
     }
 
-    public Page<PostPagingInfo> findPagingFilteredBy(StudyPostPagingCondition condition, Long studyId) {
-        Pageable pageable = condition.toPageable();
+    public Page<PostPagingInfo> findPagingFilteredBy(Long studyId, Pageable pageable, Category category, String keyword) {
 
         JPAQuery<PostPagingInfo> query = queryFactory.select(
                         new QPostPagingInfo(
@@ -94,25 +93,25 @@ public class StudyPostQueryRepository {
                 .where(
                         studyPost.activated.isTrue(),
                         studyPost.study.id.eq(studyId),
-                        likeContent(condition.getContent()),
-                        equalsCategory(condition.getCategory())
+                        likeContent(keyword),
+                        equalsCategory(category)
                 )
                 .groupBy(studyPost.id)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
 
-        OrderSpecifier<?> orderSpecifier = resolveOrderSpecifier(condition.getAttributeName(), condition.getSort());
-        if (orderSpecifier != null) {
-            query.orderBy(orderSpecifier);
-        }
+        pageable.getSort().stream()
+                .map(order -> resolveOrderSpecifier(order.getProperty(), order.isAscending()))
+                .filter(Objects::nonNull)
+                .forEach(query::orderBy);
 
         Long count = queryFactory.select(studyPost.count())
                 .from(studyPost)
                 .where(
                         studyPost.activated.isTrue(),
                         studyPost.study.id.eq(studyId),
-                        likeContent(condition.getContent()),
-                        equalsCategory(condition.getCategory())
+                        likeContent(keyword),
+                        equalsCategory(category)
                 )
                 .fetchOne();
 
@@ -139,12 +138,10 @@ public class StudyPostQueryRepository {
                 .fetch();
     }
 
-    private OrderSpecifier<?> resolveOrderSpecifier(String attributeName, String direction) {
-        if (attributeName == null || direction == null) {
+    private OrderSpecifier<?> resolveOrderSpecifier(String attributeName, Boolean isAsc) {
+        if (attributeName == null || isAsc == null) {
             return null;
         }
-
-        boolean isAsc = "ASC".equals(direction);
 
         if (attributeName.equalsIgnoreCase("commentCount")) {
             NumberExpression<Long> commentCount = studyPostComment.id.countDistinct();

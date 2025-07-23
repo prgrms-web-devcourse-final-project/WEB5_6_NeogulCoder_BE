@@ -3,9 +3,9 @@ package grep.neogul_coder.domain.studypost.service;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
 import grep.neogul_coder.domain.study.repository.StudyMemberQueryRepository;
+import grep.neogul_coder.domain.studypost.Category;
 import grep.neogul_coder.domain.studypost.StudyPost;
 import grep.neogul_coder.domain.studypost.comment.repository.StudyPostCommentQueryRepository;
-import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostPagingCondition;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostSaveRequest;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostUpdateRequest;
 import grep.neogul_coder.domain.studypost.controller.dto.response.*;
@@ -17,6 +17,7 @@ import grep.neogul_coder.global.utils.upload.FileUploadResponse;
 import grep.neogul_coder.global.utils.upload.FileUsageType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,8 +46,8 @@ public class StudyPostService {
         return new StudyPostDetailResponse(postInfo, commentInfos, commentInfos.size());
     }
 
-    public PostPagingResult findPagingInfo(StudyPostPagingCondition condition, Long studyId) {
-        Page<PostPagingInfo> pages = studyPostQueryRepository.findPagingFilteredBy(condition, studyId);
+    public PostPagingResult findPagingInfo(long studyId, Pageable pageable, Category category, String keyword) {
+        Page<PostPagingInfo> pages = studyPostQueryRepository.findPagingFilteredBy(studyId, pageable, category, keyword);
         List<NoticePostInfo> noticeInfos = studyPostQueryRepository.findLatestNoticeInfoBy(studyId);
         return new PostPagingResult(noticeInfos, pages);
     }
