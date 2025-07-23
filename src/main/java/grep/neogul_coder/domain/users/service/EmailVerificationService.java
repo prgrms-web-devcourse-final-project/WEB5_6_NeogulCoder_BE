@@ -2,6 +2,9 @@ package grep.neogul_coder.domain.users.service;
 
 import java.time.Duration;
 import java.util.Random;
+
+import grep.neogul_coder.domain.users.exception.EmailDuplicationException;
+import grep.neogul_coder.domain.users.exception.code.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
@@ -14,10 +17,16 @@ public class EmailVerificationService  {
 
     private final JavaMailSender mailSender;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final UserService userService;
 
     private static final long CODE_TTL_SECONDS = 300;
 
     public void sendVerificationEmail(String email) {
+
+        if(userService.isDuplicateEmail(email)) {
+            throw new EmailDuplicationException(UserErrorCode.IS_DUPLICATED_MALI);
+        }
+
         String code = generateRandomCode();
 
         sendEmail(email,code);
