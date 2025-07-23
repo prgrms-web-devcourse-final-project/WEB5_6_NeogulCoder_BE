@@ -3,12 +3,16 @@ INSERT INTO member (activated, email, password, nickname, profile_image_url, rol
 INSERT INTO member (activated, email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES (true, 'eunjeongi@hotmail.com',  '$2a$10$WZzvlwlN6FVtQvGUXw2CIeNQvT5fPfA4qN99NisD2GOyCeuC4W0t2', 'm#T99Yfl@*','https://placekitten.com/101/440', 'ROLE_USER', 5741, 'google');
 INSERT INTO member (activated, email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES (true, 'rryu@yuhanhoesa.com',  '$2a$10$WZzvlwlN6FVtQvGUXw2CIeNQvT5fPfA4qN99NisD2GOyCeuC4W0t2','NPy2EpXd$6', 'https://placekitten.com/842/456', 'ROLE_USER', NULL, NULL);
 INSERT INTO member (activated, email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES (true, 'yeonghoseo@nate.com',  '$2a$10$WZzvlwlN6FVtQvGUXw2CIeNQvT5fPfA4qN99NisD2GOyCeuC4W0t2', '$c3VDMSkF)','https://placekitten.com/812/623', 'ROLE_ADMIN', NULL, NULL);
+INSERT INTO member (activated, email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES (true,'test@test.com',  '{bcrypt}$2b$12$TK9zyc6f5qjHE1sSUSULieLOJVDBraWqSz2HRrIKgEKjUES0J2kva', 'test','https://placekitten.com/812/624', 'ROLE_USER', NULL, NULL);
+INSERT INTO member (activated, email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES (true,'test2@test.com',  '{bcrypt}$2b$12$TK9zyc6f5qjHE1sSUSULieLOJVDBraWqSz2HRrIKgEKjUES0J2kva', 'test2','https://placekitten.com/812/625', 'ROLE_USER', NULL, NULL);
+INSERT INTO member (activated, email, password, nickname, profile_image_url, role, oauth_id, oauth_provider) VALUES (true,'test3@test.com',  '{bcrypt}$2b$12$TK9zyc6f5qjHE1sSUSULieLOJVDBraWqSz2HRrIKgEKjUES0J2kva', 'test3','https://placekitten.com/812/626', 'ROLE_USER', NULL, NULL);
 
 INSERT INTO study (origin_study_id, name, category, capacity, current_count, study_type, location, start_date, end_date, introduction, image_url, extended, activated, finished) VALUES (NULL, '자바 스터디', 'IT', 10, 1, 'ONLINE', NULL, '2025-08-01', '2025-12-31', '자바 스터디에 오신 것을 환영합니다.', 'https://example.com/image.jpg', FALSE, TRUE, FALSE);
 INSERT INTO study (origin_study_id, name, category, capacity, current_count, study_type, location, start_date, end_date, introduction, image_url, extended, activated, finished) VALUES (NULL, '파이썬 스터디', 'IT', 8, 1, 'OFFLINE', '대구', '2025-09-01', '2026-01-31', '파이썬 기초부터 심화까지 학습합니다.', 'https://example.com/python.jpg', FALSE, TRUE, FALSE);
 INSERT INTO study (origin_study_id, name, category, capacity, current_count, study_type, location, start_date, end_date, introduction, image_url, extended, activated, finished) VALUES (NULL, '디자인 스터디', 'DESIGN', 6, 1, 'HYBRID', '서울', '2025-07-15', '2025-10-15', 'UI/UX 디자인 실습 중심 스터디입니다.', 'https://example.com/design.jpg', FALSE, TRUE, FALSE);
 INSERT INTO study (origin_study_id, name, category, capacity, current_count, study_type, location, start_date, end_date, introduction, image_url, extended, activated, finished) VALUES (NULL, '7급 공무원 스터디', 'EXAM', 12, 1, 'ONLINE', NULL, '2025-08-10', '2025-12-20', '7급 공무원 대비 스터디입니다.', 'https://example.com/exam.jpg', FALSE, TRUE, FALSE);
 INSERT INTO study (origin_study_id, name, category, capacity, current_count, study_type, location, start_date, end_date, introduction, image_url, extended, activated, finished) VALUES (NULL, '토익 스터디', 'LANGUAGE', 9, 1, 'OFFLINE', '광주', '2025-09-05', '2026-02-28', '토익 스터디입니다.', 'https://example.com/datascience.jpg', FALSE, TRUE, FALSE);
+INSERT INTO study (origin_study_id, name, category, capacity, current_count, study_type, location, start_date, end_date, introduction, image_url, extended, activated, finished) VALUES (NULL, '최적시간 테스트 스터디', 'IT', 9, 1, 'OFFLINE', '광주', '2025-09-05', '2026-02-28', '테스트 스터디입니다.', 'https://example.com/datascience.jpg', FALSE, TRUE, FALSE);
 
 INSERT INTO study_post (study_id, user_id, title, category, content) VALUES (5, 3, '자바 스터디 1주차 공지.', 'NOTICE', '1주차 스터디 내용은 가위바위보 게임 만들기 입니다. 모두 각자 만드시고 설명 하는 시간을 가지겠습니다.');
 INSERT INTO study_post (study_id, user_id, title, category, content) VALUES (4, 4, '익명 클래스 자료 공유', 'FREE', '동물 이라는 인터페이스가 있을때 구현체는 강아지, 고양이 등이 있습니다. 구현을 하면 여러 구현 클래스가 필요합니다 이를 줄이기 위해 익명클래스를 사용할 수 있습니다.');
@@ -27,6 +31,9 @@ INSERT INTO study_member (study_id, user_id, role, participated) VALUES (1, 4, '
 INSERT INTO study_member (study_id, user_id, role, participated) VALUES (2, 5, 'LEADER', FALSE);
 INSERT INTO study_member (study_id, user_id, role, participated) VALUES (3, 2, 'LEADER', FALSE);
 INSERT INTO study_member (study_id, user_id, role, participated) VALUES (3, 1, 'MEMBER', FALSE);
+INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (6, 7, 'LEADER', FALSE, TRUE);
+INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (6, 8, 'MEMBER', FALSE, TRUE);
+INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (6, 9, 'MEMBER', FALSE, TRUE);
 
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status, activated) VALUES (3, 1, '자바 스터디 모집', '이펙티브 자바 공부하실분 구해요!!', 3, '2025-04-19', 'COMPLETE', true);
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status, activated) VALUES (2, 4, '면접 스터디 모집', '삼성 면접 1차 합격자 분들 같이 준비하실분들 찾습니다', 1, '2025-07-08', 'COMPLETE', true);
@@ -58,59 +65,50 @@ INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (1, 2, 3);
 INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (3, 3, 4);
 INSERT INTO team_calendar (study_id, user_id, calendar_id) VALUES (4, 4, 5);
 
-INSERT INTO time_vote_period (study_id, start_date, end_date) VALUES (2, '2025-07-15 00:00:00', '2025-07-22 00:00:00');
+INSERT INTO time_vote_period (study_id, start_date, end_date, activated) VALUES (6, '2025-07-25 00:00:00', '2025-07-30 00:00:00', TRUE);
 
--- 2025-07-15 10:00:00 - 2명
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 1, '2025-07-15 10:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 2, '2025-07-15 10:00:00');
--- 2025-07-15 11:00:00 - 2명
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 1, '2025-07-15 11:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 2, '2025-07-15 11:00:00');
--- 2025-07-16 14:00:00 - 3명
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 1, '2025-07-16 14:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 2, '2025-07-16 14:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 3, '2025-07-16 14:00:00');
--- 2025-07-16 15:00:00 - 3명
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 1, '2025-07-16 15:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 2, '2025-07-16 15:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 3, '2025-07-16 15:00:00');
--- 2025-07-17 09:00:00 - 1명
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 4, '2025-07-17 09:00:00');
--- 2025-07-17 13:00:00 - 1명
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 4, '2025-07-17 13:00:00');
--- 2025-07-18 13:00:00 - 4명
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 1, '2025-07-18 13:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 2, '2025-07-18 13:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 3, '2025-07-18 13:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 4, '2025-07-18 13:00:00');
--- 2025-07-18 14:00:00 - 4명
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 1, '2025-07-18 14:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 2, '2025-07-18 14:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 3, '2025-07-18 14:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 4, '2025-07-18 14:00:00');
--- 2025-07-19 19:00:00 - 5명
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 1, '2025-07-19 19:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 2, '2025-07-19 19:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 3, '2025-07-19 19:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 4, '2025-07-19 19:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 5, '2025-07-19 19:00:00');
--- 2025-07-19 20:00:00 - 5명
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 1, '2025-07-19 20:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 2, '2025-07-19 20:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 3, '2025-07-19 20:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 4, '2025-07-19 20:00:00');
-INSERT INTO time_vote (period_id, study_member_id, time_slot) VALUES (1, 5, '2025-07-19 20:00:00');
+-- 2025-07-25 10:00:00 - 2명
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 6, '2025-07-25 10:00:00', TRUE);
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 8, '2025-07-25 10:00:00', TRUE);
+-- 2025-07-25 11:00:00 - 2명
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 6, '2025-07-25 11:00:00', TRUE);
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 8, '2025-07-25 11:00:00', TRUE);
+-- 2025-07-26 14:00:00 - 3명
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 6, '2025-07-26 14:00:00', TRUE);
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 7, '2025-07-26 14:00:00', TRUE);
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 8, '2025-07-26 14:00:00', TRUE);
+-- 2025-07-26 15:00:00 - 3명
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 6, '2025-07-26 15:00:00', TRUE);
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 7, '2025-07-26 15:00:00', TRUE);
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 8, '2025-07-26 15:00:00', TRUE);
+-- 2025-07-27 09:00:00 - 1명
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 8, '2025-07-27 09:00:00', TRUE);
+-- 2025-07-27 13:00:00 - 1명
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 8, '2025-07-27 13:00:00', TRUE);
+-- 2025-07-28 13:00:00 - 3명
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 6, '2025-07-28 13:00:00', TRUE);
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 7, '2025-07-28 13:00:00', TRUE);
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 8, '2025-07-28 13:00:00', TRUE);
+-- 2025-07-28 14:00:00 - 3명
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 6, '2025-07-28 14:00:00', TRUE);
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 7, '2025-07-28 14:00:00', TRUE);
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 8, '2025-07-28 14:00:00', TRUE);
+-- 2025-07-29 19:00:00 - 2명
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 6, '2025-07-29 19:00:00', TRUE);
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 7, '2025-07-29 19:00:00', TRUE);
+-- 2025-07-29 20:00:00 - 1명
+INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 8, '2025-07-29 20:00:00', TRUE);
 
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-15 10:00:00', 2);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-15 11:00:00', 2);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-16 14:00:00', 3);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-16 15:00:00', 3);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-17 09:00:00', 1);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-17 13:00:00', 1);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-18 13:00:00', 4);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-18 14:00:00', 4);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-19 19:00:00', 5);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-19 20:00:00', 5);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-25 10:00:00', 2);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-25 11:00:00', 2);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-26 14:00:00', 3);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-26 15:00:00', 3);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-27 09:00:00', 1);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-27 13:00:00', 1);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-28 13:00:00', 3);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-28 14:00:00', 3);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-29 19:00:00', 2);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count) VALUES (1, '2025-07-29 20:00:00', 1);
 
 -- INSERT INTO alarm (receive_user_id, alram_type, message, is_read, redirect_url) VALUES (5, 'APPLICATION', 'jiweon01님이 스터디 신청을 했습니다.', FALSE, '/admin/studies/2/applications');
 -- INSERT INTO alarm (receive_user_id, alram_type, message, is_read, redirect_url) VALUES (3, 'APPLICATION_STATUS', '스터디 신청이 수락되었습니다.', FALSE, '/my/applications');
