@@ -17,7 +17,7 @@ public interface ApplicationSpecification {
     public ApiResponse<ReceivedApplicationPagingResponse> getReceivedApplications(Long recruitmentPostId, Pageable pageable, Principal userDetails);
 
     @Operation(summary = "내 스터디 신청 목록 조회", description = "내가 신청한 스터디의 목록을 조회합니다.")
-    ApiResponse<MyApplicationPagingResponse> getMyStudyApplications(Long recruitmentPostId, Pageable pageable, ApplicationStatus status, Principal userDetails);
+    ApiResponse<MyApplicationPagingResponse> getMyStudyApplications(Pageable pageable, ApplicationStatus status, Principal userDetails);
 
     @Operation(summary = "스터디 신청 생성", description = "스터디를 신청합니다.")
     ApiResponse<Long> createApplication(Long recruitmentPostId, ApplicationCreateRequest request, Principal userDetails);
