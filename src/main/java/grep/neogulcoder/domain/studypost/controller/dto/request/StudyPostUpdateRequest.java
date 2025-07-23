@@ -1,0 +1,34 @@
+package grep.neogulcoder.domain.studypost.controller.dto.request;
+
+import grep.neogulcoder.domain.studypost.Category;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Schema(description = "스터디 게시글 수정 요청 DTO")
+public class StudyPostUpdateRequest {
+
+    @Schema(description = "제목", example = "스터디 공지")
+    @NotBlank
+    private String title;
+
+    @Schema(description = "카테고리: NOTICE(공지), FREE(자유)", example = "NOTICE")
+    @NotBlank
+    private Category category;
+
+    @Schema(description = "내용", example = "오늘은 각자 공부한 내용에 대해 발표가 있는 날 입니다!")
+    @NotBlank
+    private String content;
+
+    private StudyPostUpdateRequest() {
+    }
+
+    @Builder
+    private StudyPostUpdateRequest(String title, Category category, String content) {
+        this.title = title;
+        this.category = category;
+        this.content = content;
+    }
+}
