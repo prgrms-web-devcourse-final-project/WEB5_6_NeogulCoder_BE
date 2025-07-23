@@ -4,22 +4,24 @@ import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
+import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.domain.studyapplication.ApplicationStatus;
 import grep.neogul_coder.domain.studyapplication.StudyApplication;
 import grep.neogul_coder.domain.studyapplication.controller.dto.request.ApplicationCreateRequest;
+import grep.neogul_coder.domain.studyapplication.controller.dto.response.MyApplicationPagingResponse;
 import grep.neogul_coder.domain.studyapplication.controller.dto.response.MyApplicationResponse;
 import grep.neogul_coder.domain.studyapplication.repository.ApplicationQueryRepository;
 import grep.neogul_coder.domain.studyapplication.repository.ApplicationRepository;
 import grep.neogul_coder.global.exception.business.BusinessException;
 import grep.neogul_coder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static grep.neogul_coder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
 import static grep.neogul_coder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
@@ -36,8 +38,9 @@ public class ApplicationService {
     private final StudyMemberRepository studyMemberRepository;
     private final StudyRepository studyRepository;
 
-    public List<MyApplicationResponse> getMyStudyApplications(Long userId) {
-        return applicationQueryRepository.findMyApplications(userId);
+    public MyApplicationPagingResponse getMyStudyApplicationsPaging(Pageable pageable, Long userId, ApplicationStatus status) {
+        Page<MyApplicationResponse> page = applicationQueryRepository.findMyStudyApplicationsPaging(pageable, userId, status);
+        return MyApplicationPagingResponse.of(page);
     }
 
     @Transactional
