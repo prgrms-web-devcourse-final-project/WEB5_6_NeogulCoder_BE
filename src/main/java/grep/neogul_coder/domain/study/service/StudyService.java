@@ -65,6 +65,11 @@ public class StudyService {
         return StudyItemPagingResponse.of(page);
     }
 
+    public List<StudyItemResponse> getMyUnfinishedStudies(Long userId) {
+        List<StudyItemResponse> myUnfinishedStudies = studyQueryRepository.findMyUnfinishedStudies(userId);
+        return myUnfinishedStudies;
+    }
+
     public List<StudyItemResponse> getMyStudies(Long userId) {
         return studyQueryRepository.findMyStudies(userId);
     }

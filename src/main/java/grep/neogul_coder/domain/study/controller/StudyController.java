@@ -26,12 +26,17 @@ public class StudyController implements StudySpecification {
     private final StudyService studyService;
 
     @GetMapping
-    public ApiResponse<StudyItemPagingResponse> getStudies(@PageableDefault(size = 12) Pageable pageable,
-                                                           @RequestParam(required = false) Boolean finished,
-                                                           @AuthenticationPrincipal Principal userDetails) {
-        Long userId = userDetails.getUserId();
-        StudyItemPagingResponse studies = studyService.getMyStudiesPaging(pageable, userId, finished);
-        return ApiResponse.success(studies);
+    public ApiResponse<StudyItemPagingResponse> getMyStudies(@PageableDefault(size = 12) Pageable pageable,
+                                                             @RequestParam(required = false) Boolean finished,
+                                                             @AuthenticationPrincipal Principal userDetails) {
+        StudyItemPagingResponse myStudies = studyService.getMyStudiesPaging(pageable, userDetails.getUserId(), finished);
+        return ApiResponse.success(myStudies);
+    }
+
+    @GetMapping("/main")
+    public ApiResponse<List<StudyItemResponse>> getMyUnfinishedStudies(@AuthenticationPrincipal Principal userDetails) {
+        List<StudyItemResponse> unfinishedStudies = studyService.getMyUnfinishedStudies(userDetails.getUserId());
+        return ApiResponse.success(unfinishedStudies);
     }
 
     @GetMapping("/{studyId}/header")

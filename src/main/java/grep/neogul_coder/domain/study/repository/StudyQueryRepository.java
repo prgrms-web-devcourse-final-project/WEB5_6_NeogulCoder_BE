@@ -76,6 +76,33 @@ public class StudyQueryRepository {
         return new PageImpl<>(studies, pageable, total == null ? 0 : total);
     }
 
+    public List<StudyItemResponse> findMyUnfinishedStudies(Long userId) {
+        return queryFactory
+            .select(new QStudyItemResponse(
+                study.id,
+                study.name,
+                user.nickname,
+                study.capacity,
+                study.currentCount,
+                study.startDate,
+                study.endDate,
+                study.imageUrl,
+                study.introduction,
+                study.category,
+                study.studyType,
+                study.finished
+            ))
+            .from(studyMember)
+            .join(user).on(user.id.eq(studyMember.userId))
+            .join(study).on(study.id.eq(studyMember.study.id))
+            .where(
+                studyMember.userId.eq(userId),
+                studyMember.activated.isTrue(),
+                studyMember.study.finished.isFalse()
+            )
+            .fetch();
+    }
+
     public List<StudyItemResponse> findMyStudies(Long userId) {
         return queryFactory
             .select(new QStudyItemResponse(

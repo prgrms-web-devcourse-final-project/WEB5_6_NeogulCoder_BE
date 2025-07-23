@@ -17,7 +17,10 @@ import java.util.List;
 public interface StudySpecification {
 
     @Operation(summary = "스터디 목록 조회", description = "가입한 스터디 목록을 조회합니다.")
-    ApiResponse<StudyItemPagingResponse> getStudies(Pageable pageable, Boolean finished, Principal userDetails);
+    ApiResponse<StudyItemPagingResponse> getMyStudies(Pageable pageable, Boolean finished, Principal userDetails);
+
+    @Operation(summary = "종료되지않은 내 스터디 목록 조회", description = "종료되지않은 내 스터디 목록을 조회합니다.")
+    ApiResponse<List<StudyItemResponse>> getMyUnfinishedStudies(Principal userDetails);
 
     @Operation(summary = "스터디 헤더 조회", description = "스터디 헤더 정보를 조회합니다.")
     ApiResponse<StudyHeaderResponse> getStudyHeader(Long studyId);
