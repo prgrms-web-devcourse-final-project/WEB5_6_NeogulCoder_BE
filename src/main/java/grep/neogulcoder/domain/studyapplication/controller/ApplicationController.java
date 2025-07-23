@@ -23,7 +23,7 @@ public class ApplicationController implements ApplicationSpecification {
 
     @GetMapping("/{recruitment-post-id}/applications")
     public ApiResponse<ReceivedApplicationPagingResponse> getReceivedApplications(@PathVariable("recruitment-post-id") Long recruitmentPostId,
-                                                                                  @PageableDefault(size = 12) Pageable pageable,
+                                                                                  @PageableDefault(size = 5) Pageable pageable,
                                                                                   @AuthenticationPrincipal Principal userDetails) {
         return ApiResponse.success(applicationService.getReceivedApplicationsPaging(recruitmentPostId, pageable, userDetails.getUserId()));
     }
