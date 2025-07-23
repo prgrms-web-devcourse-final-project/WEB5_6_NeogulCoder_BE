@@ -12,6 +12,8 @@ import grep.neogulcoder.domain.studyapplication.StudyApplication;
 import grep.neogulcoder.domain.studyapplication.controller.dto.request.ApplicationCreateRequest;
 import grep.neogulcoder.domain.studyapplication.controller.dto.response.MyApplicationPagingResponse;
 import grep.neogulcoder.domain.studyapplication.controller.dto.response.MyApplicationResponse;
+import grep.neogulcoder.domain.studyapplication.controller.dto.response.ReceivedApplicationPagingResponse;
+import grep.neogulcoder.domain.studyapplication.controller.dto.response.ReceivedApplicationResponse;
 import grep.neogulcoder.domain.studyapplication.repository.ApplicationQueryRepository;
 import grep.neogulcoder.domain.studyapplication.repository.ApplicationRepository;
 import grep.neogulcoder.global.exception.business.BusinessException;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
+import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_OWNER;
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
 import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
 
@@ -37,6 +40,15 @@ public class ApplicationService {
     private final StudyMemberRepository studyMemberRepository;
     private final StudyRepository studyRepository;
 
+    public ReceivedApplicationPagingResponse getReceivedApplicationsPaging(Long recruitmentPostId, Pageable pageable, Long userId) {
+        RecruitmentPost recruitmentPost = findValidRecruitmentPost(recruitmentPostId);
+
+        validateOwner(userId, recruitmentPost);
+
+        Page<ReceivedApplicationResponse> page = applicationQueryRepository.findReceivedApplicationsPaging(recruitmentPostId, pageable);
+        return ReceivedApplicationPagingResponse.of(page);
+    }
+
     public MyApplicationPagingResponse getMyStudyApplicationsPaging(Pageable pageable, Long userId, ApplicationStatus status) {
         Page<MyApplicationResponse> page = applicationQueryRepository.findMyStudyApplicationsPaging(pageable, userId, status);
         return MyApplicationPagingResponse.of(page);
@@ -44,7 +56,7 @@ public class ApplicationService {
 
     @Transactional
     public Long createApplication(Long recruitmentPostId, ApplicationCreateRequest request, Long userId) {
-        RecruitmentPost recruitmentPost = findValidRecruimentPost(recruitmentPostId);
+        RecruitmentPost recruitmentPost = findValidRecruitmentPost(recruitmentPostId);
 
         validateNotLeaderApply(recruitmentPost, userId);
         validateNotAlreadyApplied(recruitmentPostId, userId);
@@ -58,7 +70,7 @@ public class ApplicationService {
     @Transactional
     public void approveApplication(Long applicationId, Long userId) {
         StudyApplication application = findValidApplication(applicationId);
-        RecruitmentPost post = findValidRecruimentPost(application.getRecruitmentPostId());
+        RecruitmentPost post = findValidRecruitmentPost(application.getRecruitmentPostId());
         Study study = findValidStudy(post);
 
         validateOnlyLeaderCanApprove(study, userId);
@@ -74,7 +86,7 @@ public class ApplicationService {
     @Transactional
     public void rejectApplication(Long applicationId, Long userId) {
         StudyApplication application = findValidApplication(applicationId);
-        RecruitmentPost post = findValidRecruimentPost(application.getRecruitmentPostId());
+        RecruitmentPost post = findValidRecruitmentPost(application.getRecruitmentPostId());
         Study study = findValidStudy(post);
 
         validateOnlyLeaderCanReject(study, userId);
@@ -95,10 +107,16 @@ public class ApplicationService {
         return application;
     }
 
-    private RecruitmentPost findValidRecruimentPost(Long recruitmentPostId) {
+    private RecruitmentPost findValidRecruitmentPost(Long recruitmentPostId) {
         RecruitmentPost post = recruitmentPostRepository.findByIdAndActivatedTrue(recruitmentPostId)
             .orElseThrow(() -> new NotFoundException(NOT_FOUND));
         return post;
+    }
+
+    private static void validateOwner(Long userId, RecruitmentPost recruitmentPost) {
+        if (recruitmentPost.isNotOwnedBy(userId)) {
+            throw new BusinessException(NOT_OWNER);
+        }
     }
 
     private void validateNotLeaderApply(RecruitmentPost recruitmentPost, Long userId) {

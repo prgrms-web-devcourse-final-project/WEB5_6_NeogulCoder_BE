@@ -3,6 +3,7 @@ package grep.neogulcoder.domain.studyapplication.controller;
 import grep.neogulcoder.domain.studyapplication.ApplicationStatus;
 import grep.neogulcoder.domain.studyapplication.controller.dto.request.ApplicationCreateRequest;
 import grep.neogulcoder.domain.studyapplication.controller.dto.response.MyApplicationPagingResponse;
+import grep.neogulcoder.domain.studyapplication.controller.dto.response.ReceivedApplicationPagingResponse;
 import grep.neogulcoder.domain.studyapplication.service.ApplicationService;
 import grep.neogulcoder.global.auth.Principal;
 import grep.neogulcoder.global.response.ApiResponse;
@@ -21,6 +22,13 @@ public class ApplicationController implements ApplicationSpecification {
     private final ApplicationService applicationService;
 
     @GetMapping("/{recruitment-post-id}/applications")
+    public ApiResponse<ReceivedApplicationPagingResponse> getReceivedApplications(@PathVariable("recruitment-post-id") Long recruitmentPostId,
+                                                                                  @PageableDefault(size = 12) Pageable pageable,
+                                                                                  @AuthenticationPrincipal Principal userDetails) {
+        return ApiResponse.success(applicationService.getReceivedApplicationsPaging(recruitmentPostId, pageable, userDetails.getUserId()));
+    }
+
+    @GetMapping("/applications")
     public ApiResponse<MyApplicationPagingResponse> getMyStudyApplications(@PathVariable("recruitment-post-id") Long recruitmentPostId,
                                                                            @PageableDefault(size = 12) Pageable pageable,
                                                                            @RequestParam(required = false) ApplicationStatus status,

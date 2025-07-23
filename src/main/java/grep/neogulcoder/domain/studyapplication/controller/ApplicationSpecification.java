@@ -3,6 +3,7 @@ package grep.neogulcoder.domain.studyapplication.controller;
 import grep.neogulcoder.domain.studyapplication.ApplicationStatus;
 import grep.neogulcoder.domain.studyapplication.controller.dto.request.ApplicationCreateRequest;
 import grep.neogulcoder.domain.studyapplication.controller.dto.response.MyApplicationPagingResponse;
+import grep.neogulcoder.domain.studyapplication.controller.dto.response.ReceivedApplicationPagingResponse;
 import grep.neogulcoder.global.auth.Principal;
 import grep.neogulcoder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,9 @@ import org.springframework.data.domain.Pageable;
 
 @Tag(name = "StudyApplication", description = "스터디 신청 API")
 public interface ApplicationSpecification {
+
+    @Operation(summary = "모집글 신청 목록 조회", description = "스터디장(모집글 작성자)이 신청 목록을 조회합니다.")
+    public ApiResponse<ReceivedApplicationPagingResponse> getReceivedApplications(Long recruitmentPostId, Pageable pageable, Principal userDetails);
 
     @Operation(summary = "내 스터디 신청 목록 조회", description = "내가 신청한 스터디의 목록을 조회합니다.")
     ApiResponse<MyApplicationPagingResponse> getMyStudyApplications(Long recruitmentPostId, Pageable pageable, ApplicationStatus status, Principal userDetails);
