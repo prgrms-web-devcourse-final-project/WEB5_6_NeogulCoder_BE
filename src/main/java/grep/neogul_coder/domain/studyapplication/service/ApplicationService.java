@@ -4,6 +4,7 @@ import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
+import grep.neogul_coder.domain.study.enums.Category;
 import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import grep.neogul_coder.domain.study.repository.StudyMemberRepository;
 import grep.neogul_coder.domain.study.repository.StudyRepository;
@@ -37,8 +38,8 @@ public class ApplicationService {
     private final StudyMemberRepository studyMemberRepository;
     private final StudyRepository studyRepository;
 
-    public MyApplicationPagingResponse getMyStudyApplicationsPaging(Pageable pageable, Long userId) {
-        Page<MyApplicationResponse> page = applicationQueryRepository.findMyStudyApplicationsPaging(pageable, userId);
+    public MyApplicationPagingResponse getMyStudyApplicationsPaging(Pageable pageable, Long userId, Category category) {
+        Page<MyApplicationResponse> page = applicationQueryRepository.findMyStudyApplicationsPaging(pageable, userId, category);
         return MyApplicationPagingResponse.of(page);
     }
 
