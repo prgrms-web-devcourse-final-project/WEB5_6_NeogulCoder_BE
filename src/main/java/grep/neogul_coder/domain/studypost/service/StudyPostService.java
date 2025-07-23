@@ -46,8 +46,13 @@ public class StudyPostService {
         return new StudyPostDetailResponse(postInfo, commentInfos, commentInfos.size());
     }
 
+    public MyStudyPostPagingResult findMyPagingInfo(Long studyId, Pageable pageable, Category category, String keyword, long userId) {
+        Page<PostPagingInfo> pages = studyPostQueryRepository.findPagingFilteredBy(studyId, pageable, category, keyword, userId);
+        return new MyStudyPostPagingResult(pages);
+    }
+
     public PostPagingResult findPagingInfo(long studyId, Pageable pageable, Category category, String keyword) {
-        Page<PostPagingInfo> pages = studyPostQueryRepository.findPagingFilteredBy(studyId, pageable, category, keyword);
+        Page<PostPagingInfo> pages = studyPostQueryRepository.findPagingFilteredBy(studyId, pageable, category, keyword, null);
         List<NoticePostInfo> noticeInfos = studyPostQueryRepository.findLatestNoticeInfoBy(studyId);
         return new PostPagingResult(noticeInfos, pages);
     }
@@ -79,16 +84,16 @@ public class StudyPostService {
         studyPost.delete();
     }
 
+    public String uploadPostImage(MultipartFile file, long userId) throws IOException {
+        FileUploadResponse response = fileUploader.upload(file, userId, FileUsageType.POST, userId);
+        return response.getFileUrl();
+    }
+
     private Study extractTargetStudyById(List<StudyMember> studyMembers, long studyId) {
         return studyMembers.stream()
                 .map(StudyMember::getStudy)
                 .filter(study -> studyId == study.getId())
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException(NOT_JOINED_STUDY_USER));
-    }
-
-    public String uploadPostImage(MultipartFile file, long userId) throws IOException {
-        FileUploadResponse response = fileUploader.upload(file, userId, FileUsageType.POST, userId);
-        return response.getFileUrl();
     }
 }

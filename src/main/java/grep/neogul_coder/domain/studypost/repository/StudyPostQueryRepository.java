@@ -76,7 +76,7 @@ public class StudyPostQueryRepository {
         return Optional.ofNullable(findStudyPost);
     }
 
-    public Page<PostPagingInfo> findPagingFilteredBy(Long studyId, Pageable pageable, Category category, String keyword) {
+    public Page<PostPagingInfo> findPagingFilteredBy(Long studyId, Pageable pageable, Category category, String keyword, Long userId) {
 
         JPAQuery<PostPagingInfo> query = queryFactory.select(
                         new QPostPagingInfo(
@@ -93,6 +93,7 @@ public class StudyPostQueryRepository {
                 .where(
                         studyPost.activated.isTrue(),
                         studyPost.study.id.eq(studyId),
+                        equalsUserId(userId),
                         likeContent(keyword),
                         equalsCategory(category)
                 )
@@ -153,6 +154,10 @@ public class StudyPostQueryRepository {
         }
 
         throw new ValidationException(NOT_VALID_CONDITION);
+    }
+
+    private BooleanBuilder equalsUserId(Long userId) {
+        return nullSafeBuilder(() -> studyPost.userId.eq(userId));
     }
 
     private BooleanBuilder likeContent(String content) {

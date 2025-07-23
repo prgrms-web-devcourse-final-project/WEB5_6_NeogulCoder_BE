@@ -86,11 +86,11 @@ class StudyPostQueryRepositoryTest extends IntegrationTestSupport {
         PageRequest pageRequest = PageRequest.of(0, 2, sort);
 
         //when
-        Page<PostPagingInfo> page = studyPostQueryRepository.findPagingFilteredBy(study.getId(), pageRequest, FREE, "Like");
+        Page<PostPagingInfo> page = studyPostQueryRepository.findPagingFilteredBy(study.getId(), pageRequest, FREE, "Like", null);
         List<PostPagingInfo> response = page.getContent();
-         // System.out.println("response = " + response);
-         // System.out.println("page.getTotalPages() = " + page.getTotalPages());
-         // System.out.println("page.getTotalElements() = " + page.getTotalElements());
+        //  System.out.println("response = " + response);
+        //  System.out.println("page.getTotalPages() = " + page.getTotalPages());
+        //  System.out.println("page.getTotalElements() = " + page.getTotalElements());
 
         //then
         assertThat(response).hasSize(1);
