@@ -66,15 +66,15 @@ public class StudyCreateRequest {
 
     public Study toEntity(String imageUrl) {
         return Study.builder()
-            .name(this.name)
-            .category(this.category)
-            .capacity(this.capacity)
-            .studyType(this.studyType)
-            .location(this.location)
-            .startDate(this.startDate)
-            .endDate(this.endDate)
-            .introduction(this.introduction)
-            .imageUrl(imageUrl)
-            .build();
+                .name(this.name)
+                .category(this.category)
+                .capacity(this.capacity)
+                .studyType(this.studyType)
+                .location(this.location)
+                .startDate(this.startDate)
+                .endDate(this.endDate)
+                .introduction(this.introduction)
+                .imageUrl(imageUrl)
+                .build();
     }
 }
