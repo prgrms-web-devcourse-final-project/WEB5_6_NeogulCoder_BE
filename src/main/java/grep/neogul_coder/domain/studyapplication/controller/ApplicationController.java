@@ -1,6 +1,7 @@
 package grep.neogul_coder.domain.studyapplication.controller;
 
 import grep.neogul_coder.domain.study.enums.Category;
+import grep.neogul_coder.domain.studyapplication.ApplicationStatus;
 import grep.neogul_coder.domain.studyapplication.controller.dto.request.ApplicationCreateRequest;
 import grep.neogul_coder.domain.studyapplication.controller.dto.response.MyApplicationPagingResponse;
 import grep.neogul_coder.domain.studyapplication.service.ApplicationService;
@@ -24,8 +25,9 @@ public class ApplicationController implements ApplicationSpecification {
     public ApiResponse<MyApplicationPagingResponse> getMyStudyApplications(@PathVariable("recruitment-post-id") Long recruitmentPostId,
                                                                            @PageableDefault(size = 12) Pageable pageable,
                                                                            @RequestParam(required = false) Category category,
+                                                                           @RequestParam(required = false) ApplicationStatus status,
                                                                            @AuthenticationPrincipal Principal userDetails) {
-        return ApiResponse.success(applicationService.getMyStudyApplicationsPaging(pageable, userDetails.getUserId(), category));
+        return ApiResponse.success(applicationService.getMyStudyApplicationsPaging(pageable, userDetails.getUserId(), category, status));
     }
 
     @PostMapping("/{recruitment-post-id}/applications")

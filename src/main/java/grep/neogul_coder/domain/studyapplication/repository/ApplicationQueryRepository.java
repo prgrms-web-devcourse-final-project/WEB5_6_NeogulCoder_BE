@@ -4,6 +4,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import grep.neogul_coder.domain.study.enums.Category;
+import grep.neogul_coder.domain.studyapplication.ApplicationStatus;
 import grep.neogul_coder.domain.studyapplication.controller.dto.response.MyApplicationResponse;
 import grep.neogul_coder.domain.studyapplication.controller.dto.response.QMyApplicationResponse;
 import jakarta.persistence.EntityManager;
@@ -31,7 +32,7 @@ public class ApplicationQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public Page<MyApplicationResponse> findMyStudyApplicationsPaging(Pageable pageable, Long userId, Category category) {
+    public Page<MyApplicationResponse> findMyStudyApplicationsPaging(Pageable pageable, Long userId, Category category, ApplicationStatus status) {
         List<MyApplicationResponse> applications = queryFactory
             .select(new QMyApplicationResponse(
                 studyApplication.id,
@@ -54,7 +55,8 @@ public class ApplicationQueryRepository {
             .join(user).on(user.id.eq(studyMember.userId))
             .where(
                 studyApplication.userId.eq(userId),
-                equalsStudyCategory(category)
+                equalsStudyCategory(category),
+                equalsApplicationStatus(status)
             )
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
@@ -68,7 +70,8 @@ public class ApplicationQueryRepository {
             .join(studyMember).on(studyMember.study.id.eq(study.id), studyMember.role.eq(LEADER))
             .where(
                 studyApplication.userId.eq(userId),
-                equalsStudyCategory(category)
+                equalsStudyCategory(category),
+                equalsApplicationStatus(status)
             )
             .fetchOne();
 
@@ -77,6 +80,10 @@ public class ApplicationQueryRepository {
 
     private BooleanBuilder equalsStudyCategory(Category category) {
         return nullSafeBuilder(() -> study.category.eq(category));
+    }
+
+    private BooleanBuilder equalsApplicationStatus(ApplicationStatus status) {
+        return nullSafeBuilder(() -> studyApplication.status.eq(status));
     }
 
     private BooleanBuilder nullSafeBuilder(Supplier<BooleanExpression> supplier) {
