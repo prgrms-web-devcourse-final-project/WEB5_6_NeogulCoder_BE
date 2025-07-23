@@ -32,7 +32,7 @@ public class ApplicationQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public Page<MyApplicationResponse> findMyStudyApplicationsPaging(Pageable pageable, Long userId, Category category, ApplicationStatus status) {
+    public Page<MyApplicationResponse> findMyStudyApplicationsPaging(Pageable pageable, Long userId, ApplicationStatus status) {
         List<MyApplicationResponse> applications = queryFactory
             .select(new QMyApplicationResponse(
                 studyApplication.id,
@@ -55,7 +55,6 @@ public class ApplicationQueryRepository {
             .join(user).on(user.id.eq(studyMember.userId))
             .where(
                 studyApplication.userId.eq(userId),
-                equalsStudyCategory(category),
                 equalsApplicationStatus(status)
             )
             .offset(pageable.getOffset())
@@ -70,16 +69,11 @@ public class ApplicationQueryRepository {
             .join(studyMember).on(studyMember.study.id.eq(study.id), studyMember.role.eq(LEADER))
             .where(
                 studyApplication.userId.eq(userId),
-                equalsStudyCategory(category),
                 equalsApplicationStatus(status)
             )
             .fetchOne();
 
         return new PageImpl<>(applications, pageable, total == null ? 0 : total);
-    }
-
-    private BooleanBuilder equalsStudyCategory(Category category) {
-        return nullSafeBuilder(() -> study.category.eq(category));
     }
 
     private BooleanBuilder equalsApplicationStatus(ApplicationStatus status) {

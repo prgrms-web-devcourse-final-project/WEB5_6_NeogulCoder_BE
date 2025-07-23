@@ -38,8 +38,8 @@ public class ApplicationService {
     private final StudyMemberRepository studyMemberRepository;
     private final StudyRepository studyRepository;
 
-    public MyApplicationPagingResponse getMyStudyApplicationsPaging(Pageable pageable, Long userId, Category category, ApplicationStatus status) {
-        Page<MyApplicationResponse> page = applicationQueryRepository.findMyStudyApplicationsPaging(pageable, userId, category, status);
+    public MyApplicationPagingResponse getMyStudyApplicationsPaging(Pageable pageable, Long userId, ApplicationStatus status) {
+        Page<MyApplicationResponse> page = applicationQueryRepository.findMyStudyApplicationsPaging(pageable, userId, status);
         return MyApplicationPagingResponse.of(page);
     }
 
