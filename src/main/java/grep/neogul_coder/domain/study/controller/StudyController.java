@@ -27,9 +27,10 @@ public class StudyController implements StudySpecification {
 
     @GetMapping
     public ApiResponse<StudyItemPagingResponse> getStudies(@PageableDefault(size = 12) Pageable pageable,
+                                                           @RequestParam(required = false) Boolean finished,
                                                            @AuthenticationPrincipal Principal userDetails) {
         Long userId = userDetails.getUserId();
-        StudyItemPagingResponse studies = studyService.getMyStudiesPaging(pageable, userId);
+        StudyItemPagingResponse studies = studyService.getMyStudiesPaging(pageable, userId, finished);
         return ApiResponse.success(studies);
     }
 

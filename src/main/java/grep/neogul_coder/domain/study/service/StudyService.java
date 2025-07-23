@@ -60,8 +60,8 @@ public class StudyService {
     @Autowired
     private Environment environment;
 
-    public StudyItemPagingResponse getMyStudiesPaging(Pageable pageable, Long userId) {
-        Page<StudyItemResponse> page = studyQueryRepository.findMyStudiesPaging(pageable, userId);
+    public StudyItemPagingResponse getMyStudiesPaging(Pageable pageable, Long userId, Boolean finished) {
+        Page<StudyItemResponse> page = studyQueryRepository.findMyStudiesPaging(pageable, userId, finished);
         return StudyItemPagingResponse.of(page);
     }
 

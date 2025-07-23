@@ -1,6 +1,8 @@
 package grep.neogul_coder.domain.study.repository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.controller.dto.response.QStudyItemResponse;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static grep.neogul_coder.domain.study.QStudy.study;
 import static grep.neogul_coder.domain.study.QStudyMember.studyMember;
@@ -29,7 +32,8 @@ public class StudyQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public Page<StudyItemResponse> findMyStudiesPaging(Pageable pageable, Long userId) {
+    public Page<StudyItemResponse> findMyStudiesPaging(Pageable pageable, Long userId, Boolean finished) {
+
         List<StudyItemResponse> studies = queryFactory
             .select(new QStudyItemResponse(
                 study.id,
@@ -50,7 +54,8 @@ public class StudyQueryRepository {
             .join(study).on(study.id.eq(studyMember.study.id))
             .where(
                 studyMember.userId.eq(userId),
-                studyMember.activated.isTrue()
+                studyMember.activated.isTrue(),
+                equalsStudyFinished(finished)
             )
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
@@ -61,11 +66,12 @@ public class StudyQueryRepository {
             .from(studyMember)
             .where(
                 studyMember.userId.eq(userId),
-                studyMember.activated.eq(true)
+                studyMember.activated.eq(true),
+                equalsStudyFinished(finished)
             )
             .fetchOne();
 
-        return new PageImpl<>(studies, pageable, total == null ? 0 : total);
+        return new PageImpl<>(studies, pageable, total);
     }
 
     public List<StudyItemResponse> findMyStudies(Long userId) {
@@ -147,5 +153,17 @@ public class StudyQueryRepository {
             .fetchCount();
 
         return new PageImpl<>(content, pageable, total);
+    }
+
+    private BooleanBuilder equalsStudyFinished(Boolean finished) {
+        return nullSafeBuilder(() -> study.finished.eq(finished));
+    }
+
+    private BooleanBuilder nullSafeBuilder(Supplier<BooleanExpression> supplier) {
+        try {
+            return new BooleanBuilder(supplier.get());
+        } catch (Exception e) {
+            return new BooleanBuilder();
+        }
     }
 }
