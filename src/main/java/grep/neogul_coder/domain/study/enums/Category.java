@@ -1,5 +1,11 @@
 package grep.neogul_coder.domain.study.enums;
 
+import grep.neogul_coder.global.exception.business.NotFoundException;
+
+import java.util.Arrays;
+
+import static grep.neogul_coder.domain.recruitment.RecruitmentErrorCode.BAD_REQUEST_STUDY_CATEGORY;
+
 public enum Category {
     LANGUAGE("어학"),
     IT("IT"),
@@ -18,6 +24,17 @@ public enum Category {
 
     Category(String description) {
         this.description = description;
+    }
+
+    public static Category fromDescription(String description) {
+        return Arrays.stream(values())
+                .filter(category -> category.equalsDescription(description))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(BAD_REQUEST_STUDY_CATEGORY));
+    }
+
+    private boolean equalsDescription(String description) {
+        return this.description.equals(description);
     }
 
     public String getDescription() {

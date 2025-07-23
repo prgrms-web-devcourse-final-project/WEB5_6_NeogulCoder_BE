@@ -1,8 +1,9 @@
 package grep.neogul_coder.domain.studypost.controller;
 
-import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostPagingCondition;
+import grep.neogul_coder.domain.studypost.Category;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostSaveRequest;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostUpdateRequest;
+import grep.neogul_coder.domain.studypost.controller.dto.response.MyStudyPostPagingResult;
 import grep.neogul_coder.domain.studypost.controller.dto.response.PostPagingResult;
 import grep.neogul_coder.domain.studypost.controller.dto.response.StudyPostDetailResponse;
 import grep.neogul_coder.domain.studypost.service.StudyPostService;
@@ -10,6 +11,8 @@ import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +27,17 @@ public class StudyPostController implements StudyPostSpecification {
 
     private final StudyPostService studyPostService;
 
+    @GetMapping("/{study-id}/posts/search/me")
+    public ApiResponse<MyStudyPostPagingResult> getMyPostSearch(@PathVariable("study-id") long studyId,
+                                                                @PageableDefault(size = 10) Pageable pageable,
+                                                                @RequestParam(value = "category", required = false) Category category,
+                                                                @RequestParam(value = "keyword", required = false) String keyword,
+                                                                @AuthenticationPrincipal Principal userDetails) {
+
+        MyStudyPostPagingResult response = studyPostService.findMyPagingInfo(studyId, pageable, category, keyword, userDetails.getUserId());
+        return ApiResponse.success(response);
+    }
+
     @PostMapping("/{study-id}/posts")
     public ApiResponse<Long> create(@PathVariable("study-id") long studyId,
                                     @RequestBody @Valid StudyPostSaveRequest request,
@@ -32,10 +46,13 @@ public class StudyPostController implements StudyPostSpecification {
         return ApiResponse.success(postId);
     }
 
-    @PostMapping("/{study-id}/posts/search")
+    @GetMapping("/{study-id}/posts/search")
     public ApiResponse<PostPagingResult> findPagingInfo(@PathVariable("study-id") Long studyId,
-                                                        @RequestBody @Valid StudyPostPagingCondition condition) {
-        PostPagingResult response = studyPostService.findPagingInfo(condition, studyId);
+                                                        @PageableDefault(size = 10) Pageable pageable,
+                                                        @RequestParam(value = "category", required = false) Category category,
+                                                        @RequestParam(value = "keyword", required = false) String keyword) {
+
+        PostPagingResult response = studyPostService.findPagingInfo(studyId, pageable, category, keyword);
         return ApiResponse.success(response);
     }
 

@@ -1,17 +1,17 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
-import grep.neogul_coder.domain.recruitment.post.controller.dto.request.PagingCondition;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
+import grep.neogul_coder.domain.study.enums.Category;
+import grep.neogul_coder.domain.study.enums.StudyType;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "Recruitment-Post", description = "모집 글 API")
 public interface RecruitmentPostSpecification {
@@ -36,6 +36,25 @@ public interface RecruitmentPostSpecification {
                     ✅ 요청 예시:  
                     `GET /recruitment-posts/me?page=0&size=5`
                     
+                    ✅ studyType (스터디 방식): \s
+                            - `ONLINE("온라인")` \s
+                            - `OFFLINE("오프라인")` \s
+                            - `HYBRID("병행")`
+                    
+                    ✅ category (스터디 카테고리): \s
+                            - `LANGUAGE("어학")` \s
+                            - `IT("IT")` \s
+                            - `EXAM("고시/자격증")` \s
+                            - `FINANCE("금융")` \s
+                            - `MANAGEMENT("경영")` \s
+                            - `DESIGN("디자인")` \s
+                            - `ART("예술")` \s
+                            - `PHOTO_VIDEO("사진/영상")` \s
+                            - `BEAUTY("뷰티")` \s
+                            - `SPORTS("스포츠")` \s
+                            - `HOBBY("취미")` \s
+                            - `ETC("기타")`
+                    
                     ✅ 응답 예시:
                     ```json
                     {
@@ -65,7 +84,8 @@ public interface RecruitmentPostSpecification {
                     ```
                     """
     )
-    ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(@RequestBody PagingCondition condition, Principal userDetails);
+    ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(Pageable pageable, Category category, StudyType studyType,
+                                                               String keyword, Principal userDetails);
 
     @Operation(
             summary = "모집글 페이징 조회",
@@ -75,6 +95,25 @@ public interface RecruitmentPostSpecification {
                     ✅ 요청 예시:  
                     `GET /recruitment-posts?page=0&size=5`
                     
+                    ✅ studyType (스터디 방식): \s
+                            - `ONLINE("온라인")` \s
+                            - `OFFLINE("오프라인")` \s
+                            - `HYBRID("병행")`
+                    
+                    ✅ category (스터디 카테고리): \s
+                            - `LANGUAGE("어학")` \s
+                            - `IT("IT")` \s
+                            - `EXAM("고시/자격증")` \s
+                            - `FINANCE("금융")` \s
+                            - `MANAGEMENT("경영")` \s
+                            - `DESIGN("디자인")` \s
+                            - `ART("예술")` \s
+                            - `PHOTO_VIDEO("사진/영상")` \s
+                            - `BEAUTY("뷰티")` \s
+                            - `SPORTS("스포츠")` \s
+                            - `HOBBY("취미")` \s
+                            - `ETC("기타")`
+                    
                     ✅ 응답 예시:
                     ```json
                     {
@@ -104,7 +143,7 @@ public interface RecruitmentPostSpecification {
                     ```
                     """
     )
-    ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(PagingCondition condition);
+    ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(Pageable pageable, Category category, StudyType studyType, String keyword);
 
     @Operation(
             summary = "스터디 신청한 회원 목록 페이징 조회",

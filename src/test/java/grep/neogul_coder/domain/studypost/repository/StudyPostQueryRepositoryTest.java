@@ -8,8 +8,7 @@ import grep.neogul_coder.domain.study.repository.StudyRepository;
 import grep.neogul_coder.domain.studypost.Category;
 import grep.neogul_coder.domain.studypost.StudyPost;
 import grep.neogul_coder.domain.studypost.comment.StudyPostComment;
-import grep.neogul_coder.domain.studypost.comment.repository.StudyCommentRepository;
-import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostPagingCondition;
+import grep.neogul_coder.domain.studypost.comment.repository.StudyPostCommentRepository;
 import grep.neogul_coder.domain.studypost.controller.dto.response.NoticePostInfo;
 import grep.neogul_coder.domain.studypost.controller.dto.response.PostPagingInfo;
 import grep.neogul_coder.domain.users.entity.User;
@@ -20,6 +19,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ class StudyPostQueryRepositoryTest extends IntegrationTestSupport {
     private StudyPostQueryRepository studyPostQueryRepository;
 
     @Autowired
-    private StudyCommentRepository studycommentRepository;
+    private StudyPostCommentRepository postCommentRepositoryPost;
 
     @DisplayName("스터디 게시글을 페이징 조회 합니다.")
     @Test
@@ -76,15 +77,20 @@ class StudyPostQueryRepositoryTest extends IntegrationTestSupport {
                 createPostComment(post2.getId(), user.getId(), "댓글2"),
                 createPostComment(post2.getId(), user.getId(), "댓글3")
         );
-        studycommentRepository.saveAll(comments);
+        postCommentRepositoryPost.saveAll(comments);
+
+        Sort sort = Sort.by(
+                Sort.Order.desc("createDateTime"),
+                Sort.Order.desc("commentCount")
+        );
+        PageRequest pageRequest = PageRequest.of(0, 2, sort);
 
         //when
-        StudyPostPagingCondition condition = new StudyPostPagingCondition(0, 2, FREE, "Like", "createDateTime", "DESC");
-        Page<PostPagingInfo> page = studyPostQueryRepository.findPagingFilteredBy(condition, study.getId());
+        Page<PostPagingInfo> page = studyPostQueryRepository.findPagingFilteredBy(study.getId(), pageRequest, FREE, "Like", null);
         List<PostPagingInfo> response = page.getContent();
-        // System.out.println("response = " + response);
-        // System.out.println("page.getTotalPages() = " + page.getTotalPages());
-        // System.out.println("page.getTotalElements() = " + page.getTotalElements());
+        //  System.out.println("response = " + response);
+        //  System.out.println("page.getTotalPages() = " + page.getTotalPages());
+        //  System.out.println("page.getTotalElements() = " + page.getTotalElements());
 
         //then
         assertThat(response).hasSize(1);

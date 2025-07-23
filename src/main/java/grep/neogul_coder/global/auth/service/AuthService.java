@@ -101,7 +101,6 @@ public class AuthService {
                     .oauthId(userInfo.getProviderId())
                     .password(dummyPassword)
                     .role(Role.ROLE_USER)
-                    .activated(true)
                     .build();
 
                 User savedUser = usersRepository.save(newUser);

@@ -31,9 +31,6 @@ public interface StudySpecification {
     @Operation(summary = "스터디 정보 조회", description = "스터디장이 스터디 정보를 조회합니다.")
     ApiResponse<StudyInfoResponse> getStudyInfo(Long studyId, Principal userDetails);
 
-    @Operation(summary = "스터디 내가 쓴 게시글 조회", description = "스터디에서 내가 쓴 게시글을 조회합니다.")
-    ApiResponse<StudyMyContentResponse> getMyStudyContent(Long studyId);
-
     @Operation(summary = "스터디 내 정보 조회", description = "스터디에서 사용자의 정보를 조회합니다.")
     ApiResponse<StudyMemberInfoResponse> getMyStudyMemberInfo(Long studyId, Principal userDetails);
 

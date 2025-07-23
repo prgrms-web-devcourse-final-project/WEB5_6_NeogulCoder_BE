@@ -1,8 +1,9 @@
 package grep.neogul_coder.domain.studypost.controller;
 
-import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostPagingCondition;
+import grep.neogul_coder.domain.studypost.Category;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostSaveRequest;
 import grep.neogul_coder.domain.studypost.controller.dto.request.StudyPostUpdateRequest;
+import grep.neogul_coder.domain.studypost.controller.dto.response.MyStudyPostPagingResult;
 import grep.neogul_coder.domain.studypost.controller.dto.response.PostPagingResult;
 import grep.neogul_coder.domain.studypost.controller.dto.response.StudyPostDetailResponse;
 import grep.neogul_coder.global.auth.Principal;
@@ -10,6 +11,7 @@ import grep.neogul_coder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,16 +20,19 @@ import java.io.IOException;
 @Tag(name = "Study-Post", description = "스터디 게시판 API")
 public interface StudyPostSpecification {
 
+    @Operation(summary = "내 게시글 검색 검색 페이징 조회", description = "스터디에서 내가 쓴 게시글을 검색 조회 합니다.")
+    ApiResponse<MyStudyPostPagingResult> getMyPostSearch(long studyId, Pageable pageable, Category category, String keyword, Principal userDetails);
+
     @Operation(summary = "게시글 생성", description = "스터디에 새로운 게시글을 작성합니다.")
     ApiResponse<Long> create(long studyId, StudyPostSaveRequest request, Principal userDetails);
 
     @Operation(
-            summary = "게시글 목록 페이징 조회",
+            summary = "게시글 검색 페이징 조회",
             description = """
                     스터디의 게시글을 조건에 따라 페이징하여 조회합니다.
                     
                     ✅ 요청 예시:
-                    `GET /api/studies/{study-id}/posts/search
+                    `GET /api/studies/{study-id}/posts/search?page=0&size=2&sort=createDateTime,DESC&category=NOTICE&keyword=검색
                     
                     ✅ condition 설명:
                     - `page`: 조회할 페이지 번호 (0부터 시작)
@@ -36,7 +41,7 @@ public interface StudyPostSpecification {
                     
                     - `category`: 게시글 카테고리 (예: NOTICE, FREE)
                     
-                    - `content`: 게시글 내용 검색 키워드
+                    - `keyword`: 게시글 내용 검색 키워드
                     
                     - `attributeName`: 정렬 대상 속성 (예: commentCount, createDateTime)
                     
@@ -72,8 +77,7 @@ public interface StudyPostSpecification {
                     ```
                     """
     )
-    ApiResponse<PostPagingResult> findPagingInfo(@Parameter(description = "스터디 ID", example = "1") Long studyId,
-                                                 StudyPostPagingCondition condition);
+    ApiResponse<PostPagingResult> findPagingInfo(Long studyId, Pageable pageable, Category category, String keyword);
 
     @Operation(
             summary = "게시글 상세 조회",
