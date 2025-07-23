@@ -40,10 +40,12 @@ public class ApplicationService {
     private final StudyMemberRepository studyMemberRepository;
     private final StudyRepository studyRepository;
 
+    @Transactional
     public ReceivedApplicationPagingResponse getReceivedApplicationsPaging(Long recruitmentPostId, Pageable pageable, Long userId) {
         RecruitmentPost recruitmentPost = findValidRecruitmentPost(recruitmentPostId);
 
         validateOwner(userId, recruitmentPost);
+        applicationRepository.markAllAsReadByRecruitmentPostId(recruitmentPostId);
 
         Page<ReceivedApplicationResponse> page = applicationQueryRepository.findReceivedApplicationsPaging(recruitmentPostId, pageable);
         return ReceivedApplicationPagingResponse.of(page);
