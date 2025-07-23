@@ -47,9 +47,14 @@ public class StudyService {
     private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final UserRepository userRepository;
 
-    public StudyItemPagingResponse getMyStudiesPaging(Pageable pageable, Long userId) {
-        Page<StudyItemResponse> page = studyQueryRepository.findMyStudiesPaging(pageable, userId);
+    public StudyItemPagingResponse getMyStudiesPaging(Pageable pageable, Long userId, Boolean finished) {
+        Page<StudyItemResponse> page = studyQueryRepository.findMyStudiesPaging(pageable, userId, finished);
         return StudyItemPagingResponse.of(page);
+    }
+
+    public List<StudyItemResponse> getMyUnfinishedStudies(Long userId) {
+        List<StudyItemResponse> myUnfinishedStudies = studyQueryRepository.findMyUnfinishedStudies(userId);
+        return myUnfinishedStudies;
     }
 
     public List<StudyItemResponse> getMyStudies(Long userId) {
