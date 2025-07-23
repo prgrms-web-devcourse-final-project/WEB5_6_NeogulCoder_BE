@@ -20,7 +20,54 @@ import java.io.IOException;
 @Tag(name = "Study-Post", description = "스터디 게시판 API")
 public interface StudyPostSpecification {
 
-    @Operation(summary = "내 게시글 검색 검색 페이징 조회", description = "스터디에서 내가 쓴 게시글을 검색 조회 합니다.")
+    @Operation(summary = "내 게시글 검색 검색 페이징 조회",  description = """
+                    내 스터디의 게시글을 조건에 따라 페이징하여 조회합니다.
+                    
+                    ✅ 요청 예시:
+                    `GET /api/studies/{study-id}/posts/search/me?page=0&size=2&sort=createDateTime,DESC&category=NOTICE&keyword=검색
+                    
+                    ✅ query 설명:
+                    - `page`: 조회할 페이지 번호 (0부터 시작)
+                    
+                    - `pageSize`: 한 페이지에 표시할 게시글 수
+                    
+                    - `category`: 게시글 카테고리 (예: NOTICE, FREE)
+                    
+                    - `keyword`: 게시글 내용 검색 키워드
+                    
+                    - `attributeName`: 정렬 대상 속성 (예: commentCount, createDateTime)
+                    
+                    - `sort`: 정렬 방향 (ASC 또는 DESC)
+                    
+                    ✅ 응답 예시:
+                    ```json
+                    {
+                      "data": {
+                        "noticePostInfos": [
+                          {
+                            "postId": 3,
+                            "category": "공지",
+                            "title": "스터디 일정 공지",
+                            "createdAt": "2025-07-21"
+                          }
+                        ],
+                        "postInfos": [
+                          {
+                            "id": 12,
+                            "title": "모든 국민은 직업선택의 자유를 가진다.",
+                            "category": "NOTICE",
+                            "content": "국회는 의원의 자격을 심사하며, 의원을 징계할 있다.",
+                            "createdDate": "2025-07-10T14:32:00",
+                            "commentCount": 3
+                          }
+                        ],
+                        "totalPage": 3,
+                        "totalElementCount": 12,
+                        "hasNext": true
+                      }
+                    }
+                    ```
+                    """)
     ApiResponse<MyStudyPostPagingResult> getMyPostSearch(long studyId, Pageable pageable, Category category, String keyword, Principal userDetails);
 
     @Operation(summary = "게시글 생성", description = "스터디에 새로운 게시글을 작성합니다.")
@@ -34,7 +81,7 @@ public interface StudyPostSpecification {
                     ✅ 요청 예시:
                     `GET /api/studies/{study-id}/posts/search?page=0&size=2&sort=createDateTime,DESC&category=NOTICE&keyword=검색
                     
-                    ✅ condition 설명:
+                    ✅ query 설명:
                     - `page`: 조회할 페이지 번호 (0부터 시작)
                     
                     - `pageSize`: 한 페이지에 표시할 게시글 수
