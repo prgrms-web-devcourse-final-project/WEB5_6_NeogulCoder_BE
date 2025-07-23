@@ -69,7 +69,7 @@ public class TimeVoteController implements TimeVoteSpecification {
       @RequestBody @Valid TimeVoteUpdateRequest request,
       @AuthenticationPrincipal Principal userDetails
   ) {
-    TimeVoteResponse response = timeVoteService.updateVote(request, studyId, userDetails.getUserId());
+    TimeVoteResponse response = timeVoteService.updateVotes(request, studyId, userDetails.getUserId());
     return ApiResponse.success(response);
   }
 

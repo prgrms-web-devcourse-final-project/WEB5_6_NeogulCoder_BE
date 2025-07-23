@@ -57,7 +57,7 @@ public class TimeVoteService {
     return TimeVoteResponse.from(studyMember.getId(), saved);
   }
 
-  public TimeVoteResponse updateVote(TimeVoteUpdateRequest request, Long studyId, Long userId) {
+  public TimeVoteResponse updateVotes(TimeVoteUpdateRequest request, Long studyId, Long userId) {
     StudyMember studyMember = getValidStudyMember(studyId, userId);
     TimeVotePeriod period = getValidTimeVotePeriod(studyId);
 
