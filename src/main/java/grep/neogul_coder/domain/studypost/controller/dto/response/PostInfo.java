@@ -19,7 +19,7 @@ public class PostInfo {
     private String nickname;
 
     @Schema(description = "작성자 프로필 이미지 URL", example = "https://cdn.example.com/profile.jpg")
-    private String profileImageUrl;
+    private String imageUrl;
 
     @Schema(description = "게시글 ID", example = "10")
     private Long postId;
@@ -37,11 +37,11 @@ public class PostInfo {
     private LocalDateTime createdDate;
 
     @QueryProjection
-    public PostInfo(long userId, String nickname, String profileImageUrl, Long postId,
+    public PostInfo(long userId, String nickname, String imageUrl, Long postId,
                     String title, Category category, String content, LocalDateTime createdDate) {
         this.userId = userId;
         this.nickname = nickname;
-        this.profileImageUrl = profileImageUrl;
+        this.imageUrl = imageUrl;
         this.postId = postId;
         this.title = title;
         this.category = category;
