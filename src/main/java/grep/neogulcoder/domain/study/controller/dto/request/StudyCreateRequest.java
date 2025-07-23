@@ -35,7 +35,7 @@ public class StudyCreateRequest {
     private String location;
 
     @NotNull
-    @Schema(description = "시작일", example = "2025-07-15")
+    @Schema(description = "시작일", example = "2025-07-25T10:00:00")
     private LocalDateTime startDate;
 
     @NotNull
@@ -45,14 +45,11 @@ public class StudyCreateRequest {
     @Schema(description = "스터디 소개", example = "자바 스터디입니다.")
     private String introduction;
 
-    @Schema(description = "대표 이미지", example = "http://localhost:8083/image.jpg")
-    private String imageUrl;
-
     private StudyCreateRequest() {}
 
     @Builder
     private StudyCreateRequest(String name, Category category, int capacity, StudyType studyType, String location,
-                               LocalDateTime startDate, LocalDateTime endDate, String introduction, String imageUrl) {
+                               LocalDateTime startDate, LocalDateTime endDate, String introduction) {
         this.name = name;
         this.category = category;
         this.capacity = capacity;
@@ -61,20 +58,19 @@ public class StudyCreateRequest {
         this.startDate = startDate;
         this.endDate = endDate;
         this.introduction = introduction;
-        this.imageUrl = imageUrl;
     }
 
     public Study toEntity(String imageUrl) {
         return Study.builder()
-                .name(this.name)
-                .category(this.category)
-                .capacity(this.capacity)
-                .studyType(this.studyType)
-                .location(this.location)
-                .startDate(this.startDate)
-                .endDate(this.endDate)
-                .introduction(this.introduction)
-                .imageUrl(imageUrl)
-                .build();
+            .name(this.name)
+            .category(this.category)
+            .capacity(this.capacity)
+            .studyType(this.studyType)
+            .location(this.location)
+            .startDate(this.startDate)
+            .endDate(this.endDate)
+            .introduction(this.introduction)
+            .imageUrl(imageUrl)
+            .build();
     }
 }
