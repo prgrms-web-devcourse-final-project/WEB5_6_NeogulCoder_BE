@@ -15,6 +15,8 @@ import java.util.Optional;
 public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> {
     List<StudyMember> findByStudyId(long studyId);
 
+    List<StudyMember> findAllByStudyIdAndActivatedTrue(Long studyId);
+
     @Query("select m.study from StudyMember m where m.userId = :userId and m.study.activated = true")
     List<Study> findStudiesByUserId(@Param("userId") long userId);
 
@@ -25,11 +27,15 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> 
 
     boolean existsByStudyIdAndUserIdAndActivatedTrue(Long studyId, Long userId);
 
+    boolean existsByStudyIdAndUserIdAndRoleAndActivatedTrue(Long studyId, Long id, StudyMemberRole role);
+
     @Modifying(clearAutomatically = true)
     @Query("update StudyMember m set m.activated = false where m.study.id = :studyId")
     void deactivateByStudyId(@Param("studyId") Long studyId);
 
     Optional<StudyMember> findByStudyIdAndUserId(Long studyId, Long userId);
+
+    Optional<StudyMember> findByStudyIdAndUserIdAndActivatedTrue(Long studyId, Long userId);
 
     @Query("select m from StudyMember m where m.study.id = :studyId and m.role = 'MEMBER' and m.activated = true")
     List<StudyMember> findAvailableNewLeaders(@Param("studyId") Long studyId);

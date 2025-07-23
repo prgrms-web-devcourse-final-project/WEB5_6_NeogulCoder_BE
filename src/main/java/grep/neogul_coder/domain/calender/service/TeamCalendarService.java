@@ -58,6 +58,21 @@ public class TeamCalendarService {
             .toList();
     }
 
+    // 특정 월(한 달 단위) 조회
+    public List<TeamCalendarResponse> findByMonth(Long studyId, int year, int month) {
+        LocalDate startOfMonth = LocalDate.of(year, month, 1);
+        LocalDateTime start = startOfMonth.atStartOfDay();
+        LocalDateTime end = startOfMonth.plusMonths(1).atStartOfDay();
+
+        return teamCalendarQueryRepository
+            .findByStudyIdAndMonth(studyId, start, end).stream()
+            .map(tc -> {
+                User user = userService.get(tc.getUserId());
+                return TeamCalendarResponse.from(tc, user);
+            })
+            .toList();
+    }
+
     @Transactional
     public Long create(Long studyId, Long userId, TeamCalendarRequest request) {
         validateRequest(request);
