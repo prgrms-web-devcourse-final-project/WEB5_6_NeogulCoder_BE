@@ -42,6 +42,23 @@ public interface TeamCalendarSpecification {
         @RequestParam String date
     );
 
+    @Operation(
+        summary = "팀 일정 월 단위 조회",
+        description = "특정 팀의 특정 월(year, month)에 등록된 모든 일정을 조회합니다.\n\n" +
+            "예: `/api/teams/{studyId}/calendar/month?year=2025&month=7`"
+    )
+    ApiResponse<List<TeamCalendarResponse>> findByMonth(
+        @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
+        @Parameter(name = "studyId", description = "조회할 팀 ID", required = true, in = ParameterIn.PATH)
+        @PathVariable("studyId") Long studyId,
+
+        @Parameter(name = "year", description = "조회할 연도 (예: 2025)", required = true, in = ParameterIn.QUERY)
+        @RequestParam int year,
+
+        @Parameter(name = "month", description = "조회할 월 (1~12)", required = true, in = ParameterIn.QUERY)
+        @RequestParam int month
+    );
+
 
     @Operation(
         summary = "팀 일정 생성",

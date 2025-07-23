@@ -2,6 +2,7 @@ package grep.neogul_coder.domain.study.repository;
 
 import grep.neogul_coder.domain.study.Study;
 import grep.neogul_coder.domain.study.StudyMember;
+import grep.neogul_coder.domain.study.enums.StudyMemberRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,8 @@ import java.util.Optional;
 public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> {
     List<StudyMember> findByStudyId(long studyId);
 
+    List<StudyMember> findAllByStudyIdAndActivatedTrue(Long studyId);
+
     @Query("select m.study from StudyMember m where m.userId = :userId and m.study.activated = true")
     List<Study> findStudiesByUserId(@Param("userId") long userId);
 
@@ -24,11 +27,15 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> 
 
     boolean existsByStudyIdAndUserIdAndActivatedTrue(Long studyId, Long userId);
 
+    boolean existsByStudyIdAndUserIdAndRoleAndActivatedTrue(Long studyId, Long id, StudyMemberRole role);
+
     @Modifying(clearAutomatically = true)
     @Query("update StudyMember m set m.activated = false where m.study.id = :studyId")
     void deactivateByStudyId(@Param("studyId") Long studyId);
 
     Optional<StudyMember> findByStudyIdAndUserId(Long studyId, Long userId);
+
+    Optional<StudyMember> findByStudyIdAndUserIdAndActivatedTrue(Long studyId, Long userId);
 
     @Query("select m from StudyMember m where m.study.id = :studyId and m.role = 'MEMBER' and m.activated = true")
     List<StudyMember> findAvailableNewLeaders(@Param("studyId") Long studyId);
@@ -37,4 +44,6 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> 
     LocalDateTime findCreatedDateByStudyIdAndUserId(@Param("studyId") Long studyId, @Param("userId") Long userId);
 
     boolean existsByStudyIdAndUserId(Long studyId, Long id);
+
+    boolean existsByStudyIdAndUserIdAndRole(Long studyId, Long userId, StudyMemberRole role);
 }

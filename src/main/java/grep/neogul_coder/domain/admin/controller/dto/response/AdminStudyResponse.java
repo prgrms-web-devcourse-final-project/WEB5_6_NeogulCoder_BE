@@ -22,7 +22,7 @@ public class AdminStudyResponse {
     private Category category;
 
     @Schema(description = "스터디 종료 여부", example = "false")
-    private boolean isFinished;
+    private boolean finished;
 
     @Schema(description = "활성화 여부", example = "true")
     private boolean activated;
@@ -33,7 +33,7 @@ public class AdminStudyResponse {
         this.id = id;
         this.name = name;
         this.category = category;
-        this.isFinished = isFinished;
+        this.finished = isFinished;
         this.activated = activated;
     }
 
@@ -42,7 +42,7 @@ public class AdminStudyResponse {
             .id(study.getId())
             .name(study.getName())
             .category(study.getCategory())
-            .isFinished(study.getEndDate().toLocalDate().isBefore(LocalDate.now()))
+            .isFinished(study.isFinished())
             .activated(study.getActivated())
             .build();
     }

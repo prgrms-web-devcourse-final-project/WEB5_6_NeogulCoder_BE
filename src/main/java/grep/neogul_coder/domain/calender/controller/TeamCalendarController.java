@@ -51,6 +51,17 @@ public class TeamCalendarController implements TeamCalendarSpecification {
         return ApiResponse.success(teamCalendarService.findByDate(studyId, parsedDate));
     }
 
+    // 특정 월(한 달 단위) 팀 일정 조회 API
+    @GetMapping("/month")
+    public ApiResponse<List<TeamCalendarResponse>> findByMonth(
+        @AuthenticationPrincipal(expression = "userId") Long userId,
+        @PathVariable("studyId") Long studyId,
+        @RequestParam int year,
+        @RequestParam int month
+    ) {
+        return ApiResponse.success(teamCalendarService.findByMonth(studyId, year, month));
+    }
+
     // 팀 일정 수정 API - 본인이 작성한 일정만 수정 가능
     @PutMapping("/{teamCalendarId}")
     public ApiResponse<Void> update(

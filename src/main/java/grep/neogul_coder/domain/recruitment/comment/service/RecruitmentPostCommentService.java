@@ -1,6 +1,5 @@
 package grep.neogul_coder.domain.recruitment.comment.service;
 
-import grep.neogul_coder.domain.recruitment.RecruitmentErrorCode;
 import grep.neogul_coder.domain.recruitment.comment.RecruitmentPostComment;
 import grep.neogul_coder.domain.recruitment.comment.controller.dto.request.RecruitmentCommentSaveRequest;
 import grep.neogul_coder.domain.recruitment.comment.controller.dto.request.RecruitmentCommentUpdateRequest;
@@ -13,7 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogul_coder.domain.recruitment.RecruitmentErrorCode.*;
+import static grep.neogul_coder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
+import static grep.neogul_coder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND_COMMENT;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -26,10 +26,10 @@ public class RecruitmentPostCommentService {
 
     @Transactional
     public long save(RecruitmentCommentSaveRequest request, long userId) {
-        RecruitmentPost myPost = postRepository.findMyPostBy(request.getPostId(), userId)
+        RecruitmentPost post = postRepository.findPostBy(request.getPostId())
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND));
 
-        return commentRepository.save(request.toEntity(myPost, userId)).getId();
+        return commentRepository.save(request.toEntity(post, userId)).getId();
     }
 
     @Transactional

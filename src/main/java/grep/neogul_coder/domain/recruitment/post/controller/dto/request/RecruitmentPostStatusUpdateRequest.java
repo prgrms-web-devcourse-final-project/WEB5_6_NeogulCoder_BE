@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 public class RecruitmentPostStatusUpdateRequest {
 
-    @Schema(example = "IN_PROGRESS", description = "모집 글 상태")
+    @Schema(example = "IN_PROGRESS, COMPLETE", description = "모집 글 상태")
     @NotNull
     private RecruitmentPostStatus status;
 

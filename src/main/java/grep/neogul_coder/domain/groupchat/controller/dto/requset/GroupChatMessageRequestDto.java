@@ -1,6 +1,9 @@
 package grep.neogul_coder.domain.groupchat.controller.dto.requset;
 
+import grep.neogul_coder.domain.groupchat.entity.GroupChatMessage;
+import grep.neogul_coder.domain.groupchat.entity.GroupChatRoom;
 import io.swagger.v3.oas.annotations.Hidden;
+import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Hidden
@@ -18,15 +21,12 @@ public class GroupChatMessageRequestDto {
         this.message = message;
     }
 
-    public void setRoomId(Long roomId) {
-        this.roomId = roomId;
-    }
-
-    public void setSenderId(Long senderId) {
-        this.senderId = senderId;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public GroupChatMessage toEntity(GroupChatRoom room, Long senderId) {
+        return new GroupChatMessage(
+            room,
+            senderId,
+            this.message,
+            LocalDateTime.now()
+        );
     }
 }
