@@ -69,7 +69,7 @@ public class TimeVoteController implements TimeVoteSpecification {
       @RequestBody @Valid TimeVoteUpdateRequest request,
       @AuthenticationPrincipal Principal userDetails
   ) {
-    TimeVoteResponse response = timeVoteService.updateVote(request, studyId, userDetails.getUserId());
+    TimeVoteResponse response = timeVoteService.updateVotes(request, studyId, userDetails.getUserId());
     return ApiResponse.success(response);
   }
 
@@ -79,7 +79,7 @@ public class TimeVoteController implements TimeVoteSpecification {
       @AuthenticationPrincipal Principal userDetails
   ) {
     timeVoteService.deleteAllVotes(studyId, userDetails.getUserId());
-    return ApiResponse.noContent();
+    return ApiResponse.success("성공적으로 투표를 삭제했습니다.");
   }
 
   @GetMapping("/periods/submissions")

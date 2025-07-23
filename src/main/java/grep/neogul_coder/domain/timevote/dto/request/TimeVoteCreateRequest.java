@@ -21,8 +21,7 @@ public class TimeVoteCreateRequest {
   )
   private List<LocalDateTime> timeSlots;
 
-  private TimeVoteCreateRequest() {
-  }
+  private TimeVoteCreateRequest() {}
 
   @Builder
   private TimeVoteCreateRequest(List<LocalDateTime> timeSlots) {
