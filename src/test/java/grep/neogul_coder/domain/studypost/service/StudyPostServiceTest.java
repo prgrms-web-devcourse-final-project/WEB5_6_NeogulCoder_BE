@@ -106,10 +106,10 @@ class StudyPostServiceTest extends IntegrationTestSupport {
 
         return List.of(
                 DynamicTest.dynamicTest("스터디 게시글은 스터디에 참여한 회원만 작성할 수 있습니다.", () -> {
-                    StudyPostSaveRequest request = createStudyPostSaveRequest(study.getId(), "게시글 제목", FREE, "게시글 내용");
+                    StudyPostSaveRequest request = createStudyPostSaveRequest("게시글 제목", FREE, "게시글 내용");
 
                     //when //then
-                    assertThatThrownBy(() -> studyPostService.create(request, user.getId()))
+                    assertThatThrownBy(() -> studyPostService.create(request, study.getId(), user.getId()))
                             .isInstanceOf(NotFoundException.class).hasMessage("해당 스터디에 참여 하고 있지 않은 회원 입니다.");
                 }),
 
@@ -118,10 +118,10 @@ class StudyPostServiceTest extends IntegrationTestSupport {
                     StudyMember studyMember = createStudyMember(study, user.getId());
                     studyMemberRepository.save(studyMember);
 
-                    StudyPostSaveRequest request = createStudyPostSaveRequest(study.getId(), "게시글 제목", FREE, "게시글 내용");
+                    StudyPostSaveRequest request = createStudyPostSaveRequest("게시글 제목", FREE, "게시글 내용");
 
                     //when
-                    long postId = studyPostService.create(request, user.getId());
+                    long postId = studyPostService.create(request, study.getId(), user.getId());
                     em.flush();
                     em.clear();
 
@@ -199,9 +199,8 @@ class StudyPostServiceTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private StudyPostSaveRequest createStudyPostSaveRequest(long studyId, String title, Category category, String content) {
+    private StudyPostSaveRequest createStudyPostSaveRequest(String title, Category category, String content) {
         return StudyPostSaveRequest.builder()
-                .studyId(studyId)
                 .title(title)
                 .category(category)
                 .content(content)
@@ -232,7 +231,7 @@ class StudyPostServiceTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private StudyPostComment createPostComment(long postId, long userId, String content){
+    private StudyPostComment createPostComment(long postId, long userId, String content) {
         return StudyPostComment.builder()
                 .postId(postId)
                 .userId(userId)

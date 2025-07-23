@@ -1,12 +1,13 @@
 package grep.neogul_coder.domain.recruitment.post.controller;
 
-import grep.neogul_coder.domain.recruitment.post.controller.dto.request.PagingCondition;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogul_coder.domain.recruitment.post.service.RecruitmentPostService;
+import grep.neogul_coder.domain.study.enums.Category;
+import grep.neogul_coder.domain.study.enums.StudyType;
 import grep.neogul_coder.global.auth.Principal;
 import grep.neogul_coder.global.response.ApiResponse;
 import jakarta.validation.Valid;
@@ -24,15 +25,28 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
     private final RecruitmentPostService recruitmentPostService;
 
     @GetMapping
-    public ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(@RequestBody PagingCondition condition) {
-        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(condition, null);
+    public ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(@PageableDefault(size = 10) Pageable pageable,
+                                                                @RequestParam("category") String category,
+                                                                @RequestParam("studyType") String studyType,
+                                                                @RequestParam("keyword") String keyword) {
+
+        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(
+                pageable, Category.fromDescription(category), StudyType.fromDescription(studyType),
+                keyword, null
+        );
         return ApiResponse.success(response);
     }
 
     @GetMapping("/me")
-    public ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(@RequestBody PagingCondition condition,
+    public ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(@PageableDefault(size = 10) Pageable pageable,
+                                                                      @RequestParam("category") String category,
+                                                                      @RequestParam("studyType") String studyType,
+                                                                      @RequestParam("keyword") String keyword,
                                                                       @AuthenticationPrincipal Principal userDetails) {
-        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(condition, userDetails.getUserId());
+        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(
+                pageable, Category.fromDescription(category), StudyType.fromDescription(studyType),
+                keyword, userDetails.getUserId()
+        );
         return ApiResponse.success(response);
     }
 

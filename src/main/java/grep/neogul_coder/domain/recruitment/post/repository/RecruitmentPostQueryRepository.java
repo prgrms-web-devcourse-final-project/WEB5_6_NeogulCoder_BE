@@ -4,7 +4,6 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
-import grep.neogul_coder.domain.recruitment.post.controller.dto.request.PagingCondition;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.QRecruitmentPostWithStudyInfo;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.RecruitmentPostWithStudyInfo;
 import grep.neogul_coder.domain.study.enums.Category;
@@ -12,6 +11,7 @@ import grep.neogul_coder.domain.study.enums.StudyType;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -60,19 +60,19 @@ public class RecruitmentPostQueryRepository {
                 ).fetchOne();
     }
 
-    public Page<RecruitmentPost> findAllByFilter(PagingCondition condition) {
+    public Page<RecruitmentPost> findAllByFilter(Pageable pageable, Category category, StudyType studyType, String keyword) {
         List<RecruitmentPost> content = queryFactory.select(recruitmentPost)
                 .from(recruitmentPost)
                 .join(study).on(recruitmentPost.studyId.eq(study.id))
                 .where(
                         recruitmentPost.activated.isTrue(),
 
-                        equalsStudyCategory(condition.getCategory()),
-                        equalsStudyType(condition.getStudyType()),
-                        likeContent(condition.getContent())
+                        equalsStudyCategory(category),
+                        equalsStudyType(studyType),
+                        likeContent(keyword)
                 )
-                .offset(condition.getPage())
-                .limit(condition.getPageSize())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .orderBy(recruitmentPost.createdDate.desc())
                 .fetch();
 
@@ -82,16 +82,16 @@ public class RecruitmentPostQueryRepository {
                 .where(
                         recruitmentPost.activated.isTrue(),
 
-                        equalsStudyCategory(condition.getCategory()),
-                        equalsStudyType(condition.getStudyType()),
-                        likeContent(condition.getContent())
+                        equalsStudyCategory(category),
+                        equalsStudyType(studyType),
+                        likeContent(keyword)
                 )
                 .fetchOne();
 
-        return new PageImpl<>(content, condition.toPageable(), count == null ? 0 : count);
+        return new PageImpl<>(content, pageable, count == null ? 0 : count);
     }
 
-    public Page<RecruitmentPost> findAllByFilter(PagingCondition condition, Long userId) {
+    public Page<RecruitmentPost> findAllByFilter(Pageable pageable, Category category, StudyType studyType, String keyword, Long userId) {
         List<RecruitmentPost> content = queryFactory.select(recruitmentPost)
                 .from(recruitmentPost)
                 .join(study).on(recruitmentPost.studyId.eq(study.id))
@@ -99,12 +99,12 @@ public class RecruitmentPostQueryRepository {
                         recruitmentPost.userId.eq(userId),
                         recruitmentPost.activated.isTrue(),
 
-                        equalsStudyCategory(condition.getCategory()),
-                        equalsStudyType(condition.getStudyType()),
-                        likeContent(condition.getContent())
+                        equalsStudyCategory(category),
+                        equalsStudyType(studyType),
+                        likeContent(keyword)
                 )
-                .offset(condition.getPage())
-                .limit(condition.getPageSize())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .orderBy(recruitmentPost.createdDate.desc())
                 .fetch();
 
@@ -116,13 +116,13 @@ public class RecruitmentPostQueryRepository {
                         recruitmentPost.userId.eq(userId),
                         recruitmentPost.activated.isTrue(),
 
-                        equalsStudyCategory(condition.getCategory()),
-                        equalsStudyType(condition.getStudyType()),
-                        likeContent(condition.getContent())
+                        equalsStudyCategory(category),
+                        equalsStudyType(studyType),
+                        likeContent(keyword)
                 )
                 .fetchOne();
 
-        return new PageImpl<>(content, condition.toPageable(), count == null ? 0 : count);
+        return new PageImpl<>(content, pageable, count == null ? 0 : count);
     }
 
     public Optional<RecruitmentPost> findMyPostBy(long postId, long userId) {
