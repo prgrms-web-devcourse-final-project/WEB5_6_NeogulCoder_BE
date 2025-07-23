@@ -57,7 +57,7 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
         return ApiResponse.noContent();
     }
 
-    @PostMapping("/{recruitment-post-id}/status")
+    @PutMapping("/{recruitment-post-id}/status")
     public ApiResponse<Long> changeStatus(@PathVariable("recruitment-post-id") long recruitmentPostId,
                                           @RequestBody RecruitmentPostStatusUpdateRequest request,
                                           @AuthenticationPrincipal Principal userDetails) {

@@ -3,7 +3,6 @@ package grep.neogul_coder.domain.recruitment.post.repository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import grep.neogul_coder.domain.recruitment.post.QRecruitmentPost;
 import grep.neogul_coder.domain.recruitment.post.RecruitmentPost;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.request.PagingCondition;
 import grep.neogul_coder.domain.recruitment.post.controller.dto.response.QRecruitmentPostWithStudyInfo;
@@ -42,6 +41,7 @@ public class RecruitmentPostQueryRepository {
                                 recruitmentPost.subject,
                                 recruitmentPost.content,
                                 recruitmentPost.recruitmentCount,
+                                recruitmentPost.status,
                                 recruitmentPost.createdDate,
                                 recruitmentPost.expiredDate,
                                 study.category,
@@ -130,6 +130,16 @@ public class RecruitmentPostQueryRepository {
                 .where(
                         recruitmentPost.activated.isTrue(),
                         recruitmentPost.userId.eq(userId),
+                        recruitmentPost.id.eq(postId)
+                )
+                .fetchOne();
+        return Optional.ofNullable(findRecruitmentPost);
+    }
+
+    public Optional<RecruitmentPost> findPostBy(long postId) {
+        RecruitmentPost findRecruitmentPost = queryFactory.selectFrom(recruitmentPost)
+                .where(
+                        recruitmentPost.activated.isTrue(),
                         recruitmentPost.id.eq(postId)
                 )
                 .fetchOne();
