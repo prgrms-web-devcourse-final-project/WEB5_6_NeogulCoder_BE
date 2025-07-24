@@ -46,7 +46,7 @@ public class StudyController implements StudySpecification {
 
     @GetMapping("/{studyId}")
     public ApiResponse<StudyResponse> getStudy(@PathVariable("studyId") Long studyId) {
-        return ApiResponse.success(new StudyResponse());
+        return ApiResponse.success(studyService.getStudy(studyId));
     }
 
     @GetMapping("/me/images")

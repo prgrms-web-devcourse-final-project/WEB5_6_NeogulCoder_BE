@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static grep.neogulcoder.domain.studypost.Category.NOTICE;
+import static grep.neogulcoder.domain.studypost.Category.*;
 import static grep.neogulcoder.domain.studypost.StudyPostErrorCode.NOT_VALID_CONDITION;
 import static grep.neogulcoder.domain.studypost.comment.QStudyPostComment.studyPostComment;
 import static grep.neogulcoder.domain.users.entity.QUser.user;
@@ -34,6 +34,7 @@ public class StudyPostQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     public static final int NOTICE_POST_LIMIT = 2;
+    public static final int FREE_POST_LIMIT = 3;
 
     private final QStudyPost studyPost = QStudyPost.studyPost;
 
@@ -137,6 +138,26 @@ public class StudyPostQueryRepository {
                 .orderBy(studyPost.createdDate.desc())
                 .limit(NOTICE_POST_LIMIT)
                 .fetch();
+    }
+
+    public List<FreePostInfo> findLatestFreeInfoBy(Long studyId) {
+        return queryFactory.select(
+                new QFreePostInfo(
+                    studyPost.id,
+                    studyPost.category,
+                    studyPost.title,
+                    studyPost.createdDate
+                )
+            )
+            .from(studyPost)
+            .where(
+                studyPost.activated.isTrue(),
+                studyPost.study.id.eq(studyId),
+                studyPost.category.eq(FREE)
+            )
+            .orderBy(studyPost.createdDate.desc())
+            .limit(FREE_POST_LIMIT)
+            .fetch();
     }
 
     private OrderSpecifier<?> resolveOrderSpecifier(String attributeName, Boolean isAsc) {
