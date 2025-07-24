@@ -48,4 +48,11 @@ public class BuddyEnergy {
             this.level -= 1;
         }
     }
+
+    public BuddyEnergyReason findReasonFrom(ReviewType reviewType) {
+        if(reviewType.isPositive()){
+            return BuddyEnergyReason.POSITIVE_REVIEW;
+        }
+        return BuddyEnergyReason.NEGATIVE_REVIEW;
+    }
 }

@@ -1,6 +1,8 @@
 package grep.neogulcoder.domain.review.controller.service;
 
 import grep.neogulcoder.domain.IntegrationTestSupport;
+import grep.neogulcoder.domain.buddy.entity.BuddyEnergy;
+import grep.neogulcoder.domain.buddy.repository.BuddyEnergyRepository;
 import grep.neogulcoder.domain.review.Review;
 import grep.neogulcoder.domain.review.ReviewType;
 import grep.neogulcoder.domain.review.controller.dto.response.MyReviewTagsInfo;
@@ -60,6 +62,9 @@ class ReviewServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private ReviewTagRepository reviewTagRepository;
+
+    @Autowired
+    private BuddyEnergyRepository buddyEnergyRepository;
 
     @DisplayName("리뷰 대상 회원들의 정보를 조회할때 자신은 제외 된다.")
     @Test
@@ -208,6 +213,8 @@ class ReviewServiceTest extends IntegrationTestSupport {
         User reviewer = createUser("리뷰어");
         User targetUser = createUser("리뷰대상");
         userRepository.saveAll(List.of(reviewer, targetUser));
+
+        buddyEnergyRepository.save(BuddyEnergy.createDefault(reviewer.getId()));
 
         Study study = createStudy("자바 스터디", Category.IT);
         studyRepository.save(study);
