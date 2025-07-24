@@ -162,7 +162,13 @@ public class StudyManagementService {
         User targetUser = userRepository.findByNickname(targetUserNickname).orElseThrow(() -> new NotFoundException(
             UserErrorCode.USER_NOT_FOUND));
 
-        alarmService.saveAlarm(targetUser.getId(), AlarmType.INVITE, DomainType.STUDY_INVITE, studyId);
+        alarmService.saveAlarm(targetUser.getId(), AlarmType.INVITE, DomainType.STUDY, studyId);
+    }
+
+    @Transactional
+    public void acceptInvite(Long studyId, Long targetUserId) {
+        Study study = findValidStudy(studyId);
+        StudyMember.createMember(study,targetUserId);
     }
 
     private Study findValidStudy(Long studyId) {
