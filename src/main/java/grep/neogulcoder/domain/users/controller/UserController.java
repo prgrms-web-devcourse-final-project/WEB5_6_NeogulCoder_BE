@@ -59,7 +59,7 @@ public class UserController implements UserSpecification {
     @PutMapping(value = "/update/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<Void> updateProfile(
         @AuthenticationPrincipal Principal principal,
-        @RequestPart("nickname") String nickname,
+        @RequestPart(value = "nickname", required = false) String nickname,
         @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
     ) throws IOException {
         usersService.updateProfile(principal.getUserId(), nickname, profileImage);
