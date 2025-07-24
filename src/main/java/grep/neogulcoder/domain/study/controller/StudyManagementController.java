@@ -62,4 +62,10 @@ public class StudyManagementController implements StudyManagementSpecification {
         studyManagementService.registerExtensionParticipation(studyId, userDetails.getUserId());
         return ApiResponse.noContent();
     }
+
+    @PostMapping("/invite/user")
+    public ApiResponse<Void> inviteUser(@PathVariable("studyId") Long studyId, @AuthenticationPrincipal Principal userDetails, String targetUserNickname) {
+        studyManagementService.inviteTargetUser(studyId, userDetails.getUserId(), targetUserNickname);
+        return ApiResponse.noContent();
+    }
 }
