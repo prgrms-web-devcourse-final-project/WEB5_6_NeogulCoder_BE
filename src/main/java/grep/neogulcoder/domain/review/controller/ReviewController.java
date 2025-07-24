@@ -1,9 +1,9 @@
 package grep.neogulcoder.domain.review.controller;
 
 import grep.neogulcoder.domain.review.controller.dto.request.ReviewSaveRequest;
-import grep.neogulcoder.domain.review.controller.dto.response.JoinedStudiesInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
+import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetStudiesInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
 import grep.neogulcoder.domain.review.service.ReviewService;
 import grep.neogulcoder.global.auth.Principal;
@@ -15,6 +15,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RequiredArgsConstructor
 @RequestMapping("/reviews")
 @RestController
@@ -25,13 +27,14 @@ public class ReviewController implements ReviewSpecification {
     @GetMapping("/studies/{study-id}/targets")
     public ApiResponse<ReviewTargetUsersInfo> getReviewTargetUsersInfo(@PathVariable("study-id") long studyId,
                                                                        @AuthenticationPrincipal Principal userDetails) {
-        ReviewTargetUsersInfo response = reviewService.getReviewTargetUsersInfo(studyId, userDetails.getUsername());
+        ReviewTargetUsersInfo response = reviewService.getReviewTargetUsersInfo(studyId, userDetails.getUserId());
         return ApiResponse.success(response);
     }
 
     @GetMapping("/studies/me")
-    public ApiResponse<JoinedStudiesInfo> getJoinedStudiesInfo(@AuthenticationPrincipal Principal userDetails) {
-        JoinedStudiesInfo response = reviewService.getJoinedStudiesInfo(userDetails.getUserId());
+    public ApiResponse<ReviewTargetStudiesInfo> getReviewTargetStudiesInfo(@AuthenticationPrincipal Principal userDetails,
+                                                                           LocalDateTime currentDateTime) {
+        ReviewTargetStudiesInfo response = reviewService.getReviewTargetStudiesInfo(userDetails.getUserId(), LocalDateTime.now());
         return ApiResponse.success(response);
     }
 

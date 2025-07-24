@@ -9,21 +9,21 @@ import java.util.List;
 
 @ToString
 @Getter
-public class JoinedStudiesInfo {
+public class ReviewTargetStudiesInfo {
 
     @Schema(example = "[ { studyId: 2, studyName: 자바 스터디, imageUrl: www.s3.com } ]")
     private List<StudyInfo> studies;
 
-    public JoinedStudiesInfo(List<StudyInfo> studies) {
+    public ReviewTargetStudiesInfo(List<StudyInfo> studies) {
         this.studies = studies;
     }
 
-    public static JoinedStudiesInfo of(List<Study> studies) {
+    public static ReviewTargetStudiesInfo of(List<Study> studies) {
         List<StudyInfo> studiesInfo = studies.stream()
                 .map(study -> new StudyInfo(study.getId(), study.getName(), study.getImageUrl()))
                 .toList();
 
-        return new JoinedStudiesInfo(studiesInfo);
+        return new ReviewTargetStudiesInfo(studiesInfo);
     }
 
     @ToString
