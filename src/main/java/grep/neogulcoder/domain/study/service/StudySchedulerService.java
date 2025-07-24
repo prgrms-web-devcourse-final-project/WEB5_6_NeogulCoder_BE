@@ -39,7 +39,7 @@ public class StudySchedulerService {
             study.finish();
 
             // 스터디 멤버들 조회 후 버디에너지 업데이트
-            List<StudyMember> members = studyMemberRepository.findByStudyIdFetchStudy(study.getId());
+            List<StudyMember> members = studyMemberRepository.findFetchStudyByStudyId(study.getId());
             for (StudyMember member : members) {
                 buddyEnergyService.updateEnergyByStudy(member.getUserId(), member.isLeader());
             }

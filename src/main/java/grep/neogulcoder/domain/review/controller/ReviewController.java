@@ -1,7 +1,7 @@
 package grep.neogulcoder.domain.review.controller;
 
 import grep.neogulcoder.domain.review.controller.dto.request.ReviewSaveRequest;
-import grep.neogulcoder.domain.review.controller.dto.response.JoinedStudiesInfo;
+import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetStudiesInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
@@ -25,13 +25,13 @@ public class ReviewController implements ReviewSpecification {
     @GetMapping("/studies/{study-id}/targets")
     public ApiResponse<ReviewTargetUsersInfo> getReviewTargetUsersInfo(@PathVariable("study-id") long studyId,
                                                                        @AuthenticationPrincipal Principal userDetails) {
-        ReviewTargetUsersInfo response = reviewService.getReviewTargetUsersInfo(studyId, userDetails.getUsername());
+        ReviewTargetUsersInfo response = reviewService.getReviewTargetUsersInfo(studyId, userDetails.getUserId());
         return ApiResponse.success(response);
     }
 
     @GetMapping("/studies/me")
-    public ApiResponse<JoinedStudiesInfo> getJoinedStudiesInfo(@AuthenticationPrincipal Principal userDetails) {
-        JoinedStudiesInfo response = reviewService.getJoinedStudiesInfo(userDetails.getUserId());
+    public ApiResponse<ReviewTargetStudiesInfo> getReviewTargetStudiesInfo(@AuthenticationPrincipal Principal userDetails) {
+        ReviewTargetStudiesInfo response = reviewService.getReviewTargetStudiesInfo(userDetails.getUserId());
         return ApiResponse.success(response);
     }
 

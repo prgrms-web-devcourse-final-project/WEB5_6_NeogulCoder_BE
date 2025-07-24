@@ -3,7 +3,7 @@ package grep.neogulcoder.domain.review.controller.service;
 import grep.neogulcoder.domain.IntegrationTestSupport;
 import grep.neogulcoder.domain.review.Review;
 import grep.neogulcoder.domain.review.ReviewType;
-import grep.neogulcoder.domain.review.controller.dto.response.JoinedStudiesInfo;
+import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetStudiesInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static grep.neogulcoder.domain.review.BadReviewTag.LACK_OF_RESPONSIBILITY;
@@ -59,27 +60,27 @@ class ReviewServiceTest extends IntegrationTestSupport {
     @Autowired
     private ReviewTagRepository reviewTagRepository;
 
-    @DisplayName("리뷰 대상 회원들의 정보를 조회 합니다.")
+    @DisplayName("리뷰 대상 회원들의 정보를 조회할때 자신은 제외 된다.")
     @Test
     void getReviewTargetUsersInfo() {
         //given
-        String myNickname = "myNickname";
-
-        User user1 = createUser(myNickname);
+        User myUser = createUser("내 닉네임");
         User user2 = createUser("테스터2");
         User user3 = createUser("테스터3");
-        userRepository.saveAll(List.of(user1, user2, user3));
+        userRepository.saveAll(List.of(myUser, user2, user3));
 
         Study study = createStudy("운영체제 스터디", Category.IT);
         studyRepository.save(study);
 
-        StudyMember studyMember1 = createStudyMember(study, user1.getId());
-        StudyMember studyMember2 = createStudyMember(study, user2.getId());
-        StudyMember studyMember3 = createStudyMember(study, user3.getId());
-        studyMemberRepository.saveAll(List.of(studyMember1, studyMember2, studyMember3));
+        List<StudyMember> studyMembers = List.of(
+                createStudyMember(study, myUser.getId()),
+                createStudyMember(study, user2.getId()),
+                createStudyMember(study, user3.getId())
+        );
+        studyMemberRepository.saveAll(studyMembers);
 
         //when
-        ReviewTargetUsersInfo response = reviewService.getReviewTargetUsersInfo(study.getId(), myNickname);
+        ReviewTargetUsersInfo response = reviewService.getReviewTargetUsersInfo(study.getId(), myUser.getId());
 
         //then
         assertThat(response.getUserInfos()).hasSize(2)
@@ -87,9 +88,40 @@ class ReviewServiceTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrder("테스터2", "테스터3");
     }
 
+    @DisplayName("리뷰 대상 회원들을 조회할때 이미 리뷰한 회원들은 제외 된다.")
+    @Test
+    void getReviewTargetUsersInfo_whenAlreadyReviewedUserExists_thenExcludeThem() {
+        //given
+        User myUser = createUser("내 닉네임");
+        User user2 = createUser("테스터2");
+        User user3 = createUser("테스터3");
+        userRepository.saveAll(List.of(myUser, user2, user3));
+
+        Study study = createStudy("운영체제 스터디", Category.IT);
+        studyRepository.save(study);
+
+        List<StudyMember> studyMembers = List.of(
+                createStudyMember(study, myUser.getId()),
+                createStudyMember(study, user2.getId()),
+                createStudyMember(study, user3.getId())
+        );
+        studyMemberRepository.saveAll(studyMembers);
+
+        reviewRepository.save(createReviewEntity(createReview(study.getId(), user2.getId(), myUser.getId()), Collections.emptyList()));
+
+        //when
+        ReviewTargetUsersInfo response = reviewService.getReviewTargetUsersInfo(study.getId(), myUser.getId());
+        System.out.println("response = " + response);
+
+        //then
+        assertThat(response.getUserInfos()).hasSize(1)
+                .extracting("nickname")
+                .containsExactly("테스터3");
+    }
+
     @DisplayName("내가 참여한 스터디 정보들을 조회 합니다.")
     @Test
-    void getJoinedStudiesInfo() {
+    void getReviewTargetStudiesInfo() {
         //given
         User user = createUser("테스터");
         userRepository.save(user);
@@ -103,7 +135,7 @@ class ReviewServiceTest extends IntegrationTestSupport {
         studyMemberRepository.saveAll(List.of(studyMember1, studyMember2));
 
         //when
-        JoinedStudiesInfo response = reviewService.getJoinedStudiesInfo(user.getId());
+        ReviewTargetStudiesInfo response = reviewService.getReviewTargetStudiesInfo(user.getId());
 
         //then
         assertThat(response.getStudies())
@@ -231,6 +263,7 @@ class ReviewServiceTest extends IntegrationTestSupport {
 
     private ReviewEntity createReviewEntity(Review review, List<ReviewTagEntity> reviewTags) {
         return ReviewEntity.builder()
+                .studyId(review.getStudyId())
                 .review(review)
                 .reviewTags(reviewTags)
                 .build();

@@ -1,7 +1,7 @@
 package grep.neogulcoder.domain.review.controller;
 
 import grep.neogulcoder.domain.review.controller.dto.request.ReviewSaveRequest;
-import grep.neogulcoder.domain.review.controller.dto.response.JoinedStudiesInfo;
+import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetStudiesInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
@@ -52,7 +52,7 @@ public interface ReviewSpecification {
                     - `studyInfo`: 회원이 참여한 스터디의 이름과 이미지 정보 리스트입니다.
                     """
     )
-    ApiResponse<JoinedStudiesInfo> getJoinedStudiesInfo(Principal userDetails);
+    ApiResponse<ReviewTargetStudiesInfo> getReviewTargetStudiesInfo(Principal userDetails);
 
     @Operation(summary = "리뷰 생성", description = "스터디에 대한 리뷰를 작성 합니다.")
     ApiResponse<Long> save(ReviewSaveRequest request, Principal userDetails);
