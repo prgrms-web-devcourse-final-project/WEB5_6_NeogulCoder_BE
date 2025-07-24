@@ -69,9 +69,4 @@ public class StudyManagementController implements StudyManagementSpecification {
         return ApiResponse.noContent();
     }
 
-    @PostMapping("/accept/invite")
-    public ApiResponse<Void> acceptInvite(@PathVariable("studyId") Long studyId,@AuthenticationPrincipal Principal principal) {
-        studyManagementService.acceptInvite(studyId, principal.getUserId());
-        return ApiResponse.success("스터디 초대를 수락했습니다.");
-    }
 }

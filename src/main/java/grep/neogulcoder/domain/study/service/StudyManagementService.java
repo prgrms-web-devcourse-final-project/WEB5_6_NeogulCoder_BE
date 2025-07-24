@@ -1,13 +1,11 @@
 package grep.neogulcoder.domain.study.service;
 
-import grep.neogulcoder.domain.alram.service.AlarmService;
-import grep.neogulcoder.domain.alram.type.AlarmType;
-import grep.neogulcoder.domain.alram.type.DomainType;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.StudyMember;
 import grep.neogulcoder.domain.study.controller.dto.request.ExtendStudyRequest;
 import grep.neogulcoder.domain.study.controller.dto.response.ExtendParticipationResponse;
 import grep.neogulcoder.domain.study.controller.dto.response.StudyExtensionResponse;
+import grep.neogulcoder.domain.study.event.StudyInviteEvent;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
@@ -16,18 +14,27 @@ import grep.neogulcoder.domain.users.exception.code.UserErrorCode;
 import grep.neogulcoder.domain.users.repository.UserRepository;
 import grep.neogulcoder.global.exception.business.BusinessException;
 import grep.neogulcoder.global.exception.business.NotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static grep.neogulcoder.domain.study.enums.StudyMemberRole.LEADER;
 import static grep.neogulcoder.domain.study.enums.StudyMemberRole.MEMBER;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.ALREADY_EXTENDED_STUDY;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.ALREADY_REGISTERED_PARTICIPATION;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.END_DATE_BEFORE_ORIGIN_STUDY;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.EXTENDED_STUDY_NOT_FOUND;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.LEADER_CANNOT_DELEGATE_TO_SELF;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.LEADER_CANNOT_LEAVE_STUDY;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.NOT_STUDY_LEADER;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_EXTENSION_NOT_AVAILABLE;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_MEMBER_NOT_FOUND;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -38,12 +45,13 @@ public class StudyManagementService {
     private final StudyMemberRepository studyMemberRepository;
     private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final UserRepository userRepository;
-    private final AlarmService alarmService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public StudyExtensionResponse getStudyExtension(Long studyId) {
         Study study = findValidStudy(studyId);
 
-        List<ExtendParticipationResponse> members = studyMemberQueryRepository.findExtendParticipation(studyId);
+        List<ExtendParticipationResponse> members = studyMemberQueryRepository.findExtendParticipation(
+            studyId);
         return StudyExtensionResponse.from(study, members);
     }
 
@@ -159,16 +167,11 @@ public class StudyManagementService {
         StudyMember studyMember = findValidStudyMember(studyId, userId);
         studyMember.isLeader();
 
-        User targetUser = userRepository.findByNickname(targetUserNickname).orElseThrow(() -> new NotFoundException(
-            UserErrorCode.USER_NOT_FOUND));
+        User targetUser = userRepository.findByNickname(targetUserNickname)
+            .orElseThrow(() -> new NotFoundException(
+                UserErrorCode.USER_NOT_FOUND));
 
-        alarmService.saveAlarm(targetUser.getId(), AlarmType.INVITE, DomainType.STUDY, studyId);
-    }
-
-    @Transactional
-    public void acceptInvite(Long studyId, Long targetUserId) {
-        Study study = findValidStudy(studyId);
-        StudyMember.createMember(study,targetUserId);
+        eventPublisher.publishEvent(new StudyInviteEvent(studyId, userId, targetUser.getId()));
     }
 
     private Study findValidStudy(Long studyId) {
@@ -182,7 +185,8 @@ public class StudyManagementService {
     }
 
     private boolean isLastMember(Study study) {
-        int activatedMemberCount = studyMemberRepository.countByStudyIdAndActivatedTrue(study.getId());
+        int activatedMemberCount = studyMemberRepository.countByStudyIdAndActivatedTrue(
+            study.getId());
         return activatedMemberCount == 1;
     }
 
@@ -221,4 +225,5 @@ public class StudyManagementService {
             throw new BusinessException(END_DATE_BEFORE_ORIGIN_STUDY);
         }
     }
+
 }
