@@ -77,7 +77,7 @@ public class StudyController implements StudySpecification {
         return ApiResponse.success(id);
     }
 
-    @PutMapping("/{studyId}")
+    @PutMapping(value = "/{studyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<Void> updateStudy(@PathVariable("studyId") Long studyId,
                                          @RequestPart @Valid StudyUpdateRequest request,
                                          @RequestPart(value = "image", required = false) MultipartFile image,
