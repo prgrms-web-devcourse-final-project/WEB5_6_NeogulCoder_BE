@@ -183,7 +183,7 @@ class StudyPostServiceTest extends IntegrationTestSupport {
 
         //then
         StudyPost findPost = studyPostRepository.findById(post.getId()).orElseThrow();
-        assertThat(findPost.getActivated()).isFalse();
+        assertThat(findPost.isActivated()).isFalse();
     }
 
     private User createUser(String nickname) {

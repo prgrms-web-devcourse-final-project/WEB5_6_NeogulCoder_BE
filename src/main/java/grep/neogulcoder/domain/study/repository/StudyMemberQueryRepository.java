@@ -24,7 +24,7 @@ public class StudyMemberQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public List<StudyMember> findAllFetchStudyByUserId(long userId) {
+    public List<StudyMember> findMembersByUserId(long userId) {
         return queryFactory.selectFrom(studyMember)
                 .where(
                         studyMember.userId.eq(userId),
@@ -70,5 +70,15 @@ public class StudyMemberQueryRepository {
             .join(user).on(user.id.eq(studyMember.userId))
             .where(studyMember.study.id.eq(studyId))
             .fetch();
+    }
+
+    public List<StudyMember> findByIdIn(List<Long> studyIds) {
+        return queryFactory.selectFrom(studyMember)
+                .where(
+                        studyMember.id.in(studyIds),
+                        studyMember.activated.isTrue()
+                )
+                .join(studyMember.study, study).fetchJoin()
+                .fetch();
     }
 }

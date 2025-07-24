@@ -47,4 +47,22 @@ public class ReviewQueryRepository {
                 )
                 .fetchOne();
     }
+
+    public List<ReviewEntity> findReviewsByReviewerInStudy(long studyId, long writeUserId) {
+        return queryFactory.selectFrom(reviewEntity)
+                .where(
+                        reviewEntity.studyId.eq(studyId),
+                        reviewEntity.writeUserId.eq(writeUserId)
+                )
+                .fetch();
+    }
+
+    public List<ReviewEntity> findReviewsByReviewerInStudies(List<Long> studyIds, long writeUserId) {
+        return queryFactory.selectFrom(reviewEntity)
+                .where(
+                        reviewEntity.studyId.in(studyIds),
+                        reviewEntity.writeUserId.eq(writeUserId)
+                )
+                .fetch();
+    }
 }

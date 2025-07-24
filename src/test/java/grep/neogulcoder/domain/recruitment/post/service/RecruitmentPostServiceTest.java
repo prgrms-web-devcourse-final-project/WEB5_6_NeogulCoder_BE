@@ -281,7 +281,7 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
 
         //then
         RecruitmentPost findRecruitmentPost = recruitmentPostRepository.findById(savedRecruitmentPost.getId()).orElseThrow();
-        assertThat(findRecruitmentPost.getActivated()).isFalse();
+        assertThat(findRecruitmentPost.isActivated()).isFalse();
     }
 
     private User createUser(String nickname) {
