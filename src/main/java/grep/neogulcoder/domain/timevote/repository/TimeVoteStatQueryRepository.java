@@ -51,6 +51,7 @@ public class TimeVoteStatQueryRepository {
     } else {
       TimeVoteStat newStat = TimeVoteStat.of(period, slot, countToAdd);
       em.persist(newStat);
+      em.flush();
     }
   }
 }
