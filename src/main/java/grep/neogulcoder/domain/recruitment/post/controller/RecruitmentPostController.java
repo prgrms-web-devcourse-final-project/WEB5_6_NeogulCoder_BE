@@ -2,7 +2,6 @@ package grep.neogulcoder.domain.recruitment.post.controller;
 
 import grep.neogulcoder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogulcoder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
-import grep.neogulcoder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
 import grep.neogulcoder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogulcoder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogulcoder.domain.recruitment.post.service.RecruitmentPostService;
@@ -76,11 +75,4 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
         long postId = recruitmentPostService.updateStatus(request.toServiceRequest(), recruitmentPostId, userDetails.getUserId());
         return ApiResponse.success(postId);
     }
-
-    @GetMapping("{recruitment-post-id}/applications")
-    public ApiResponse<RecruitmentApplicationPagingInfo> getApplications(@PageableDefault(size = 5) Pageable pageable,
-                                                                         @PathVariable("recruitment-post-id") long recruitmentPostId) {
-        return ApiResponse.success(new RecruitmentApplicationPagingInfo());
-    }
-
 }
