@@ -39,6 +39,7 @@ public class ApplicationQueryRepository {
             .select(new QReceivedApplicationResponse(
                 studyApplication.id,
                 user.nickname,
+                user.profileImageUrl,
                 buddyEnergy.level,
                 studyApplication.createdDate,
                 studyApplication.applicationReason
