@@ -25,13 +25,13 @@ public class AlarmService {
     }
 
     public List<Alarm> getAllAlarms(Long receiverUserId) {
-        return alarmRepository.findAllByReceiverUserIdAndReadFalse(receiverUserId);
+        return alarmRepository.findAllByReceiverUserIdAndCheckedFalse(receiverUserId);
     }
 
     @Transactional
-    public void readAllAlarm(Long receiverUserId) {
-        List<Alarm> alarms = alarmRepository.findAllByReceiverUserIdAndReadFalse(receiverUserId);
-        alarms.forEach(Alarm::read);
+    public void checkAllAlarm(Long receiverUserId) {
+        List<Alarm> alarms = alarmRepository.findAllByReceiverUserIdAndCheckedFalse(receiverUserId);
+        alarms.forEach(Alarm::checkAlarm);
     }
 
 }

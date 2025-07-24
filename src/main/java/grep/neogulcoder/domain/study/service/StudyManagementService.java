@@ -154,7 +154,7 @@ public class StudyManagementService {
         studyMemberRepository.save(extendMember);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void inviteTargetUser(Long studyId, Long userId, String targetUserNickname) {
         StudyMember studyMember = findValidStudyMember(studyId, userId);
         studyMember.isLeader();

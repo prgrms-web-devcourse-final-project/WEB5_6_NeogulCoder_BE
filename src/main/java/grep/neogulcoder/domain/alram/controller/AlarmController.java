@@ -24,9 +24,9 @@ public class AlarmController implements AlarmSpecification {
         return ApiResponse.success(alarmService.getAllAlarms(userDetails.getUserId()));
     }
 
-    @PostMapping("/my/read/all")
+    @PostMapping("/my/check/all")
     public ApiResponse<Void> checkAlarm(@AuthenticationPrincipal Principal userDetails) {
-        alarmService.readAllAlarm(userDetails.getUserId());
+        alarmService.checkAllAlarm(userDetails.getUserId());
         return ApiResponse.noContent();
     }
 

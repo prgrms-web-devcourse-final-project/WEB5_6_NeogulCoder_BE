@@ -41,10 +41,10 @@ public class Alarm extends BaseEntity {
     private String message;
 
     @Schema(description = "알림 읽음 여부", example = "false")
-    private boolean isRead = false;
+    private boolean checked = false;
 
-    public void read() {
-        this.isRead = true;
+    public void checkAlarm() {
+        this.checked = true;
     }
 
     public static Alarm init(AlarmType alarmType, Long receiverUserId , DomainType domainType, Long domainId, String message) {
@@ -56,7 +56,6 @@ public class Alarm extends BaseEntity {
             .message(message)
             .build();
     }
-
 
     @Builder
     private Alarm(Long id, Long receiverUserId, AlarmType alarmType, DomainType domainType,
@@ -71,4 +70,5 @@ public class Alarm extends BaseEntity {
 
     protected Alarm() {
     }
+
 }
