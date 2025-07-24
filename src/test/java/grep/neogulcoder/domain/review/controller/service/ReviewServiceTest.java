@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -119,28 +120,50 @@ class ReviewServiceTest extends IntegrationTestSupport {
                 .containsExactly("테스터3");
     }
 
-    @DisplayName("내가 참여한 스터디 정보들을 조회 합니다.")
+    @DisplayName("리뷰 가능한 스터디 정보들을 조회 합니다.")
     @Test
     void getReviewTargetStudiesInfo() {
         //given
         User user = createUser("테스터");
         userRepository.save(user);
 
-        Study study1 = createStudy("운영체제 스터디", Category.IT);
-        Study study2 = createStudy("클라이밍 동아리", Category.HOBBY);
-        studyRepository.saveAll(List.of(study1, study2));
+        LocalDateTime endDateTime = LocalDateTime.of(2025, 7, 1, 0, 0, 0);
+        Study study = createStudy("운영체제 스터디", endDateTime);
+        studyRepository.save(study);
 
-        StudyMember studyMember1 = createStudyMember(study1, user.getId());
-        StudyMember studyMember2 = createStudyMember(study2, user.getId());
-        studyMemberRepository.saveAll(List.of(studyMember1, studyMember2));
+        StudyMember studyMember1 = createStudyMember(study, user.getId());
+        studyMemberRepository.save(studyMember1);
 
         //when
-        ReviewTargetStudiesInfo response = reviewService.getReviewTargetStudiesInfo(user.getId());
+        LocalDateTime currentDateTime = endDateTime;
+        ReviewTargetStudiesInfo response = reviewService.getReviewTargetStudiesInfo(user.getId(), currentDateTime);
 
         //then
-        assertThat(response.getStudies())
+        assertThat(response.getStudies()).hasSize(1)
                 .extracting("studyName")
-                .containsExactlyInAnyOrder("운영체제 스터디", "클라이밍 동아리");
+                .containsExactlyInAnyOrder("운영체제 스터디");
+    }
+
+    @DisplayName("리뷰 가능한 스터디를 조회 시, 없다면 빈 리스트를 반환한다.")
+    @Test
+    void getReviewTargetStudiesInfo_whenNotReviewableStudy_returnsEmptyList() {
+        //given
+        User user = createUser("테스터");
+        userRepository.save(user);
+
+        LocalDateTime endDateTime = LocalDateTime.of(2025, 7, 1, 0, 0, 0);
+        Study study = createStudy("운영체제 스터디", endDateTime);
+        studyRepository.save(study);
+
+        StudyMember studyMember1 = createStudyMember(study, user.getId());
+        studyMemberRepository.save(studyMember1);
+
+        //when
+        LocalDateTime currentDateTime = endDateTime.plusDays(7).plusSeconds(1);
+        ReviewTargetStudiesInfo response = reviewService.getReviewTargetStudiesInfo(user.getId(), currentDateTime);
+
+        //then
+        assertThat(response.getStudies()).isEmpty();
     }
 
     @DisplayName("리뷰 입력을 받아 리뷰를 저장 합니다.")
@@ -241,6 +264,13 @@ class ReviewServiceTest extends IntegrationTestSupport {
         return Study.builder()
                 .name(name)
                 .category(category)
+                .build();
+    }
+
+    private Study createStudy(String name, LocalDateTime endDate) {
+        return Study.builder()
+                .name(name)
+                .endDate(endDate)
                 .build();
     }
 

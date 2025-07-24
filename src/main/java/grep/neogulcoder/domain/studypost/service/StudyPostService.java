@@ -59,7 +59,7 @@ public class StudyPostService {
 
     @Transactional
     public long create(StudyPostSaveRequest request, long studyId, long userId) {
-        List<StudyMember> myStudies = studyQueryRepository.findAllFetchStudyByUserId(userId);
+        List<StudyMember> myStudies = studyQueryRepository.findMembersByUserId(userId);
         Study study = extractTargetStudyById(myStudies, studyId);
         return studyPostRepository.save(request.toEntity(study, userId)).getId();
     }

@@ -32,7 +32,7 @@ class StudyMemberQueryRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("자신이 참여한 스터디의 정보를 조회 합니다.")
     @Test
-    void findAllFetchStudyByUserId() {
+    void findMembersByUserId() {
         //given
         User user = createUser("테스터");
         userRepository.save(user);
@@ -46,7 +46,7 @@ class StudyMemberQueryRepositoryTest extends IntegrationTestSupport {
         studyMemberRepository.saveAll(List.of(studyMember1, studyMember2));
 
         //when
-        List<StudyMember> studyMembers = studyMemberQueryRepository.findAllFetchStudyByUserId(user.getId());
+        List<StudyMember> studyMembers = studyMemberQueryRepository.findMembersByUserId(user.getId());
 
         //then
         assertThat(studyMembers).hasSize(2)
