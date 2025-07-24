@@ -50,7 +50,9 @@ public class AlarmService {
     @Transactional
     public void checkAllAlarm(Long receiverUserId) {
         List<Alarm> alarms = alarmRepository.findAllByReceiverUserIdAndCheckedFalse(receiverUserId);
-        alarms.forEach(Alarm::checkAlarm);
+        alarms.stream()
+            .filter(alarm -> alarm.getAlarmType() != AlarmType.INVITE)
+            .forEach(Alarm::checkAlarm);
     }
 
     @EventListener
