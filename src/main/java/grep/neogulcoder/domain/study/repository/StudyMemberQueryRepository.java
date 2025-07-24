@@ -75,7 +75,7 @@ public class StudyMemberQueryRepository {
     public List<StudyMember> findByIdIn(List<Long> studyIds) {
         return queryFactory.selectFrom(studyMember)
                 .where(
-                        studyMember.id.in(studyIds),
+                        studyMember.study.id.in(studyIds),
                         studyMember.activated.isTrue()
                 )
                 .join(studyMember.study, study).fetchJoin()
