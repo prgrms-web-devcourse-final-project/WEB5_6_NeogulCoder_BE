@@ -2,6 +2,7 @@ package grep.neogulcoder.domain.groupchat.entity;
 
 import grep.neogulcoder.global.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 @Entity
@@ -14,4 +15,12 @@ public class GroupChatRoom extends BaseEntity {
 
     @JoinColumn(name = "study_id")
     private Long studyId;
+
+    public GroupChatRoom(Long studyId) {
+        this.studyId = studyId;
+    }
+
+    protected GroupChatRoom() {
+
+    }
 }
