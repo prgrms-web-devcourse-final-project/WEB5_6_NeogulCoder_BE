@@ -3,13 +3,16 @@ package grep.neogulcoder.domain.users.controller;
 import grep.neogulcoder.domain.users.controller.dto.request.PasswordRequest;
 import grep.neogulcoder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogulcoder.domain.users.controller.dto.request.UpdatePasswordRequest;
+import grep.neogulcoder.domain.users.controller.dto.response.AllUserResponse;
 import grep.neogulcoder.domain.users.controller.dto.response.UserResponse;
+import grep.neogulcoder.domain.users.entity.User;
 import grep.neogulcoder.domain.users.service.EmailVerificationService;
 import grep.neogulcoder.domain.users.service.UserService;
 import grep.neogulcoder.global.auth.Principal;
 import grep.neogulcoder.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,6 +48,12 @@ public class UserController implements UserSpecification {
     public ApiResponse<UserResponse> get(@PathVariable("userid") Long userId) {
         UserResponse userResponse = usersService.getUserResponse(userId);
         return ApiResponse.success(userResponse);
+    }
+
+    @GetMapping("/all")
+    public ApiResponse<List<AllUserResponse>> getAll() {
+        List<AllUserResponse> users = usersService.getAllUsers();
+        return ApiResponse.success(users);
     }
 
     @PutMapping(value = "/update/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
