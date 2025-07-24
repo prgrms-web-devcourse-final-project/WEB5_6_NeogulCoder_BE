@@ -96,7 +96,7 @@ public class ReviewService {
                 );
 
         List<Study> studies1 = studies.stream()
-                .filter(study -> groupedStudyIdCountMap.get(study.getId()) != groupedStudyIdMap.get(study.getId()).size())
+                .filter(study -> groupedStudyIdCountMap.get(study.getId()) - 1 != groupedStudyIdMap.get(study.getId()).size())
                 .toList();
 
         return ReviewTargetStudiesInfo.of(studies1);
