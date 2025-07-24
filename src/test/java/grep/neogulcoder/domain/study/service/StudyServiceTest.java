@@ -30,6 +30,7 @@ import java.util.List;
 import static grep.neogulcoder.domain.study.enums.StudyMemberRole.LEADER;
 import static grep.neogulcoder.domain.study.enums.StudyMemberRole.MEMBER;
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.NOT_STUDY_LEADER;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_CREATE_LIMIT_EXCEEDED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -69,7 +70,6 @@ class StudyServiceTest extends IntegrationTestSupport {
         Study study = createStudy("스터디", Category.IT, 3, StudyType.OFFLINE, "서울", LocalDateTime.of(2025, 7, 18, 0, 0, 0),
             LocalDateTime.of(2025, 7, 28, 0, 0, 0), "스터디입니다.", "http://localhost:8083/image.url");
         studyRepository.save(study);
-        Long studyId = study.getId();
 
         StudyMember studyMember = createStudyMember(study, userId, LEADER);
         studyMemberRepository.save(studyMember);
@@ -92,9 +92,8 @@ class StudyServiceTest extends IntegrationTestSupport {
                 .studyType(StudyType.OFFLINE)
                 .location("서울")
                 .startDate(LocalDateTime.of(2025, 7, 20, 0, 0, 0))
-                .endDate(LocalDateTime.of(2025, 7, 28, 0, 0, 0))
+                .endDate(LocalDateTime.of(2026, 7, 28, 0, 0, 0))
                 .introduction("스터디입니다.")
-                .imageUrl("http://localhost:8083/image.url")
                 .build();
         MultipartFile image = null;
 
@@ -106,6 +105,34 @@ class StudyServiceTest extends IntegrationTestSupport {
         // then
         Study findStudy = studyRepository.findByIdAndActivatedTrue(id).orElseThrow();
         assertThat(findStudy.getName()).isEqualTo("스터디");
+    }
+
+    @DisplayName("종료되지 않은 스터디를 10개 초과로 생성할 시 예외가 발생합니다.")
+    @Test
+    void createStudyFail() throws IOException {
+        // given
+        StudyCreateRequest request = StudyCreateRequest.builder()
+            .name("스터디")
+            .category(Category.IT)
+            .capacity(5)
+            .studyType(StudyType.OFFLINE)
+            .location("서울")
+            .startDate(LocalDateTime.of(2025, 7, 20, 0, 0, 0))
+            .endDate(LocalDateTime.of(2026, 7, 28, 0, 0, 0))
+            .introduction("스터디입니다.")
+            .build();
+        MultipartFile image = null;
+
+        for (int i = 0; i < 10; i++) {
+            studyService.createStudy(request, userId, image);
+            em.flush();
+            em.clear();
+        }
+
+        // when then
+        assertThatThrownBy(() ->
+            studyService.createStudy(request, userId, image))
+            .isInstanceOf(BusinessException.class).hasMessage(STUDY_CREATE_LIMIT_EXCEEDED.getMessage());
     }
 
     @DisplayName("스터디장이 스터디를 수정합니다.")
@@ -161,7 +188,6 @@ class StudyServiceTest extends IntegrationTestSupport {
                 .location("서울")
                 .startDate(LocalDateTime.now())
                 .introduction("Updated")
-                .imageUrl("http://localhost:8083/image.url")
                 .build();
         MultipartFile image = null;
 
@@ -191,7 +217,7 @@ class StudyServiceTest extends IntegrationTestSupport {
         Study deletedStudy = studyRepository.findById(studyId).orElseThrow();
 
         // then
-        assertThat(deletedStudy.getActivated()).isFalse();
+        assertThat(deletedStudy.isActivated()).isFalse();
     }
 
     private static User createUser(String nickname) {

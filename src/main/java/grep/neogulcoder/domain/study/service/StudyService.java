@@ -1,5 +1,9 @@
 package grep.neogulcoder.domain.study.service;
 
+import grep.neogulcoder.domain.calender.controller.dto.response.TeamCalendarResponse;
+import grep.neogulcoder.domain.calender.service.TeamCalendarService;
+import grep.neogulcoder.domain.groupchat.entity.GroupChatRoom;
+import grep.neogulcoder.domain.groupchat.repository.GroupChatRoomRepository;
 import grep.neogulcoder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.StudyMember;
@@ -12,6 +16,10 @@ import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
+import grep.neogulcoder.domain.studypost.controller.dto.response.FreePostInfo;
+import grep.neogulcoder.domain.studypost.controller.dto.response.NoticePostInfo;
+import grep.neogulcoder.domain.studypost.repository.StudyPostQueryRepository;
+import grep.neogulcoder.domain.studypost.repository.StudyPostRepository;
 import grep.neogulcoder.domain.users.entity.User;
 import grep.neogulcoder.domain.users.repository.UserRepository;
 import grep.neogulcoder.global.exception.business.BusinessException;
@@ -27,6 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +56,11 @@ public class StudyService {
     private final RecruitmentPostRepository recruitmentPostRepository;
     private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final UserRepository userRepository;
+    private final StudyPostRepository studyPostRepository;
+    private final StudyPostQueryRepository studyPostQueryRepository;
+    private final TeamCalendarService teamCalendarService;
+    private final GroupChatRoomRepository groupChatRoomRepository;
+
 
     public StudyItemPagingResponse getMyStudiesPaging(Pageable pageable, Long userId, Boolean finished) {
         Page<StudyItemResponse> page = studyQueryRepository.findMyStudiesPaging(pageable, userId, finished);
@@ -53,19 +68,29 @@ public class StudyService {
     }
 
     public List<StudyItemResponse> getMyUnfinishedStudies(Long userId) {
-        List<StudyItemResponse> myUnfinishedStudies = studyQueryRepository.findMyUnfinishedStudies(userId);
-        return myUnfinishedStudies;
-    }
-
-    public List<StudyItemResponse> getMyStudies(Long userId) {
-        return studyQueryRepository.findMyStudies(userId);
+        return studyQueryRepository.findMyUnfinishedStudies(userId);
     }
 
     public StudyHeaderResponse getStudyHeader(Long studyId) {
-        Study study = studyRepository.findByIdAndActivatedTrue(studyId)
-                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+        Study study = findValidStudy(studyId);
 
         return StudyHeaderResponse.from(study);
+    }
+
+    public StudyResponse getStudy(Long studyId) {
+        Study study = findValidStudy(studyId);
+
+        int progressDays = (int) ChronoUnit.DAYS.between(study.getStartDate().toLocalDate(), LocalDate.now()) + 1;
+        int totalDays = (int) ChronoUnit.DAYS.between(study.getStartDate().toLocalDate(), study.getEndDate().toLocalDate()) + 1;
+        progressDays = Math.max(0, Math.min(progressDays, totalDays));
+        int totalPostCount = studyPostRepository.countByStudyIdAndActivatedTrue(studyId);
+
+        List<TeamCalendarResponse> teamCalendars = getCurrentMonthTeamCalendars(studyId);
+
+        List<NoticePostInfo> noticePosts = studyPostQueryRepository.findLatestNoticeInfoBy(studyId);
+        List<FreePostInfo> freePosts = studyPostQueryRepository.findLatestFreeInfoBy(studyId);
+
+        return StudyResponse.from(study, progressDays, totalDays, totalPostCount, teamCalendars, noticePosts, freePosts);
     }
 
     public List<StudyImageResponse> getStudyImages(Long userId) {
@@ -77,8 +102,7 @@ public class StudyService {
     }
 
     public StudyInfoResponse getMyStudyContent(Long studyId, Long userId) {
-        Study study = studyRepository.findByIdAndActivatedTrue(studyId)
-                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+        Study study = findValidStudy(studyId);
 
         validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
@@ -89,8 +113,7 @@ public class StudyService {
     }
 
     public StudyMemberInfoResponse getMyStudyMemberInfo(Long studyId, Long userId) {
-        StudyMember studyMember = Optional.ofNullable(studyMemberQueryRepository.findByStudyIdAndUserId(studyId, userId))
-                .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
+        StudyMember studyMember = findValidStudyMember(studyId, userId);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
@@ -100,26 +123,25 @@ public class StudyService {
 
     @Transactional
     public Long createStudy(StudyCreateRequest request, Long userId, MultipartFile image) throws IOException {
+        validateStudyCreateLimit(userId);
         validateLocation(request.getStudyType(), request.getLocation());
 
         String imageUrl = createImageUrl(userId, image);
 
-        Study study = studyRepository.save(request.toEntity(imageUrl));
+        Study study = studyRepository.save(request.toEntity(userId, imageUrl));
 
-        StudyMember leader = StudyMember.builder()
-                .study(study)
-                .userId(userId)
-                .role(LEADER)
-                .build();
+        StudyMember leader = StudyMember.createLeader(study, userId);
         studyMemberRepository.save(leader);
+
+        GroupChatRoom chatRoom = new GroupChatRoom(study.getId());
+        groupChatRoomRepository.save(chatRoom);
 
         return study.getId();
     }
 
     @Transactional
     public void updateStudy(Long studyId, StudyUpdateRequest request, Long userId, MultipartFile image) throws IOException {
-        Study study = studyRepository.findById(studyId)
-                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+        Study study = findValidStudy(studyId);
 
         validateLocation(request.getStudyType(), request.getLocation());
         validateStudyMember(studyId, userId);
@@ -142,8 +164,7 @@ public class StudyService {
 
     @Transactional
     public void deleteStudy(Long studyId, Long userId) {
-        Study study = studyRepository.findById(studyId)
-                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+        Study study = findValidStudy(studyId);
 
         validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
@@ -156,16 +177,39 @@ public class StudyService {
 
     @Transactional
     public void deleteStudyByAdmin(Long studyId) {
-        Study study = studyRepository.findById(studyId)
-                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+        Study study = findValidStudy(studyId);
 
         study.delete();
+    }
+
+    private Study findValidStudy(Long studyId) {
+        return studyRepository.findById(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+    }
+
+    private StudyMember findValidStudyMember(Long studyId, Long userId) {
+        return Optional.ofNullable(studyMemberQueryRepository.findByStudyIdAndUserId(studyId, userId))
+            .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
+    }
+
+    private void validateStudyCreateLimit(Long userId) {
+        int count = studyRepository.countByUserIdAndActivatedTrueAndFinishedFalse(userId);
+        if (count >= 10) {
+            throw new BusinessException(STUDY_CREATE_LIMIT_EXCEEDED);
+        }
     }
 
     private static void validateLocation(StudyType studyType, String location) {
         if ((studyType == StudyType.OFFLINE || studyType == StudyType.HYBRID) && (location == null || location.isBlank())) {
             throw new BusinessException(STUDY_LOCATION_REQUIRED);
         }
+    }
+
+    private List<TeamCalendarResponse> getCurrentMonthTeamCalendars(Long studyId) {
+        LocalDate now = LocalDate.now();
+        int currentYear = now.getYear();
+        int currentMonth = now.getMonthValue();
+        return teamCalendarService.findByMonth(studyId, currentYear, currentMonth);
     }
 
     private void validateStudyMember(Long studyId, Long userId) {
@@ -196,9 +240,8 @@ public class StudyService {
     }
 
     private String createImageUrl(Long userId, MultipartFile image) throws IOException {
-        FileUploadResponse response = null;
         if (isImgExists(image)) {
-            response = fileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
+            FileUploadResponse response = fileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
             return response.getFileUrl();
         }
         return null;

@@ -1,9 +1,11 @@
 package grep.neogulcoder.domain.study.controller.dto.response;
 
-import grep.neogulcoder.domain.attendance.controller.dto.response.AttendanceResponse;
 import grep.neogulcoder.domain.calender.controller.dto.response.TeamCalendarResponse;
-import grep.neogulcoder.domain.studypost.controller.dto.StudyPostListResponse;
+import grep.neogulcoder.domain.study.Study;
+import grep.neogulcoder.domain.studypost.controller.dto.response.FreePostInfo;
+import grep.neogulcoder.domain.studypost.controller.dto.response.NoticePostInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
@@ -26,15 +28,39 @@ public class StudyResponse {
     @Schema(description = "스터디 총 게시물 수", example = "10")
     private int totalPostCount;
 
-    @Schema(description = "출석 정보")
-    private List<AttendanceResponse> attendances;
-
-    @Schema(description = "출석률", example = "60")
-    private int attendanceRate;
-
     @Schema(description = "팀 달력")
-    private List<TeamCalendarResponse> teamCalenders;
+    private List<TeamCalendarResponse> teamCalendars;
 
-    @Schema(description = "게시글 리스트")
-    private List<StudyPostListResponse> studyPosts;
+    @Schema(description = "스터디 공지글 2개")
+    private List<NoticePostInfo> noticePosts;
+
+    @Schema(description = "스터디 자유글 3개")
+    private List<FreePostInfo> freePosts;
+
+    @Builder
+    private StudyResponse(int progressDays, int totalDays, int capacity, int currentCount, int totalPostCount,
+                          List<TeamCalendarResponse> teamCalendars, List<NoticePostInfo> noticePosts, List<FreePostInfo> freePosts) {
+        this.progressDays = progressDays;
+        this.totalDays = totalDays;
+        this.capacity = capacity;
+        this.currentCount = currentCount;
+        this.totalPostCount = totalPostCount;
+        this.teamCalendars = teamCalendars;
+        this.noticePosts = noticePosts;
+        this.freePosts = freePosts;
+    }
+
+    public static StudyResponse from(Study study, int progressDays, int totalDays, int totalPostCount,
+                                     List<TeamCalendarResponse> teamCalendars, List<NoticePostInfo> noticePosts, List<FreePostInfo> freePosts) {
+        return StudyResponse.builder()
+            .progressDays(progressDays)
+            .totalDays(totalDays)
+            .capacity(study.getCapacity())
+            .currentCount(study.getCurrentCount())
+            .totalPostCount(totalPostCount)
+            .teamCalendars(teamCalendars)
+            .noticePosts(noticePosts)
+            .freePosts(freePosts)
+            .build();
+    }
 }

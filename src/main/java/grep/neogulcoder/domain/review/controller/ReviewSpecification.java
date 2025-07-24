@@ -1,7 +1,7 @@
 package grep.neogulcoder.domain.review.controller;
 
 import grep.neogulcoder.domain.review.controller.dto.request.ReviewSaveRequest;
-import grep.neogulcoder.domain.review.controller.dto.response.JoinedStudiesInfo;
+import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetStudiesInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
@@ -10,6 +10,8 @@ import grep.neogulcoder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDateTime;
 
 @Tag(name = "Review", description = "리뷰 API")
 public interface ReviewSpecification {
@@ -36,9 +38,9 @@ public interface ReviewSpecification {
     ApiResponse<ReviewTargetUsersInfo> getReviewTargetUsersInfo(long studyId, Principal userDetails);
 
     @Operation(
-            summary = "참여한 스터디 목록 조회",
+            summary = "리뷰 가능한 스터디 목록 조회",
             description = """
-                    회원이 참여한 스터디의 목록들을 조회합니다.
+                    리뷰 가능한 스터디의 목록들을 조회합니다.
                     
                     ✅ 응답 형식 (예시):
                     ```json
@@ -49,10 +51,10 @@ public interface ReviewSpecification {
                     }
                     ```
                     
-                    - `studyInfo`: 회원이 참여한 스터디의 이름과 이미지 정보 리스트입니다.
+                    - `studyInfo`: 리뷰 가능한 스터디의 이름과 이미지 정보 리스트입니다.
                     """
     )
-    ApiResponse<JoinedStudiesInfo> getJoinedStudiesInfo(Principal userDetails);
+    ApiResponse<ReviewTargetStudiesInfo> getReviewTargetStudiesInfo(Principal userDetails, LocalDateTime currentDateTime);
 
     @Operation(summary = "리뷰 생성", description = "스터디에 대한 리뷰를 작성 합니다.")
     ApiResponse<Long> save(ReviewSaveRequest request, Principal userDetails);

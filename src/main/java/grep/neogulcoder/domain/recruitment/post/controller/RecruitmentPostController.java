@@ -2,7 +2,6 @@ package grep.neogulcoder.domain.recruitment.post.controller;
 
 import grep.neogulcoder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogulcoder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
-import grep.neogulcoder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
 import grep.neogulcoder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogulcoder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogulcoder.domain.recruitment.post.service.RecruitmentPostService;
@@ -26,9 +25,9 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
 
     @GetMapping
     public ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(@PageableDefault(size = 10) Pageable pageable,
-                                                                @RequestParam("category") Category category,
-                                                                @RequestParam("studyType") StudyType studyType,
-                                                                @RequestParam("keyword") String keyword) {
+                                                                @RequestParam(value = "category", required = false) Category category,
+                                                                @RequestParam(value = "studyType", required = false) StudyType studyType,
+                                                                @RequestParam(value = "keyword", required = false) String keyword) {
         RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(
                 pageable, category, studyType, keyword, null
         );
@@ -37,9 +36,9 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
 
     @GetMapping("/me")
     public ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(@PageableDefault(size = 10) Pageable pageable,
-                                                                      @RequestParam("category") Category category,
-                                                                      @RequestParam("studyType") StudyType studyType,
-                                                                      @RequestParam("keyword") String keyword,
+                                                                      @RequestParam(value = "category", required = false) Category category,
+                                                                      @RequestParam(value = "studyType", required = false) StudyType studyType,
+                                                                      @RequestParam(value = "keyword", required = false) String keyword,
                                                                       @AuthenticationPrincipal Principal userDetails) {
         RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(
                 pageable, category, studyType,
@@ -76,11 +75,4 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
         long postId = recruitmentPostService.updateStatus(request.toServiceRequest(), recruitmentPostId, userDetails.getUserId());
         return ApiResponse.success(postId);
     }
-
-    @GetMapping("{recruitment-post-id}/applications")
-    public ApiResponse<RecruitmentApplicationPagingInfo> getApplications(@PageableDefault(size = 5) Pageable pageable,
-                                                                         @PathVariable("recruitment-post-id") long recruitmentPostId) {
-        return ApiResponse.success(new RecruitmentApplicationPagingInfo());
-    }
-
 }
