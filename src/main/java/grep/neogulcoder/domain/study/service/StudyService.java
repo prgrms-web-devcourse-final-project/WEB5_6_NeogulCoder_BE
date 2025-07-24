@@ -68,12 +68,7 @@ public class StudyService {
     }
 
     public List<StudyItemResponse> getMyUnfinishedStudies(Long userId) {
-        List<StudyItemResponse> myUnfinishedStudies = studyQueryRepository.findMyUnfinishedStudies(userId);
-        return myUnfinishedStudies;
-    }
-
-    public List<StudyItemResponse> getMyStudies(Long userId) {
-        return studyQueryRepository.findMyStudies(userId);
+        return studyQueryRepository.findMyUnfinishedStudies(userId);
     }
 
     public StudyHeaderResponse getStudyHeader(Long studyId) {
@@ -90,10 +85,7 @@ public class StudyService {
         progressDays = Math.max(0, Math.min(progressDays, totalDays));
         int totalPostCount = studyPostRepository.countByStudyIdAndActivatedTrue(studyId);
 
-        LocalDate now = LocalDate.now();
-        int currentYear = now.getYear();
-        int currentMonth = now.getMonthValue();
-        List<TeamCalendarResponse> teamCalendars = teamCalendarService.findByMonth(studyId, currentYear, currentMonth);
+        List<TeamCalendarResponse> teamCalendars = getCurrentMonthTeamCalendars(studyId);
 
         List<NoticePostInfo> noticePosts = studyPostQueryRepository.findLatestNoticeInfoBy(studyId);
         List<FreePostInfo> freePosts = studyPostQueryRepository.findLatestFreeInfoBy(studyId);
@@ -121,8 +113,7 @@ public class StudyService {
     }
 
     public StudyMemberInfoResponse getMyStudyMemberInfo(Long studyId, Long userId) {
-        StudyMember studyMember = Optional.ofNullable(studyMemberQueryRepository.findByStudyIdAndUserId(studyId, userId))
-                .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
+        StudyMember studyMember = findValidStudyMember(studyId, userId);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
@@ -196,6 +187,11 @@ public class StudyService {
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
     }
 
+    private StudyMember findValidStudyMember(Long studyId, Long userId) {
+        return Optional.ofNullable(studyMemberQueryRepository.findByStudyIdAndUserId(studyId, userId))
+            .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
+    }
+
     private void validateStudyCreateLimit(Long userId) {
         int count = studyRepository.countByUserIdAndActivatedTrueAndFinishedFalse(userId);
         if (count >= 10) {
@@ -207,6 +203,13 @@ public class StudyService {
         if ((studyType == StudyType.OFFLINE || studyType == StudyType.HYBRID) && (location == null || location.isBlank())) {
             throw new BusinessException(STUDY_LOCATION_REQUIRED);
         }
+    }
+
+    private List<TeamCalendarResponse> getCurrentMonthTeamCalendars(Long studyId) {
+        LocalDate now = LocalDate.now();
+        int currentYear = now.getYear();
+        int currentMonth = now.getMonthValue();
+        return teamCalendarService.findByMonth(studyId, currentYear, currentMonth);
     }
 
     private void validateStudyMember(Long studyId, Long userId) {
@@ -237,9 +240,8 @@ public class StudyService {
     }
 
     private String createImageUrl(Long userId, MultipartFile image) throws IOException {
-        FileUploadResponse response = null;
         if (isImgExists(image)) {
-            response = fileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
+            FileUploadResponse response = fileUploader.upload(image, userId, FileUsageType.STUDY_COVER, userId);
             return response.getFileUrl();
         }
         return null;
