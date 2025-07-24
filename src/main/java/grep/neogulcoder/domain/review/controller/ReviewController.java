@@ -1,9 +1,9 @@
 package grep.neogulcoder.domain.review.controller;
 
 import grep.neogulcoder.domain.review.controller.dto.request.ReviewSaveRequest;
-import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetStudiesInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
+import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetStudiesInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
 import grep.neogulcoder.domain.review.service.ReviewService;
 import grep.neogulcoder.global.auth.Principal;
@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @RequestMapping("/reviews")
@@ -30,8 +32,9 @@ public class ReviewController implements ReviewSpecification {
     }
 
     @GetMapping("/studies/me")
-    public ApiResponse<ReviewTargetStudiesInfo> getReviewTargetStudiesInfo(@AuthenticationPrincipal Principal userDetails) {
-        ReviewTargetStudiesInfo response = reviewService.getReviewTargetStudiesInfo(userDetails.getUserId());
+    public ApiResponse<ReviewTargetStudiesInfo> getReviewTargetStudiesInfo(@AuthenticationPrincipal Principal userDetails,
+                                                                           LocalDateTime currentDateTime) {
+        ReviewTargetStudiesInfo response = reviewService.getReviewTargetStudiesInfo(userDetails.getUserId(), LocalDateTime.now());
         return ApiResponse.success(response);
     }
 

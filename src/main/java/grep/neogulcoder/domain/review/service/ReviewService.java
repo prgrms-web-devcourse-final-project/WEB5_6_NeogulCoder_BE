@@ -2,9 +2,9 @@ package grep.neogulcoder.domain.review.service;
 
 import grep.neogulcoder.domain.buddy.service.BuddyEnergyService;
 import grep.neogulcoder.domain.review.*;
-import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetStudiesInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
+import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetStudiesInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
 import grep.neogulcoder.domain.review.entity.MyReviewTagEntity;
 import grep.neogulcoder.domain.review.entity.ReviewEntity;
@@ -29,12 +29,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static grep.neogulcoder.domain.review.ReviewErrorCode.*;
+import static grep.neogulcoder.domain.review.ReviewErrorCode.ALREADY_REVIEW_WRITE_USER;
+import static grep.neogulcoder.domain.review.ReviewErrorCode.STUDY_NOT_FOUND;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -64,10 +66,40 @@ public class ReviewService {
         return ReviewTargetUsersInfo.of(otherUsers);
     }
 
-    public ReviewTargetStudiesInfo getReviewTargetStudiesInfo(long userId) {
+    public ReviewTargetStudiesInfo getReviewTargetStudiesInfo(long userId, LocalDateTime currentDateTime) {
+        List<StudyMember> studyMembers = studyMemberQueryRepository.findMembersByUserId(userId);
+        List<Study> studies = extractConnectedStudies(studyMembers);
+        List<Study> reviewableStudies = filteredReviewableStudies(currentDateTime, studies);
 
-        List<StudyMember> studyMembers = studyMemberQueryRepository.findAllFetchStudyByUserId(userId);
-        return ReviewTargetStudiesInfo.of(convertToStudiesFrom(studyMembers));
+        List<Long> studyIds = reviewableStudies.stream()
+                .map(Study::getId)
+                .toList();
+
+        List<StudyMember> studyMemberList = studyMemberQueryRepository.findByIdIn(studyIds);
+
+
+        Map<Long, Long> groupedStudyIdCountMap = studyMemberList.stream()
+                .map(StudyMember::getStudy)
+                .collect(
+                        Collectors.groupingBy(
+                                Study::getId,
+                                Collectors.counting()
+                        )
+                );
+
+        List<ReviewEntity> myReviews = reviewQueryRepository.findReviewsByReviewerInStudies(studyIds, userId);
+        Map<Long, List<ReviewEntity>> groupedStudyIdMap = myReviews.stream()
+                .collect(
+                        Collectors.groupingBy(
+                                ReviewEntity::getStudyId
+                        )
+                );
+
+        List<Study> studies1 = studies.stream()
+                .filter(study -> groupedStudyIdCountMap.get(study.getId()) -1 != groupedStudyIdMap.get(study.getId()).size())
+                .toList();
+
+        return ReviewTargetStudiesInfo.of(studies1);
     }
 
     @Transactional
@@ -128,15 +160,21 @@ public class ReviewService {
                 .toList();
     }
 
-    private Study findValidStudy(long studyId) {
-        return studyRepository.findById(studyId)
-                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+    private List<Study> filteredReviewableStudies(LocalDateTime currentDateTime, List<Study> studies) {
+        return studies.stream()
+                .filter(study -> study.isReviewableAt(currentDateTime))
+                .toList();
     }
 
-    private List<Study> convertToStudiesFrom(List<StudyMember> studyMembers) {
+    private List<Study> extractConnectedStudies(List<StudyMember> studyMembers) {
         return studyMembers.stream()
                 .map(StudyMember::getStudy)
                 .toList();
+    }
+
+    private Study findValidStudy(long studyId) {
+        return studyRepository.findById(studyId)
+                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
     }
 
     private boolean isAlreadyWrittenReviewBy(long studyId, long targetUserId, long writeUserId) {

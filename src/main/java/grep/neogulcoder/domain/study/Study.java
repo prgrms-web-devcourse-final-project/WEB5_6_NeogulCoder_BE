@@ -45,7 +45,8 @@ public class Study extends BaseEntity {
 
     private boolean finished;
 
-    protected Study() {}
+    protected Study() {
+    }
 
     @Builder
     private Study(Long originStudyId, String name, Category category, int capacity, StudyType studyType, String location,
@@ -107,5 +108,12 @@ public class Study extends BaseEntity {
 
     public void finish() {
         this.finished = true;
+    }
+
+    public boolean isReviewableAt(LocalDateTime currentDateTime) {
+        LocalDateTime reviewableDateTime = this.endDate.plusDays(7);
+
+        return (currentDateTime.isEqual(this.endDate) || currentDateTime.isAfter(this.endDate)) &&
+                (currentDateTime.isEqual(reviewableDateTime) || currentDateTime.isBefore(reviewableDateTime));
     }
 }
