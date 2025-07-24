@@ -47,7 +47,10 @@ public class ApplicationQueryRepository {
             .from(studyApplication)
             .join(user).on(studyApplication.userId.eq(user.id))
             .join(buddyEnergy).on(user.id.eq(buddyEnergy.userId))
-            .where(studyApplication.recruitmentPostId.eq(recruitmentPostId))
+            .where(
+                studyApplication.recruitmentPostId.eq(recruitmentPostId),
+                studyApplication.status.eq(ApplicationStatus.APPLYING)
+            )
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
@@ -57,7 +60,10 @@ public class ApplicationQueryRepository {
             .from(studyApplication)
             .join(user).on(studyApplication.userId.eq(user.id))
             .join(buddyEnergy).on(user.id.eq(buddyEnergy.userId))
-            .where(studyApplication.recruitmentPostId.eq(recruitmentPostId))
+            .where(
+                studyApplication.recruitmentPostId.eq(recruitmentPostId),
+                studyApplication.status.eq(ApplicationStatus.APPLYING)
+            )
             .fetchOne();
 
         return new PageImpl<>(receivedApplications, pageable, total == null ? 0 : total);
