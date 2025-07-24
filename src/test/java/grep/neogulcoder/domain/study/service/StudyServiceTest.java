@@ -94,7 +94,6 @@ class StudyServiceTest extends IntegrationTestSupport {
                 .startDate(LocalDateTime.of(2025, 7, 20, 0, 0, 0))
                 .endDate(LocalDateTime.of(2025, 7, 28, 0, 0, 0))
                 .introduction("스터디입니다.")
-                .imageUrl("http://localhost:8083/image.url")
                 .build();
         MultipartFile image = null;
 
@@ -161,7 +160,6 @@ class StudyServiceTest extends IntegrationTestSupport {
                 .location("서울")
                 .startDate(LocalDateTime.now())
                 .introduction("Updated")
-                .imageUrl("http://localhost:8083/image.url")
                 .build();
         MultipartFile image = null;
 
@@ -191,7 +189,7 @@ class StudyServiceTest extends IntegrationTestSupport {
         Study deletedStudy = studyRepository.findById(studyId).orElseThrow();
 
         // then
-        assertThat(deletedStudy.getActivated()).isFalse();
+        assertThat(deletedStudy.isActivated()).isFalse();
     }
 
     private static User createUser(String nickname) {
