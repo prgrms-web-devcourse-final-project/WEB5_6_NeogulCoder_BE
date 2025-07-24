@@ -5,11 +5,12 @@ import grep.neogulcoder.domain.timevote.dto.request.TimeVotePeriodCreateRequest;
 import grep.neogulcoder.domain.timevote.dto.request.TimeVoteUpdateRequest;
 import grep.neogulcoder.domain.timevote.dto.response.TimeVotePeriodResponse;
 import grep.neogulcoder.domain.timevote.dto.response.TimeVoteResponse;
-import grep.neogulcoder.domain.timevote.dto.response.TimeVoteStatListResponse;
+import grep.neogulcoder.domain.timevote.dto.response.TimeVoteStatResponse;
 import grep.neogulcoder.domain.timevote.dto.response.TimeVoteSubmissionStatusResponse;
 import grep.neogulcoder.domain.timevote.entity.TimeVotePeriod;
 import grep.neogulcoder.domain.timevote.service.TimeVotePeriodService;
 import grep.neogulcoder.domain.timevote.service.TimeVoteService;
+import grep.neogulcoder.domain.timevote.service.TimeVoteStatService;
 import grep.neogulcoder.global.auth.Principal;
 import grep.neogulcoder.global.response.ApiResponse;
 import jakarta.validation.Valid;
@@ -32,7 +33,7 @@ public class TimeVoteController implements TimeVoteSpecification {
 
   private final TimeVotePeriodService timeVotePeriodService;
   private final TimeVoteService timeVoteService;
-//  private final TimeVoteStatService timeVoteStatService;
+  private final TimeVoteStatService timeVoteStatService;
 
   @PostMapping("/periods")
   public ApiResponse<TimeVotePeriodResponse> createPeriod(
@@ -92,10 +93,11 @@ public class TimeVoteController implements TimeVoteSpecification {
   }
 
   @GetMapping("/periods/stats")
-  public ApiResponse<TimeVoteStatListResponse> getVoteStats(
+  public ApiResponse<TimeVoteStatResponse> getVoteStats(
       @PathVariable("studyId") Long studyId,
       @AuthenticationPrincipal Principal userDetails
   ) {
-    return ApiResponse.success(new TimeVoteStatListResponse());  // mock response
+    TimeVoteStatResponse response  = timeVoteStatService.getStats(studyId, userDetails.getUserId());
+    return ApiResponse.success(response);
   }
 }

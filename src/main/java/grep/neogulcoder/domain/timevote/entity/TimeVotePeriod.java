@@ -36,4 +36,17 @@ public class TimeVotePeriod extends BaseEntity {
     this.startDate = startDate;
     this.endDate = endDate;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    TimeVotePeriod that = (TimeVotePeriod) o;
+    return periodId != null && periodId.equals(that.periodId);
+  }
+
+  @Override
+  public int hashCode() {
+    return periodId != null ? periodId.hashCode() : 0;
+  }
 }
