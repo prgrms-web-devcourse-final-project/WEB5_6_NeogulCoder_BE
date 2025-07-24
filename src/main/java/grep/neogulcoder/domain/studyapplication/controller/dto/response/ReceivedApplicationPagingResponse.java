@@ -15,6 +15,7 @@ public class ReceivedApplicationPagingResponse {
         example = "[{" +
             "\"applicationId\": 1," +
             "\"nickname\": \"너굴\"," +
+            "\"profileImageUrl\": \"http://localhost:8083/image.jpg\"," +
             "\"buddyEnergy\": 30," +
             "\"createdDate\": \"2025-07-10T15:30:00\"," +
             "\"applicationReason\": \"자바를 더 공부하고 싶어 지원합니다.\"" +

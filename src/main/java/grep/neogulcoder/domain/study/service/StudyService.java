@@ -2,6 +2,8 @@ package grep.neogulcoder.domain.study.service;
 
 import grep.neogulcoder.domain.calender.controller.dto.response.TeamCalendarResponse;
 import grep.neogulcoder.domain.calender.service.TeamCalendarService;
+import grep.neogulcoder.domain.groupchat.entity.GroupChatRoom;
+import grep.neogulcoder.domain.groupchat.repository.GroupChatRoomRepository;
 import grep.neogulcoder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.StudyMember;
@@ -57,6 +59,8 @@ public class StudyService {
     private final StudyPostRepository studyPostRepository;
     private final StudyPostQueryRepository studyPostQueryRepository;
     private final TeamCalendarService teamCalendarService;
+    private final GroupChatRoomRepository groupChatRoomRepository;
+
 
     public StudyItemPagingResponse getMyStudiesPaging(Pageable pageable, Long userId, Boolean finished) {
         Page<StudyItemResponse> page = studyQueryRepository.findMyStudiesPaging(pageable, userId, finished);
@@ -140,6 +144,10 @@ public class StudyService {
                 .role(LEADER)
                 .build();
         studyMemberRepository.save(leader);
+
+        // 3. 그룹 채팅방 생성
+        GroupChatRoom chatRoom = new GroupChatRoom(study.getId());
+        groupChatRoomRepository.save(chatRoom);
 
         return study.getId();
     }
