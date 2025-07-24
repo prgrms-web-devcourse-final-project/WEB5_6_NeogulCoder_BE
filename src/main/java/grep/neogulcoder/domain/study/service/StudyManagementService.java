@@ -1,5 +1,8 @@
 package grep.neogulcoder.domain.study.service;
 
+import grep.neogulcoder.domain.alram.service.AlarmService;
+import grep.neogulcoder.domain.alram.type.AlarmType;
+import grep.neogulcoder.domain.alram.type.DomainType;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.StudyMember;
 import grep.neogulcoder.domain.study.controller.dto.request.ExtendStudyRequest;
@@ -8,6 +11,9 @@ import grep.neogulcoder.domain.study.controller.dto.response.StudyExtensionRespo
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
+import grep.neogulcoder.domain.users.entity.User;
+import grep.neogulcoder.domain.users.exception.code.UserErrorCode;
+import grep.neogulcoder.domain.users.repository.UserRepository;
 import grep.neogulcoder.global.exception.business.BusinessException;
 import grep.neogulcoder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +37,8 @@ public class StudyManagementService {
     private final StudyRepository studyRepository;
     private final StudyMemberRepository studyMemberRepository;
     private final StudyMemberQueryRepository studyMemberQueryRepository;
+    private final UserRepository userRepository;
+    private final AlarmService alarmService;
 
     public StudyExtensionResponse getStudyExtension(Long studyId) {
         Study study = findValidStudy(studyId);
@@ -144,6 +152,23 @@ public class StudyManagementService {
             .role(MEMBER)
             .build();
         studyMemberRepository.save(extendMember);
+    }
+
+    @Transactional
+    public void inviteTargetUser(Long studyId, Long userId, String targetUserNickname) {
+        StudyMember studyMember = findValidStudyMember(studyId, userId);
+        studyMember.isLeader();
+
+        User targetUser = userRepository.findByNickname(targetUserNickname).orElseThrow(() -> new NotFoundException(
+            UserErrorCode.USER_NOT_FOUND));
+
+        alarmService.saveAlarm(targetUser.getId(), AlarmType.INVITE, DomainType.STUDY, studyId);
+    }
+
+    @Transactional
+    public void acceptInvite(Long studyId, Long targetUserId) {
+        Study study = findValidStudy(studyId);
+        StudyMember.createMember(study,targetUserId);
     }
 
     private Study findValidStudy(Long studyId) {

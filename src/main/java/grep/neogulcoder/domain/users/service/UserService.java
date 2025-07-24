@@ -9,6 +9,7 @@ import grep.neogulcoder.domain.prtemplate.service.LinkService;
 import grep.neogulcoder.domain.prtemplate.service.PrTemplateService;
 import grep.neogulcoder.domain.study.service.StudyManagementService;
 import grep.neogulcoder.domain.users.controller.dto.request.SignUpRequest;
+import grep.neogulcoder.domain.users.controller.dto.response.AllUserResponse;
 import grep.neogulcoder.domain.users.controller.dto.response.UserResponse;
 import grep.neogulcoder.domain.users.entity.User;
 import grep.neogulcoder.domain.users.exception.EmailDuplicationException;
@@ -24,6 +25,7 @@ import grep.neogulcoder.global.utils.upload.uploader.GcpFileUploader;
 import grep.neogulcoder.global.utils.upload.uploader.LocalFileUploader;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -88,7 +90,6 @@ public class UserService {
         verificationService.clearVerifiedStatus(request.getEmail());
     }
 
-    @Transactional
     public void updateProfile(Long userId, String nickname, MultipartFile profileImage)
         throws IOException {
 
@@ -165,6 +166,18 @@ public class UserService {
             user.getProfileImageUrl(),
             user.getOauthProvider(),
             user.getRole());
+    }
+
+    public List<AllUserResponse> getAllUsers() {
+        return userRepository.findAllByActivatedTrue().stream()
+            .map(user -> AllUserResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .profileImageUrl(user.getProfileImageUrl())
+                .build()
+            )
+            .toList();
     }
 
     private User findUser(Long id) {
