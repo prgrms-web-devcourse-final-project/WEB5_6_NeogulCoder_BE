@@ -120,11 +120,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
             .requestMatchers(
-                "/Chat-Test.html",   // 여기에 테스트 파일 추가
-                "/css/**",
-                "/js/**",
-                "/images/**",
-                "/favicon.ico"
+                "/Chat-Test.html"
             );
     }
 
