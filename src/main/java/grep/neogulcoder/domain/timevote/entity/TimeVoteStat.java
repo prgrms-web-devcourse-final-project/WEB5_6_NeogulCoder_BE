@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Version;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +32,9 @@ public class TimeVoteStat extends BaseEntity {
   @Column(nullable = false)
   private Long voteCount;
 
+  @Version
+  private Long version;
+
   protected TimeVoteStat() {};
 
   @Builder
@@ -38,5 +42,17 @@ public class TimeVoteStat extends BaseEntity {
     this.period = period;
     this.timeSlot = timeSlot;
     this.voteCount = voteCount;
+  }
+
+  public static TimeVoteStat of(TimeVotePeriod period, LocalDateTime timeSlot, Long voteCount) {
+    return TimeVoteStat.builder()
+        .period(period)
+        .timeSlot(timeSlot)
+        .voteCount(voteCount)
+        .build();
+  }
+
+  public void addVotes(Long countToAdd) {
+    this.voteCount += countToAdd;
   }
 }
