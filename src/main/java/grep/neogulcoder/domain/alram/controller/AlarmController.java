@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/alarm")
-public class AlarmController {
+public class AlarmController implements AlarmSpecification {
 
     private final AlarmService alarmService;
 
@@ -24,7 +24,7 @@ public class AlarmController {
         return ApiResponse.success(alarmService.getAllAlarms(userDetails.getUserId()));
     }
 
-    @PostMapping("/my/check")
+    @PostMapping("/my/read/all")
     public ApiResponse<Void> checkAlarm(@AuthenticationPrincipal Principal userDetails) {
         alarmService.readAllAlarm(userDetails.getUserId());
         return ApiResponse.noContent();
