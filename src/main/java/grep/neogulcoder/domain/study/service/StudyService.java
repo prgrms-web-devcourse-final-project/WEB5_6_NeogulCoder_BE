@@ -132,20 +132,16 @@ public class StudyService {
 
     @Transactional
     public Long createStudy(StudyCreateRequest request, Long userId, MultipartFile image) throws IOException {
+        validateStudyCreateLimit(userId);
         validateLocation(request.getStudyType(), request.getLocation());
 
         String imageUrl = createImageUrl(userId, image);
 
-        Study study = studyRepository.save(request.toEntity(imageUrl));
+        Study study = studyRepository.save(request.toEntity(userId, imageUrl));
 
-        StudyMember leader = StudyMember.builder()
-                .study(study)
-                .userId(userId)
-                .role(LEADER)
-                .build();
+        StudyMember leader = StudyMember.createLeader(study, userId);
         studyMemberRepository.save(leader);
 
-        // 3. 그룹 채팅방 생성
         GroupChatRoom chatRoom = new GroupChatRoom(study.getId());
         groupChatRoomRepository.save(chatRoom);
 
@@ -198,6 +194,13 @@ public class StudyService {
     private Study findValidStudy(Long studyId) {
         return studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+    }
+
+    private void validateStudyCreateLimit(Long userId) {
+        int count = studyRepository.countByUserIdAndActivatedTrueAndFinishedFalse(userId);
+        if (count >= 10) {
+            throw new BusinessException(STUDY_CREATE_LIMIT_EXCEEDED);
+        }
     }
 
     private static void validateLocation(StudyType studyType, String location) {

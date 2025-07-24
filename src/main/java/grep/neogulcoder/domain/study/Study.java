@@ -17,6 +17,8 @@ public class Study extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long userId;
+
     private Long originStudyId;
 
     private String name;
@@ -49,8 +51,9 @@ public class Study extends BaseEntity {
     }
 
     @Builder
-    private Study(Long originStudyId, String name, Category category, int capacity, StudyType studyType, String location,
+    private Study(Long userId, Long originStudyId, String name, Category category, int capacity, StudyType studyType, String location,
                   LocalDateTime startDate, LocalDateTime endDate, String introduction, String imageUrl) {
+        this.userId = userId;
         this.originStudyId = originStudyId;
         this.name = name;
         this.category = category;
