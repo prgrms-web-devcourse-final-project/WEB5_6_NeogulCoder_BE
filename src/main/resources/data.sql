@@ -99,16 +99,16 @@ INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES 
 -- 2025-07-29 20:00:00 - 1명
 INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 8, '2025-07-29 20:00:00', TRUE);
 
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated) VALUES (1, '2025-07-25 10:00:00', 2, TRUE);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated) VALUES (1, '2025-07-25 11:00:00', 2, TRUE);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated) VALUES (1, '2025-07-26 14:00:00', 3, TRUE);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated) VALUES (1, '2025-07-26 15:00:00', 3, TRUE);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated) VALUES (1, '2025-07-27 09:00:00', 1, TRUE);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated) VALUES (1, '2025-07-27 13:00:00', 1, TRUE);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated) VALUES (1, '2025-07-28 13:00:00', 3, TRUE);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated) VALUES (1, '2025-07-28 14:00:00', 3, TRUE);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated) VALUES (1, '2025-07-29 19:00:00', 2, TRUE);
-INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated) VALUES (1, '2025-07-29 20:00:00', 1, TRUE);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, version) VALUES (1, '2025-07-25 10:00:00', 2, TRUE, 0);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, version) VALUES (1, '2025-07-25 11:00:00', 2, TRUE, 0);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, version) VALUES (1, '2025-07-26 14:00:00', 3, TRUE, 0);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, version) VALUES (1, '2025-07-26 15:00:00', 3, TRUE, 0);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, version) VALUES (1, '2025-07-27 09:00:00', 1, TRUE, 0);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, version) VALUES (1, '2025-07-27 13:00:00', 1, TRUE, 0);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, version) VALUES (1, '2025-07-28 13:00:00', 3, TRUE, 0);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, version) VALUES (1, '2025-07-28 14:00:00', 3, TRUE, 0);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, version) VALUES (1, '2025-07-29 19:00:00', 2, TRUE, 0);
+INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, version) VALUES (1, '2025-07-29 20:00:00', 1, TRUE, 0);
 
 -- INSERT INTO alarm (receive_user_id, alram_type, message, is_read, redirect_url) VALUES (5, 'APPLICATION', 'jiweon01님이 스터디 신청을 했습니다.', FALSE, '/admin/studies/2/applications');
 -- INSERT INTO alarm (receive_user_id, alram_type, message, is_read, redirect_url) VALUES (3, 'APPLICATION_STATUS', '스터디 신청이 수락되었습니다.', FALSE, '/my/applications');

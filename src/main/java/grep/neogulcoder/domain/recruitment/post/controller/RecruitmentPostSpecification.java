@@ -2,7 +2,6 @@ package grep.neogulcoder.domain.recruitment.post.controller;
 
 import grep.neogulcoder.domain.recruitment.post.controller.dto.request.RecruitmentPostStatusUpdateRequest;
 import grep.neogulcoder.domain.recruitment.post.controller.dto.request.RecruitmentPostUpdateRequest;
-import grep.neogulcoder.domain.recruitment.post.controller.dto.response.RecruitmentApplicationPagingInfo;
 import grep.neogulcoder.domain.recruitment.post.controller.dto.response.RecruitmentPostInfo;
 import grep.neogulcoder.domain.recruitment.post.controller.dto.response.RecruitmentPostPagingInfo;
 import grep.neogulcoder.domain.study.enums.Category;
@@ -144,32 +143,4 @@ public interface RecruitmentPostSpecification {
                     """
     )
     ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(Pageable pageable, Category category, StudyType studyType, String keyword);
-
-    @Operation(
-            summary = "스터디 신청한 회원 목록 페이징 조회",
-            description = """
-                    특정 모집글에 신청한 회원 목록을 페이징하여 조회합니다.
-                    
-                    ✅ 요청 형식:
-                    `GET /recruitment-posts/{id}/applications?page=0&size=5`
-                    
-                    ✅ 응답 예시:
-                    ```json
-                    {
-                      "applicationInfos": [
-                        {
-                          "nickname": "테스터",
-                          "buddyEnergy": 30,
-                          "createdDate": "2025-07-13T15:30:00",
-                          "applicationReason": "자바를 더 공부 하고싶어요!"
-                        }
-                      ],
-                      "totalPage": 3,
-                      "totalElementCount": 20
-                    }
-                    ```                
-                    """
-    )
-    ApiResponse<RecruitmentApplicationPagingInfo> getApplications(Pageable pageable, long recruitmentPostId);
-
 }

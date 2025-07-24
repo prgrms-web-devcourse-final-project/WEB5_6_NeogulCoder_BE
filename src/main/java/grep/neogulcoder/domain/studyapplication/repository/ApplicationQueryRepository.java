@@ -6,6 +6,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import grep.neogulcoder.domain.studyapplication.ApplicationStatus;
 import grep.neogulcoder.domain.studyapplication.controller.dto.response.MyApplicationResponse;
 import grep.neogulcoder.domain.studyapplication.controller.dto.response.QMyApplicationResponse;
+import grep.neogulcoder.domain.studyapplication.controller.dto.response.QReceivedApplicationResponse;
+import grep.neogulcoder.domain.studyapplication.controller.dto.response.ReceivedApplicationResponse;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,6 +23,7 @@ import static grep.neogulcoder.domain.study.QStudyMember.studyMember;
 import static grep.neogulcoder.domain.study.enums.StudyMemberRole.LEADER;
 import static grep.neogulcoder.domain.studyapplication.QStudyApplication.studyApplication;
 import static grep.neogulcoder.domain.users.entity.QUser.user;
+import static grep.neogulcoder.domain.buddy.entity.QBuddyEnergy.buddyEnergy;
 
 @Repository
 public class ApplicationQueryRepository {
@@ -29,6 +32,34 @@ public class ApplicationQueryRepository {
 
     public ApplicationQueryRepository(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
+    }
+
+    public Page<ReceivedApplicationResponse> findReceivedApplicationsPaging(Long recruitmentPostId, Pageable pageable) {
+        List<ReceivedApplicationResponse> receivedApplications = queryFactory
+            .select(new QReceivedApplicationResponse(
+                studyApplication.id,
+                user.nickname,
+                buddyEnergy.level,
+                studyApplication.createdDate,
+                studyApplication.applicationReason
+            ))
+            .from(studyApplication)
+            .join(user).on(studyApplication.userId.eq(user.id))
+            .join(buddyEnergy).on(user.id.eq(buddyEnergy.userId))
+            .where(studyApplication.recruitmentPostId.eq(recruitmentPostId))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        Long total = queryFactory
+            .select(studyApplication.count())
+            .from(studyApplication)
+            .join(user).on(studyApplication.userId.eq(user.id))
+            .join(buddyEnergy).on(user.id.eq(buddyEnergy.userId))
+            .where(studyApplication.recruitmentPostId.eq(recruitmentPostId))
+            .fetchOne();
+
+        return new PageImpl<>(receivedApplications, pageable, total == null ? 0 : total);
     }
 
     public Page<MyApplicationResponse> findMyStudyApplicationsPaging(Pageable pageable, Long userId, ApplicationStatus status) {
