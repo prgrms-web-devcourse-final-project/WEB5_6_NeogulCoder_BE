@@ -31,7 +31,7 @@ public class AlarmService {
 
     @Transactional
     public void saveAlarm(Long receiverId, AlarmType alarmType, DomainType domainType, Long domainId) {
-        String message = messageFinder.findMessage(alarmType);
+        String message = messageFinder.findMessage(alarmType, domainType, domainId);
         alarmRepository.save(Alarm.init(alarmType, receiverId, domainType, domainId, message));
     }
 
