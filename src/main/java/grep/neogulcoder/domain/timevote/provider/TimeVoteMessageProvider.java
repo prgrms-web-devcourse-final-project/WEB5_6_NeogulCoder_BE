@@ -1,4 +1,4 @@
-package grep.neogulcoder.domain.timevote;
+package grep.neogulcoder.domain.timevote.provider;
 
 import static grep.neogulcoder.domain.timevote.exception.code.TimeVoteErrorCode.STUDY_NOT_FOUND;
 
