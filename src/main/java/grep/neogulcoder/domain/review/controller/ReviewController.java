@@ -32,8 +32,7 @@ public class ReviewController implements ReviewSpecification {
     }
 
     @GetMapping("/studies/me")
-    public ApiResponse<ReviewTargetStudiesInfo> getReviewTargetStudiesInfo(@AuthenticationPrincipal Principal userDetails,
-                                                                           LocalDateTime currentDateTime) {
+    public ApiResponse<ReviewTargetStudiesInfo> getReviewTargetStudiesInfo(@AuthenticationPrincipal Principal userDetails) {
         ReviewTargetStudiesInfo response = reviewService.getReviewTargetStudiesInfo(userDetails.getUserId(), LocalDateTime.now());
         return ApiResponse.success(response);
     }
