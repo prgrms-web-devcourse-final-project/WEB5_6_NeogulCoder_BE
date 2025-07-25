@@ -65,7 +65,7 @@ INSERT INTO team_calendar (study_id, user_id, calendar_id, activated) VALUES (1,
 INSERT INTO team_calendar (study_id, user_id, calendar_id, activated) VALUES (3, 3, 4, TRUE);
 INSERT INTO team_calendar (study_id, user_id, calendar_id, activated) VALUES (4, 4, 5, TRUE);
 
-INSERT INTO time_vote_period (study_id, start_date, end_date, activated) VALUES (6, '2025-07-25 00:00:00', '2025-07-30 00:00:00', TRUE);
+INSERT INTO time_vote_period (study_id, start_date, end_date, activated) VALUES (6, '2025-07-25 00:00:00', '2025-07-30 23:59:59', TRUE);
 
 -- 2025-07-25 10:00:00 - 2명
 INSERT INTO time_vote (period_id, study_member_id, time_slot, activated) VALUES (1, 6, '2025-07-25 10:00:00', TRUE);
