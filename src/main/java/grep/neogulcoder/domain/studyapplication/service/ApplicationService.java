@@ -25,10 +25,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
-import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_OWNER;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_PARTICIPATE_LIMIT;
+import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.*;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
 import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
 
 @Transactional(readOnly = true)
@@ -65,7 +63,7 @@ public class ApplicationService {
 
         validateNotLeaderApply(recruitmentPost, userId);
         validateNotAlreadyApplied(recruitmentPostId, userId);
-        validateStudyParticipationLimit(userId);
+        validateApplicantStudyLimit(userId);
 
         StudyApplication application = request.toEntity(recruitmentPostId, userId);
         applicationRepository.save(application);
@@ -81,7 +79,7 @@ public class ApplicationService {
 
         validateOnlyLeaderCanApprove(study, userId);
         validateStatusIsApplying(application);
-        validateStudyParticipationLimit(application.getUserId());
+        validateParticipantStudyLimit(application.getUserId());
 
         application.approve();
 
@@ -160,10 +158,17 @@ public class ApplicationService {
         }
     }
 
-    private void validateStudyParticipationLimit(Long userId) {
+    private void validateApplicantStudyLimit(Long userId) {
         int count = studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
         if (count >= 10) {
             throw new BusinessException(STUDY_PARTICIPATE_LIMIT);
+        }
+    }
+
+    private void validateParticipantStudyLimit(Long userId) {
+        int count = studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
+        if (count >= 10) {
+            throw new BusinessException(STUDY_PARTICIPANT_LIMIT_EXCEEDED);
         }
     }
 }
