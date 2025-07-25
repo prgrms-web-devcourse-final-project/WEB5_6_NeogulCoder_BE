@@ -25,9 +25,9 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
 
     @GetMapping
     public ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(@PageableDefault(size = 10) Pageable pageable,
-                                                                @RequestParam("category") Category category,
-                                                                @RequestParam("studyType") StudyType studyType,
-                                                                @RequestParam("keyword") String keyword) {
+                                                                @RequestParam(value = "category", required = false) Category category,
+                                                                @RequestParam(value = "studyType", required = false) StudyType studyType,
+                                                                @RequestParam(value = "keyword", required = false) String keyword) {
         RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(
                 pageable, category, studyType, keyword, null
         );
@@ -36,9 +36,9 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
 
     @GetMapping("/me")
     public ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(@PageableDefault(size = 10) Pageable pageable,
-                                                                      @RequestParam("category") Category category,
-                                                                      @RequestParam("studyType") StudyType studyType,
-                                                                      @RequestParam("keyword") String keyword,
+                                                                      @RequestParam(value = "category", required = false) Category category,
+                                                                      @RequestParam(value = "studyType", required = false) StudyType studyType,
+                                                                      @RequestParam(value = "keyword", required = false) String keyword,
                                                                       @AuthenticationPrincipal Principal userDetails) {
         RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(
                 pageable, category, studyType,
