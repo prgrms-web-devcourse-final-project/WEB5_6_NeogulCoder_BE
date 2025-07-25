@@ -161,14 +161,14 @@ public class ApplicationService {
     private void validateApplicantStudyLimit(Long userId) {
         int count = studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
         if (count >= 10) {
-            throw new BusinessException(STUDY_PARTICIPATE_LIMIT);
+            throw new BusinessException(APPLICATION_PARTICIPATION_LIMIT_EXCEEDED);
         }
     }
 
     private void validateParticipantStudyLimit(Long userId) {
         int count = studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
         if (count >= 10) {
-            throw new BusinessException(STUDY_PARTICIPANT_LIMIT_EXCEEDED);
+            throw new BusinessException(APPLICATION_PARTICIPANT_LIMIT_EXCEEDED);
         }
     }
 }
