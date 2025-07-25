@@ -24,7 +24,7 @@ public interface GroupChatSwaggerSpecification {
         **예시 Request JSON**
         ```json
         {
-          "roomId": 1,
+          "studyId": 1,
           "senderId": 10,
           "message": "안녕하세요!"
         }
@@ -43,16 +43,16 @@ public interface GroupChatSwaggerSpecification {
         - 먼저 `wss://wibby.cedartodo.uk/ws-stomp` 엔드포인트로 STOMP 연결을 맺습니다.
 
         **2. 메시지 구독**
-        - 연결 후 `/sub/chat/room/{roomId}` 경로를 구독(subscribe)하면 해당 채팅방의 새로운 메시지를 실시간으로 수신할 수 있습니다.
+        - 연결 후 `/sub/chat/study/{studyId}` 경로를 구독(subscribe)하면 해당 채팅방의 새로운 메시지를 실시간으로 수신할 수 있습니다.
 
         **예시 Subscribe 경로**
-        `/sub/chat/room/1`
+        `/sub/chat/study/1`
 
         **예시 수신 데이터(JSON)**
         ```json
         {
           "id": 101,
-          "roomId": 1,
+          "studyId": 1,
           "senderId": 10,
           "senderNickname": "유강현",
           "profileImageUrl": "https://example.com/profile.jpg",
@@ -64,5 +64,5 @@ public interface GroupChatSwaggerSpecification {
         ** Swagger에서는 WebSocket 구독을 테스트할 수 없으며,
         이 문서는 프론트엔드 구현 참고용입니다.**
         """)
-    ApiResponse<List<GroupChatSwaggerResponse>> getMessages(Long roomId);
+    ApiResponse<List<GroupChatSwaggerResponse>> getMessages(Long studyId);
 }

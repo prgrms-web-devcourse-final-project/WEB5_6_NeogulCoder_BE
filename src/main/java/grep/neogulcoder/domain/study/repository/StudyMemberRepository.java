@@ -21,7 +21,7 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> 
     List<Study> findStudiesByUserId(@Param("userId") long userId);
 
     @Query("select sm from StudyMember sm join fetch sm.study where sm.study.id = :studyId")
-    List<StudyMember> findByStudyIdFetchStudy(@Param("studyId") long studyId);
+    List<StudyMember> findFetchStudyByStudyId(@Param("studyId") long studyId);
 
     int countByStudyIdAndActivatedTrue(Long studyId);
 
@@ -46,4 +46,6 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> 
     boolean existsByStudyIdAndUserId(Long studyId, Long id);
 
     boolean existsByStudyIdAndUserIdAndRole(Long studyId, Long userId, StudyMemberRole role);
+
+    Optional<StudyMember> findByStudyIdAndRoleAndActivatedTrue(Long studyId, StudyMemberRole role);
 }

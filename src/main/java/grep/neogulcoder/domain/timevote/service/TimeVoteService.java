@@ -15,6 +15,7 @@ import grep.neogulcoder.domain.timevote.repository.TimeVoteRepository;
 import grep.neogulcoder.domain.timevote.repository.TimeVoteQueryRepository;
 import grep.neogulcoder.global.exception.business.BusinessException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -119,7 +120,8 @@ public class TimeVoteService {
   // 각 투표 시간이 투표 기간 내에 포함되는지 확인
   private void validateVoteWithinPeriod(TimeVotePeriod period, List<LocalDateTime> dateTimes) {
     for (LocalDateTime dateTime : dateTimes) {
-      if (dateTime.isBefore(period.getStartDate()) || dateTime.isAfter(period.getEndDate())) {
+      if (dateTime.isBefore(period.getStartDate()) || dateTime.isAfter(period.getEndDate().with(
+          LocalTime.of(23, 59, 59)))) {
         throw new BusinessException(TIME_VOTE_OUT_OF_RANGE);
       }
     }

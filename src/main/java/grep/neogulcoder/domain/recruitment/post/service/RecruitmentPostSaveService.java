@@ -38,7 +38,7 @@ public class RecruitmentPostSaveService {
     }
 
     public JoinedStudiesInfo getJoinedStudyInfo(long userId) {
-        List<StudyMember> studyMembers = studyMemberRepository.findAllFetchStudyByUserId(userId);
+        List<StudyMember> studyMembers = studyMemberRepository.findMembersByUserId(userId);
         List<Study> studyList = toStudyList(studyMembers);
         return JoinedStudiesInfo.of(studyList);
     }

@@ -21,4 +21,8 @@ public enum ReviewType {
     public boolean isNotSameType(ReviewType reviewType) {
         return !isSameType(reviewType);
     }
+
+    public boolean isPositive() {
+        return this == GOOD || this == EXCELLENT;
+    }
 }

@@ -5,7 +5,6 @@ import grep.neogulcoder.domain.studypost.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -21,13 +20,13 @@ public class FreePostInfo {
     private String title;
 
     @Schema(example = "2025-07-21", description = "생성일")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @QueryProjection
     public FreePostInfo(long postId, Category category, String title, LocalDateTime createdAt) {
         this.postId = postId;
         this.category = category.getKorean();
         this.title = title;
-        this.createdAt = createdAt.toLocalDate();
+        this.createdAt = createdAt;
     }
 }

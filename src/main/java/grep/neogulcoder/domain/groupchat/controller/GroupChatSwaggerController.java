@@ -20,9 +20,9 @@ public class GroupChatSwaggerController implements GroupChatSwaggerSpecification
     }
 
 
-    @GetMapping("/sub/chat/room/{roomId}")
+    @GetMapping("/sub/chat/study/{studyId}")
     @Override
-    public ApiResponse<List<GroupChatSwaggerResponse>> getMessages(@PathVariable Long roomId) {
+    public ApiResponse<List<GroupChatSwaggerResponse>> getMessages(@PathVariable Long studyId) {
         List<GroupChatSwaggerResponse> messages = List.of(
             new GroupChatSwaggerResponse(),
             new GroupChatSwaggerResponse()

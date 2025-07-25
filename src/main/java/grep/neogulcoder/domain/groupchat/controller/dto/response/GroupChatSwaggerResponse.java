@@ -20,8 +20,8 @@ public class GroupChatSwaggerResponse {
     @Schema(description = "프로필 이미지 URL", example = "https://ganghyeon.jpg")
     private String profileImageUrl;
 
-    @Schema(description = "채팅방 ID", example = "100")
-    private Long roomId;
+    @Schema(description = "스터디 ID", example = "100")
+    private Long studyId;
 
     @Schema(description = "보낸 메시지", example = "안녕하세요!")
     private String message;

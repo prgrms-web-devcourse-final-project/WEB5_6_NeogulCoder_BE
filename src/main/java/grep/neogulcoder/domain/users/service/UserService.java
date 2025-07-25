@@ -9,6 +9,7 @@ import grep.neogulcoder.domain.prtemplate.service.LinkService;
 import grep.neogulcoder.domain.prtemplate.service.PrTemplateService;
 import grep.neogulcoder.domain.study.service.StudyManagementService;
 import grep.neogulcoder.domain.users.controller.dto.request.SignUpRequest;
+import grep.neogulcoder.domain.users.controller.dto.response.AllUserResponse;
 import grep.neogulcoder.domain.users.controller.dto.response.UserResponse;
 import grep.neogulcoder.domain.users.entity.User;
 import grep.neogulcoder.domain.users.exception.EmailDuplicationException;
@@ -22,13 +23,14 @@ import grep.neogulcoder.global.utils.upload.FileUploadResponse;
 import grep.neogulcoder.global.utils.upload.FileUsageType;
 import grep.neogulcoder.global.utils.upload.uploader.GcpFileUploader;
 import grep.neogulcoder.global.utils.upload.uploader.LocalFileUploader;
-import jakarta.transaction.Transactional;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Transactional
@@ -56,14 +58,14 @@ public class UserService {
     private Environment environment;
 
 
+    @Transactional(readOnly = true)
     public User get(Long id) {
-        User user = findUser(id);
-        return user;
+        return findUserById(id);
     }
 
+    @Transactional(readOnly = true)
     public User getByEmail(String email) {
-        User user = findUser(email);
-        return user;
+        return findUserByEmail(email);
     }
 
     public void signUp(SignUpRequest request) {
@@ -82,20 +84,18 @@ public class UserService {
         userRepository.save(
             User.UserInit(request.getEmail(), encodedPassword, request.getNickname()));
 
-        User user = findUser(request.getEmail());
+        User user = findUserByEmail(request.getEmail());
         initializeUserData(user.getId());
 
         verificationService.clearVerifiedStatus(request.getEmail());
     }
 
-    @Transactional
     public void updateProfile(Long userId, String nickname, MultipartFile profileImage)
         throws IOException {
 
-        User user = findUser(userId);
-        if(isDuplicateNickname(nickname)){
-            throw new NicknameDuplicatedException(UserErrorCode.IS_DUPLICATED_NICKNAME);
-        }
+        User user = findUserById(userId);
+
+        String validatedNickname = validateUpdateNickname(user, nickname);
 
         String uploadedImageUrl;
         if (isProfileImgExists(profileImage)) {
@@ -107,12 +107,12 @@ public class UserService {
             uploadedImageUrl = user.getProfileImageUrl();
         }
 
-        user.updateProfile(nickname, uploadedImageUrl);
+        user.updateProfile(validatedNickname, uploadedImageUrl);
     }
 
     public void updatePassword(Long id, String password, String newPassword,
         String newPasswordCheck) {
-        User user = findUser(id);
+        User user = findUserById(id);
 
         if (isNotMatchCurrentPassword(password, user.getPassword())) {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
@@ -127,7 +127,7 @@ public class UserService {
     }
 
     public void deleteUser(Long userId, String password) {
-        User user = findUser(userId);
+        User user = findUserById(userId);
 
         if (isNotMatchCurrentPassword(password, user.getPassword())) {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
@@ -141,7 +141,7 @@ public class UserService {
     }
 
     public void deleteUser(Long userId) {
-        User user = findUser(userId);
+        User user = findUserById(userId);
 
         prTemplateService.deleteByUserId(user.getId());
         linkService.deleteByUserId(userId);
@@ -156,6 +156,7 @@ public class UserService {
         buddyEnergyService.createDefaultEnergy(userId);
     }
 
+    @Transactional(readOnly = true)
     public UserResponse getUserResponse(Long userId) {
         User user = get(userId);
         return UserResponse.toUserResponse(
@@ -167,13 +168,39 @@ public class UserService {
             user.getRole());
     }
 
-    private User findUser(Long id) {
+    @Transactional(readOnly = true)
+    public List<AllUserResponse> getAllUsers() {
+        return userRepository.findAllByActivatedTrue().stream()
+            .map(user -> AllUserResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .profileImageUrl(user.getProfileImageUrl())
+                .build()
+            )
+            .toList();
+    }
+
+    private String validateUpdateNickname(User user, String nickname) {
+        if (isChangedNickname(nickname)) {
+            nickNameDuplicationCheck(nickname);
+        } else {
+            nickname = user.getNickname();
+        }
+        return nickname;
+    }
+
+    private boolean isChangedNickname(String nickname){
+        return nickname != null && !nickname.isBlank();
+    }
+
+    private User findUserById(Long id) {
         return userRepository.findById(id)
             .orElseThrow(
                 () -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
     }
 
-    private User findUser(String email) {
+    private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(
                 () -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
@@ -185,6 +212,12 @@ public class UserService {
         }
 
         if (isDuplicateNickname(nickname)) {
+            throw new NicknameDuplicatedException(UserErrorCode.IS_DUPLICATED_NICKNAME);
+        }
+    }
+
+    private void nickNameDuplicationCheck(String nickname){
+        if(isDuplicateNickname(nickname)){
             throw new NicknameDuplicatedException(UserErrorCode.IS_DUPLICATED_NICKNAME);
         }
     }

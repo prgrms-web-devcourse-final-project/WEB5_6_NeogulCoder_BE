@@ -2,13 +2,7 @@ package grep.neogulcoder.domain.users.entity;
 
 import grep.neogulcoder.global.auth.code.Role;
 import grep.neogulcoder.global.entity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,11 +34,11 @@ public class User extends BaseEntity {
 
     public static User UserInit(String email, String password, String nickname) {
         return User.builder()
-            .email(email)
-            .password(password)
-            .nickname(nickname)
-            .role(Role.ROLE_USER)
-            .build();
+                .email(email)
+                .password(password)
+                .nickname(nickname)
+                .role(Role.ROLE_USER)
+                .build();
     }
 
     public void updateProfile(String nickname, String profileImageUrl) {
@@ -64,7 +58,7 @@ public class User extends BaseEntity {
 
     @Builder
     private User(Long id, String oauthId, String oauthProvider, String email, String password,
-        String nickname, String profileImageUrl, Role role) {
+                 String nickname, String profileImageUrl, Role role) {
         this.id = id;
         this.oauthId = oauthId;
         this.oauthProvider = oauthProvider;

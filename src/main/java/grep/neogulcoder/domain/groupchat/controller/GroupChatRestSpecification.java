@@ -16,20 +16,20 @@ public interface GroupChatRestSpecification {
         summary = "채팅 메시지 페이징 조회",
         description = """
         이 API는 **채팅방의 과거 메시지**를 페이지 단위로 가져오는 용도입니다.  
-        WebSocket의 실시간 수신(`/sub/chat/room/{roomId}`)과는 별개로,  
+        WebSocket의 실시간 수신(`/sub/chat/study/{studyId}`)과는 별개로,  
         채팅방에 입장할 때 이전 대화 기록을 불러오는 데 사용됩니다.
         
         ---
         
         **프론트엔드 연동 흐름 (권장 방식)**:
-        1. **채팅방 입장 시** → `GET /api/chat/room/{roomId}/messages?page=0&size=20` 호출해 최신 메시지 20개 로드  
+        1. **채팅방 입장 시** → `GET /api/chat/study/{studyId}/messages?page=0&size=20` 호출해 최신 메시지 20개 로드  
         2. **스크롤 위로 올릴 때** → `page=1`, `page=2` ... 순차적으로 과거 메시지를 추가 로딩 (무한 스크롤)  
-        3. **동시에** → WebSocket(`wss://wibby.cedartodo.uk/ws-stomp`) 연결 후 `/sub/chat/room/{roomId}`를 **구독**해 실시간 메시지 수신  
+        3. **동시에** → WebSocket(`wss://wibby.cedartodo.uk/ws-stomp`) 연결 후 `/sub/chat/study/{studyId}`를 **구독**해 실시간 메시지 수신  
         
         ---
         
         **파라미터 설명**:
-        - `roomId`: 채팅방 ID  
+        - `studyId`: 스터디 ID  
         - `page`: 페이지 번호 (0부터 시작, 0 = 최신 메시지 20개)  
         - `size`: 한 페이지당 메시지 수 (기본값 20)  
         - 메시지는 **오래된 순(오름차순)**으로 반환됩니다.
@@ -45,7 +45,7 @@ public interface GroupChatRestSpecification {
         
         **예시 요청 URL**:
         ```
-        /api/chat/room/1/messages?page=0&size=20
+        /api/chat/study/1/messages?page=0&size=20
         ```
         
         **예시 응답**:
@@ -56,7 +56,7 @@ public interface GroupChatRestSpecification {
             "content": [
               {
                 "id": 101,
-                "roomId": 1,
+                "studyId": 1,
                 "senderId": 10,
                 "senderNickname": "유강현",
                 "profileImageUrl": "https://example.com/profile.jpg",
@@ -74,8 +74,8 @@ public interface GroupChatRestSpecification {
     )
 
     ApiResponse<PageResponse<GroupChatMessageResponseDto>> getMessages(
-        @Parameter(description = "채팅방 ID", example = "1")
-        @PathVariable("roomId") Long roomId,
+        @Parameter(description = "스터디 ID", example = "1")
+        @PathVariable("studyId") Long studyId,
 
         @Parameter(description = "페이지 번호 (0부터 시작)", example = "0")
         @RequestParam(defaultValue = "0") int page,

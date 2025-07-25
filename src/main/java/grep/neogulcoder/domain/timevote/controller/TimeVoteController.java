@@ -41,8 +41,8 @@ public class TimeVoteController implements TimeVoteSpecification {
       @RequestBody @Valid TimeVotePeriodCreateRequest request,
       @AuthenticationPrincipal Principal userDetails
   ) {
-    TimeVotePeriod saved = timeVotePeriodService.createTimeVotePeriodAndReturn(request, studyId, userDetails.getUserId());
-    return ApiResponse.success(TimeVotePeriodResponse.from(saved));
+    TimeVotePeriodResponse response = timeVotePeriodService.createTimeVotePeriodAndReturn(request, studyId, userDetails.getUserId());
+    return ApiResponse.success(response);
   }
 
   @GetMapping("/votes")
