@@ -174,13 +174,6 @@ public class StudyService {
         recruitmentPostRepository.deactivateByStudyId(studyId);
     }
 
-    @Transactional
-    public void deleteStudyByAdmin(Long studyId) {
-        Study study = findValidStudy(studyId);
-
-        study.delete();
-    }
-
     private Study findValidStudy(Long studyId) {
         return studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));

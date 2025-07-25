@@ -9,7 +9,9 @@ import grep.neogulcoder.domain.alram.type.DomainType;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.StudyMember;
 import grep.neogulcoder.domain.study.event.StudyInviteEvent;
+import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
+import grep.neogulcoder.global.exception.business.BusinessException;
 import grep.neogulcoder.global.exception.business.NotFoundException;
 import grep.neogulcoder.global.provider.finder.MessageFinder;
 import java.util.List;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
+import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.APPLICATION_PARTICIPANT_LIMIT_EXCEEDED;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,7 @@ public class AlarmService {
     private final AlarmRepository alarmRepository;
     private final MessageFinder messageFinder;
     private final StudyRepository studyRepository;
+    private final StudyMemberQueryRepository studyMemberQueryRepository;
 
     @Transactional
     public void saveAlarm(Long receiverId, AlarmType alarmType, DomainType domainType, Long domainId) {
@@ -65,8 +69,11 @@ public class AlarmService {
         );
     }
 
-    @Transactional //TODO 회원이 가입한 스터디 체크 로직 필요
+    @Transactional
     public void acceptInvite(Long targetUserId, Long alarmId) {
+
+        validateParticipantStudyLimit(targetUserId);
+
         Alarm alarm = findValidAlarm(alarmId);
         Long studyId = alarm.getDomainId();
         Study study = findValidStudy(studyId);
@@ -87,5 +94,12 @@ public class AlarmService {
     private Study findValidStudy(Long studyId) {
         return studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+    }
+
+    private void validateParticipantStudyLimit(Long userId) {
+        int count = studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
+        if (count >= 10) {
+            throw new BusinessException(APPLICATION_PARTICIPANT_LIMIT_EXCEEDED);
+        }
     }
 }
