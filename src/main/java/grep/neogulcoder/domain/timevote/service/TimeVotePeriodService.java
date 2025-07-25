@@ -1,7 +1,15 @@
 package grep.neogulcoder.domain.timevote.service;
 
-import static grep.neogulcoder.domain.timevote.exception.code.TimeVoteErrorCode.*;
+import static grep.neogulcoder.domain.timevote.exception.code.TimeVoteErrorCode.FORBIDDEN_TIME_VOTE_CREATE;
+import static grep.neogulcoder.domain.timevote.exception.code.TimeVoteErrorCode.INVALID_TIME_VOTE_PERIOD;
+import static grep.neogulcoder.domain.timevote.exception.code.TimeVoteErrorCode.STUDY_MEMBER_NOT_FOUND;
+import static grep.neogulcoder.domain.timevote.exception.code.TimeVoteErrorCode.STUDY_NOT_FOUND;
+import static grep.neogulcoder.domain.timevote.exception.code.TimeVoteErrorCode.TIME_VOTE_INVALID_DATE_RANGE;
+import static grep.neogulcoder.domain.timevote.exception.code.TimeVoteErrorCode.TIME_VOTE_PERIOD_START_DATE_IN_PAST;
 
+import grep.neogulcoder.domain.alram.service.AlarmService;
+import grep.neogulcoder.domain.alram.type.AlarmType;
+import grep.neogulcoder.domain.alram.type.DomainType;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.StudyMember;
 import grep.neogulcoder.domain.study.enums.StudyMemberRole;
@@ -14,9 +22,12 @@ import grep.neogulcoder.domain.timevote.repository.TimeVotePeriodRepository;
 import grep.neogulcoder.domain.timevote.repository.TimeVoteRepository;
 import grep.neogulcoder.domain.timevote.repository.TimeVoteStatRepository;
 import grep.neogulcoder.global.exception.business.BusinessException;
+import grep.neogulcoder.global.provider.finder.MessageFinder;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +42,8 @@ public class TimeVotePeriodService {
   private final TimeVoteStatRepository timeVoteStatRepository;
   private final StudyRepository studyRepository;
   private final StudyMemberRepository studyMemberRepository;
+  private final AlarmService alarmService;
+  private final MessageFinder messageFinder;
 
   public TimeVotePeriodResponse createTimeVotePeriodAndReturn(TimeVotePeriodCreateRequest request, Long studyId, Long userId) {
     StudyMember studyMember = getValidStudyMember(studyId, userId);
@@ -48,7 +61,20 @@ public class TimeVotePeriodService {
 
     TimeVotePeriod savedPeriod = timeVotePeriodRepository.save(request.toEntity(studyId, adjustedEndDate));
 
-    return TimeVotePeriodResponse.from(savedPeriod);
+    getValidStudy(studyId);
+    messageFinder.findMessage(AlarmType.TIME_VOTE_REQUEST, DomainType.TIME_VOTE, studyId);
+
+    List<StudyMember> members = studyMemberRepository.findAllByStudyIdAndActivatedTrue(studyId);
+    List<Long> notifiedUserIds = new ArrayList<>();
+    for (StudyMember member : members) {
+      if (!member.getUserId().equals(userId)) {
+        alarmService.saveAlarm(member.getUserId(), AlarmType.TIME_VOTE_REQUEST,
+            DomainType.TIME_VOTE, studyId);
+        notifiedUserIds.add(member.getId());
+      }
+    }
+
+    return TimeVotePeriodResponse.from(savedPeriod, notifiedUserIds);
   }
 
   public void deleteAllTimeVoteDate(Long studyId) {
