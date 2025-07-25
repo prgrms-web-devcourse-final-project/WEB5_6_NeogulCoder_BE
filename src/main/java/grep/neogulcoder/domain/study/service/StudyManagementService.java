@@ -5,6 +5,7 @@ import grep.neogulcoder.domain.study.StudyMember;
 import grep.neogulcoder.domain.study.controller.dto.request.ExtendStudyRequest;
 import grep.neogulcoder.domain.study.controller.dto.response.ExtendParticipationResponse;
 import grep.neogulcoder.domain.study.controller.dto.response.StudyExtensionResponse;
+import grep.neogulcoder.domain.study.event.StudyExtendEvent;
 import grep.neogulcoder.domain.study.event.StudyInviteEvent;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
@@ -138,6 +139,8 @@ public class StudyManagementService {
             .role(LEADER)
             .build();
         studyMemberRepository.save(extendedLeader);
+
+        eventPublisher.publishEvent(new StudyExtendEvent(originStudy.getId()));
     }
 
     @Transactional
