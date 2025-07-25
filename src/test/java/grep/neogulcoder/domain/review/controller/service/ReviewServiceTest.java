@@ -1,11 +1,13 @@
 package grep.neogulcoder.domain.review.controller.service;
 
 import grep.neogulcoder.domain.IntegrationTestSupport;
+import grep.neogulcoder.domain.buddy.entity.BuddyEnergy;
+import grep.neogulcoder.domain.buddy.repository.BuddyEnergyRepository;
 import grep.neogulcoder.domain.review.Review;
 import grep.neogulcoder.domain.review.ReviewType;
-import grep.neogulcoder.domain.review.controller.dto.response.JoinedStudiesInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
+import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetStudiesInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewTargetUsersInfo;
 import grep.neogulcoder.domain.review.entity.MyReviewTagEntity;
 import grep.neogulcoder.domain.review.entity.ReviewEntity;
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +37,7 @@ import static grep.neogulcoder.domain.review.BadReviewTag.LACK_OF_RESPONSIBILITY
 import static grep.neogulcoder.domain.review.GoodReviewTag.GOOD_ADAPTATION;
 import static grep.neogulcoder.domain.review.ReviewType.BAD;
 import static grep.neogulcoder.domain.review.ReviewType.GOOD;
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ReviewServiceTest extends IntegrationTestSupport {
@@ -59,27 +63,30 @@ class ReviewServiceTest extends IntegrationTestSupport {
     @Autowired
     private ReviewTagRepository reviewTagRepository;
 
-    @DisplayName("리뷰 대상 회원들의 정보를 조회 합니다.")
+    @Autowired
+    private BuddyEnergyRepository buddyEnergyRepository;
+
+    @DisplayName("리뷰 대상 회원들의 정보를 조회할때 자신은 제외 된다.")
     @Test
     void getReviewTargetUsersInfo() {
         //given
-        String myNickname = "myNickname";
-
-        User user1 = createUser(myNickname);
+        User myUser = createUser("내 닉네임");
         User user2 = createUser("테스터2");
         User user3 = createUser("테스터3");
-        userRepository.saveAll(List.of(user1, user2, user3));
+        userRepository.saveAll(List.of(myUser, user2, user3));
 
         Study study = createStudy("운영체제 스터디", Category.IT);
         studyRepository.save(study);
 
-        StudyMember studyMember1 = createStudyMember(study, user1.getId());
-        StudyMember studyMember2 = createStudyMember(study, user2.getId());
-        StudyMember studyMember3 = createStudyMember(study, user3.getId());
-        studyMemberRepository.saveAll(List.of(studyMember1, studyMember2, studyMember3));
+        List<StudyMember> studyMembers = List.of(
+                createStudyMember(study, myUser.getId()),
+                createStudyMember(study, user2.getId()),
+                createStudyMember(study, user3.getId())
+        );
+        studyMemberRepository.saveAll(studyMembers);
 
         //when
-        ReviewTargetUsersInfo response = reviewService.getReviewTargetUsersInfo(study.getId(), myNickname);
+        ReviewTargetUsersInfo response = reviewService.getReviewTargetUsersInfo(study.getId(), myUser.getId());
 
         //then
         assertThat(response.getUserInfos()).hasSize(2)
@@ -87,28 +94,116 @@ class ReviewServiceTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrder("테스터2", "테스터3");
     }
 
-    @DisplayName("내가 참여한 스터디 정보들을 조회 합니다.")
+    @DisplayName("리뷰 대상 회원들을 조회할때 이미 리뷰한 회원들은 제외 된다.")
     @Test
-    void getJoinedStudiesInfo() {
+    void getReviewTargetUsersInfo_whenAlreadyReviewedUserExists_thenExcludeThem() {
+        //given
+        User myUser = createUser("내 닉네임");
+        User user2 = createUser("테스터2");
+        User user3 = createUser("테스터3");
+        userRepository.saveAll(List.of(myUser, user2, user3));
+
+        Study study = createStudy("운영체제 스터디", Category.IT);
+        studyRepository.save(study);
+
+        List<StudyMember> studyMembers = List.of(
+                createStudyMember(study, myUser.getId()),
+                createStudyMember(study, user2.getId()),
+                createStudyMember(study, user3.getId())
+        );
+        studyMemberRepository.saveAll(studyMembers);
+
+        reviewRepository.save(createReviewEntity(createReview(study.getId(), user2.getId(), myUser.getId()), emptyList()));
+
+        //when
+        ReviewTargetUsersInfo response = reviewService.getReviewTargetUsersInfo(study.getId(), myUser.getId());
+
+        //then
+        assertThat(response.getUserInfos()).hasSize(1)
+                .extracting("nickname")
+                .containsExactly("테스터3");
+    }
+
+    @DisplayName("리뷰 가능한 스터디 정보들을 조회 합니다.")
+    @Test
+    void getReviewTargetStudiesInfo() {
+        //given
+        User user1 = createUser("테스터1");
+        User user2 = createUser("테스터2");
+        userRepository.saveAll(List.of(user1, user2));
+
+        LocalDateTime endDateTime = LocalDateTime.of(2025, 7, 1, 0, 0, 0);
+        Study study = createStudy("운영체제 스터디", endDateTime);
+        studyRepository.save(study);
+
+        List<StudyMember> studyMembers = List.of(
+                createStudyMember(study, user1.getId()),
+                createStudyMember(study, user2.getId())
+        );
+        studyMemberRepository.saveAll(studyMembers);
+
+        //when
+        ReviewTargetStudiesInfo response = reviewService.getReviewTargetStudiesInfo(user1.getId(), endDateTime);
+
+        //then
+        assertThat(response.getStudies()).hasSize(1)
+                .extracting("studyName")
+                .containsExactlyInAnyOrder("운영체제 스터디");
+    }
+
+    @DisplayName("리뷰 가능한 스터디를 조회 시, 없다면 빈 리스트를 반환한다.")
+    @Test
+    void getReviewTargetStudiesInfo_whenNotReviewableStudy_returnsEmptyList() {
         //given
         User user = createUser("테스터");
         userRepository.save(user);
 
-        Study study1 = createStudy("운영체제 스터디", Category.IT);
-        Study study2 = createStudy("클라이밍 동아리", Category.HOBBY);
-        studyRepository.saveAll(List.of(study1, study2));
+        LocalDateTime endDateTime = LocalDateTime.of(2025, 7, 1, 0, 0, 0);
+        Study study = createStudy("운영체제 스터디", endDateTime);
+        studyRepository.save(study);
 
-        StudyMember studyMember1 = createStudyMember(study1, user.getId());
-        StudyMember studyMember2 = createStudyMember(study2, user.getId());
-        studyMemberRepository.saveAll(List.of(studyMember1, studyMember2));
+        StudyMember studyMember1 = createStudyMember(study, user.getId());
+        studyMemberRepository.save(studyMember1);
 
         //when
-        JoinedStudiesInfo response = reviewService.getJoinedStudiesInfo(user.getId());
+        ReviewTargetStudiesInfo response = reviewService.getReviewTargetStudiesInfo(user.getId(), endDateTime);
 
         //then
-        assertThat(response.getStudies())
-                .extracting("studyName")
-                .containsExactlyInAnyOrder("운영체제 스터디", "클라이밍 동아리");
+        assertThat(response.getStudies()).isEmpty();
+    }
+
+    @DisplayName("리뷰 가능한 스터디 조회 시, 이미 모든 회원에게 리뷰를 했다면 제외 된다.")
+    @Test
+    void getReviewTargetStudiesInfo_whenAllReviewedInStudy_thenExcludeStudy() {
+        //given
+        User myUser = createUser("테스터1");
+        User user2 = createUser("테스터2");
+        User user3 = createUser("테스터3");
+        userRepository.saveAll(List.of(myUser, user2, user3));
+
+        LocalDateTime endDateTime = LocalDateTime.of(2025, 7, 1, 0, 0, 0);
+        Study study = createStudy("운영체제 스터디", endDateTime);
+        studyRepository.save(study);
+
+        List<StudyMember> studyMembers = List.of(
+                createStudyMember(study, myUser.getId()),
+                createStudyMember(study, user2.getId()),
+                createStudyMember(study, user3.getId())
+        );
+        studyMemberRepository.saveAll(studyMembers);
+
+        List<ReviewEntity> reviews = List.of(
+                createReviewEntity(createReview(study.getId(), user2.getId(), myUser.getId()), emptyList()),
+                createReviewEntity(createReview(study.getId(), user3.getId(), myUser.getId()), emptyList())
+        );
+        reviewRepository.saveAll(reviews);
+
+        //when
+        ReviewTargetStudiesInfo response = reviewService.getReviewTargetStudiesInfo(myUser.getId(), endDateTime);
+        System.out.println("response = " + response);
+
+        //then
+        assertThat(response.getStudies()).isEmpty();
     }
 
     @DisplayName("리뷰 입력을 받아 리뷰를 저장 합니다.")
@@ -118,6 +213,8 @@ class ReviewServiceTest extends IntegrationTestSupport {
         User reviewer = createUser("리뷰어");
         User targetUser = createUser("리뷰대상");
         userRepository.saveAll(List.of(reviewer, targetUser));
+
+        buddyEnergyRepository.save(BuddyEnergy.createDefault(reviewer.getId()));
 
         Study study = createStudy("자바 스터디", Category.IT);
         studyRepository.save(study);
@@ -212,6 +309,13 @@ class ReviewServiceTest extends IntegrationTestSupport {
                 .build();
     }
 
+    private Study createStudy(String name, LocalDateTime endDate) {
+        return Study.builder()
+                .name(name)
+                .endDate(endDate)
+                .build();
+    }
+
     private Review createReview(long studyId, long targetUserId, long writeUserId) {
         return Review.builder()
                 .studyId(studyId)
@@ -231,6 +335,7 @@ class ReviewServiceTest extends IntegrationTestSupport {
 
     private ReviewEntity createReviewEntity(Review review, List<ReviewTagEntity> reviewTags) {
         return ReviewEntity.builder()
+                .studyId(review.getStudyId())
                 .review(review)
                 .reviewTags(reviewTags)
                 .build();

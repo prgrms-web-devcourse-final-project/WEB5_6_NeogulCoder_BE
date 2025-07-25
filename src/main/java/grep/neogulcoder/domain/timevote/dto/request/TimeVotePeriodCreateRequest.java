@@ -27,11 +27,15 @@ public class TimeVotePeriodCreateRequest {
     this.endDate = endDate;
   }
 
-  public TimeVotePeriod toEntity(Long studyId) {
+  public TimeVotePeriod toEntity(Long studyId, LocalDateTime adjustedEndDate) {
     return TimeVotePeriod.builder()
         .startDate(this.startDate)
-        .endDate(this.endDate)
+        .endDate(adjustedEndDate)
         .studyId(studyId)
         .build();
+  }
+
+  public static TimeVotePeriodCreateRequest of(LocalDateTime startDate, LocalDateTime endDate) {
+    return new TimeVotePeriodCreateRequest(startDate, endDate);
   }
 }

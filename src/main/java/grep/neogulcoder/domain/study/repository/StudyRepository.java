@@ -26,4 +26,6 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     @Query("select s from Study s where s.endDate < :now and s.finished = false and s.activated = true")
     List<Study> findStudiesToBeFinished(@Param("now") LocalDateTime now);
+
+    int countByUserIdAndActivatedTrueAndFinishedFalse(Long userId);
 }

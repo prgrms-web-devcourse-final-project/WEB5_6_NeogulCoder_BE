@@ -17,6 +17,8 @@ public class Study extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long userId;
+
     private Long originStudyId;
 
     private String name;
@@ -45,11 +47,13 @@ public class Study extends BaseEntity {
 
     private boolean finished;
 
-    protected Study() {}
+    protected Study() {
+    }
 
     @Builder
-    private Study(Long originStudyId, String name, Category category, int capacity, StudyType studyType, String location,
+    private Study(Long userId, Long originStudyId, String name, Category category, int capacity, StudyType studyType, String location,
                   LocalDateTime startDate, LocalDateTime endDate, String introduction, String imageUrl) {
+        this.userId = userId;
         this.originStudyId = originStudyId;
         this.name = name;
         this.category = category;
@@ -107,5 +111,12 @@ public class Study extends BaseEntity {
 
     public void finish() {
         this.finished = true;
+    }
+
+    public boolean isReviewableAt(LocalDateTime currentDateTime) {
+        LocalDateTime reviewableDateTime = this.endDate.plusDays(7);
+
+        return (currentDateTime.isEqual(this.endDate) || currentDateTime.isAfter(this.endDate)) &&
+                (currentDateTime.isEqual(reviewableDateTime) || currentDateTime.isBefore(reviewableDateTime));
     }
 }

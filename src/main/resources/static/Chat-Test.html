@@ -10,8 +10,8 @@
 <h2>그룹 채팅 테스트 (로컬 서버)</h2>
 
 <div>
-  <label>Room ID: </label>
-  <input type="number" id="roomId" value="1">
+  <label>Study ID: </label>
+  <input type="number" id="studyId" value="1">
   <label>Sender ID: </label>
   <input type="number" id="senderId" value="10">
   <button onclick="connect()">연결하기</button>
@@ -30,11 +30,11 @@
 
 <script>
   let stompClient = null;
-  let currentRoomId = null;
+  let currentStudyId = null;
 
   function connect() {
-    const roomId = document.getElementById("roomId").value || 1;
-    currentRoomId = roomId;
+    const studyId = document.getElementById("studyId").value || 1;
+    currentStudyId = studyId;
 
     // 로컬 서버용 WebSocket 엔드포인트
     const socket = new SockJS("http://localhost:8083/ws-stomp");
@@ -42,10 +42,10 @@
 
     stompClient.connect({}, function (frame) {
       console.log("WebSocket 연결 성공:", frame);
-      alert("채팅방 " + roomId + "에 연결되었습니다!");
+      alert("스터디 " + studyId + "에 연결되었습니다!");
 
       // 채팅방 구독
-      stompClient.subscribe(`/sub/chat/room/${roomId}`, function (message) {
+      stompClient.subscribe(`/sub/chat/study/${studyId}`, function (message) {
         const chat = JSON.parse(message.body);
         showMessage(chat.senderNickname + ": " + chat.message);
       });
@@ -58,7 +58,7 @@
 
     if (stompClient && stompClient.connected) {
       stompClient.send("/pub/chat/message", {}, JSON.stringify({
-        roomId: currentRoomId,
+        studyId: currentStudyId,
         senderId: senderId,
         message: messageContent
       }));

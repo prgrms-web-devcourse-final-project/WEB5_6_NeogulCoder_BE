@@ -15,6 +15,9 @@ public class ReceivedApplicationResponse {
     @Schema(description = "신청자 닉네임", example = "너굴")
     private String nickname;
 
+    @Schema(description = "신청자 프로필 이미지 URL", example = "http://localhost:8083/image.jpg")
+    private String profileImageUrl;
+
     @Schema(description = "신청자 버디에너지", example = "30")
     private int buddyEnergy;
 
@@ -25,9 +28,10 @@ public class ReceivedApplicationResponse {
     private String applicationReason;
 
     @QueryProjection
-    public ReceivedApplicationResponse(Long applicationId, String nickname, int buddyEnergy, LocalDateTime createdDate, String applicationReason) {
+    public ReceivedApplicationResponse(Long applicationId, String nickname, String profileImageUrl, int buddyEnergy, LocalDateTime createdDate, String applicationReason) {
         this.applicationId = applicationId;
         this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
         this.buddyEnergy = buddyEnergy;
         this.createdDate = createdDate;
         this.applicationReason = applicationReason;

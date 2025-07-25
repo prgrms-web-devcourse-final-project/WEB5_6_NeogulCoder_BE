@@ -3,6 +3,7 @@ package grep.neogulcoder.domain.users.controller;
 import grep.neogulcoder.domain.users.controller.dto.request.PasswordRequest;
 import grep.neogulcoder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogulcoder.domain.users.controller.dto.request.UpdatePasswordRequest;
+import grep.neogulcoder.domain.users.controller.dto.response.AllUserResponse;
 import grep.neogulcoder.domain.users.controller.dto.response.UserResponse;
 import grep.neogulcoder.global.auth.Principal;
 import grep.neogulcoder.global.response.ApiResponse;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
+import java.util.List;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -21,6 +23,9 @@ public interface UserSpecification {
 
     @Operation(summary = "회원 가입", description = "회원 정보를 저장합니다.")
     ApiResponse<Void> signUp(@RequestBody SignUpRequest request);
+
+    @Operation(summary = "회원 전체 조회", description = "회원 전체 정보를 조회합니다.")
+    ApiResponse<List<AllUserResponse>> getAll();
 
     @Operation(summary = "회원 조회", description = "회원 정보를 조회합니다.")
     ApiResponse<UserResponse> get(@AuthenticationPrincipal Principal principal);
