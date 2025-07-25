@@ -5,6 +5,7 @@ import grep.neogulcoder.domain.recruitment.post.repository.RecruitmentPostReposi
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.StudyMember;
 import grep.neogulcoder.domain.study.enums.StudyMemberRole;
+import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
 import grep.neogulcoder.domain.studyapplication.ApplicationStatus;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
 import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_OWNER;
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_PARTICIPATE_LIMIT;
 import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
 
 @Transactional(readOnly = true)
@@ -39,6 +41,7 @@ public class ApplicationService {
     private final RecruitmentPostRepository recruitmentPostRepository;
     private final StudyMemberRepository studyMemberRepository;
     private final StudyRepository studyRepository;
+    private final StudyMemberQueryRepository studyMemberQueryRepository;
 
     @Transactional
     public ReceivedApplicationPagingResponse getReceivedApplicationsPaging(Long recruitmentPostId, Pageable pageable, Long userId) {
@@ -62,6 +65,7 @@ public class ApplicationService {
 
         validateNotLeaderApply(recruitmentPost, userId);
         validateNotAlreadyApplied(recruitmentPostId, userId);
+        validateStudyParticipationLimit(userId);
 
         StudyApplication application = request.toEntity(recruitmentPostId, userId);
         applicationRepository.save(application);
@@ -77,6 +81,7 @@ public class ApplicationService {
 
         validateOnlyLeaderCanApprove(study, userId);
         validateStatusIsApplying(application);
+        validateStudyParticipationLimit(application.getUserId());
 
         application.approve();
 
@@ -152,6 +157,13 @@ public class ApplicationService {
         boolean isLeader = studyMemberRepository.existsByStudyIdAndUserIdAndRole(study.getId(), userId, StudyMemberRole.LEADER);
         if (!isLeader) {
             throw new BusinessException(LEADER_ONLY_REJECTED);
+        }
+    }
+
+    private void validateStudyParticipationLimit(Long userId) {
+        int count = studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
+        if (count >= 10) {
+            throw new BusinessException(STUDY_PARTICIPATE_LIMIT);
         }
     }
 }

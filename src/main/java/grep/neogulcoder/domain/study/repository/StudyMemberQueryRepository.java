@@ -1,6 +1,7 @@
 package grep.neogulcoder.domain.study.repository;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import grep.neogulcoder.domain.study.StudyMember;
 import grep.neogulcoder.domain.study.controller.dto.response.ExtendParticipationResponse;
@@ -80,5 +81,24 @@ public class StudyMemberQueryRepository {
                 )
                 .join(studyMember.study, study).fetchJoin()
                 .fetch();
+    }
+
+    public int countActiveUnfinishedStudies(Long userId) {
+        BooleanExpression notExtendedAndParticipate = study.extended.isFalse().and(studyMember.activated.isTrue());
+        BooleanExpression extendedAndNotParticipate = study.extended.isTrue().and(studyMember.participated.isFalse());
+
+        Long result =  queryFactory
+            .select(studyMember.count())
+            .from(studyMember)
+            .join(studyMember.study, study)
+            .where(
+                studyMember.userId.eq(userId),
+                study.activated.isTrue(),
+                study.finished.isFalse(),
+                notExtendedAndParticipate.or(extendedAndNotParticipate)
+            )
+            .fetchOne();
+
+            return result != null ? result.intValue() : 0;
     }
 }
