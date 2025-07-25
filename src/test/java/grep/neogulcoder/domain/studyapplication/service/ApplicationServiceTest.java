@@ -22,10 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static grep.neogulcoder.domain.study.enums.StudyMemberRole.LEADER;
-import static grep.neogulcoder.domain.study.enums.StudyMemberRole.MEMBER;
+import static grep.neogulcoder.domain.study.enums.StudyMemberRole.*;
 import static grep.neogulcoder.domain.studyapplication.ApplicationStatus.*;
-import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.APPLICATION_NOT_APPLYING;
+import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -96,6 +95,29 @@ class ApplicationServiceTest extends IntegrationTestSupport {
         assertThat(application.getApplicationReason()).isEqualTo("자바를 더 공부하고 싶어 지원합니다.");
     }
 
+    @DisplayName("종료되지 않은 스터디를 10개를 진행중일 때 신청서 생성 시 예외가 발생합니다.")
+    @Test
+    void createApplicationFail() {
+        // given
+        ApplicationCreateRequest request = ApplicationCreateRequest.builder()
+            .applicationReason("자바를 더 공부하고 싶어 지원합니다.")
+            .build();
+
+        for (int i = 0; i < 9; i++) {
+            Study study = createStudy("스터디", LocalDateTime.parse("2025-07-25T20:20:20"), LocalDateTime.parse("2026-07-28T20:20:20"));
+            studyRepository.save(study);
+            StudyMember studyLeader = createStudyLeader(study, userId2);
+            studyMemberRepository.save(studyLeader);
+            em.flush();
+            em.clear();
+        }
+
+        // when then
+        assertThatThrownBy(() ->
+            applicationService.createApplication(recruitmentPostId, request, userId2))
+            .isInstanceOf(BusinessException.class).hasMessage(APPLICATION_PARTICIPATION_LIMIT_EXCEEDED.getMessage());
+    }
+
     @DisplayName("스터디장이 신청서를 승인합니다.")
     @Test
     void approveApplication() {
@@ -111,6 +133,29 @@ class ApplicationServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(application.getStatus()).isEqualTo(APPROVED);
+    }
+
+    @DisplayName("참여 중인 스터디가 10개인 사용자의 신청서 승인 시 예외가 발생합니다.")
+    @Test
+    void approveApplicationFail() {
+        // given
+        StudyApplication application = createApplication(recruitmentPostId, userId2);
+        applicationRepository.save(application);
+        Long id = application.getId();
+
+        for (int i = 0; i < 9; i++) {
+            Study study = createStudy("스터디", LocalDateTime.parse("2025-07-25T20:20:20"), LocalDateTime.parse("2026-07-28T20:20:20"));
+            studyRepository.save(study);
+            StudyMember studyLeader = createStudyLeader(study, userId2);
+            studyMemberRepository.save(studyLeader);
+            em.flush();
+            em.clear();
+        }
+
+        // when then
+        assertThatThrownBy(() ->
+            applicationService.approveApplication(id, userId1))
+            .isInstanceOf(BusinessException.class).hasMessage(APPLICATION_PARTICIPANT_LIMIT_EXCEEDED.getMessage());
     }
 
     @DisplayName("스터디장이 신청서를 거절합니다.")
