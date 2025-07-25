@@ -9,14 +9,14 @@ import lombok.Getter;
 @Hidden
 @Getter
 public class GroupChatMessageRequestDto {
-    private Long roomId;
+    private Long studyId;
     private Long senderId;
     private String message;
 
     public GroupChatMessageRequestDto() {}
 
-    public GroupChatMessageRequestDto(Long roomId, Long senderId, String message) {
-        this.roomId = roomId;
+    public GroupChatMessageRequestDto(Long studyId, Long senderId, String message) {
+        this.studyId = studyId;
         this.senderId = senderId;
         this.message = message;
     }
