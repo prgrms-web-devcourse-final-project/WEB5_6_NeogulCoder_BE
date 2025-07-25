@@ -8,8 +8,10 @@ import grep.neogulcoder.domain.alram.type.AlarmType;
 import grep.neogulcoder.domain.alram.type.DomainType;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.StudyMember;
+import grep.neogulcoder.domain.study.event.StudyExtendEvent;
 import grep.neogulcoder.domain.study.event.StudyInviteEvent;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
+import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
 import grep.neogulcoder.global.exception.business.BusinessException;
 import grep.neogulcoder.global.exception.business.NotFoundException;
@@ -32,6 +34,7 @@ public class AlarmService {
     private final MessageFinder messageFinder;
     private final StudyRepository studyRepository;
     private final StudyMemberQueryRepository studyMemberQueryRepository;
+    private final StudyMemberRepository studyMemberRepository;
 
     @Transactional
     public void saveAlarm(Long receiverId, AlarmType alarmType, DomainType domainType, Long domainId) {
@@ -85,6 +88,22 @@ public class AlarmService {
     public void rejectInvite(Long alarmId) {
         Alarm alarm = findValidAlarm(alarmId);
         alarm.checkAlarm();
+    }
+
+    @EventListener
+    public void handleStudyExtendEvent(StudyExtendEvent event) {
+        List<StudyMember> members = studyMemberRepository.findAllByStudyIdAndActivatedTrue(event.studyId());
+
+        for (StudyMember member : members) {
+            if (!member.isLeader()) {
+                saveAlarm(
+                    member.getUserId(),
+                    AlarmType.STUDY_EXTEND,
+                    DomainType.STUDY,
+                    event.studyId()
+                );
+            }
+        }
     }
 
     private Alarm findValidAlarm(Long alarmId) {
