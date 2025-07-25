@@ -1,7 +1,5 @@
 package grep.neogulcoder.domain.alram.type;
 
 public enum AlarmType {
-
-    INVITE
-
+    INVITE, TIME_VOTE_REQUEST
 }
