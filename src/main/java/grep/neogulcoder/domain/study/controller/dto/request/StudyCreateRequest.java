@@ -60,8 +60,9 @@ public class StudyCreateRequest {
         this.introduction = introduction;
     }
 
-    public Study toEntity(String imageUrl) {
+    public Study toEntity(Long userId, String imageUrl) {
         return Study.builder()
+            .userId(userId)
             .name(this.name)
             .category(this.category)
             .capacity(this.capacity)
