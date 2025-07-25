@@ -1,6 +1,10 @@
 package grep.neogulcoder.domain.review.service;
 
-import grep.neogulcoder.domain.buddy.service.BuddyEnergyService;
+import grep.neogulcoder.domain.buddy.entity.BuddyEnergy;
+import grep.neogulcoder.domain.buddy.entity.BuddyLog;
+import grep.neogulcoder.domain.buddy.exception.BuddyEnergyNotFoundException;
+import grep.neogulcoder.domain.buddy.repository.BuddyEnergyLogRepository;
+import grep.neogulcoder.domain.buddy.repository.BuddyEnergyRepository;
 import grep.neogulcoder.domain.review.*;
 import grep.neogulcoder.domain.review.controller.dto.response.MyReviewTagsInfo;
 import grep.neogulcoder.domain.review.controller.dto.response.ReviewContentsPagingInfo;
@@ -14,8 +18,10 @@ import grep.neogulcoder.domain.review.repository.ReviewQueryRepository;
 import grep.neogulcoder.domain.review.repository.ReviewRepository;
 import grep.neogulcoder.domain.review.repository.ReviewTagRepository;
 import grep.neogulcoder.domain.review.service.request.ReviewSaveServiceRequest;
+import grep.neogulcoder.domain.study.Studies;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.StudyMember;
+import grep.neogulcoder.domain.study.StudyMembers;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
@@ -30,11 +36,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static grep.neogulcoder.domain.buddy.exception.code.BuddyEnergyErrorCode.BUDDY_ENERGY_NOT_FOUND;
 import static grep.neogulcoder.domain.review.ReviewErrorCode.ALREADY_REVIEW_WRITE_USER;
 import static grep.neogulcoder.domain.review.ReviewErrorCode.STUDY_NOT_FOUND;
 
@@ -54,7 +62,8 @@ public class ReviewService {
     private final MyReviewTagRepository myReviewTagRepository;
     private final ReviewTagRepository reviewTagRepository;
 
-    private final BuddyEnergyService buddyEnergyService;
+    private final BuddyEnergyRepository buddyEnergyRepository;
+    private final BuddyEnergyLogRepository buddyEnergyLogRepository;
 
     public ReviewTargetUsersInfo getReviewTargetUsersInfo(long studyId, long userId) {
         List<StudyMember> studyMembers = studyMemberRepository.findFetchStudyByStudyId(studyId);
@@ -67,39 +76,22 @@ public class ReviewService {
     }
 
     public ReviewTargetStudiesInfo getReviewTargetStudiesInfo(long userId, LocalDateTime currentDateTime) {
-        List<StudyMember> studyMembers = studyMemberQueryRepository.findMembersByUserId(userId);
-        List<Study> studies = extractConnectedStudies(studyMembers);
-        List<Study> reviewableStudies = filteredReviewableStudies(currentDateTime, studies);
+        List<Study> studies = findReviewableStudies(userId, currentDateTime);
+        List<StudyMember> studyMembers = findJoinedStudyMemberBy(studies);
+        List<StudyMember> otherMembers = StudyMembers.of(studyMembers).excludeByUser(userId);
 
-        List<Long> studyIds = reviewableStudies.stream()
-                .map(Study::getId)
+        List<ReviewEntity> myReviews = reviewQueryRepository.findReviewsByReviewerInStudies(
+                Studies.of(studies).extractId(), userId
+        );
+
+        Map<Long, Long> groupedStudyIdCountMap = StudyMembers.of(otherMembers).getGroupedStudyIdCountMap();
+        Map<Long, List<ReviewEntity>> groupedStudyIdMap = getGroupedStudyIdMap(myReviews);
+
+        List<Study> reviewTargetStudies = studies.stream()
+                .filter(study -> isCompletedReview(study, groupedStudyIdCountMap, groupedStudyIdMap))
                 .toList();
 
-        List<StudyMember> studyMemberList = studyMemberQueryRepository.findByIdIn(studyIds);
-
-
-        Map<Long, Long> groupedStudyIdCountMap = studyMemberList.stream()
-                .map(StudyMember::getStudy)
-                .collect(
-                        Collectors.groupingBy(
-                                Study::getId,
-                                Collectors.counting()
-                        )
-                );
-
-        List<ReviewEntity> myReviews = reviewQueryRepository.findReviewsByReviewerInStudies(studyIds, userId);
-        Map<Long, List<ReviewEntity>> groupedStudyIdMap = myReviews.stream()
-                .collect(
-                        Collectors.groupingBy(
-                                ReviewEntity::getStudyId
-                        )
-                );
-
-        List<Study> studies1 = studies.stream()
-                .filter(study -> groupedStudyIdCountMap.get(study.getId()) - 1 != groupedStudyIdMap.get(study.getId()).size())
-                .toList();
-
-        return ReviewTargetStudiesInfo.of(studies1);
+        return ReviewTargetStudiesInfo.of(reviewTargetStudies);
     }
 
     @Transactional
@@ -108,15 +100,16 @@ public class ReviewService {
             throw new BusinessException(ALREADY_REVIEW_WRITE_USER);
         }
 
-        Study study = findValidStudy(request.getStudyId());
+        Study study = studyRepository.findById(request.getStudyId())
+                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+
         ReviewTags reviewTags = ReviewTags.from(convertStringToReviewTag(request.getReviewTag()));
         ReviewType reviewType = reviewTags.ensureSingleReviewType();
 
         Review review = request.toReview(reviewTags.getReviewTags(), reviewType, writeUserId);
         List<ReviewTagEntity> reviewTagEntities = mapToReviewTagEntities(reviewTags);
 
-        buddyEnergyService.updateEnergyByReview(request.getTargetUserId(), reviewType);
-
+        updatedBuddyEnergy(writeUserId, reviewType);
         return reviewRepository.save(ReviewEntity.from(review, reviewTagEntities, study.getId())).getId();
     }
 
@@ -160,21 +153,37 @@ public class ReviewService {
                 .toList();
     }
 
-    private List<Study> filteredReviewableStudies(LocalDateTime currentDateTime, List<Study> studies) {
-        return studies.stream()
+    private List<Study> findReviewableStudies(long userId, LocalDateTime currentDateTime) {
+        List<StudyMember> myStudyMembers = studyMemberQueryRepository.findMembersByUserId(userId);
+        List<Study> myStudies = extractConnectedStudies(myStudyMembers);
+
+        return myStudies.stream()
                 .filter(study -> study.isReviewableAt(currentDateTime))
                 .toList();
+    }
+
+    private boolean isCompletedReview(Study study, Map<Long, Long> groupedStudyIdCountMap, Map<Long, List<ReviewEntity>> groupedStudyIdMap) {
+        return groupedStudyIdCountMap.getOrDefault(study.getId(), 0L) != groupedStudyIdMap.getOrDefault(study.getId(), Collections.emptyList()).size();
+    }
+
+    private List<StudyMember> findJoinedStudyMemberBy(List<Study> studies) {
+        List<Long> studyIds = Studies.of(studies).extractId();
+        return studyMemberQueryRepository.findByIdIn(studyIds);
+    }
+
+    private Map<Long, List<ReviewEntity>> getGroupedStudyIdMap(List<ReviewEntity> myReviews) {
+        return myReviews.stream()
+                .collect(
+                        Collectors.groupingBy(
+                                ReviewEntity::getStudyId
+                        )
+                );
     }
 
     private List<Study> extractConnectedStudies(List<StudyMember> studyMembers) {
         return studyMembers.stream()
                 .map(StudyMember::getStudy)
                 .toList();
-    }
-
-    private Study findValidStudy(long studyId) {
-        return studyRepository.findById(studyId)
-                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
     }
 
     private boolean isAlreadyWrittenReviewBy(long studyId, long targetUserId, long writeUserId) {
@@ -190,6 +199,15 @@ public class ReviewService {
     private List<ReviewTagEntity> mapToReviewTagEntities(ReviewTags reviewTags) {
         List<String> reviewTagDescriptions = reviewTags.extractDescription();
         return reviewTagRepository.findByReviewTagIn(reviewTagDescriptions);
+    }
+
+    private BuddyEnergy updatedBuddyEnergy(long writeUserId, ReviewType reviewType) {
+        BuddyEnergy energy = buddyEnergyRepository.findByUserId(writeUserId)
+                .orElseThrow(() -> new BuddyEnergyNotFoundException(BUDDY_ENERGY_NOT_FOUND));
+
+        energy.updateEnergy(reviewType);
+        buddyEnergyLogRepository.save(BuddyLog.of(energy, energy.findReasonFrom(reviewType)));
+        return energy;
     }
 
     private List<ReviewTag> extractReviewTags(List<ReviewEntity> myReviews) {

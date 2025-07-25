@@ -54,7 +54,7 @@ public interface ReviewSpecification {
                     - `studyInfo`: 리뷰 가능한 스터디의 이름과 이미지 정보 리스트입니다.
                     """
     )
-    ApiResponse<ReviewTargetStudiesInfo> getReviewTargetStudiesInfo(Principal userDetails, LocalDateTime currentDateTime);
+    ApiResponse<ReviewTargetStudiesInfo> getReviewTargetStudiesInfo(Principal userDetails);
 
     @Operation(summary = "리뷰 생성", description = "스터디에 대한 리뷰를 작성 합니다.")
     ApiResponse<Long> save(ReviewSaveRequest request, Principal userDetails);

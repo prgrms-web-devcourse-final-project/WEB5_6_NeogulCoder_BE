@@ -61,7 +61,6 @@ public class StudyService {
     private final TeamCalendarService teamCalendarService;
     private final GroupChatRoomRepository groupChatRoomRepository;
 
-
     public StudyItemPagingResponse getMyStudiesPaging(Pageable pageable, Long userId, Boolean finished) {
         Page<StudyItemResponse> page = studyQueryRepository.findMyStudiesPaging(pageable, userId, finished);
         return StudyItemPagingResponse.of(page);
@@ -259,4 +258,7 @@ public class StudyService {
         return image != null && !image.isEmpty();
     }
 
+    private int getActiveUnfinishedStudiesCount(Long userId) {
+        return studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
+    }
 }
