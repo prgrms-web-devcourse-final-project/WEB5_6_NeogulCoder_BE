@@ -25,6 +25,7 @@ public class StudySchedulerService {
     private final StudyMemberRepository studyMemberRepository;
     private final ApplicationEventPublisher eventPublisher;
 
+    @Transactional
     public void findStudiesEndingIn7Days() {
         LocalDate targetEndDate = LocalDate.now().plusDays(7);
         LocalDateTime endDateStart = targetEndDate.atStartOfDay();
