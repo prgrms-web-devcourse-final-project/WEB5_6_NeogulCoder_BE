@@ -15,6 +15,7 @@ import grep.neogulcoder.domain.study.event.StudyInviteEvent;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
+import grep.neogulcoder.domain.timevote.event.TimeVotePeriodCreatedEvent;
 import grep.neogulcoder.global.exception.business.BusinessException;
 import grep.neogulcoder.global.exception.business.NotFoundException;
 import grep.neogulcoder.global.provider.finder.MessageFinder;
@@ -119,6 +120,22 @@ public class AlarmService {
             DomainType.STUDY,
             event.studyId()
         );
+    }
+
+    @EventListener
+    public void handleTimeVotePeriodCreatedEvent(TimeVotePeriodCreatedEvent event) {
+        List<StudyMember> members = studyMemberRepository.findAllByStudyIdAndActivatedTrue(event.studyId());
+
+        for (StudyMember member : members) {
+            if (!member.getUserId().equals(event.excludedUserId())) {
+                saveAlarm(
+                    member.getUserId(),
+                    AlarmType.TIME_VOTE_REQUEST,
+                    DomainType.TIME_VOTE,
+                    event.studyId()
+                );
+            }
+        }
     }
 
     private Alarm findValidAlarm(Long alarmId) {
