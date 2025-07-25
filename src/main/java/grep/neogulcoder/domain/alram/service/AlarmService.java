@@ -8,7 +8,9 @@ import grep.neogulcoder.domain.alram.type.AlarmType;
 import grep.neogulcoder.domain.alram.type.DomainType;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.StudyMember;
+import grep.neogulcoder.domain.study.enums.StudyMemberRole;
 import grep.neogulcoder.domain.study.event.StudyExtendEvent;
+import grep.neogulcoder.domain.study.event.StudyExtensionReminderEvent;
 import grep.neogulcoder.domain.study.event.StudyInviteEvent;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
@@ -22,8 +24,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
-import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.APPLICATION_PARTICIPANT_LIMIT_EXCEEDED;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
+import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -104,6 +106,19 @@ public class AlarmService {
                 );
             }
         }
+    }
+
+    @EventListener
+    public void handleStudyExtensionReminderEvent(StudyExtensionReminderEvent event) {
+        StudyMember leader = studyMemberRepository.findByStudyIdAndRoleAndActivatedTrue(event.studyId(), StudyMemberRole.LEADER)
+            .orElseThrow(() -> new BusinessException(STUDY_LEADER_NOT_FOUND));
+
+        saveAlarm(
+            leader.getUserId(),
+            AlarmType.STUDY_EXTENSION_REMINDER,
+            DomainType.STUDY,
+            event.studyId()
+        );
     }
 
     private Alarm findValidAlarm(Long alarmId) {
