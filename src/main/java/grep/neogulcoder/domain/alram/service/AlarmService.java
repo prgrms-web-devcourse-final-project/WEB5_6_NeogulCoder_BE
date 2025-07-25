@@ -65,7 +65,7 @@ public class AlarmService {
         );
     }
 
-    @Transactional
+    @Transactional //TODO 회원이 가입한 스터디 체크 로직 필요
     public void acceptInvite(Long targetUserId, Long alarmId) {
         Alarm alarm = findValidAlarm(alarmId);
         Long studyId = alarm.getDomainId();
