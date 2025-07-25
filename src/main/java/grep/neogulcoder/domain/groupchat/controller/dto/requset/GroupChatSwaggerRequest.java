@@ -10,8 +10,8 @@ public class GroupChatSwaggerRequest {
     @Schema(description = "보낸 사람 ID", example = "456")
     private Long senderId;
 
-    @Schema(description = "채팅방 ID", example = "100")
-    private Long roomId;
+    @Schema(description = "스터디 ID", example = "100")
+    private Long studyId;
 
     @Schema(description = "보낼 메시지", example = "안녕하세요!")
     private String message;

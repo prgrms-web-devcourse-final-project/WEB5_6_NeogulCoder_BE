@@ -32,7 +32,7 @@ INSERT INTO study_member (study_id, user_id, role, participated, activated) VALU
 INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (3, 2, 'LEADER', FALSE, TRUE);
 INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (3, 1, 'MEMBER', FALSE, TRUE);
 INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (6, 7, 'LEADER', FALSE, TRUE);
-INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (6, 8, 'MEMBER', FALSE, TRUE);
+INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (5, 8, 'MEMBER', FALSE, TRUE);
 INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (6, 9, 'MEMBER', FALSE, TRUE);
 
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status, activated) VALUES (3, 1, '자바 스터디 모집', '이펙티브 자바 공부하실분 구해요!!', 3, '2025-04-19', 'COMPLETE', true);
@@ -156,7 +156,7 @@ INSERT INTO attendance (study_id, user_id, attendance_date, activated) VALUES (2
 INSERT INTO attendance (study_id, user_id, attendance_date, activated) VALUES (3, 2, '2025-07-03', TRUE);
 
 INSERT INTO group_chat_room (study_id, activated) VALUES (1, true);
-INSERT INTO group_chat_room (study_id, activated) VALUES (2, true);
+INSERT INTO group_chat_room (study_id, activated) VALUES (6, true);
 
 INSERT INTO group_chat_message (room_id, user_id, message, activated) VALUES (1, 1, '안녕하세요! 스터디 언제 시작하나요?', TRUE);
 INSERT INTO group_chat_message (room_id, user_id, message, activated) VALUES (1, 2, '오늘 저녁 8시에 시작해요!', TRUE);
