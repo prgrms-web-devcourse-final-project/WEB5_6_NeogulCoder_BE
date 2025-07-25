@@ -1,4 +1,4 @@
-package grep.neogulcoder.global.provider;
+package grep.neogulcoder.domain.study.provider;
 
 import grep.neogulcoder.domain.alram.type.AlarmType;
 import grep.neogulcoder.domain.alram.type.DomainType;
@@ -6,6 +6,7 @@ import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.exception.code.StudyErrorCode;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
 import grep.neogulcoder.global.exception.business.NotFoundException;
+import grep.neogulcoder.global.provider.MessageProvidable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
