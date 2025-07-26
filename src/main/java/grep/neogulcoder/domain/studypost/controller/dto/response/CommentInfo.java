@@ -21,7 +21,7 @@ public class CommentInfo {
     private String profileImageUrl;
 
     @Schema(description = "댓글 ID", example = "100")
-    private long id;
+    private long commentId;
 
     @Schema(description = "댓글 내용", example = "정말 좋은 정보 감사합니다!")
     private String content;
@@ -30,12 +30,12 @@ public class CommentInfo {
     private LocalDateTime createdAt;
 
     @QueryProjection
-    public CommentInfo(long userId, String nickname, String profileImageUrl, long id,
+    public CommentInfo(long userId, String nickname, String profileImageUrl, long commentId,
                        String content, LocalDateTime createdAt) {
         this.userId = userId;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
-        this.id = id;
+        this.commentId = commentId;
         this.content = content;
         this.createdAt = createdAt;
     }

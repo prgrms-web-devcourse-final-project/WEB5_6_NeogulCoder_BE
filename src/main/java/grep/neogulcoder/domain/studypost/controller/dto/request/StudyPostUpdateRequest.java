@@ -3,6 +3,7 @@ package grep.neogulcoder.domain.studypost.controller.dto.request;
 import grep.neogulcoder.domain.studypost.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,7 +16,7 @@ public class StudyPostUpdateRequest {
     private String title;
 
     @Schema(description = "카테고리: NOTICE(공지), FREE(자유)", example = "NOTICE")
-    @NotBlank
+    @NotNull
     private Category category;
 
     @Schema(description = "내용", example = "오늘은 각자 공부한 내용에 대해 발표가 있는 날 입니다!")
