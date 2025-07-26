@@ -7,7 +7,7 @@ import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import grep.neogulcoder.domain.study.QStudyMember;
 import grep.neogulcoder.domain.timevote.dto.response.TimeVoteSubmissionStatusResponse;
-import grep.neogulcoder.domain.timevote.entity.QTimeVote;
+import grep.neogulcoder.domain.timevote.QTimeVote;
 import grep.neogulcoder.domain.users.entity.QUser;
 import jakarta.persistence.EntityManager;
 import com.querydsl.core.Tuple;
