@@ -25,8 +25,8 @@ public class RecruitmentPostCommentService {
     private final RecruitmentPostCommentQueryRepository commentQueryRepository;
 
     @Transactional
-    public long save(RecruitmentCommentSaveRequest request, long userId) {
-        RecruitmentPost post = postRepository.findPostBy(request.getPostId())
+    public long save(long postId, RecruitmentCommentSaveRequest request, long userId) {
+        RecruitmentPost post = postRepository.findPostBy(postId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND));
 
         return commentRepository.save(request.toEntity(post, userId)).getId();
