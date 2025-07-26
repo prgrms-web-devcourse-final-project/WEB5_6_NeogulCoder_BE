@@ -13,7 +13,7 @@ public class MyApplicationPagingResponse {
     @Schema(
         description = "내가 신청한 스터디 목록",
         example = "[{" +
-            "\"applicationId\": 1," +
+            "\"recruitmentPostId\": 1," +
             "\"name\": \"자바 스터디\"," +
             "\"leaderNickname\": \"너굴\"," +
             "\"capacity\": 4," +
