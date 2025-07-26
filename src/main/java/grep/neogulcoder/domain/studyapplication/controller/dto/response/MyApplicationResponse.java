@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Getter
 public class MyApplicationResponse {
 
-    @Schema(description = "신청 번호", example = "1")
-    private Long applicationId;
+    @Schema(description = "모집글 번호", example = "1")
+    private Long recruitmentPostId;
 
     @Schema(description = "스터디 이름", example = "자바 스터디")
     private String name;
@@ -49,9 +49,9 @@ public class MyApplicationResponse {
     private ApplicationStatus status;
 
     @QueryProjection
-    public MyApplicationResponse(Long applicationId, String name, String leaderNickname, int capacity, int currentCount, LocalDateTime startDate,
+    public MyApplicationResponse(Long recruitmentPostId, String name, String leaderNickname, int capacity, int currentCount, LocalDateTime startDate,
                                   String imageUrl,String introduction, Category category, StudyType studyType, boolean isRead, ApplicationStatus status) {
-        this.applicationId = applicationId;
+        this.recruitmentPostId = recruitmentPostId;
         this.name = name;
         this.leaderNickname = leaderNickname;
         this.capacity = capacity;
