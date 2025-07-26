@@ -7,7 +7,6 @@ import grep.neogulcoder.domain.timevote.dto.response.TimeVotePeriodResponse;
 import grep.neogulcoder.domain.timevote.dto.response.TimeVoteResponse;
 import grep.neogulcoder.domain.timevote.dto.response.TimeVoteStatResponse;
 import grep.neogulcoder.domain.timevote.dto.response.TimeVoteSubmissionStatusResponse;
-import grep.neogulcoder.domain.timevote.entity.TimeVotePeriod;
 import grep.neogulcoder.domain.timevote.service.TimeVotePeriodService;
 import grep.neogulcoder.domain.timevote.service.TimeVoteService;
 import grep.neogulcoder.domain.timevote.service.TimeVoteStatService;

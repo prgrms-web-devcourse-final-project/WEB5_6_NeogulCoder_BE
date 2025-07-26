@@ -1,6 +1,6 @@
 package grep.neogulcoder.domain.timevote.dto.response;
 
-import grep.neogulcoder.domain.timevote.entity.TimeVote;
+import grep.neogulcoder.domain.timevote.TimeVote;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
