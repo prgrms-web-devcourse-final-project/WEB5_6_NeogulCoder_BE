@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AlarmRepository  extends JpaRepository<Alarm, Long> {
     List<Alarm> findAllByReceiverUserIdAndCheckedFalse(Long receiverUserId);
+    List<Alarm> findAllByReceiverUserId(Long receiverUserId);
 
 }

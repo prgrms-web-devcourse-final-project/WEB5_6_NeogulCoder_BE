@@ -21,14 +21,19 @@ public class AlarmController implements AlarmSpecification {
     private final AlarmService alarmService;
 
     @GetMapping("/my")
-    public ApiResponse<List<AlarmResponse>> getAllAlarm(
-        @AuthenticationPrincipal Principal userDetails) {
+    public ApiResponse<List<AlarmResponse>> getAllAlarms(@AuthenticationPrincipal Principal userDetails) {
         return ApiResponse.success(alarmService.getAllAlarms(userDetails.getUserId()));
+    }
+
+    @GetMapping("/unchecked/my")
+    public ApiResponse<List<AlarmResponse>> getAllUncheckedAlarm(
+        @AuthenticationPrincipal Principal userDetails) {
+        return ApiResponse.success(alarmService.getAllUncheckedAlarms(userDetails.getUserId()));
     }
 
     @PostMapping("/my/check/all")
     public ApiResponse<Void> checkAlarm(@AuthenticationPrincipal Principal userDetails) {
-        alarmService.checkAllAlarm(userDetails.getUserId());
+        alarmService.checkAllAlarmWithoutInvite(userDetails.getUserId());
         return ApiResponse.noContent();
     }
 

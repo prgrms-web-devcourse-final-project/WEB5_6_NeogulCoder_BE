@@ -1,6 +1,6 @@
 package grep.neogulcoder.domain.timevote.repository;
 
-import grep.neogulcoder.domain.timevote.entity.TimeVotePeriod;
+import grep.neogulcoder.domain.timevote.TimeVotePeriod;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
