@@ -15,11 +15,13 @@ import grep.neogulcoder.domain.studyapplication.controller.dto.response.MyApplic
 import grep.neogulcoder.domain.studyapplication.controller.dto.response.MyApplicationResponse;
 import grep.neogulcoder.domain.studyapplication.controller.dto.response.ReceivedApplicationPagingResponse;
 import grep.neogulcoder.domain.studyapplication.controller.dto.response.ReceivedApplicationResponse;
+import grep.neogulcoder.domain.studyapplication.event.StudyApplicationEvent;
 import grep.neogulcoder.domain.studyapplication.repository.ApplicationQueryRepository;
 import grep.neogulcoder.domain.studyapplication.repository.ApplicationRepository;
 import grep.neogulcoder.global.exception.business.BusinessException;
 import grep.neogulcoder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,7 @@ public class ApplicationService {
     private final StudyMemberRepository studyMemberRepository;
     private final StudyRepository studyRepository;
     private final StudyMemberQueryRepository studyMemberQueryRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public ReceivedApplicationPagingResponse getReceivedApplicationsPaging(Long recruitmentPostId, Pageable pageable, Long userId) {
@@ -67,6 +70,8 @@ public class ApplicationService {
 
         StudyApplication application = request.toEntity(recruitmentPostId, userId);
         applicationRepository.save(application);
+
+        eventPublisher.publishEvent(new StudyApplicationEvent(recruitmentPostId, application.getId()));
 
         return application.getId();
     }
