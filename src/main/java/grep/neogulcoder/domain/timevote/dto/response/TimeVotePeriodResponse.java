@@ -1,9 +1,8 @@
 package grep.neogulcoder.domain.timevote.dto.response;
 
-import grep.neogulcoder.domain.timevote.entity.TimeVotePeriod;
+import grep.neogulcoder.domain.timevote.TimeVotePeriod;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,23 +19,18 @@ public class TimeVotePeriodResponse {
   @Schema(description = "종료일", example = "2025-07-30T23:59:59")
   private LocalDateTime endDate;
 
-  @Schema(description = "알림이 전송된 팀원 멤버 ID 목록", example = "[11, 12, 13]")
-  private List<Long> notifiedMemberIds;
-
   @Builder
-  private TimeVotePeriodResponse(Long studyId, LocalDateTime startDate, LocalDateTime endDate, List<Long> notifiedMemberIds) {
+  private TimeVotePeriodResponse(Long studyId, LocalDateTime startDate, LocalDateTime endDate) {
     this.studyId = studyId;
     this.startDate = startDate;
     this.endDate = endDate;
-    this.notifiedMemberIds = notifiedMemberIds;
   }
 
-  public static TimeVotePeriodResponse from(TimeVotePeriod timeVotePeriod, List<Long> notifiedMemberIds) {
+  public static TimeVotePeriodResponse from(TimeVotePeriod timeVotePeriod) {
     return TimeVotePeriodResponse.builder()
         .studyId(timeVotePeriod.getStudyId())
         .startDate(timeVotePeriod.getStartDate())
         .endDate(timeVotePeriod.getEndDate())
-        .notifiedMemberIds(notifiedMemberIds)
         .build();
   }
 }

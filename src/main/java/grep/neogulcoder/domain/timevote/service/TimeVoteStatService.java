@@ -5,8 +5,8 @@ import static grep.neogulcoder.domain.timevote.exception.code.TimeVoteErrorCode.
 import grep.neogulcoder.domain.study.StudyMember;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.timevote.dto.response.TimeVoteStatResponse;
-import grep.neogulcoder.domain.timevote.entity.TimeVotePeriod;
-import grep.neogulcoder.domain.timevote.entity.TimeVoteStat;
+import grep.neogulcoder.domain.timevote.TimeVotePeriod;
+import grep.neogulcoder.domain.timevote.TimeVoteStat;
 import grep.neogulcoder.domain.timevote.repository.TimeVotePeriodRepository;
 import grep.neogulcoder.domain.timevote.repository.TimeVoteStatQueryRepository;
 import grep.neogulcoder.domain.timevote.repository.TimeVoteStatRepository;

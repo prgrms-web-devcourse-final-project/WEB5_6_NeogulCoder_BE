@@ -49,11 +49,11 @@ public class StudyManagementController implements StudyManagementSpecification {
     }
 
     @PostMapping("/extension")
-    public ApiResponse<Void> extendStudy(@PathVariable("studyId") Long studyId,
+    public ApiResponse<Long> extendStudy(@PathVariable("studyId") Long studyId,
                                          @RequestBody @Valid ExtendStudyRequest request,
                                          @AuthenticationPrincipal Principal userDetails) {
-        studyManagementService.extendStudy(studyId, request, userDetails.getUserId());
-        return ApiResponse.noContent();
+        Long extendStudyId = studyManagementService.extendStudy(studyId, request, userDetails.getUserId());
+        return ApiResponse.success(extendStudyId);
     }
 
     @PostMapping("/extension/participations")

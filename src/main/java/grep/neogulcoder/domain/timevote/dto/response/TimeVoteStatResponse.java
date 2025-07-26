@@ -1,7 +1,7 @@
 package grep.neogulcoder.domain.timevote.dto.response;
 
-import grep.neogulcoder.domain.timevote.entity.TimeVoteStat;
-import grep.neogulcoder.domain.timevote.entity.TimeVotePeriod;
+import grep.neogulcoder.domain.timevote.TimeVoteStat;
+import grep.neogulcoder.domain.timevote.TimeVotePeriod;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Comparator;
 import lombok.Builder;

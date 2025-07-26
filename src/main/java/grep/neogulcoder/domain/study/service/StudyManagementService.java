@@ -120,7 +120,7 @@ public class StudyManagementService {
     }
 
     @Transactional
-    public void extendStudy(Long studyId, ExtendStudyRequest request, Long userId) {
+    public Long extendStudy(Long studyId, ExtendStudyRequest request, Long userId) {
         Study originStudy = findValidStudy(studyId);
 
         StudyMember leader = findValidStudyMember(studyId, userId);
@@ -141,6 +141,8 @@ public class StudyManagementService {
         studyMemberRepository.save(extendedLeader);
 
         eventPublisher.publishEvent(new StudyExtendEvent(originStudy.getId()));
+
+        return extendedStudy.getId();
     }
 
     @Transactional
