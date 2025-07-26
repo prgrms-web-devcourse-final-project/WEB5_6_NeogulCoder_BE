@@ -1,4 +1,4 @@
-package grep.neogulcoder.domain.timevote.entity;
+package grep.neogulcoder.domain.timevote;
 
 import grep.neogulcoder.global.entity.BaseEntity;
 import jakarta.persistence.Column;

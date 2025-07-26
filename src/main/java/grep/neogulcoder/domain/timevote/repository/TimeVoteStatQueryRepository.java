@@ -2,10 +2,10 @@ package grep.neogulcoder.domain.timevote.repository;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import grep.neogulcoder.domain.timevote.entity.QTimeVote;
-import grep.neogulcoder.domain.timevote.entity.QTimeVoteStat;
-import grep.neogulcoder.domain.timevote.entity.TimeVotePeriod;
-import grep.neogulcoder.domain.timevote.entity.TimeVoteStat;
+import grep.neogulcoder.domain.timevote.TimeVotePeriod;
+import grep.neogulcoder.domain.timevote.TimeVoteStat;
+import grep.neogulcoder.domain.timevote.QTimeVote;
+import grep.neogulcoder.domain.timevote.QTimeVoteStat;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
