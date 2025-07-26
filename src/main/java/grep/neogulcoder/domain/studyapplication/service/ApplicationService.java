@@ -1,5 +1,6 @@
 package grep.neogulcoder.domain.studyapplication.service;
 
+import grep.neogulcoder.domain.alram.type.AlarmType;
 import grep.neogulcoder.domain.recruitment.post.RecruitmentPost;
 import grep.neogulcoder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogulcoder.domain.study.Study;
@@ -15,7 +16,8 @@ import grep.neogulcoder.domain.studyapplication.controller.dto.response.MyApplic
 import grep.neogulcoder.domain.studyapplication.controller.dto.response.MyApplicationResponse;
 import grep.neogulcoder.domain.studyapplication.controller.dto.response.ReceivedApplicationPagingResponse;
 import grep.neogulcoder.domain.studyapplication.controller.dto.response.ReceivedApplicationResponse;
-import grep.neogulcoder.domain.studyapplication.event.StudyApplicationEvent;
+import grep.neogulcoder.domain.studyapplication.event.ApplicationEvent;
+import grep.neogulcoder.domain.studyapplication.event.ApplicationStatusChangedEvent;
 import grep.neogulcoder.domain.studyapplication.repository.ApplicationQueryRepository;
 import grep.neogulcoder.domain.studyapplication.repository.ApplicationRepository;
 import grep.neogulcoder.global.exception.business.BusinessException;
@@ -71,7 +73,7 @@ public class ApplicationService {
         StudyApplication application = request.toEntity(recruitmentPostId, userId);
         applicationRepository.save(application);
 
-        eventPublisher.publishEvent(new StudyApplicationEvent(recruitmentPostId, application.getId()));
+        eventPublisher.publishEvent(new ApplicationEvent(recruitmentPostId, application.getId()));
 
         return application.getId();
     }
@@ -91,6 +93,8 @@ public class ApplicationService {
         StudyMember studyMember = StudyMember.createMember(study, application.getUserId());
         studyMemberRepository.save(studyMember);
         study.increaseMemberCount();
+
+        eventPublisher.publishEvent(new ApplicationStatusChangedEvent(applicationId, AlarmType.STUDY_APPLICATION_APPROVED));
     }
 
     @Transactional
@@ -103,6 +107,8 @@ public class ApplicationService {
         validateStatusIsApplying(application);
 
         application.reject();
+
+        eventPublisher.publishEvent(new ApplicationStatusChangedEvent(applicationId, AlarmType.STUDY_APPLICATION_REJECTED));
     }
 
     private Study findValidStudy(RecruitmentPost post) {

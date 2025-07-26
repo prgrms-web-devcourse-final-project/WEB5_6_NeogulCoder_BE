@@ -13,7 +13,7 @@ import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.*;
 
 @Component
 @RequiredArgsConstructor
-public class StudyApplicationMessageProvider implements MessageProvidable {
+public class ApplicationMessageProvider implements MessageProvidable {
 
     private final RecruitmentPostRepository recruitmentPostRepository;
 

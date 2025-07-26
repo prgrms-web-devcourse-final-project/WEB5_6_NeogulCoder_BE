@@ -17,7 +17,10 @@ import grep.neogulcoder.domain.study.event.StudyInviteEvent;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
-import grep.neogulcoder.domain.studyapplication.event.StudyApplicationEvent;
+import grep.neogulcoder.domain.studyapplication.StudyApplication;
+import grep.neogulcoder.domain.studyapplication.event.ApplicationEvent;
+import grep.neogulcoder.domain.studyapplication.event.ApplicationStatusChangedEvent;
+import grep.neogulcoder.domain.studyapplication.repository.ApplicationRepository;
 import grep.neogulcoder.domain.timevote.event.TimeVotePeriodCreatedEvent;
 import grep.neogulcoder.global.exception.business.BusinessException;
 import grep.neogulcoder.global.exception.business.NotFoundException;
@@ -43,6 +46,7 @@ public class AlarmService {
     private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final StudyMemberRepository studyMemberRepository;
     private final RecruitmentPostRepository recruitmentPostRepository;
+    private final ApplicationRepository applicationRepository;
 
     @Transactional
     public void saveAlarm(Long receiverId, AlarmType alarmType, DomainType domainType, Long domainId) {
@@ -144,7 +148,7 @@ public class AlarmService {
     }
 
     @EventListener
-    public void handleStudyApplicationEvent(StudyApplicationEvent event) {
+    public void handleApplicationEvent(ApplicationEvent event) {
         RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdAndActivatedTrue(event.recruitmentPostId())
             .orElseThrow(() -> new BusinessException(NOT_FOUND));
 
@@ -153,6 +157,19 @@ public class AlarmService {
             AlarmType.STUDY_APPLICATION,
             DomainType.RECRUITMENT_POST,
             event.recruitmentPostId()
+        );
+    }
+
+    @EventListener
+    public void handleApplicationStatusChangedEvent(ApplicationStatusChangedEvent event) {
+        StudyApplication application = applicationRepository.findByIdAndActivatedTrue(event.applicationId())
+            .orElseThrow(() -> new BusinessException(APPLICATION_NOT_FOUND));
+
+        saveAlarm(
+            application.getUserId(),
+            event.alarmType(),
+            DomainType.STUDY_APPLICATION,
+            application.getId()
         );
     }
 

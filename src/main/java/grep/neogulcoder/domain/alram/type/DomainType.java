@@ -3,5 +3,6 @@ package grep.neogulcoder.domain.alram.type;
 public enum DomainType {
     STUDY,
     TIME_VOTE,
-    RECRUITMENT_POST
+    RECRUITMENT_POST,
+    STUDY_APPLICATION
 }
