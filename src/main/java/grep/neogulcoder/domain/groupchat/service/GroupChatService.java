@@ -1,5 +1,6 @@
 package grep.neogulcoder.domain.groupchat.service;
 
+import grep.neogulcoder.domain.groupchat.controller.dto.response.ChatMessagePagingResponse;
 import grep.neogulcoder.domain.groupchat.entity.GroupChatMessage;
 import grep.neogulcoder.domain.groupchat.entity.GroupChatRoom;
 import grep.neogulcoder.domain.groupchat.controller.dto.requset.GroupChatMessageRequestDto;
@@ -63,7 +64,8 @@ public class GroupChatService {
     }
 
     // 과거 채팅 메시지 페이징 조회 (무한 스크롤용)
-    public PageResponse<GroupChatMessageResponseDto> getMessages(Long studyId, int page, int size) {
+    @Transactional(readOnly = true)
+    public ChatMessagePagingResponse getMessages(Long studyId, int page, int size) {
         GroupChatRoom room = roomRepository.findByStudyId(studyId)
             .orElseThrow(() -> new IllegalArgumentException("채팅방이 존재하지 않습니다."));
 
@@ -81,12 +83,7 @@ public class GroupChatService {
             return GroupChatMessageResponseDto.from(message, sender);
         });
 
-        // PageResponse로 감싸서 반환
-        return new PageResponse<>(
-            "/api/chat/study/" + studyId + "/messages",
-            messagePage,
-            5 // 페이지 버튼 개수
-        );
+        return ChatMessagePagingResponse.of(messagePage);
     }
 
 

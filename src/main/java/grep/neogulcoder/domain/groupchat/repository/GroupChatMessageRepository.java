@@ -11,7 +11,8 @@ public interface GroupChatMessageRepository extends JpaRepository<GroupChatMessa
 
     // 채팅방(roomId)에 속한 메시지를 전송 시간 내림차순으로 페이징 조회
     @Query("SELECT m FROM GroupChatMessage m " +
-        "WHERE m.groupChatRoom.roomId = :roomId " +
+        "JOIN FETCH m.groupChatRoom r " +
+        "WHERE r.roomId = :roomId " +
         "ORDER BY m.sentAt ASC")
     Page<GroupChatMessage> findMessagesByRoomIdAsc(@Param("roomId") Long roomId, Pageable pageable);
 
