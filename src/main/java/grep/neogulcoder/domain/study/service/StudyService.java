@@ -72,8 +72,9 @@ public class StudyService {
 
     public StudyHeaderResponse getStudyHeader(Long studyId) {
         Study study = findValidStudy(studyId);
+        List<StudyMemberResponse> members = studyQueryRepository.findStudyMembers(studyId);
 
-        return StudyHeaderResponse.from(study);
+        return StudyHeaderResponse.from(study, members);
     }
 
     public StudyResponse getStudy(Long studyId) {
