@@ -6,6 +6,8 @@ import grep.neogulcoder.domain.alram.exception.code.AlarmErrorCode;
 import grep.neogulcoder.domain.alram.repository.AlarmRepository;
 import grep.neogulcoder.domain.alram.type.AlarmType;
 import grep.neogulcoder.domain.alram.type.DomainType;
+import grep.neogulcoder.domain.recruitment.post.RecruitmentPost;
+import grep.neogulcoder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.StudyMember;
 import grep.neogulcoder.domain.study.enums.StudyMemberRole;
@@ -15,6 +17,10 @@ import grep.neogulcoder.domain.study.event.StudyInviteEvent;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
+import grep.neogulcoder.domain.studyapplication.StudyApplication;
+import grep.neogulcoder.domain.studyapplication.event.ApplicationEvent;
+import grep.neogulcoder.domain.studyapplication.event.ApplicationStatusChangedEvent;
+import grep.neogulcoder.domain.studyapplication.repository.ApplicationRepository;
 import grep.neogulcoder.domain.timevote.event.TimeVotePeriodCreatedEvent;
 import grep.neogulcoder.global.exception.business.BusinessException;
 import grep.neogulcoder.global.exception.business.NotFoundException;
@@ -25,9 +31,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_LEADER_NOT_FOUND;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
-import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.APPLICATION_PARTICIPANT_LIMIT_EXCEEDED;
+import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
+import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +45,8 @@ public class AlarmService {
     private final StudyRepository studyRepository;
     private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final StudyMemberRepository studyMemberRepository;
+    private final RecruitmentPostRepository recruitmentPostRepository;
+    private final ApplicationRepository applicationRepository;
 
     @Transactional
     public void saveAlarm(Long receiverId, AlarmType alarmType, DomainType domainType,
@@ -157,6 +165,32 @@ public class AlarmService {
                 );
             }
         }
+    }
+
+    @EventListener
+    public void handleApplicationEvent(ApplicationEvent event) {
+        RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdAndActivatedTrue(event.recruitmentPostId())
+            .orElseThrow(() -> new BusinessException(NOT_FOUND));
+
+        saveAlarm(
+            recruitmentPost.getUserId(),
+            AlarmType.STUDY_APPLICATION,
+            DomainType.RECRUITMENT_POST,
+            event.recruitmentPostId()
+        );
+    }
+
+    @EventListener
+    public void handleApplicationStatusChangedEvent(ApplicationStatusChangedEvent event) {
+        StudyApplication application = applicationRepository.findByIdAndActivatedTrue(event.applicationId())
+            .orElseThrow(() -> new BusinessException(APPLICATION_NOT_FOUND));
+
+        saveAlarm(
+            application.getUserId(),
+            event.alarmType(),
+            DomainType.STUDY_APPLICATION,
+            application.getId()
+        );
     }
 
     private Alarm findValidAlarm(Long alarmId) {
