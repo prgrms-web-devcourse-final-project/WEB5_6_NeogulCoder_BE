@@ -31,9 +31,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
 import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
+import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
