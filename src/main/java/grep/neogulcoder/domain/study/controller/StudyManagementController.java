@@ -68,5 +68,4 @@ public class StudyManagementController implements StudyManagementSpecification {
         studyManagementService.inviteTargetUser(studyId, userDetails.getUserId(), targetUserNickname);
         return ApiResponse.noContent();
     }
-
 }

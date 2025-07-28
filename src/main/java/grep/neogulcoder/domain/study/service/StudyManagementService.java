@@ -25,7 +25,6 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +60,6 @@ public class StudyManagementService {
     @Transactional
     public void leaveStudy(Long studyId, Long userId) {
         Study study = getStudyById(studyId);
-
         StudyMember studyMember = getStudyMemberById(studyId, userId);
 
         if (isLastMember(study)) {
@@ -97,22 +95,13 @@ public class StudyManagementService {
     @Transactional
     public void deleteUserFromStudies(Long userId) {
         List<StudyMember> myStudyMembers = studyMemberQueryRepository.findActivatedStudyMembersWithStudy(userId);
-
-        List<Long> studyIds = myStudyMembers.stream()
-            .map(studyMember -> studyMember.getStudy().getId())
-            .distinct()
-            .toList();
-
-        List<StudyMember> allActivatedMembers = studyMemberQueryRepository.findActivatedMembersByStudyIds(studyIds);
-
-        Map<Long, List<StudyMember>> activatedMemberMap = allActivatedMembers.stream()
-            .collect(Collectors.groupingBy(studyMember -> studyMember.getStudy().getId()));
+        Map<Long, List<StudyMember>> activatedMemberMap = getActivatedMemberMap(myStudyMembers);
 
         for (StudyMember myMember : myStudyMembers) {
             Study study = myMember.getStudy();
             List<StudyMember> activatedMembers = activatedMemberMap.getOrDefault(study.getId(), List.of());
 
-            if (activatedMembers.size() == 1) {
+            if (isLastActivatedMember(activatedMembers)) {
                 study.delete();
                 myMember.delete();
                 continue;
@@ -219,6 +208,22 @@ public class StudyManagementService {
         if (!studyMember.isLeader()) {
             throw new BusinessException(NOT_STUDY_LEADER);
         }
+    }
+
+    private Map<Long, List<StudyMember>> getActivatedMemberMap(List<StudyMember> myStudyMembers) {
+        List<Long> studyIds = myStudyMembers.stream()
+            .map(sm -> sm.getStudy().getId())
+            .distinct()
+            .toList();
+
+        List<StudyMember> allActivatedMembers = studyMemberQueryRepository.findActivatedMembersByStudyIds(studyIds);
+
+        return allActivatedMembers.stream()
+            .collect(Collectors.groupingBy(studyMember -> studyMember.getStudy().getId()));
+    }
+
+    private static boolean isLastActivatedMember(List<StudyMember> activatedMembers) {
+        return activatedMembers.size() == 1;
     }
 
     private void validateStudyExtendable(Study study, LocalDateTime endDate) {
