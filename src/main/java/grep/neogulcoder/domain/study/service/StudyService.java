@@ -1,7 +1,7 @@
 package grep.neogulcoder.domain.study.service;
 
-import grep.neogulcoder.domain.calender.controller.dto.response.TeamCalendarResponse;
-import grep.neogulcoder.domain.calender.service.TeamCalendarService;
+import grep.neogulcoder.domain.calendar.controller.dto.response.TeamCalendarResponse;
+import grep.neogulcoder.domain.calendar.service.TeamCalendarService;
 import grep.neogulcoder.domain.groupchat.entity.GroupChatRoom;
 import grep.neogulcoder.domain.groupchat.repository.GroupChatRoomRepository;
 import grep.neogulcoder.domain.recruitment.post.repository.RecruitmentPostRepository;
@@ -105,7 +105,7 @@ public class StudyService {
         Study study = findValidStudy(studyId);
 
         validateStudyMember(studyId, userId);
-        // validateStudyLeader(studyId, userId);
+        validateStudyLeader(studyId, userId);
 
         List<StudyMemberResponse> members = studyQueryRepository.findStudyMembers(studyId);
 

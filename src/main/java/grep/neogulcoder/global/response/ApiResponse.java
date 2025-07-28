@@ -21,6 +21,10 @@ public class ApiResponse<T> {
         return new ApiResponse<>(code,message,data);
     }
 
+    public static <T> ApiResponse<T> error(String message) {
+        return new ApiResponse<>(CommonCode.BAD_REQUEST.getCode(), message, null);
+    }
+
     public static <T> ApiResponse<T> success(T data) {
         return ApiResponse.of(CommonCode.OK.getCode(), CommonCode.OK.getMessage(), data);
     }

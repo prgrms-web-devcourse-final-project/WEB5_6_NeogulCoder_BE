@@ -30,8 +30,7 @@ public class TimeVotePeriod extends BaseEntity {
   protected TimeVotePeriod() {}
 
   @Builder
-  public TimeVotePeriod(Long periodId, Long studyId, LocalDateTime startDate, LocalDateTime endDate) {
-    this.periodId = periodId;
+  public TimeVotePeriod(Long studyId, LocalDateTime startDate, LocalDateTime endDate) {
     this.studyId = studyId;
     this.startDate = startDate;
     this.endDate = endDate;

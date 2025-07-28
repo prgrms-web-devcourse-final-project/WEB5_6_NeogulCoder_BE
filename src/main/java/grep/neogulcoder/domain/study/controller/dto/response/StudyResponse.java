@@ -1,6 +1,6 @@
 package grep.neogulcoder.domain.study.controller.dto.response;
 
-import grep.neogulcoder.domain.calender.controller.dto.response.TeamCalendarResponse;
+import grep.neogulcoder.domain.calendar.controller.dto.response.TeamCalendarResponse;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.studypost.controller.dto.response.FreePostInfo;
 import grep.neogulcoder.domain.studypost.controller.dto.response.NoticePostInfo;
