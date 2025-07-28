@@ -6,6 +6,7 @@ import grep.neogulcoder.domain.alram.exception.code.AlarmErrorCode;
 import grep.neogulcoder.domain.alram.repository.AlarmRepository;
 import grep.neogulcoder.domain.alram.type.AlarmType;
 import grep.neogulcoder.domain.alram.type.DomainType;
+import grep.neogulcoder.domain.recruitment.comment.event.RecruitmentPostCommentEvent;
 import grep.neogulcoder.domain.recruitment.post.RecruitmentPost;
 import grep.neogulcoder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogulcoder.domain.study.Study;
@@ -50,54 +51,54 @@ public class AlarmService {
 
     @Transactional
     public void saveAlarm(Long receiverId, AlarmType alarmType, DomainType domainType,
-        Long domainId) {
+                          Long domainId) {
         String message = messageFinder.findMessage(alarmType, domainType, domainId);
         alarmRepository.save(Alarm.init(alarmType, receiverId, domainType, domainId, message));
     }
 
     public List<AlarmResponse> getAllUncheckedAlarms(Long receiverUserId) {
         return alarmRepository.findAllByReceiverUserIdAndCheckedFalse(receiverUserId).stream()
-            .map(alarm -> AlarmResponse.toResponse(
-                alarm.getId(),
-                alarm.getReceiverUserId(),
-                alarm.getAlarmType(),
-                alarm.getDomainType(),
-                alarm.getDomainId(),
-                alarm.getMessage(),
-                alarm.isChecked(),
-                alarm.getCreatedDate()))
-            .toList();
+                .map(alarm -> AlarmResponse.toResponse(
+                        alarm.getId(),
+                        alarm.getReceiverUserId(),
+                        alarm.getAlarmType(),
+                        alarm.getDomainType(),
+                        alarm.getDomainId(),
+                        alarm.getMessage(),
+                        alarm.isChecked(),
+                        alarm.getCreatedDate()))
+                .toList();
     }
 
     public List<AlarmResponse> getAllAlarms(Long receiverUserId) {
         return alarmRepository.findAllByReceiverUserId(receiverUserId).stream()
-            .map(alarm -> AlarmResponse.toResponse(
-                alarm.getId(),
-                alarm.getReceiverUserId(),
-                alarm.getAlarmType(),
-                alarm.getDomainType(),
-                alarm.getDomainId(),
-                alarm.getMessage(),
-                alarm.isChecked(),
-                alarm.getCreatedDate()))
-            .toList();
+                .map(alarm -> AlarmResponse.toResponse(
+                        alarm.getId(),
+                        alarm.getReceiverUserId(),
+                        alarm.getAlarmType(),
+                        alarm.getDomainType(),
+                        alarm.getDomainId(),
+                        alarm.getMessage(),
+                        alarm.isChecked(),
+                        alarm.getCreatedDate()))
+                .toList();
     }
 
     @Transactional
     public void checkAllAlarmWithoutInvite(Long receiverUserId) {
         List<Alarm> alarms = alarmRepository.findAllByReceiverUserIdAndCheckedFalse(receiverUserId);
         alarms.stream()
-            .filter(alarm -> alarm.getAlarmType() != AlarmType.INVITE)
-            .forEach(Alarm::checkAlarm);
+                .filter(alarm -> alarm.getAlarmType() != AlarmType.INVITE)
+                .forEach(Alarm::checkAlarm);
     }
 
     @EventListener
     public void handleStudyInviteEvent(StudyInviteEvent event) {
         saveAlarm(
-            event.targetUserId(),
-            AlarmType.INVITE,
-            DomainType.STUDY,
-            event.studyId()
+                event.targetUserId(),
+                AlarmType.INVITE,
+                DomainType.STUDY,
+                event.studyId()
         );
     }
 
@@ -122,15 +123,15 @@ public class AlarmService {
     @EventListener
     public void handleStudyExtendEvent(StudyExtendEvent event) {
         List<StudyMember> members = studyMemberRepository.findAllByStudyIdAndActivatedTrue(
-            event.studyId());
+                event.studyId());
 
         for (StudyMember member : members) {
             if (!member.isLeader()) {
                 saveAlarm(
-                    member.getUserId(),
-                    AlarmType.STUDY_EXTEND,
-                    DomainType.STUDY,
-                    event.studyId()
+                        member.getUserId(),
+                        AlarmType.STUDY_EXTEND,
+                        DomainType.STUDY,
+                        event.studyId()
                 );
             }
         }
@@ -139,29 +140,29 @@ public class AlarmService {
     @EventListener
     public void handleStudyExtensionReminderEvent(StudyExtensionReminderEvent event) {
         StudyMember leader = studyMemberRepository.findByStudyIdAndRoleAndActivatedTrue(
-                event.studyId(), StudyMemberRole.LEADER)
-            .orElseThrow(() -> new BusinessException(STUDY_LEADER_NOT_FOUND));
+                        event.studyId(), StudyMemberRole.LEADER)
+                .orElseThrow(() -> new BusinessException(STUDY_LEADER_NOT_FOUND));
 
         saveAlarm(
-            leader.getUserId(),
-            AlarmType.STUDY_EXTENSION_REMINDER,
-            DomainType.STUDY,
-            event.studyId()
+                leader.getUserId(),
+                AlarmType.STUDY_EXTENSION_REMINDER,
+                DomainType.STUDY,
+                event.studyId()
         );
     }
 
     @EventListener
     public void handleTimeVotePeriodCreatedEvent(TimeVotePeriodCreatedEvent event) {
         List<StudyMember> members = studyMemberRepository.findAllByStudyIdAndActivatedTrue(
-            event.studyId());
+                event.studyId());
 
         for (StudyMember member : members) {
             if (!member.getUserId().equals(event.excludedUserId())) {
                 saveAlarm(
-                    member.getUserId(),
-                    AlarmType.TIME_VOTE_REQUEST,
-                    DomainType.TIME_VOTE,
-                    event.studyId()
+                        member.getUserId(),
+                        AlarmType.TIME_VOTE_REQUEST,
+                        DomainType.TIME_VOTE,
+                        event.studyId()
                 );
             }
         }
@@ -170,37 +171,60 @@ public class AlarmService {
     @EventListener
     public void handleApplicationEvent(ApplicationEvent event) {
         RecruitmentPost recruitmentPost = recruitmentPostRepository.findByIdAndActivatedTrue(event.recruitmentPostId())
-            .orElseThrow(() -> new BusinessException(NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(NOT_FOUND));
 
         saveAlarm(
-            recruitmentPost.getUserId(),
-            AlarmType.STUDY_APPLICATION,
-            DomainType.RECRUITMENT_POST,
-            event.recruitmentPostId()
+                recruitmentPost.getUserId(),
+                AlarmType.STUDY_APPLICATION,
+                DomainType.RECRUITMENT_POST,
+                event.recruitmentPostId()
         );
     }
 
     @EventListener
     public void handleApplicationStatusChangedEvent(ApplicationStatusChangedEvent event) {
         StudyApplication application = applicationRepository.findByIdAndActivatedTrue(event.applicationId())
-            .orElseThrow(() -> new BusinessException(APPLICATION_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(APPLICATION_NOT_FOUND));
 
         saveAlarm(
-            application.getUserId(),
-            event.alarmType(),
-            DomainType.STUDY_APPLICATION,
-            application.getId()
+                application.getUserId(),
+                event.alarmType(),
+                DomainType.STUDY_APPLICATION,
+                application.getId()
+        );
+    }
+
+    @Transactional
+    @EventListener
+    public void handleRecruitmentPostCommentEvent(RecruitmentPostCommentEvent event){
+        RecruitmentPost recruitmentPost = recruitmentPostRepository.findById(event.getPostId())
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND));
+
+        String message = messageFinder.findMessage(
+                AlarmType.RECRUITMENT_POST_COMMENT,
+                DomainType.RECRUITMENT_POST,
+                recruitmentPost.getId()
+        );
+
+        alarmRepository.save(
+                Alarm.init(
+                        AlarmType.RECRUITMENT_POST_COMMENT,
+                        event.getTargetUserId(),
+                        DomainType.RECRUITMENT_POST,
+                        event.getPostId(),
+                        message
+                )
         );
     }
 
     private Alarm findValidAlarm(Long alarmId) {
         return alarmRepository.findById(alarmId)
-            .orElseThrow(() -> new NotFoundException(AlarmErrorCode.ALARM_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(AlarmErrorCode.ALARM_NOT_FOUND));
     }
 
     private Study findValidStudy(Long studyId) {
         return studyRepository.findById(studyId)
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
     }
 
     private void validateParticipantStudyLimit(Long userId) {

@@ -4,14 +4,11 @@ import grep.neogulcoder.domain.alram.controller.dto.response.AlarmResponse;
 import grep.neogulcoder.domain.alram.service.AlarmService;
 import grep.neogulcoder.global.auth.Principal;
 import grep.neogulcoder.global.response.ApiResponse;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +24,7 @@ public class AlarmController implements AlarmSpecification {
 
     @GetMapping("/unchecked/my")
     public ApiResponse<List<AlarmResponse>> getAllUncheckedAlarm(
-        @AuthenticationPrincipal Principal userDetails) {
+            @AuthenticationPrincipal Principal userDetails) {
         return ApiResponse.success(alarmService.getAllUncheckedAlarms(userDetails.getUserId()));
     }
 
@@ -39,8 +36,8 @@ public class AlarmController implements AlarmSpecification {
 
     @PostMapping("/choose/{alarmId}/response")
     public ApiResponse<Void> respondToInvite(@AuthenticationPrincipal Principal principal,
-        @PathVariable Long alarmId,
-        boolean accepted) {
+                                             @PathVariable Long alarmId,
+                                             boolean accepted) {
         if (accepted) {
             alarmService.acceptInvite(principal.getUserId(), alarmId);
         } else {
