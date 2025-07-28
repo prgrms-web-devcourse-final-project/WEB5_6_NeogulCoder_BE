@@ -27,14 +27,14 @@ public class RecruitmentPostUpdateRequest {
 
     @Future
     @Schema(example = "2025-07-21T23:59:59", description = "모집글 마감 기간")
-    private LocalDateTime expiredDateTime;
+    private LocalDateTime expiredDate;
 
     @Builder
-    private RecruitmentPostUpdateRequest(String subject, String content, int recruitmentCount, LocalDateTime expiredDateTime) {
+    private RecruitmentPostUpdateRequest(String subject, String content, int recruitmentCount, LocalDateTime expiredDate) {
         this.subject = subject;
         this.content = content;
         this.recruitmentCount = recruitmentCount;
-        this.expiredDateTime = expiredDateTime;
+        this.expiredDate = expiredDate;
     }
 
     public RecruitmentPostUpdateServiceRequest toServiceRequest() {
@@ -42,7 +42,7 @@ public class RecruitmentPostUpdateRequest {
                 .subject(this.subject)
                 .content(this.content)
                 .recruitmentCount(this.recruitmentCount)
-                .expiredDateTime(this.expiredDateTime)
+                .expiredDateTime(this.expiredDate)
                 .build();
     }
 

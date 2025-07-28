@@ -41,11 +41,11 @@ INSERT INTO study_member (study_id, user_id, role, participated, activated) VALU
 INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (6, 9, 'MEMBER', FALSE, TRUE);
 
 -- [ recruitment_post ]
-INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status, activated) VALUES (3, 1, '자바 스터디 모집', '이펙티브 자바 공부하실분 구해요!!', 3, '2025-04-19', 'COMPLETE', true);
-INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status, activated) VALUES (2, 4, '면접 스터디 모집', '삼성 면접 1차 합격자 분들 같이 준비하실분들 찾습니다', 1, '2025-07-08', 'COMPLETE', true);
-INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status, activated) VALUES (5, 2, '호밀밭의 파수꾼 책 같이 읽으실분', '책 같이 읽고 의견을 공유 하실분을 찾고 있습니다!! 많은 참여 부탁드려요', 5, '2025-06-10', 'IN_PROGRESS', true);
-INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status, activated) VALUES (3, 5, '클라이밍 같이 하실분 모집 합니다', '클라이밍 좋아하시는 분들의 많은 관심 바랍니다!', 5, '2025-06-08', 'IN_PROGRESS', true);
-INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status, activated) VALUES (2, 3, '토익 스터디', '토익 고수들의 많은 참여 부탁 드립니다', 2, '2025-03-31', 'IN_PROGRESS', true);
+INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status, activated, created_date) VALUES (3, 1, '자바 스터디 모집', '이펙티브 자바 공부하실분 구해요!!', 3, '2025-04-19', 'COMPLETE', true, '2025-08-02 12:00:00');
+INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status, activated, created_date) VALUES (2, 4, '면접 스터디 모집', '삼성 면접 1차 합격자 분들 같이 준비하실분들 찾습니다', 1, '2025-07-08', 'COMPLETE', true, '2025-08-11 12:00:00');
+INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status, activated, created_date) VALUES (5, 2, '호밀밭의 파수꾼 책 같이 읽으실분', '책 같이 읽고 의견을 공유 하실분을 찾고 있습니다!! 많은 참여 부탁드려요', 5, '2025-06-10', 'IN_PROGRESS', true, '2025-09-02 12:00:00');
+INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status, activated, created_date) VALUES (3, 5, '클라이밍 같이 하실분 모집 합니다', '클라이밍 좋아하시는 분들의 많은 관심 바랍니다!', 5, '2025-06-08', 'IN_PROGRESS', true, '2025-09-06 12:00:00');
+INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status, activated, created_date) VALUES (2, 3, '토익 스터디', '토익 고수들의 많은 참여 부탁 드립니다', 2, '2025-03-31', 'IN_PROGRESS', true, '2025-07-16 12:00:00');
 
 -- [ study_application ]
 INSERT INTO study_application (user_id, recruitment_post_id, application_reason, is_read, status, activated) VALUES (1, 1, '자바 스터디에 참여하고 싶습니다.', FALSE, 'APPLYING', TRUE);

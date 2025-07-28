@@ -1,5 +1,6 @@
 package grep.neogulcoder.domain.groupchat.controller;
 
+import grep.neogulcoder.domain.groupchat.controller.dto.response.ChatMessagePagingResponse;
 import grep.neogulcoder.domain.groupchat.controller.dto.response.GroupChatMessageResponseDto;
 import grep.neogulcoder.global.response.ApiResponse;
 import grep.neogulcoder.global.response.PageResponse;
@@ -73,7 +74,7 @@ public interface GroupChatRestSpecification {
         """
     )
 
-    ApiResponse<PageResponse<GroupChatMessageResponseDto>> getMessages(
+    ApiResponse<ChatMessagePagingResponse> getMessages(
         @Parameter(description = "스터디 ID", example = "1")
         @PathVariable("studyId") Long studyId,
 

@@ -1,6 +1,6 @@
 package grep.neogulcoder.domain.timevote.dto.request;
 
-import grep.neogulcoder.domain.timevote.entity.TimeVotePeriod;
+import grep.neogulcoder.domain.timevote.TimeVotePeriod;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;

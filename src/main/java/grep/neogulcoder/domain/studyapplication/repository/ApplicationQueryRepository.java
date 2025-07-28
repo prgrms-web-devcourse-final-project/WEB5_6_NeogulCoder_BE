@@ -72,7 +72,7 @@ public class ApplicationQueryRepository {
     public Page<MyApplicationResponse> findMyStudyApplicationsPaging(Pageable pageable, Long userId, ApplicationStatus status) {
         List<MyApplicationResponse> applications = queryFactory
             .select(new QMyApplicationResponse(
-                studyApplication.id,
+                recruitmentPost.id,
                 study.name,
                 user.nickname,
                 study.capacity,

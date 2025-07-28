@@ -1,8 +1,8 @@
 package grep.neogulcoder.domain.alram.controller.dto.response;
 
-import grep.neogulcoder.domain.alram.entity.Alarm;
 import grep.neogulcoder.domain.alram.type.AlarmType;
 import grep.neogulcoder.domain.alram.type.DomainType;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
 
@@ -21,8 +21,13 @@ public class AlarmResponse {
 
     private String message;
 
-    public static AlarmResponse toResponse(Long id, Long receiverUserId, AlarmType alarmType, DomainType domainType,
-        Long domainId, String message) {
+    private boolean checked;
+
+    private LocalDateTime createdDate;
+
+    public static AlarmResponse toResponse(Long id, Long receiverUserId, AlarmType alarmType,
+        DomainType domainType,
+        Long domainId, String message, boolean checked, LocalDateTime createdDate) {
         return AlarmResponse.builder()
             .id(id)
             .receiverUserId(receiverUserId)
@@ -30,17 +35,21 @@ public class AlarmResponse {
             .domainType(domainType)
             .domainId(domainId)
             .message(message)
+            .checked(checked)
+            .createdDate(createdDate)
             .build();
     }
 
     @Builder
     private AlarmResponse(Long id, Long receiverUserId, AlarmType alarmType, DomainType domainType,
-        Long domainId, String message) {
+        Long domainId, String message, boolean checked, LocalDateTime createdDate) {
         this.id = id;
         this.receiverUserId = receiverUserId;
         this.alarmType = alarmType;
         this.domainType = domainType;
         this.domainId = domainId;
         this.message = message;
+        this.checked = checked;
+        this.createdDate = createdDate;
     }
 }
