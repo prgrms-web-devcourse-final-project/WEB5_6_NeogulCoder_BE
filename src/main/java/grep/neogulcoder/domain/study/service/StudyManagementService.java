@@ -47,6 +47,7 @@ public class StudyManagementService {
     private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final UserRepository userRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final StudyManagementServiceFacade studyManagementServiceFacade;
 
     public StudyExtensionResponse getStudyExtension(Long studyId) {
         Study study = findValidStudy(studyId);
@@ -79,7 +80,7 @@ public class StudyManagementService {
         }
 
         studyMember.delete();
-        study.decreaseMemberCount();
+        studyManagementServiceFacade.decreaseMemberCount(study, userId);
     }
 
     @Transactional
@@ -115,7 +116,7 @@ public class StudyManagementService {
             }
 
             studyMember.delete();
-            study.decreaseMemberCount();
+            studyManagementServiceFacade.decreaseMemberCount(study, userId);
         }
     }
 
