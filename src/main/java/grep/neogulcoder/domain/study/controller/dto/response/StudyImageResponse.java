@@ -9,13 +9,13 @@ import lombok.Getter;
 public class StudyImageResponse {
 
     @Schema(description = "스터디 번호", example = "3")
-    private Long studyId;
+    private final Long studyId;
 
     @Schema(description = "스터디 이름", example = "자바 스터디")
-    private String name;
+    private final String name;
 
     @Schema(description = "대표 이미지", example = "http://localhost:8083/image.jpg")
-    private String imageUrl;
+    private final String imageUrl;
 
     @Builder
     private StudyImageResponse(Long studyId, String name, String imageUrl) {

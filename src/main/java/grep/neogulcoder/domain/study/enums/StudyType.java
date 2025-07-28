@@ -14,13 +14,6 @@ public enum StudyType {
         this.description = description;
     }
 
-    public static StudyType fromDescription(String description) {
-        return Arrays.stream(values())
-                .filter(study -> study.equalsDescription(description))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException(RecruitmentErrorCode.BAD_REQUEST_STUDY_TYPE));
-    }
-
     private boolean equalsDescription(String description) {
         return this.description.equals(description);
     }

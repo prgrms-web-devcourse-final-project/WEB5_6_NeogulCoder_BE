@@ -11,16 +11,16 @@ import lombok.Getter;
 public class StudyMemberInfoResponse {
 
     @Schema(description = "유저 Id", example = "1")
-    private Long userId;
+    private final Long userId;
 
     @Schema(description = "스터디 Id", example = "1")
-    private Long studyId;
+    private final Long studyId;
 
     @Schema(description = "스터디 멤버 역할", example = "LEADER")
-    private StudyMemberRole role;
+    private final StudyMemberRole role;
 
     @Schema(description = "닉네임", example = "너굴")
-    private String nickname;
+    private final String nickname;
 
     @Builder
     private StudyMemberInfoResponse(Long userId, Long studyId, StudyMemberRole role, String nickname) {

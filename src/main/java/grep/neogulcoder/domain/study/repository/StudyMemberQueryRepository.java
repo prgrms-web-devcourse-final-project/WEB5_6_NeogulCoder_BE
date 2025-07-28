@@ -17,11 +17,9 @@ import static grep.neogulcoder.domain.users.entity.QUser.user;
 @Repository
 public class StudyMemberQueryRepository {
 
-    private final EntityManager em;
     private final JPAQueryFactory queryFactory;
 
     public StudyMemberQueryRepository(EntityManager em) {
-        this.em = em;
         this.queryFactory = new JPAQueryFactory(em);
     }
 

@@ -164,7 +164,7 @@ public class StudyService {
 
     @Transactional
     public void deleteStudy(Long studyId, Long userId) {
-        Study study = findValidStudy(studyId);
+        findValidStudy(studyId);
 
         validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
@@ -250,9 +250,5 @@ public class StudyService {
 
     private boolean isImgExists(MultipartFile image) {
         return image != null && !image.isEmpty();
-    }
-
-    private int getActiveUnfinishedStudiesCount(Long userId) {
-        return studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
     }
 }

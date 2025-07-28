@@ -51,7 +51,7 @@ public class StudyManagementService {
     }
 
     public List<ExtendParticipationResponse> getExtendParticipations(Long studyId) {
-        Study study = findValidStudy(studyId);
+        findValidStudy(studyId);
 
         return studyMemberQueryRepository.findExtendParticipation(studyId);
     }
@@ -152,7 +152,7 @@ public class StudyManagementService {
 
     @Transactional
     public void registerExtensionParticipation(Long studyId, Long userId) {
-        Study originStudy = findValidStudy(studyId);
+        findValidStudy(studyId);
         StudyMember studyMember = findValidStudyMember(studyId, userId);
 
         if (studyMember.isParticipated()) {

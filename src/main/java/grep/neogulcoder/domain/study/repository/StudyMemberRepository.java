@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> {
-    List<StudyMember> findByStudyId(long studyId);
-
     List<StudyMember> findAllByStudyIdAndActivatedTrue(Long studyId);
 
     @Query("select m.study from StudyMember m where m.userId = :userId and m.study.activated = true")
@@ -26,8 +24,6 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long> 
     int countByStudyIdAndActivatedTrue(Long studyId);
 
     boolean existsByStudyIdAndUserIdAndActivatedTrue(Long studyId, Long userId);
-
-    boolean existsByStudyIdAndUserIdAndRoleAndActivatedTrue(Long studyId, Long id, StudyMemberRole role);
 
     @Modifying(clearAutomatically = true)
     @Query("update StudyMember m set m.activated = false where m.study.id = :studyId")
