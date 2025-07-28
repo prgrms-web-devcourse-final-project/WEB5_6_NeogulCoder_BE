@@ -122,32 +122,6 @@ public class StudyQueryRepository {
             .fetch();
     }
 
-    public List<StudyItemResponse> findMyStudies(Long userId) {
-        return queryFactory
-            .select(new QStudyItemResponse(
-                study.id,
-                study.name,
-                user.nickname,
-                study.capacity,
-                study.currentCount,
-                study.startDate,
-                study.endDate,
-                study.imageUrl,
-                study.introduction,
-                study.category,
-                study.studyType,
-                study.finished
-            ))
-            .from(studyMember)
-            .join(user).on(user.id.eq(studyMember.userId))
-            .join(study).on(study.id.eq(studyMember.study.id))
-            .where(
-                studyMember.userId.eq(userId),
-                studyMember.activated.isTrue()
-            )
-            .fetch();
-    }
-
     public StudyMemberRole findMyRole(Long studyId, Long userId) {
         return queryFactory
             .select(studyMember.role)
