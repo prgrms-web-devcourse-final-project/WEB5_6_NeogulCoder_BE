@@ -1,14 +1,15 @@
 package grep.neogulcoder.domain.studypost.comment.service;
 
+import grep.neogulcoder.domain.studypost.StudyPost;
 import grep.neogulcoder.domain.studypost.StudyPostErrorCode;
 import grep.neogulcoder.domain.studypost.comment.StudyPostComment;
 import grep.neogulcoder.domain.studypost.comment.dto.StudyPostCommentSaveRequest;
 import grep.neogulcoder.domain.studypost.comment.dto.request.StudyCommentUpdateRequest;
+import grep.neogulcoder.domain.studypost.comment.event.StudyPostCommentEvent;
 import grep.neogulcoder.domain.studypost.comment.repository.StudyPostCommentQueryRepository;
 import grep.neogulcoder.domain.studypost.comment.repository.StudyPostCommentRepository;
 import grep.neogulcoder.domain.studypost.repository.StudyPostRepository;
 import grep.neogulcoder.global.exception.business.NotFoundException;
-import grep.neogulcoder.global.provider.finder.MessageFinder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -29,10 +30,12 @@ public class StudyPostCommentService {
         StudyPostComment comment = request.toEntity(postId, userId);
         Long commentId = commentRepository.save(comment).getId();
 
-        postRepository.findById(postId)
+        StudyPost post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(StudyPostErrorCode.NOT_FOUND_POST));
 
-        publisher.publishEvent();
+        if (post.isNotOwned(userId)) {
+            publisher.publishEvent(new StudyPostCommentEvent(post.getUserId(), post.getId()));
+        }
         return commentId;
     }
 
