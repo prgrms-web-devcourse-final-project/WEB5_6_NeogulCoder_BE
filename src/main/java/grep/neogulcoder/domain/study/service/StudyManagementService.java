@@ -1,5 +1,7 @@
 package grep.neogulcoder.domain.study.service;
 
+import grep.neogulcoder.domain.recruitment.RecruitmentPostStatus;
+import grep.neogulcoder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.StudyMember;
 import grep.neogulcoder.domain.study.controller.dto.request.ExtendStudyRequest;
@@ -23,6 +25,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +43,7 @@ public class StudyManagementService {
     private final UserRepository userRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final StudyManagementServiceFacade studyManagementServiceFacade;
+    private final RecruitmentPostRepository recruitmentPostRepository;
 
     public StudyExtensionResponse getStudyExtension(Long studyId) {
         Study study = getStudyById(studyId);
@@ -63,6 +67,7 @@ public class StudyManagementService {
         if (isLastMember(study)) {
             study.delete();
             studyMember.delete();
+            completeRecruitmentPostIfExists(studyId);
             return;
         }
 
@@ -188,6 +193,11 @@ public class StudyManagementService {
         int activatedMemberCount = studyMemberRepository.countByStudyIdAndActivatedTrue(
             study.getId());
         return activatedMemberCount == 1;
+    }
+
+    private void completeRecruitmentPostIfExists(Long studyId) {
+        recruitmentPostRepository.findByStudyIdAndActivatedTrue(studyId)
+            .ifPresent(recruitmentPost -> recruitmentPost.updateStatus(RecruitmentPostStatus.COMPLETE));
     }
 
     private void randomDelegateLeader(Long studyId, StudyMember currentLeader) {
