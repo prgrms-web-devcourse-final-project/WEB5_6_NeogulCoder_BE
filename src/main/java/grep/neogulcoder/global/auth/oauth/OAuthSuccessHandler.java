@@ -45,7 +45,7 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         response.addHeader("Set-Cookie", accessTokenCookie.toString());
         response.addHeader("Set-Cookie", refreshTokenCookie.toString());
-        getRedirectStrategy().sendRedirect(request, response, "http://localhost:3000/auth/callback");
+        getRedirectStrategy().sendRedirect(request, response, "https://wibby.vercel.app/auth/callback");
     }
 
 }
