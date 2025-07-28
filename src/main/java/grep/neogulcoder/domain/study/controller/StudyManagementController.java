@@ -9,6 +9,7 @@ import grep.neogulcoder.global.auth.Principal;
 import grep.neogulcoder.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,50 +23,50 @@ public class StudyManagementController implements StudyManagementSpecification {
     private final StudyManagementService studyManagementService;
 
     @GetMapping("/extension")
-    public ApiResponse<StudyExtensionResponse> getStudyExtension(@PathVariable("studyId") Long studyId) {
+    public ResponseEntity<ApiResponse<StudyExtensionResponse>> getStudyExtension(@PathVariable("studyId") Long studyId) {
         StudyExtensionResponse studyExtension = studyManagementService.getStudyExtension(studyId);
-        return ApiResponse.success(studyExtension);
+        return ResponseEntity.ok(ApiResponse.success(studyExtension));
     }
 
     @GetMapping("/extension/participations")
-    public ApiResponse<List<ExtendParticipationResponse>> getExtendParticipations(@PathVariable("studyId") Long studyId) {
+    public ResponseEntity<ApiResponse<List<ExtendParticipationResponse>>> getExtendParticipations(@PathVariable("studyId") Long studyId) {
         List<ExtendParticipationResponse> extendParticipations = studyManagementService.getExtendParticipations(studyId);
-        return ApiResponse.success(extendParticipations);
+        return ResponseEntity.ok(ApiResponse.success(extendParticipations));
     }
 
     @DeleteMapping("/me")
-    public ApiResponse<Void> leaveStudy(@PathVariable("studyId") Long studyId,
+    public ResponseEntity<ApiResponse<Void>> leaveStudy(@PathVariable("studyId") Long studyId,
                                         @AuthenticationPrincipal Principal userDetails) {
         studyManagementService.leaveStudy(studyId, userDetails.getUserId());
-        return ApiResponse.noContent();
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 
     @PostMapping("/delegate")
-    public ApiResponse<Void> delegateLeader(@PathVariable("studyId") Long studyId,
+    public ResponseEntity<ApiResponse<Void>> delegateLeader(@PathVariable("studyId") Long studyId,
                                             @RequestBody DelegateLeaderRequest request,
                                             @AuthenticationPrincipal Principal userDetails) {
         studyManagementService.delegateLeader(studyId, userDetails.getUserId(), request.getNewLeaderId());
-        return ApiResponse.noContent();
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 
     @PostMapping("/extension")
-    public ApiResponse<Long> extendStudy(@PathVariable("studyId") Long studyId,
+    public ResponseEntity<ApiResponse<Long>> extendStudy(@PathVariable("studyId") Long studyId,
                                          @RequestBody @Valid ExtendStudyRequest request,
                                          @AuthenticationPrincipal Principal userDetails) {
         Long extendStudyId = studyManagementService.extendStudy(studyId, request, userDetails.getUserId());
-        return ApiResponse.success(extendStudyId);
+        return ResponseEntity.ok(ApiResponse.success(extendStudyId));
     }
 
     @PostMapping("/extension/participations")
-    public ApiResponse<Void> registerExtensionParticipation(@PathVariable("studyId") Long studyId,
+    public ResponseEntity<ApiResponse<Void>> registerExtensionParticipation(@PathVariable("studyId") Long studyId,
                                                             @AuthenticationPrincipal Principal userDetails) {
         studyManagementService.registerExtensionParticipation(studyId, userDetails.getUserId());
-        return ApiResponse.noContent();
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 
     @PostMapping("/invite/user")
-    public ApiResponse<Void> inviteUser(@PathVariable("studyId") Long studyId, @AuthenticationPrincipal Principal userDetails, String targetUserNickname) {
+    public ResponseEntity<ApiResponse<Void>> inviteUser(@PathVariable("studyId") Long studyId, @AuthenticationPrincipal Principal userDetails, String targetUserNickname) {
         studyManagementService.inviteTargetUser(studyId, userDetails.getUserId(), targetUserNickname);
-        return ApiResponse.noContent();
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 }
