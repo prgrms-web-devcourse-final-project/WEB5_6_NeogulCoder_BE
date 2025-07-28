@@ -3,13 +3,16 @@ package grep.neogulcoder.domain.study.repository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import grep.neogulcoder.domain.study.QStudyMember;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.controller.dto.response.QStudyItemResponse;
 import grep.neogulcoder.domain.study.controller.dto.response.StudyItemResponse;
 import grep.neogulcoder.domain.study.controller.dto.response.StudyMemberResponse;
 import grep.neogulcoder.domain.study.enums.Category;
 import grep.neogulcoder.domain.study.enums.StudyMemberRole;
+import grep.neogulcoder.domain.users.entity.QUser;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,11 +37,14 @@ public class StudyQueryRepository {
 
     public Page<StudyItemResponse> findMyStudiesPaging(Pageable pageable, Long userId, Boolean finished) {
 
+        QStudyMember leaderMember = new QStudyMember("leaderMember");
+        QUser leaderUser = new QUser("leaderUser");
+
         List<StudyItemResponse> studies = queryFactory
             .select(new QStudyItemResponse(
                 study.id,
                 study.name,
-                user.nickname,
+                leaderUser.nickname,
                 study.capacity,
                 study.currentCount,
                 study.startDate,
@@ -50,8 +56,13 @@ public class StudyQueryRepository {
                 study.finished
             ))
             .from(studyMember)
-            .join(user).on(user.id.eq(studyMember.userId))
             .join(study).on(study.id.eq(studyMember.study.id))
+            .join(leaderMember).on(
+                leaderMember.study.id.eq(study.id),
+                leaderMember.role.eq(StudyMemberRole.LEADER),
+                leaderMember.activated.isTrue()
+            )
+            .join(leaderUser).on(leaderUser.id.eq(leaderMember.userId))
             .where(
                 studyMember.userId.eq(userId),
                 studyMember.activated.isTrue(),
@@ -64,7 +75,6 @@ public class StudyQueryRepository {
         Long total = queryFactory
             .select(study.id.count())
             .from(studyMember)
-            .join(user).on(user.id.eq(studyMember.userId))
             .join(study).on(study.id.eq(studyMember.study.id))
             .where(
                 studyMember.userId.eq(userId),
@@ -77,11 +87,15 @@ public class StudyQueryRepository {
     }
 
     public List<StudyItemResponse> findMyUnfinishedStudies(Long userId) {
+
+        QStudyMember leaderMember = new QStudyMember("leaderMember");
+        QUser leaderUser = new QUser("leaderUser");
+
         return queryFactory
             .select(new QStudyItemResponse(
                 study.id,
                 study.name,
-                user.nickname,
+                leaderUser.nickname,
                 study.capacity,
                 study.currentCount,
                 study.startDate,
@@ -93,8 +107,13 @@ public class StudyQueryRepository {
                 study.finished
             ))
             .from(studyMember)
-            .join(user).on(user.id.eq(studyMember.userId))
             .join(study).on(study.id.eq(studyMember.study.id))
+            .join(leaderMember).on(
+                leaderMember.study.id.eq(study.id),
+                leaderMember.role.eq(StudyMemberRole.LEADER),
+                leaderMember.activated.isTrue()
+            )
+            .join(leaderUser).on(leaderUser.id.eq(leaderMember.userId))
             .where(
                 studyMember.userId.eq(userId),
                 studyMember.activated.isTrue(),
