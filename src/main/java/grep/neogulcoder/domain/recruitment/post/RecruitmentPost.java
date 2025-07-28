@@ -48,8 +48,12 @@ public class RecruitmentPost extends BaseEntity {
         this.expiredDate = expiredDateTime;
     }
 
+    public boolean isOwnedBy(long userId) {
+        return this.userId == userId;
+    }
+
     public boolean isNotOwnedBy(long userId) {
-        return this.userId != userId;
+        return !isOwnedBy(userId);
     }
 
     public void updateStatus(RecruitmentPostStatus status) {

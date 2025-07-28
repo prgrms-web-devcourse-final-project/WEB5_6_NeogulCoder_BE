@@ -3,12 +3,14 @@ package grep.neogulcoder.domain.recruitment.comment.service;
 import grep.neogulcoder.domain.recruitment.comment.RecruitmentPostComment;
 import grep.neogulcoder.domain.recruitment.comment.controller.dto.request.RecruitmentCommentSaveRequest;
 import grep.neogulcoder.domain.recruitment.comment.controller.dto.request.RecruitmentCommentUpdateRequest;
+import grep.neogulcoder.domain.recruitment.comment.event.StudyPostCommentEvent;
 import grep.neogulcoder.domain.recruitment.comment.repository.RecruitmentPostCommentQueryRepository;
 import grep.neogulcoder.domain.recruitment.comment.repository.RecruitmentPostCommentRepository;
 import grep.neogulcoder.domain.recruitment.post.RecruitmentPost;
 import grep.neogulcoder.domain.recruitment.post.repository.RecruitmentPostQueryRepository;
 import grep.neogulcoder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,12 +26,19 @@ public class RecruitmentPostCommentService {
     private final RecruitmentPostCommentRepository commentRepository;
     private final RecruitmentPostCommentQueryRepository commentQueryRepository;
 
+    private final ApplicationEventPublisher publisher;
+
     @Transactional
     public long save(long postId, RecruitmentCommentSaveRequest request, long userId) {
         RecruitmentPost post = postRepository.findPostBy(postId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND));
 
-        return commentRepository.save(request.toEntity(post, userId)).getId();
+        Long commentId = commentRepository.save(request.toEntity(post, userId)).getId();
+
+        if (post.isNotOwnedBy(userId)) {
+            publisher.publishEvent(new StudyPostCommentEvent(post.getUserId(), post.getId()));
+        }
+        return commentId;
     }
 
     @Transactional
