@@ -105,7 +105,7 @@ public class StudyService {
         Study study = findValidStudy(studyId);
 
         validateStudyMember(studyId, userId);
-        // validateStudyLeader(studyId, userId);
+        validateStudyLeader(studyId, userId);
 
         List<StudyMemberResponse> members = studyQueryRepository.findStudyMembers(studyId);
 
