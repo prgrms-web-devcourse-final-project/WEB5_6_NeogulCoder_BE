@@ -101,4 +101,28 @@ public class StudyMemberQueryRepository {
 
             return result != null ? result.intValue() : 0;
     }
+
+    public List<StudyMember> findActivatedStudyMembersWithStudy(Long userId) {
+        return queryFactory
+            .selectFrom(studyMember)
+            .join(studyMember.study, study).fetchJoin()
+            .where(
+                studyMember.userId.eq(userId),
+                studyMember.activated.isTrue(),
+                study.activated.isTrue()
+            )
+            .fetch();
+
+    }
+
+    public List<StudyMember> findActivatedMembersByStudyIds(List<Long> studyIds) {
+        return queryFactory
+            .selectFrom(studyMember)
+            .join(studyMember.study, study).fetchJoin()
+            .where(
+                studyMember.study.id.in(studyIds),
+                studyMember.activated.isTrue()
+            )
+            .fetch();
+    }
 }

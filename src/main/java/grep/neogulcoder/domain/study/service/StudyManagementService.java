@@ -18,7 +18,10 @@ import grep.neogulcoder.global.exception.business.NotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -100,22 +103,33 @@ public class StudyManagementService {
 
     @Transactional
     public void deleteUserFromStudies(Long userId) {
-        List<Study> studies = studyMemberRepository.findStudiesByUserId(userId);
+        List<StudyMember> myStudyMembers = studyMemberQueryRepository.findActivatedStudyMembersWithStudy(userId);
 
-        for (Study study : studies) {
-            StudyMember studyMember = findValidStudyMember(study.getId(), userId);
+        List<Long> studyIds = myStudyMembers.stream()
+            .map(studyMember -> studyMember.getStudy().getId())
+            .distinct()
+            .toList();
 
-            if (isLastMember(study)) {
+        List<StudyMember> allActivatedMembers = studyMemberQueryRepository.findActivatedMembersByStudyIds(studyIds);
+
+        Map<Long, List<StudyMember>> activatedMemberMap = allActivatedMembers.stream()
+            .collect(Collectors.groupingBy(studyMember -> studyMember.getStudy().getId()));
+
+        for (StudyMember myMember : myStudyMembers) {
+            Study study = myMember.getStudy();
+            List<StudyMember> activatedMembers = activatedMemberMap.getOrDefault(study.getId(), List.of());
+
+            if (activatedMembers.size() == 1) {
                 study.delete();
-                studyMember.delete();
+                myMember.delete();
                 continue;
             }
 
-            if (studyMember.isLeader()) {
-                randomDelegateLeader(study.getId(), studyMember);
+            if (myMember.isLeader()) {
+                randomDelegateLeader(study.getId(), myMember);
             }
 
-            studyMember.delete();
+            myMember.delete();
             studyManagementServiceFacade.decreaseMemberCount(study, userId);
         }
     }
