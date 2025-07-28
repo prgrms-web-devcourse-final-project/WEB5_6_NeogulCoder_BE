@@ -45,8 +45,7 @@ public class StudyManagementService {
     public StudyExtensionResponse getStudyExtension(Long studyId) {
         Study study = findValidStudy(studyId);
 
-        List<ExtendParticipationResponse> members = studyMemberQueryRepository.findExtendParticipation(
-            studyId);
+        List<ExtendParticipationResponse> members = studyMemberQueryRepository.findExtendParticipation(studyId);
         return StudyExtensionResponse.from(study, members);
     }
 
@@ -133,7 +132,7 @@ public class StudyManagementService {
 
         validateStudyExtendable(originStudy, request.getNewEndDate());
 
-        Study extendedStudy = request.toEntity(originStudy);
+        Study extendedStudy = request.toEntity(originStudy, userId);
         studyRepository.save(extendedStudy);
         originStudy.extend();
         leader.participate();

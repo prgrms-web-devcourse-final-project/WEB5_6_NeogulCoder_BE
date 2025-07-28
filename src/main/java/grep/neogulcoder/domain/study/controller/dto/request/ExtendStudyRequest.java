@@ -22,8 +22,9 @@ public class ExtendStudyRequest {
         this.newEndDate = newEndDate;
     }
 
-    public Study toEntity(Study study) {
+    public Study toEntity(Study study, Long userId) {
         return Study.builder()
+            .userId(userId)
             .originStudyId(study.getId())
             .name(study.getName())
             .category(study.getCategory())
