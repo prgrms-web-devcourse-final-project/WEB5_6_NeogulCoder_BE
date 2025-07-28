@@ -14,6 +14,12 @@ import java.time.LocalDateTime;
 @Getter
 public class RecruitmentPostWithStudyInfo {
 
+    @Schema(example = "3", description = "회원 식별자")
+    private long userId;
+
+    @Schema(example = "www.s3...", description = "회원 이미지 URL")
+    private String imageUrl;
+
     @Schema(example = "닉네임", description = "작성자 회원 닉네임")
     private String nickname;
 
@@ -54,10 +60,12 @@ public class RecruitmentPostWithStudyInfo {
     private LocalDateTime endDate;
 
     @QueryProjection
-    public RecruitmentPostWithStudyInfo(String nickname, long recruitmentPostId, String subject,
+    public RecruitmentPostWithStudyInfo(long userId, String imageUrl, String nickname, long recruitmentPostId, String subject,
                                         String content, int recruitmentCount, RecruitmentPostStatus status,
                                         LocalDateTime createdDate, LocalDateTime expiredDate, Category category, String location,
                                         StudyType studyType, LocalDateTime startedDate, LocalDateTime endDate) {
+        this.userId = userId;
+        this.imageUrl = imageUrl;
         this.nickname = nickname;
         this.recruitmentPostId = recruitmentPostId;
         this.subject = subject;
