@@ -6,9 +6,6 @@ import grep.neogulcoder.domain.alram.exception.code.AlarmErrorCode;
 import grep.neogulcoder.domain.alram.repository.AlarmRepository;
 import grep.neogulcoder.domain.alram.type.AlarmType;
 import grep.neogulcoder.domain.alram.type.DomainType;
-import grep.neogulcoder.domain.recruitment.post.RecruitmentPost;
-import grep.neogulcoder.domain.recruitment.post.repository.RecruitmentPostRepository;
-import grep.neogulcoder.domain.recruitment.comment.event.StudyPostCommentEvent;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.StudyMember;
 import grep.neogulcoder.domain.study.enums.StudyMemberRole;
@@ -18,11 +15,6 @@ import grep.neogulcoder.domain.study.event.StudyInviteEvent;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
-import grep.neogulcoder.domain.studyapplication.StudyApplication;
-import grep.neogulcoder.domain.studyapplication.event.ApplicationEvent;
-import grep.neogulcoder.domain.studyapplication.event.ApplicationStatusChangedEvent;
-import grep.neogulcoder.domain.studyapplication.repository.ApplicationRepository;
-import grep.neogulcoder.domain.timevote.event.TimeVotePeriodCreatedEvent;
 import grep.neogulcoder.global.exception.business.BusinessException;
 import grep.neogulcoder.global.exception.business.NotFoundException;
 import grep.neogulcoder.global.provider.finder.MessageFinder;
@@ -31,14 +23,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
-import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
-import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.*;
 import java.util.List;
 
-import static grep.neogulcoder.domain.alram.type.AlarmType.*;
-import static grep.neogulcoder.domain.alram.type.DomainType.RECRUITMENT_POST;
-import static grep.neogulcoder.domain.alram.type.DomainType.STUDY;
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_LEADER_NOT_FOUND;
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
 import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.APPLICATION_PARTICIPANT_LIMIT_EXCEEDED;
@@ -61,32 +47,34 @@ public class AlarmService {
     }
 
     public List<AlarmResponse> getAllAlarms(Long receiverUserId) {
-        return alarmRepository.findAllByReceiverUserIdAndCheckedFalse(receiverUserId).stream()
-            .map(alarm -> AlarmResponse.toResponse(
-                alarm.getId(),
-                alarm.getReceiverUserId(),
-                alarm.getAlarmType(),
-                alarm.getDomainType(),
-                alarm.getDomainId(),
-                alarm.getMessage()))
-            .toList();
+        return alarmRepository.findAllByReceiverUserId(receiverUserId).stream()
+                .map(alarm -> AlarmResponse.toResponse(
+                        alarm.getId(),
+                        alarm.getReceiverUserId(),
+                        alarm.getAlarmType(),
+                        alarm.getDomainType(),
+                        alarm.getDomainId(),
+                        alarm.getMessage(),
+                        alarm.isChecked(),
+                        alarm.getCreatedDate()))
+                .toList();
     }
 
     @Transactional
     public void checkAllAlarm(Long receiverUserId) {
         List<Alarm> alarms = alarmRepository.findAllByReceiverUserIdAndCheckedFalse(receiverUserId);
         alarms.stream()
-            .filter(alarm -> alarm.getAlarmType() != AlarmType.INVITE)
-            .forEach(Alarm::checkAlarm);
+                .filter(alarm -> alarm.getAlarmType() != AlarmType.INVITE)
+                .forEach(Alarm::checkAlarm);
     }
 
     @EventListener
     public void handleStudyInviteEvent(StudyInviteEvent event) {
         saveAlarm(
-            event.targetUserId(),
-            AlarmType.INVITE,
-            DomainType.STUDY,
-            event.studyId()
+                event.targetUserId(),
+                AlarmType.INVITE,
+                DomainType.STUDY,
+                event.studyId()
         );
     }
 
@@ -98,7 +86,7 @@ public class AlarmService {
         Alarm alarm = findValidAlarm(alarmId);
         Long studyId = alarm.getDomainId();
         Study study = findValidStudy(studyId);
-        StudyMember.createMember(study,targetUserId);
+        StudyMember.createMember(study, targetUserId);
         alarm.checkAlarm();
     }
 
@@ -115,10 +103,10 @@ public class AlarmService {
         for (StudyMember member : members) {
             if (!member.isLeader()) {
                 saveAlarm(
-                    member.getUserId(),
-                    AlarmType.STUDY_EXTEND,
-                    DomainType.STUDY,
-                    event.studyId()
+                        member.getUserId(),
+                        AlarmType.STUDY_EXTEND,
+                        DomainType.STUDY,
+                        event.studyId()
                 );
             }
         }
@@ -127,13 +115,13 @@ public class AlarmService {
     @EventListener
     public void handleStudyExtensionReminderEvent(StudyExtensionReminderEvent event) {
         StudyMember leader = studyMemberRepository.findByStudyIdAndRoleAndActivatedTrue(event.studyId(), StudyMemberRole.LEADER)
-            .orElseThrow(() -> new BusinessException(STUDY_LEADER_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(STUDY_LEADER_NOT_FOUND));
 
         saveAlarm(
-            leader.getUserId(),
-            AlarmType.STUDY_EXTENSION_REMINDER,
-            DomainType.STUDY,
-            event.studyId()
+                leader.getUserId(),
+                AlarmType.STUDY_EXTENSION_REMINDER,
+                DomainType.STUDY,
+                event.studyId()
         );
     }
 
@@ -143,7 +131,7 @@ public class AlarmService {
 
     private Study findValidStudy(Long studyId) {
         return studyRepository.findById(studyId)
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
     }
 
     private void validateParticipantStudyLimit(Long userId) {
