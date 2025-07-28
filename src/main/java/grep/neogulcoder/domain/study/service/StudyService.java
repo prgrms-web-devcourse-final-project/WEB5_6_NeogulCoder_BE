@@ -71,14 +71,14 @@ public class StudyService {
     }
 
     public StudyHeaderResponse getStudyHeader(Long studyId) {
-        Study study = findValidStudy(studyId);
+        Study study = getStudyById(studyId);
         List<StudyMemberResponse> members = studyQueryRepository.findStudyMembers(studyId);
 
         return StudyHeaderResponse.from(study, members);
     }
 
     public StudyResponse getStudy(Long studyId) {
-        Study study = findValidStudy(studyId);
+        Study study = getStudyById(studyId);
 
         int progressDays = (int) ChronoUnit.DAYS.between(study.getStartDate().toLocalDate(), LocalDate.now()) + 1;
         int totalDays = (int) ChronoUnit.DAYS.between(study.getStartDate().toLocalDate(), study.getEndDate().toLocalDate()) + 1;
@@ -102,7 +102,7 @@ public class StudyService {
     }
 
     public StudyInfoResponse getMyStudyContent(Long studyId, Long userId) {
-        Study study = findValidStudy(studyId);
+        Study study = getStudyById(studyId);
 
         validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
@@ -113,7 +113,7 @@ public class StudyService {
     }
 
     public StudyMemberInfoResponse getMyStudyMemberInfo(Long studyId, Long userId) {
-        StudyMember studyMember = findValidStudyMember(studyId, userId);
+        StudyMember studyMember = getStudyMemberById(studyId, userId);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
@@ -141,7 +141,7 @@ public class StudyService {
 
     @Transactional
     public void updateStudy(Long studyId, StudyUpdateRequest request, Long userId, MultipartFile image) throws IOException {
-        Study study = findValidStudy(studyId);
+        Study study = getStudyById(studyId);
 
         validateLocation(request.getStudyType(), request.getLocation());
         validateStudyMember(studyId, userId);
@@ -164,7 +164,7 @@ public class StudyService {
 
     @Transactional
     public void deleteStudy(Long studyId, Long userId) {
-        findValidStudy(studyId);
+        getStudyById(studyId);
 
         validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
@@ -175,12 +175,12 @@ public class StudyService {
         recruitmentPostRepository.deactivateByStudyId(studyId);
     }
 
-    private Study findValidStudy(Long studyId) {
+    private Study getStudyById(Long studyId) {
         return studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
     }
 
-    private StudyMember findValidStudyMember(Long studyId, Long userId) {
+    private StudyMember getStudyMemberById(Long studyId, Long userId) {
         return Optional.ofNullable(studyMemberQueryRepository.findByStudyIdAndUserId(studyId, userId))
             .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
     }

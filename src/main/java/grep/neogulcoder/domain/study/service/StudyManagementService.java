@@ -42,23 +42,23 @@ public class StudyManagementService {
     private final StudyManagementServiceFacade studyManagementServiceFacade;
 
     public StudyExtensionResponse getStudyExtension(Long studyId) {
-        Study study = findValidStudy(studyId);
+        Study study = getStudyById(studyId);
 
         List<ExtendParticipationResponse> members = studyMemberQueryRepository.findExtendParticipation(studyId);
         return StudyExtensionResponse.from(study, members);
     }
 
     public List<ExtendParticipationResponse> getExtendParticipations(Long studyId) {
-        findValidStudy(studyId);
+        getStudyById(studyId);
 
         return studyMemberQueryRepository.findExtendParticipation(studyId);
     }
 
     @Transactional
     public void leaveStudy(Long studyId, Long userId) {
-        Study study = findValidStudy(studyId);
+        Study study = getStudyById(studyId);
 
-        StudyMember studyMember = findValidStudyMember(studyId, userId);
+        StudyMember studyMember = getStudyMemberById(studyId, userId);
 
         if (isLastMember(study)) {
             study.delete();
@@ -80,10 +80,10 @@ public class StudyManagementService {
             throw new BusinessException(LEADER_CANNOT_DELEGATE_TO_SELF);
         }
 
-        StudyMember currentLeader = findValidStudyMember(studyId, userId);
+        StudyMember currentLeader = getStudyMemberById(studyId, userId);
         isLeader(currentLeader);
 
-        StudyMember newLeader = findValidStudyMember(studyId, newLeaderId);
+        StudyMember newLeader = getStudyMemberById(studyId, newLeaderId);
 
         currentLeader.changeRoleMember();
         newLeader.changeRoleLeader();
@@ -124,9 +124,9 @@ public class StudyManagementService {
 
     @Transactional
     public Long extendStudy(Long studyId, ExtendStudyRequest request, Long userId) {
-        Study originStudy = findValidStudy(studyId);
+        Study originStudy = getStudyById(studyId);
 
-        StudyMember leader = findValidStudyMember(studyId, userId);
+        StudyMember leader = getStudyMemberById(studyId, userId);
         isLeader(leader);
 
         validateStudyExtendable(originStudy, request.getNewEndDate());
@@ -146,8 +146,8 @@ public class StudyManagementService {
 
     @Transactional
     public void registerExtensionParticipation(Long studyId, Long userId) {
-        findValidStudy(studyId);
-        StudyMember studyMember = findValidStudyMember(studyId, userId);
+        getStudyById(studyId);
+        StudyMember studyMember = getStudyMemberById(studyId, userId);
 
         if (studyMember.isParticipated()) {
             throw new BusinessException(ALREADY_REGISTERED_PARTICIPATION);
@@ -164,7 +164,7 @@ public class StudyManagementService {
 
     @Transactional
     public void inviteTargetUser(Long studyId, Long userId, String targetUserNickname) {
-        StudyMember studyMember = findValidStudyMember(studyId, userId);
+        StudyMember studyMember = getStudyMemberById(studyId, userId);
         studyMember.isLeader();
 
         User targetUser = userRepository.findByNickname(targetUserNickname)
@@ -174,12 +174,12 @@ public class StudyManagementService {
         eventPublisher.publishEvent(new StudyInviteEvent(studyId, userId, targetUser.getId()));
     }
 
-    private Study findValidStudy(Long studyId) {
+    private Study getStudyById(Long studyId) {
         return studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
     }
 
-    private StudyMember findValidStudyMember(Long studyId, Long userId) {
+    private StudyMember getStudyMemberById(Long studyId, Long userId) {
         return studyMemberRepository.findByStudyIdAndUserId(studyId, userId)
             .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
     }
