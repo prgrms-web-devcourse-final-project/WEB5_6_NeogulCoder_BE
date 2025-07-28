@@ -47,6 +47,9 @@ public class Study extends BaseEntity {
 
     private boolean finished;
 
+    @Version
+    private Long version;
+
     protected Study() {
     }
 
