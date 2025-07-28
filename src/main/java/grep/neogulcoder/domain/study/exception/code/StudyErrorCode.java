@@ -26,7 +26,7 @@ public enum StudyErrorCode implements ErrorCode {
     LEADER_CANNOT_LEAVE_STUDY("S014", HttpStatus.BAD_REQUEST, "스터디장은 스터디를 탈퇴할 수 없습니다."),
     LEADER_CANNOT_DELEGATE_TO_SELF("S015", HttpStatus.BAD_REQUEST, "자기 자신에게는 스터디장 위임이 불가능합니다."),
 
-    STUDY_CONFLICT("S016", HttpStatus.CONFLICT, "요청 처리 중 시스템 충돌이 발생했습니다. 잠시 후 다시 시도해주세요.");
+    STUDY_MEMBER_COUNT_UPDATE_FAILED("S016", HttpStatus.CONFLICT, "스터디 인원 수 업데이트에 실패했습니다. 잠시 후 다시 시도해주세요.");
 
     private final String code;
     private final HttpStatus status;

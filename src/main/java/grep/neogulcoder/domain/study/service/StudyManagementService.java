@@ -140,7 +140,7 @@ public class StudyManagementService {
 
     @Transactional
     public void registerExtensionParticipation(Long studyId, Long userId) {
-        getStudyById(studyId);
+        Study study = getStudyById(studyId);
         StudyMember studyMember = getStudyMemberById(studyId, userId);
 
         if (studyMember.isParticipated()) {
@@ -154,6 +154,7 @@ public class StudyManagementService {
 
         StudyMember extendMember = StudyMember.createMember(extendedStudy, userId);
         studyMemberRepository.save(extendMember);
+        studyManagementServiceFacade.increaseMemberCount(study, userId);
     }
 
     @Transactional

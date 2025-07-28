@@ -19,6 +19,29 @@ public class StudyManagementServiceFacade {
     private static final int MAX_RETRY = 3;
 
     @Transactional
+    public void increaseMemberCount(Study study, Long userId) {
+        int retry = 0;
+        while (retry < MAX_RETRY) {
+            try {
+                study.increaseMemberCount();
+                return;
+            } catch (OptimisticLockException | ObjectOptimisticLockingFailureException e) {
+                retry++;
+
+                try {
+                    Thread.sleep(30);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }
+
+        log.warn("스터디 currentCount 증가 실패 (studyId={}, userId={})", study.getId(), userId);
+        throw new BusinessException(STUDY_MEMBER_COUNT_UPDATE_FAILED);
+    }
+
+    @Transactional
     public void decreaseMemberCount(Study study, Long userId) {
         int retry = 0;
         while (retry < MAX_RETRY) {
@@ -38,6 +61,6 @@ public class StudyManagementServiceFacade {
         }
 
         log.warn("스터디 currentCount 감소 실패 (studyId={}, userId={})", study.getId(), userId);
-        throw new BusinessException(STUDY_CONFLICT);
+        throw new BusinessException(STUDY_MEMBER_COUNT_UPDATE_FAILED);
     }
 }
