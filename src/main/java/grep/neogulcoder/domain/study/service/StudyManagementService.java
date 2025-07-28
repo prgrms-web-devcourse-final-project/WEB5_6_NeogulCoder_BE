@@ -27,7 +27,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogulcoder.domain.study.enums.StudyMemberRole.*;
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
 
 @Transactional(readOnly = true)
@@ -137,11 +136,7 @@ public class StudyManagementService {
         originStudy.extend();
         leader.participate();
 
-        StudyMember extendedLeader = StudyMember.builder()
-            .study(extendedStudy)
-            .userId(userId)
-            .role(LEADER)
-            .build();
+        StudyMember extendedLeader = StudyMember.createLeader(extendedStudy, userId);
         studyMemberRepository.save(extendedLeader);
 
         eventPublisher.publishEvent(new StudyExtendEvent(originStudy.getId()));
@@ -163,11 +158,7 @@ public class StudyManagementService {
         Study extendedStudy = studyRepository.findByOriginStudyIdAndActivatedTrue(studyId)
             .orElseThrow(() -> new BusinessException(EXTENDED_STUDY_NOT_FOUND));
 
-        StudyMember extendMember = StudyMember.builder()
-            .study(extendedStudy)
-            .userId(userId)
-            .role(MEMBER)
-            .build();
+        StudyMember extendMember = StudyMember.createMember(extendedStudy, userId);
         studyMemberRepository.save(extendMember);
     }
 
@@ -200,7 +191,6 @@ public class StudyManagementService {
     }
 
     private void randomDelegateLeader(Long studyId, StudyMember currentLeader) {
-
         isLeader(currentLeader);
 
         List<StudyMember> studyMembers = studyMemberRepository.findAvailableNewLeaders(studyId);
