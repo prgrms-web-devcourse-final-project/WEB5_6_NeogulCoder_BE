@@ -36,6 +36,8 @@ public class RecruitmentPostQueryRepository {
     public RecruitmentPostWithStudyInfo findPostWithStudyInfo(Long recruitmentPostId) {
         return queryFactory.select(
                         new QRecruitmentPostWithStudyInfo(
+                                user.id,
+                                user.profileImageUrl.as("imageUrl"),
                                 user.nickname,
                                 recruitmentPost.id,
                                 recruitmentPost.subject,
