@@ -6,8 +6,11 @@ import grep.neogulcoder.domain.studypost.comment.dto.StudyPostCommentSaveRequest
 import grep.neogulcoder.domain.studypost.comment.dto.request.StudyCommentUpdateRequest;
 import grep.neogulcoder.domain.studypost.comment.repository.StudyPostCommentQueryRepository;
 import grep.neogulcoder.domain.studypost.comment.repository.StudyPostCommentRepository;
+import grep.neogulcoder.domain.studypost.repository.StudyPostRepository;
 import grep.neogulcoder.global.exception.business.NotFoundException;
+import grep.neogulcoder.global.provider.finder.MessageFinder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,13 +19,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class StudyPostCommentService {
 
+    private final StudyPostRepository postRepository;
     private final StudyPostCommentRepository commentRepository;
     private final StudyPostCommentQueryRepository commentQueryRepository;
+    private final ApplicationEventPublisher publisher;
 
     @Transactional
     public Long create(StudyPostCommentSaveRequest request, long postId, long userId) {
         StudyPostComment comment = request.toEntity(postId, userId);
-        return commentRepository.save(comment).getId();
+        Long commentId = commentRepository.save(comment).getId();
+
+        postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(StudyPostErrorCode.NOT_FOUND_POST));
+
+        publisher.publishEvent();
+        return commentId;
     }
 
     @Transactional

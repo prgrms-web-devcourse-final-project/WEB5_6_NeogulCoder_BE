@@ -6,7 +6,7 @@ import grep.neogulcoder.domain.alram.exception.code.AlarmErrorCode;
 import grep.neogulcoder.domain.alram.repository.AlarmRepository;
 import grep.neogulcoder.domain.alram.type.AlarmType;
 import grep.neogulcoder.domain.alram.type.DomainType;
-import grep.neogulcoder.domain.recruitment.comment.event.StudyPostCommentEvent;
+import grep.neogulcoder.domain.recruitment.comment.event.RecruitmentPostCommentEvent;
 import grep.neogulcoder.domain.recruitment.post.RecruitmentPost;
 import grep.neogulcoder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogulcoder.domain.study.Study;
@@ -196,7 +196,7 @@ public class AlarmService {
 
     @Transactional
     @EventListener
-    public void handleRecruitmentPostCommentEvent(StudyPostCommentEvent event){
+    public void handleRecruitmentPostCommentEvent(RecruitmentPostCommentEvent event){
         RecruitmentPost recruitmentPost = recruitmentPostRepository.findById(event.getPostId())
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND));
 

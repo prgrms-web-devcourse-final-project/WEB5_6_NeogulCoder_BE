@@ -3,7 +3,7 @@ package grep.neogulcoder.domain.recruitment.comment.service;
 import grep.neogulcoder.domain.recruitment.comment.RecruitmentPostComment;
 import grep.neogulcoder.domain.recruitment.comment.controller.dto.request.RecruitmentCommentSaveRequest;
 import grep.neogulcoder.domain.recruitment.comment.controller.dto.request.RecruitmentCommentUpdateRequest;
-import grep.neogulcoder.domain.recruitment.comment.event.StudyPostCommentEvent;
+import grep.neogulcoder.domain.recruitment.comment.event.RecruitmentPostCommentEvent;
 import grep.neogulcoder.domain.recruitment.comment.repository.RecruitmentPostCommentQueryRepository;
 import grep.neogulcoder.domain.recruitment.comment.repository.RecruitmentPostCommentRepository;
 import grep.neogulcoder.domain.recruitment.post.RecruitmentPost;
@@ -36,7 +36,7 @@ public class RecruitmentPostCommentService {
         Long commentId = commentRepository.save(request.toEntity(post, userId)).getId();
 
         if (post.isNotOwnedBy(userId)) {
-            publisher.publishEvent(new StudyPostCommentEvent(post.getUserId(), post.getId()));
+            publisher.publishEvent(new RecruitmentPostCommentEvent(post.getUserId(), post.getId()));
         }
         return commentId;
     }
