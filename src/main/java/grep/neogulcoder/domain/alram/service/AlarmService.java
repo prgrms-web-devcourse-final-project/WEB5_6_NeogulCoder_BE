@@ -22,19 +22,26 @@ import grep.neogulcoder.domain.studyapplication.StudyApplication;
 import grep.neogulcoder.domain.studyapplication.event.ApplicationEvent;
 import grep.neogulcoder.domain.studyapplication.event.ApplicationStatusChangedEvent;
 import grep.neogulcoder.domain.studyapplication.repository.ApplicationRepository;
+import grep.neogulcoder.domain.studypost.StudyPost;
+import grep.neogulcoder.domain.studypost.StudyPostErrorCode;
+import grep.neogulcoder.domain.studypost.comment.event.StudyPostCommentEvent;
+import grep.neogulcoder.domain.studypost.repository.StudyPostRepository;
 import grep.neogulcoder.domain.timevote.event.TimeVotePeriodCreatedEvent;
 import grep.neogulcoder.global.exception.business.BusinessException;
 import grep.neogulcoder.global.exception.business.NotFoundException;
 import grep.neogulcoder.global.provider.finder.MessageFinder;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
-import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
-import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.*;
+import java.util.List;
+
+import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_LEADER_NOT_FOUND;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
+import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.APPLICATION_NOT_FOUND;
+import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.APPLICATION_PARTICIPANT_LIMIT_EXCEEDED;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +51,7 @@ public class AlarmService {
     private final AlarmRepository alarmRepository;
     private final MessageFinder messageFinder;
     private final StudyRepository studyRepository;
+    private final StudyPostRepository studyPostRepository;
     private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final StudyMemberRepository studyMemberRepository;
     private final RecruitmentPostRepository recruitmentPostRepository;
@@ -196,7 +204,7 @@ public class AlarmService {
 
     @Transactional
     @EventListener
-    public void handleRecruitmentPostCommentEvent(RecruitmentPostCommentEvent event){
+    public void handleRecruitmentPostCommentEvent(RecruitmentPostCommentEvent event) {
         RecruitmentPost recruitmentPost = recruitmentPostRepository.findById(event.getPostId())
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND));
 
@@ -211,6 +219,29 @@ public class AlarmService {
                         AlarmType.RECRUITMENT_POST_COMMENT,
                         event.getTargetUserId(),
                         DomainType.RECRUITMENT_POST,
+                        event.getPostId(),
+                        message
+                )
+        );
+    }
+
+    @Transactional
+    @EventListener
+    public void handleStudyPostCommentEvent(StudyPostCommentEvent event) {
+        StudyPost studyPost = studyPostRepository.findById(event.getPostId())
+                .orElseThrow(() -> new NotFoundException(StudyPostErrorCode.NOT_FOUND_POST));
+
+        String message = messageFinder.findMessage(
+                AlarmType.STUDY_POST_COMMENT,
+                DomainType.STUDY_POST,
+                studyPost.getId()
+        );
+
+        alarmRepository.save(
+                Alarm.init(
+                        AlarmType.STUDY_POST_COMMENT,
+                        event.getTargetUserId(),
+                        DomainType.STUDY_POST,
                         event.getPostId(),
                         message
                 )
