@@ -124,7 +124,6 @@ public class StudyService {
     @Transactional
     public Long createStudy(StudyCreateRequest request, Long userId, MultipartFile image) throws IOException {
         validateStudyCreateLimit(userId);
-        validateLocation(request.getStudyType(), request.getLocation());
 
         String imageUrl = createImageUrl(userId, image);
 
@@ -143,7 +142,6 @@ public class StudyService {
     public void updateStudy(Long studyId, StudyUpdateRequest request, Long userId, MultipartFile image) throws IOException {
         Study study = getStudyById(studyId);
 
-        validateLocation(request.getStudyType(), request.getLocation());
         validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
         validateStudyStartDate(request, study);
@@ -189,12 +187,6 @@ public class StudyService {
         int count = studyRepository.countByUserIdAndActivatedTrueAndFinishedFalse(userId);
         if (count >= 10) {
             throw new BusinessException(STUDY_CREATE_LIMIT_EXCEEDED);
-        }
-    }
-
-    private static void validateLocation(StudyType studyType, String location) {
-        if ((studyType == StudyType.OFFLINE || studyType == StudyType.HYBRID) && (location == null || location.isBlank())) {
-            throw new BusinessException(STUDY_LOCATION_REQUIRED);
         }
     }
 

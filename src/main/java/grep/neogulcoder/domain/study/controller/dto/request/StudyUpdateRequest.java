@@ -4,6 +4,7 @@ import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.enums.Category;
 import grep.neogulcoder.domain.study.enums.StudyType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -37,6 +38,12 @@ public class StudyUpdateRequest {
 
     @Schema(description = "스터디 소개", example = "자바 스터디입니다.")
     private String introduction;
+
+    @AssertTrue(message = "스터디 타입이 OFFLINE이나 HYBRID인 스터디는 지역 입력이 필수입니다.")
+    public boolean isLocationValid() {
+        return studyType != StudyType.OFFLINE && studyType != StudyType.HYBRID
+            || (location != null && !location.isBlank());
+    }
 
     private StudyUpdateRequest() {}
 
