@@ -27,18 +27,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogulcoder.domain.study.enums.StudyMemberRole.LEADER;
-import static grep.neogulcoder.domain.study.enums.StudyMemberRole.MEMBER;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.ALREADY_EXTENDED_STUDY;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.ALREADY_REGISTERED_PARTICIPATION;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.END_DATE_BEFORE_ORIGIN_STUDY;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.EXTENDED_STUDY_NOT_FOUND;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.LEADER_CANNOT_DELEGATE_TO_SELF;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.LEADER_CANNOT_LEAVE_STUDY;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.NOT_STUDY_LEADER;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_EXTENSION_NOT_AVAILABLE;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_MEMBER_NOT_FOUND;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
+import static grep.neogulcoder.domain.study.enums.StudyMemberRole.*;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
