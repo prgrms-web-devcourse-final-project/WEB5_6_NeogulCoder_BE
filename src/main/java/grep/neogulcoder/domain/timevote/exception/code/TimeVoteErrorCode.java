@@ -29,8 +29,9 @@ public enum TimeVoteErrorCode implements ErrorCode {
   TIME_VOTE_EMPTY("TV_005", HttpStatus.BAD_REQUEST, "한 개 이상의 시간을 선택해주세요."),
 
   // Time Vote Stats (e.g. 통계 충돌 등)
-  TIME_VOTE_STAT_CONFLICT("TVS_001", HttpStatus.CONFLICT, "투표 통계 저장 중 충돌이 발생했습니다. 다시 시도해주세요."),
-  TIME_VOTE_THREAD_INTERRUPTED("TVS_002", HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 스레드 오류가 발생했습니다. 다시 시도해주세요.");
+  TIME_VOTE_STAT_CONFLICT("TVS_001", HttpStatus.CONFLICT, "투표 통계 저장 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."),
+  TIME_VOTE_THREAD_INTERRUPTED("TVS_002", HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다. 다시 시도해주세요."),
+  TIME_VOTE_STAT_FATAL("TVS_003", HttpStatus.INTERNAL_SERVER_ERROR, "투표 통계 처리 중 오류가 발생했습니다. 관리자에게 문의하세요.");
 
   private final String code;
   private final HttpStatus status;

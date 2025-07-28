@@ -1,6 +1,6 @@
 package grep.neogulcoder.domain.groupchat.controller;
 
-import grep.neogulcoder.domain.groupchat.controller.dto.requset.GroupChatMessageRequestDto;
+import grep.neogulcoder.domain.groupchat.controller.dto.request.GroupChatMessageRequestDto;
 import grep.neogulcoder.domain.groupchat.controller.dto.response.GroupChatMessageResponseDto;
 import grep.neogulcoder.domain.groupchat.service.GroupChatService;
 import io.swagger.v3.oas.annotations.Hidden;
