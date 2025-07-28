@@ -14,6 +14,10 @@ public class RecruitmentCommentSaveRequest {
     private RecruitmentCommentSaveRequest() {
     }
 
+    public RecruitmentCommentSaveRequest(String content) {
+        this.content = content;
+    }
+
     public RecruitmentPostComment toEntity(RecruitmentPost post, long userId) {
         return RecruitmentPostComment.builder()
                 .recruitmentPost(post)

@@ -55,4 +55,12 @@ public class StudyPost extends BaseEntity {
     public void delete() {
         this.activated = false;
     }
+
+    public boolean isOwned(long userId) {
+        return this.userId == userId;
+    }
+
+    public boolean isNotOwned(long userId) {
+        return !isOwned(userId);
+    }
 }
