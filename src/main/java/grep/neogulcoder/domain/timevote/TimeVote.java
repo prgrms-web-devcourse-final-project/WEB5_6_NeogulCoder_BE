@@ -31,7 +31,7 @@ public class TimeVote extends BaseEntity {
   @Column(nullable = false)
   private LocalDateTime timeSlot;
 
-  protected TimeVote() {};
+  protected TimeVote() {}
 
   @Builder
   public TimeVote(TimeVotePeriod period, Long studyMemberId, LocalDateTime timeSlot) {

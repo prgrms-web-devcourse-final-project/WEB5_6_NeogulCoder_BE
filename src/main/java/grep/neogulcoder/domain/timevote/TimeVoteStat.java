@@ -13,7 +13,9 @@ import jakarta.persistence.Version;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Entity
 public class TimeVoteStat extends BaseEntity {
@@ -36,7 +38,7 @@ public class TimeVoteStat extends BaseEntity {
   @Column(nullable = false)
   private Long version;
 
-  protected TimeVoteStat() {};
+  protected TimeVoteStat() {}
 
   @Builder
   public TimeVoteStat(TimeVotePeriod period, LocalDateTime timeSlot, Long voteCount, Long version) {
@@ -56,6 +58,7 @@ public class TimeVoteStat extends BaseEntity {
   }
 
   public void addVotes(Long countToAdd) {
+    log.debug("addVotes: 이전 voteCount={}, 추가 count={}, 이전 version={}", this.voteCount, countToAdd, this.version);
     this.voteCount += countToAdd;
   }
 }
