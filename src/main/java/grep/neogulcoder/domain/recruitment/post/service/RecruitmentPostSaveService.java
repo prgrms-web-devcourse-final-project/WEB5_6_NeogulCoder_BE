@@ -13,8 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.*;
 import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND_STUDY_MEMBER;
 import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_STUDY_LEADER;
 
@@ -28,10 +30,14 @@ public class RecruitmentPostSaveService {
 
     @Transactional
     public long create(RecruitmentPostCreateServiceRequest request, long userId) {
-        StudyMember studyMember = studyMemberRepository.findByStudyIdAndUserId(request.getStudyId(), userId);
+        StudyMember studyMember = studyMemberRepository.findMemberWithStudyBy(request.getStudyId(), userId);
 
         if (studyMember.hasNotRoleLeader()) {
             throw new BusinessException(NOT_STUDY_LEADER);
+        }
+
+        if(isStudyAlreadyEndedDateTime(studyMember.getStudy(), request.getExpiredDate())){
+            throw new BusinessException(END_DATE_ERROR);
         }
 
         return recruitmentPostRepository.save(request.toEntity(userId)).getId();
@@ -49,6 +55,10 @@ public class RecruitmentPostSaveService {
         long remainSlots = study.calculateRemainSlots(currentCount);
 
         return JoinedStudyLoadInfo.of(study, remainSlots);
+    }
+
+    private boolean isStudyAlreadyEndedDateTime(Study study, LocalDateTime expiredDateTime) {
+        return study.hasEndDateBefore(expiredDateTime);
     }
 
     private boolean isNotParticipated(StudyMember studyMember) {

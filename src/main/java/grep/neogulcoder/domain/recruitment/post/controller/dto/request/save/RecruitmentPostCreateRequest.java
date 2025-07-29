@@ -2,7 +2,6 @@ package grep.neogulcoder.domain.recruitment.post.controller.dto.request.save;
 
 import grep.neogulcoder.domain.recruitment.post.service.request.RecruitmentPostCreateServiceRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -31,7 +30,7 @@ public class RecruitmentPostCreateRequest {
     private int recruitmentCount;
 
     @Schema(example = "2025-07-10", description = "모집 마감일")
-    @FutureOrPresent(message = "모집 마감일은 현재 날짜 이전으로 설정이 불가능 합니다.")
+    @NotNull
     private LocalDateTime expiredDate;
 
     private RecruitmentPostCreateRequest() {
