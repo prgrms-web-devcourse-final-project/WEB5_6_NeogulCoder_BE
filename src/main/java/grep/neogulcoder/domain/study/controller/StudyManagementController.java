@@ -65,7 +65,7 @@ public class StudyManagementController implements StudyManagementSpecification {
     }
 
     @PostMapping("/invite/user")
-    public ResponseEntity<ApiResponse<Void>> inviteUser(@PathVariable("studyId") Long studyId, @AuthenticationPrincipal Principal userDetails, String targetUserNickname) {
+    public ResponseEntity<ApiResponse<Void>> inviteUser(@PathVariable("studyId") Long studyId, @AuthenticationPrincipal Principal userDetails, @RequestParam String targetUserNickname) {
         studyManagementService.inviteTargetUser(studyId, userDetails.getUserId(), targetUserNickname);
         return ResponseEntity.ok(ApiResponse.noContent());
     }
