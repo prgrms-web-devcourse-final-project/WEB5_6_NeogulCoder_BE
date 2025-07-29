@@ -12,6 +12,9 @@ public class ReceivedApplicationResponse {
     @Schema(description = "신청 번호", example = "1")
     private Long applicationId;
 
+    @Schema(description = "신청자 번호", example = "1")
+    private Long userId;
+
     @Schema(description = "신청자 닉네임", example = "너굴")
     private String nickname;
 
@@ -28,8 +31,9 @@ public class ReceivedApplicationResponse {
     private String applicationReason;
 
     @QueryProjection
-    public ReceivedApplicationResponse(Long applicationId, String nickname, String profileImageUrl, int buddyEnergy, LocalDateTime createdDate, String applicationReason) {
+    public ReceivedApplicationResponse(Long applicationId, Long userId, String nickname, String profileImageUrl, int buddyEnergy, LocalDateTime createdDate, String applicationReason) {
         this.applicationId = applicationId;
+        this.userId = userId;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
         this.buddyEnergy = buddyEnergy;

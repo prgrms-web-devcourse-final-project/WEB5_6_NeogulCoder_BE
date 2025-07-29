@@ -38,6 +38,7 @@ public class ApplicationQueryRepository {
         List<ReceivedApplicationResponse> receivedApplications = queryFactory
             .select(new QReceivedApplicationResponse(
                 studyApplication.id,
+                user.id,
                 user.nickname,
                 user.profileImageUrl,
                 buddyEnergy.level,

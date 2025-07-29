@@ -14,6 +14,7 @@ public class ReceivedApplicationPagingResponse {
         description = "내 모집글에 지원한 신청 목록",
         example = "[{" +
             "\"applicationId\": 1," +
+            "\"userId\": 1," +
             "\"nickname\": \"너굴\"," +
             "\"profileImageUrl\": \"http://localhost:8083/image.jpg\"," +
             "\"buddyEnergy\": 30," +
