@@ -21,23 +21,50 @@ public class TimeVoteCleanupScheduler {
   // 매일 새벽 3시: soft delete 된 투표 실제 삭제
   @Scheduled(cron = "0 0 3 * * ?")
   public void hardDeleteDeactivatedVotes() {
-    log.info("[Scheduler] Soft 삭제된 데이터 통계 재계산 시작");
+    log.info("[Scheduler] Soft 삭제된 데이터 정리 시작");
 
-    // 통계 재계산 로직 호출 (soft delete된 period 기준으로)
-    List<Long> periodIds = jdbcTemplate.queryForList(
-        "SELECT DISTINCT period_id FROM time_vote WHERE activated = false", Long.class
-    );
-    periodIds.forEach(timeVoteStatService::recalculateStats);
+    try {
+      // 1. 통계 재계산 대상 조회
+      List<Long> periodIds = jdbcTemplate.queryForList(
+          "SELECT DISTINCT period_id FROM time_vote WHERE activated = false", Long.class
+      );
 
-    log.info("[Scheduler] 통계 재계산 완료 - {}건", periodIds.size());
+      // // 2. 통계 재계산
+      for (Long periodId : periodIds) {
+        try {
+          timeVoteStatService.recalculateStats(periodId);
+        } catch (Exception e) {
+          log.error("[Scheduler] 통계 재계산 실패 - periodId={}, error={}", periodId, e.getMessage(), e);
+        }
+      }
 
-    int deletedVotes = jdbcTemplate.update("DELETE FROM time_vote WHERE activated = false");
-    log.info("[Scheduler] Soft 삭제된 투표 {}건 실제 삭제 완료", deletedVotes);
+      log.info("[Scheduler] 통계 재계산 완료 - 총 {}건", periodIds.size());
 
-    int deletedStats = jdbcTemplate.update("DELETE FROM time_vote_stat WHERE activated = false");
-    log.info("[Scheduler] Soft 삭제된 통계 {}건 실제 삭제 완료", deletedStats);
+    } catch (Exception e) {
+      log.error("[Scheduler] 통계 재계산 단계 실패: {}", e.getMessage(), e);
+    }
+    // 3. 실제 삭제
+    try {
+      int deletedVotes = jdbcTemplate.update("DELETE FROM time_vote WHERE activated = false");
+      log.info("[Scheduler] Soft 삭제된 투표 {}건 실제 삭제 완료", deletedVotes);
+    } catch (Exception e) {
+      log.error("[Scheduler] 투표 삭제 실패: {}", e.getMessage(), e);
+    }
 
-    int deletedPeriods = jdbcTemplate.update("DELETE FROM time_vote_period WHERE activated = false");
-    log.info("[Scheduler] Soft 삭제된 투표 기간 {}건 실제 삭제 완료", deletedPeriods);
+    try {
+      int deletedStats = jdbcTemplate.update("DELETE FROM time_vote_stat WHERE activated = false");
+      log.info("[Scheduler] Soft 삭제된 통계 {}건 실제 삭제 완료", deletedStats);
+    } catch (Exception e) {
+      log.error("[Scheduler] 통계 삭제 실패: {}", e.getMessage(), e);
+    }
+
+    try {
+      int deletedPeriods = jdbcTemplate.update("DELETE FROM time_vote_period WHERE activated = false");
+      log.info("[Scheduler] Soft 삭제된 투표 기간 {}건 실제 삭제 완료", deletedPeriods);
+    } catch (Exception e) {
+      log.error("[Scheduler] 투표 기간 삭제 실패: {}", e.getMessage(), e);
+    }
+
+    log.info("[Scheduler] Soft 삭제된 데이터 정리 작업 종료");
   }
 }
