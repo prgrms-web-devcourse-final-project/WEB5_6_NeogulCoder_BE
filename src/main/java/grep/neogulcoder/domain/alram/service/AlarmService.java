@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static grep.neogulcoder.domain.alram.exception.code.AlarmErrorCode.ALREADY_CHECKED;
 import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_LEADER_NOT_FOUND;
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
@@ -113,6 +114,10 @@ public class AlarmService {
     @Transactional
     public void acceptInvite(Long targetUserId, Long alarmId) {
 
+        if(isChecked(targetUserId, alarmId)){
+            throw new BusinessException(ALREADY_CHECKED);
+        }
+
         validateParticipantStudyLimit(targetUserId);
 
         Alarm alarm = findValidAlarm(targetUserId, alarmId);
@@ -124,6 +129,11 @@ public class AlarmService {
 
     @Transactional
     public void rejectInvite(Long targetUserId,Long alarmId) {
+
+        if(isChecked(targetUserId, alarmId)){
+            throw new BusinessException(ALREADY_CHECKED);
+        }
+
         Alarm alarm = findValidAlarm(targetUserId, alarmId);
         alarm.checkAlarm();
     }
@@ -262,5 +272,9 @@ public class AlarmService {
         if (count >= 10) {
             throw new BusinessException(APPLICATION_PARTICIPANT_LIMIT_EXCEEDED);
         }
+    }
+
+    private boolean isChecked(Long targetUserId, Long alarmId) {
+        return findValidAlarm(targetUserId, alarmId).isChecked();
     }
 }
