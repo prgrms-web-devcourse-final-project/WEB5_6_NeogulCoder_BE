@@ -83,7 +83,6 @@ dependencies {
     implementation 'dev.langchain4j:langchain4j-spring-boot-starter:1.0.0-beta3'
     implementation 'dev.langchain4j:langchain4j-google-ai-gemini-spring-boot-starter:1.0.0-beta3'
 
-
     // 배포 관련 의존성
 //    runtimeOnly 'org.postgresql:postgresql'
     implementation 'org.springframework.boot:spring-boot-devtools'
