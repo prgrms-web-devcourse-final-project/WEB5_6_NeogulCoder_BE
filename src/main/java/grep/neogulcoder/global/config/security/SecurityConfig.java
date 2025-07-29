@@ -78,7 +78,7 @@ public class SecurityConfig {
                 (requests) -> requests
                     .requestMatchers("/auth/**", "/",
                         "/api/users/signup",
-                        "/recruitment-posts",
+                        "/recruitment-posts", "/recruitment-posts/*",
                         "/oauth2/**",
                         "/login/**",
                         "/signup",
