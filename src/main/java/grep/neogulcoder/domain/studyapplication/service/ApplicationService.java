@@ -9,6 +9,7 @@ import grep.neogulcoder.domain.study.enums.StudyMemberRole;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
+import grep.neogulcoder.domain.study.service.StudyManagementServiceFacade;
 import grep.neogulcoder.domain.studyapplication.ApplicationStatus;
 import grep.neogulcoder.domain.studyapplication.StudyApplication;
 import grep.neogulcoder.domain.studyapplication.controller.dto.request.ApplicationCreateRequest;
@@ -29,8 +30,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.*;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
+import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
+import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_OWNER;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
 import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
 
 @Transactional(readOnly = true)
@@ -45,10 +47,11 @@ public class ApplicationService {
     private final StudyRepository studyRepository;
     private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final StudyManagementServiceFacade studyManagementServiceFacade;
 
     @Transactional
     public ReceivedApplicationPagingResponse getReceivedApplicationsPaging(Long recruitmentPostId, Pageable pageable, Long userId) {
-        RecruitmentPost recruitmentPost = findValidRecruitmentPost(recruitmentPostId);
+        RecruitmentPost recruitmentPost = getRecruitmentPostById(recruitmentPostId);
 
         validateOwner(userId, recruitmentPost);
         applicationRepository.markAllAsReadByRecruitmentPostId(recruitmentPostId);
@@ -64,7 +67,7 @@ public class ApplicationService {
 
     @Transactional
     public Long createApplication(Long recruitmentPostId, ApplicationCreateRequest request, Long userId) {
-        RecruitmentPost recruitmentPost = findValidRecruitmentPost(recruitmentPostId);
+        RecruitmentPost recruitmentPost = getRecruitmentPostById(recruitmentPostId);
 
         validateNotLeaderApply(recruitmentPost, userId);
         validateNotAlreadyApplied(recruitmentPostId, userId);
@@ -80,9 +83,9 @@ public class ApplicationService {
 
     @Transactional
     public void approveApplication(Long applicationId, Long userId) {
-        StudyApplication application = findValidApplication(applicationId);
-        RecruitmentPost post = findValidRecruitmentPost(application.getRecruitmentPostId());
-        Study study = findValidStudy(post);
+        StudyApplication application = getApplicationById(applicationId);
+        RecruitmentPost post = getRecruitmentPostById(application.getRecruitmentPostId());
+        Study study = getStudyByRecruitmentPostId(post);
 
         validateOnlyLeaderCanApprove(study, userId);
         validateStatusIsApplying(application);
@@ -92,16 +95,16 @@ public class ApplicationService {
 
         StudyMember studyMember = StudyMember.createMember(study, application.getUserId());
         studyMemberRepository.save(studyMember);
-        study.increaseMemberCount();
+        studyManagementServiceFacade.increaseMemberCount(study, userId);
 
         eventPublisher.publishEvent(new ApplicationStatusChangedEvent(applicationId, AlarmType.STUDY_APPLICATION_APPROVED));
     }
 
     @Transactional
     public void rejectApplication(Long applicationId, Long userId) {
-        StudyApplication application = findValidApplication(applicationId);
-        RecruitmentPost post = findValidRecruitmentPost(application.getRecruitmentPostId());
-        Study study = findValidStudy(post);
+        StudyApplication application = getApplicationById(applicationId);
+        RecruitmentPost post = getRecruitmentPostById(application.getRecruitmentPostId());
+        Study study = getStudyByRecruitmentPostId(post);
 
         validateOnlyLeaderCanReject(study, userId);
         validateStatusIsApplying(application);
@@ -111,22 +114,19 @@ public class ApplicationService {
         eventPublisher.publishEvent(new ApplicationStatusChangedEvent(applicationId, AlarmType.STUDY_APPLICATION_REJECTED));
     }
 
-    private Study findValidStudy(RecruitmentPost post) {
-        Study study = studyRepository.findByIdAndActivatedTrue(post.getStudyId())
+    private Study getStudyByRecruitmentPostId(RecruitmentPost post) {
+        return studyRepository.findByIdAndActivatedTrue(post.getStudyId())
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
-        return study;
     }
 
-    private StudyApplication findValidApplication(Long applicationId) {
-        StudyApplication application = applicationRepository.findById(applicationId)
+    private StudyApplication getApplicationById(Long applicationId) {
+        return applicationRepository.findById(applicationId)
             .orElseThrow(() -> new NotFoundException(APPLICATION_NOT_FOUND));
-        return application;
     }
 
-    private RecruitmentPost findValidRecruitmentPost(Long recruitmentPostId) {
-        RecruitmentPost post = recruitmentPostRepository.findByIdAndActivatedTrue(recruitmentPostId)
+    private RecruitmentPost getRecruitmentPostById(Long recruitmentPostId) {
+        return recruitmentPostRepository.findByIdAndActivatedTrue(recruitmentPostId)
             .orElseThrow(() -> new NotFoundException(NOT_FOUND));
-        return post;
     }
 
     private static void validateOwner(Long userId, RecruitmentPost recruitmentPost) {
@@ -170,15 +170,15 @@ public class ApplicationService {
     }
 
     private void validateApplicantStudyLimit(Long userId) {
-        int count = studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
-        if (count >= 10) {
+        int joinedStudyCount = studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
+        if (Study.isOverJoinLimit(joinedStudyCount)) {
             throw new BusinessException(APPLICATION_PARTICIPATION_LIMIT_EXCEEDED);
         }
     }
 
     private void validateParticipantStudyLimit(Long userId) {
-        int count = studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
-        if (count >= 10) {
+        int joinedStudyCount = studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
+        if (Study.isOverJoinLimit(joinedStudyCount)) {
             throw new BusinessException(APPLICATION_PARTICIPANT_LIMIT_EXCEEDED);
         }
     }

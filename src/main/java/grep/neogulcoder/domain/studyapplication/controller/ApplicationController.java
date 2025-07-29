@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,38 +23,38 @@ public class ApplicationController implements ApplicationSpecification {
     private final ApplicationService applicationService;
 
     @GetMapping("/{recruitment-post-id}/applications")
-    public ApiResponse<ReceivedApplicationPagingResponse> getReceivedApplications(@PathVariable("recruitment-post-id") Long recruitmentPostId,
-                                                                                  @PageableDefault(size = 5) Pageable pageable,
-                                                                                  @AuthenticationPrincipal Principal userDetails) {
-        return ApiResponse.success(applicationService.getReceivedApplicationsPaging(recruitmentPostId, pageable, userDetails.getUserId()));
+    public ResponseEntity<ApiResponse<ReceivedApplicationPagingResponse>> getReceivedApplications(@PathVariable("recruitment-post-id") Long recruitmentPostId,
+                                                                                                  @PageableDefault(size = 5) Pageable pageable,
+                                                                                                  @AuthenticationPrincipal Principal userDetails) {
+        return ResponseEntity.ok(ApiResponse.success(applicationService.getReceivedApplicationsPaging(recruitmentPostId, pageable, userDetails.getUserId())));
     }
 
     @GetMapping("/applications")
-    public ApiResponse<MyApplicationPagingResponse> getMyStudyApplications(@PageableDefault(size = 12) Pageable pageable,
+    public ResponseEntity<ApiResponse<MyApplicationPagingResponse>> getMyStudyApplications(@PageableDefault(size = 12) Pageable pageable,
                                                                            @RequestParam(required = false) ApplicationStatus status,
                                                                            @AuthenticationPrincipal Principal userDetails) {
-        return ApiResponse.success(applicationService.getMyStudyApplicationsPaging(pageable, userDetails.getUserId(), status));
+        return ResponseEntity.ok(ApiResponse.success(applicationService.getMyStudyApplicationsPaging(pageable, userDetails.getUserId(), status)));
     }
 
     @PostMapping("/{recruitment-post-id}/applications")
-    public ApiResponse<Long> createApplication(@PathVariable("recruitment-post-id") Long recruitmentPostId,
+    public ResponseEntity<ApiResponse<Long>> createApplication(@PathVariable("recruitment-post-id") Long recruitmentPostId,
                                                @RequestBody @Valid ApplicationCreateRequest request,
                                                @AuthenticationPrincipal Principal userDetails) {
         Long id = applicationService.createApplication(recruitmentPostId, request, userDetails.getUserId());
-        return ApiResponse.success(id);
+        return ResponseEntity.ok(ApiResponse.success(id));
     }
 
     @PostMapping("/applications/{applicationId}/approve")
-    public ApiResponse<Void> approveApplication(@PathVariable("applicationId") Long applicationId,
+    public ResponseEntity<ApiResponse<Void>> approveApplication(@PathVariable("applicationId") Long applicationId,
                                                 @AuthenticationPrincipal Principal userDetails) {
         applicationService.approveApplication(applicationId, userDetails.getUserId());
-        return ApiResponse.noContent();
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 
     @PostMapping("/applications/{applicationId}/reject")
-    public ApiResponse<Void> rejectApplication(@PathVariable("applicationId") Long applicationId,
+    public ResponseEntity<ApiResponse<Void>> rejectApplication(@PathVariable("applicationId") Long applicationId,
                                                @AuthenticationPrincipal Principal userDetails) {
         applicationService.rejectApplication(applicationId, userDetails.getUserId());
-        return ApiResponse.noContent();
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 }

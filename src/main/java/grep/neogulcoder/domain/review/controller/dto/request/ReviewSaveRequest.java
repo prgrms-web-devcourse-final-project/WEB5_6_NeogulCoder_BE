@@ -3,6 +3,7 @@ package grep.neogulcoder.domain.review.controller.dto.request;
 import grep.neogulcoder.domain.review.ReviewType;
 import grep.neogulcoder.domain.review.service.request.ReviewSaveServiceRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -29,6 +30,7 @@ public class ReviewSaveRequest {
     private List<String> reviewTag;
 
     @Schema(example = "너무 친절 하세요!", description = "주관 리뷰")
+    @NotBlank
     private String content;
 
     private ReviewSaveRequest() {}
