@@ -109,7 +109,7 @@ public class ReviewService {
         Review review = request.toReview(reviewTags.getReviewTags(), reviewType, writeUserId);
         List<ReviewTagEntity> reviewTagEntities = mapToReviewTagEntities(reviewTags);
 
-        updatedBuddyEnergy(writeUserId, reviewType);
+        updatedBuddyEnergy(request.getTargetUserId(), reviewType);
         return reviewRepository.save(ReviewEntity.from(review, reviewTagEntities, study.getId())).getId();
     }
 
@@ -201,8 +201,8 @@ public class ReviewService {
         return reviewTagRepository.findByReviewTagIn(reviewTagDescriptions);
     }
 
-    private BuddyEnergy updatedBuddyEnergy(long writeUserId, ReviewType reviewType) {
-        BuddyEnergy energy = buddyEnergyRepository.findByUserId(writeUserId)
+    private BuddyEnergy updatedBuddyEnergy(long targetUserId, ReviewType reviewType) {
+        BuddyEnergy energy = buddyEnergyRepository.findByUserId(targetUserId)
                 .orElseThrow(() -> new BuddyEnergyNotFoundException(BUDDY_ENERGY_NOT_FOUND));
 
         energy.updateEnergy(reviewType);

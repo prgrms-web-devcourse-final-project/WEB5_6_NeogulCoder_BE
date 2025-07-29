@@ -7,6 +7,7 @@ import grep.neogulcoder.global.response.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -73,8 +74,7 @@ public interface GroupChatRestSpecification {
         ```
         """
     )
-
-    ApiResponse<ChatMessagePagingResponse> getMessages(
+    ResponseEntity<ApiResponse<ChatMessagePagingResponse>> getMessages(
         @Parameter(description = "스터디 ID", example = "1")
         @PathVariable("studyId") Long studyId,
 

@@ -4,6 +4,7 @@ import grep.neogulcoder.domain.buddy.controller.dto.response.BuddyEnergyResponse
 import grep.neogulcoder.domain.buddy.service.BuddyEnergyService;
 import grep.neogulcoder.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -14,8 +15,8 @@ public class BuddyEnergyController implements BuddyEnergySpecification {
     private final BuddyEnergyService buddyEnergyService;
 
     @GetMapping("/{userId}")
-    public ApiResponse<BuddyEnergyResponse> get(@PathVariable("userId") Long userId) {
-        return ApiResponse.success(buddyEnergyService.getBuddyEnergy(userId));
+    public ResponseEntity<ApiResponse<BuddyEnergyResponse>> get(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(ApiResponse.success(buddyEnergyService.getBuddyEnergy(userId)));
     }
 
 
