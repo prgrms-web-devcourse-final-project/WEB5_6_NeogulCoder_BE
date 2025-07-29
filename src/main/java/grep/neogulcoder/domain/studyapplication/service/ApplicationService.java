@@ -30,8 +30,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.*;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
+import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
+import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_OWNER;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
 import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
 
 @Transactional(readOnly = true)

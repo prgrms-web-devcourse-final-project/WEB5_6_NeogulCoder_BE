@@ -1,6 +1,7 @@
 package grep.neogulcoder.domain.studyapplication.provider;
 
-import grep.neogulcoder.domain.alram.type.*;
+import grep.neogulcoder.domain.alram.type.AlarmType;
+import grep.neogulcoder.domain.alram.type.DomainType;
 import grep.neogulcoder.domain.recruitment.post.RecruitmentPost;
 import grep.neogulcoder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogulcoder.domain.studyapplication.StudyApplication;
@@ -10,8 +11,8 @@ import grep.neogulcoder.global.provider.MessageProvidable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.*;
-import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
+import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
+import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.APPLICATION_NOT_FOUND;
 
 @Component
 @RequiredArgsConstructor

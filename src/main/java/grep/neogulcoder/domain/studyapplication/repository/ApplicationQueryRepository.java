@@ -17,13 +17,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static grep.neogulcoder.domain.buddy.entity.QBuddyEnergy.buddyEnergy;
 import static grep.neogulcoder.domain.recruitment.post.QRecruitmentPost.recruitmentPost;
 import static grep.neogulcoder.domain.study.QStudy.study;
 import static grep.neogulcoder.domain.study.QStudyMember.studyMember;
 import static grep.neogulcoder.domain.study.enums.StudyMemberRole.LEADER;
 import static grep.neogulcoder.domain.studyapplication.QStudyApplication.studyApplication;
 import static grep.neogulcoder.domain.users.entity.QUser.user;
-import static grep.neogulcoder.domain.buddy.entity.QBuddyEnergy.buddyEnergy;
 
 @Repository
 public class ApplicationQueryRepository {

@@ -9,7 +9,7 @@ import grep.neogulcoder.global.provider.MessageProvidable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.*;
+import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
 
 @Component
 @RequiredArgsConstructor
