@@ -53,7 +53,7 @@ public class TimeVoteStatValidator {
   }
 
   private TimeVotePeriod getValidTimeVotePeriodByStudyId(Long studyId) {
-    return timeVotePeriodRepository.findTopByStudyIdOrderByStartDateDesc(studyId)
+    return timeVotePeriodRepository.findTopByStudyIdAndActivatedTrueOrderByStartDateDesc(studyId)
         .orElseThrow(() -> new BusinessException(TIME_VOTE_PERIOD_NOT_FOUND));
   }
 }

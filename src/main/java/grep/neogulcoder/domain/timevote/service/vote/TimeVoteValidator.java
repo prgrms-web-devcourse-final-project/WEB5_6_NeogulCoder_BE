@@ -84,7 +84,7 @@ public class TimeVoteValidator {
   }
 
   private TimeVotePeriod getValidTimeVotePeriod(Long studyId) {
-    return timeVotePeriodRepository.findTopByStudyIdOrderByStartDateDesc(studyId)
+    return timeVotePeriodRepository.findTopByStudyIdAndActivatedTrueOrderByStartDateDesc(studyId)
         .orElseThrow(() -> new BusinessException(TIME_VOTE_PERIOD_NOT_FOUND));
   }
 
@@ -117,7 +117,7 @@ public class TimeVoteValidator {
   }
 
   private void validateNotAlreadySubmitted(TimeVotePeriod period, Long studyMemberId) {
-    boolean alreadySubmitted = timeVoteRepository.existsByPeriodAndStudyMemberId(period,
+    boolean alreadySubmitted = timeVoteRepository.existsByPeriodAndStudyMemberIdAndActivatedTrue(period,
         studyMemberId);
     if (alreadySubmitted) {
       throw new BusinessException(TIME_VOTE_ALREADY_SUBMITTED);
@@ -125,7 +125,7 @@ public class TimeVoteValidator {
   }
 
   private void validateAlreadySubmitted(TimeVotePeriod period, Long studyMemberId) {
-    boolean alreadySubmitted = timeVoteRepository.existsByPeriodAndStudyMemberId(period,
+    boolean alreadySubmitted = timeVoteRepository.existsByPeriodAndStudyMemberIdAndActivatedTrue(period,
         studyMemberId);
     if (!alreadySubmitted) {
       throw new BusinessException(TIME_VOTE_NOT_FOUND);

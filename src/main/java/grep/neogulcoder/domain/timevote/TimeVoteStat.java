@@ -34,18 +34,13 @@ public class TimeVoteStat extends BaseEntity {
   @Column(nullable = false)
   private Long voteCount;
 
-  @Version
-  @Column(nullable = false)
-  private Long version;
-
   protected TimeVoteStat() {}
 
   @Builder
-  public TimeVoteStat(TimeVotePeriod period, LocalDateTime timeSlot, Long voteCount, Long version) {
+  public TimeVoteStat(TimeVotePeriod period, LocalDateTime timeSlot, Long voteCount) {
     this.period = period;
     this.timeSlot = timeSlot;
     this.voteCount = voteCount;
-    this.version = version;
   }
 
   public static TimeVoteStat of(TimeVotePeriod period, LocalDateTime timeSlot, Long voteCount) {
@@ -53,12 +48,11 @@ public class TimeVoteStat extends BaseEntity {
         .period(period)
         .timeSlot(timeSlot)
         .voteCount(voteCount)
-        .version(0L)
         .build();
   }
 
   public void addVotes(Long countToAdd) {
-    log.debug("addVotes: 이전 voteCount={}, 추가 count={}, 이전 version={}", this.voteCount, countToAdd, this.version);
+    log.debug("addVotes: 이전 voteCount={}, 추가 count={}, 이전 version={}", this.voteCount, countToAdd);
     this.voteCount += countToAdd;
   }
 }
