@@ -11,7 +11,6 @@ import grep.neogulcoder.domain.study.controller.dto.request.StudyCreateRequest;
 import grep.neogulcoder.domain.study.controller.dto.request.StudyUpdateRequest;
 import grep.neogulcoder.domain.study.controller.dto.response.*;
 import grep.neogulcoder.domain.study.enums.StudyMemberRole;
-import grep.neogulcoder.domain.study.enums.StudyType;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyQueryRepository;
@@ -36,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -71,14 +71,14 @@ public class StudyService {
     }
 
     public StudyHeaderResponse getStudyHeader(Long studyId) {
-        Study study = findValidStudy(studyId);
+        Study study = getStudyById(studyId);
         List<StudyMemberResponse> members = studyQueryRepository.findStudyMembers(studyId);
 
         return StudyHeaderResponse.from(study, members);
     }
 
     public StudyResponse getStudy(Long studyId) {
-        Study study = findValidStudy(studyId);
+        Study study = getStudyById(studyId);
 
         int progressDays = (int) ChronoUnit.DAYS.between(study.getStartDate().toLocalDate(), LocalDate.now()) + 1;
         int totalDays = (int) ChronoUnit.DAYS.between(study.getStartDate().toLocalDate(), study.getEndDate().toLocalDate()) + 1;
@@ -102,7 +102,7 @@ public class StudyService {
     }
 
     public StudyInfoResponse getMyStudyContent(Long studyId, Long userId) {
-        Study study = findValidStudy(studyId);
+        Study study = getStudyById(studyId);
 
         validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
@@ -113,7 +113,7 @@ public class StudyService {
     }
 
     public StudyMemberInfoResponse getMyStudyMemberInfo(Long studyId, Long userId) {
-        StudyMember studyMember = findValidStudyMember(studyId, userId);
+        StudyMember studyMember = getStudyMemberById(studyId, userId);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
@@ -124,7 +124,6 @@ public class StudyService {
     @Transactional
     public Long createStudy(StudyCreateRequest request, Long userId, MultipartFile image) throws IOException {
         validateStudyCreateLimit(userId);
-        validateLocation(request.getStudyType(), request.getLocation());
 
         String imageUrl = createImageUrl(userId, image);
 
@@ -141,9 +140,8 @@ public class StudyService {
 
     @Transactional
     public void updateStudy(Long studyId, StudyUpdateRequest request, Long userId, MultipartFile image) throws IOException {
-        Study study = findValidStudy(studyId);
+        Study study = getStudyById(studyId);
 
-        validateLocation(request.getStudyType(), request.getLocation());
         validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
         validateStudyStartDate(request, study);
@@ -164,7 +162,7 @@ public class StudyService {
 
     @Transactional
     public void deleteStudy(Long studyId, Long userId) {
-        Study study = findValidStudy(studyId);
+        getStudyById(studyId);
 
         validateStudyMember(studyId, userId);
         validateStudyLeader(studyId, userId);
@@ -175,12 +173,12 @@ public class StudyService {
         recruitmentPostRepository.deactivateByStudyId(studyId);
     }
 
-    private Study findValidStudy(Long studyId) {
+    private Study getStudyById(Long studyId) {
         return studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
     }
 
-    private StudyMember findValidStudyMember(Long studyId, Long userId) {
+    private StudyMember getStudyMemberById(Long studyId, Long userId) {
         return Optional.ofNullable(studyMemberQueryRepository.findByStudyIdAndUserId(studyId, userId))
             .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
     }
@@ -189,12 +187,6 @@ public class StudyService {
         int count = studyRepository.countByUserIdAndActivatedTrueAndFinishedFalse(userId);
         if (count >= 10) {
             throw new BusinessException(STUDY_CREATE_LIMIT_EXCEEDED);
-        }
-    }
-
-    private static void validateLocation(StudyType studyType, String location) {
-        if ((studyType == StudyType.OFFLINE || studyType == StudyType.HYBRID) && (location == null || location.isBlank())) {
-            throw new BusinessException(STUDY_LOCATION_REQUIRED);
         }
     }
 
@@ -220,7 +212,7 @@ public class StudyService {
     }
 
     private static void validateStudyStartDate(StudyUpdateRequest request, Study study) {
-        if (study.isStarted() && !study.getStartDate().equals(request.getStartDate())) {
+        if (study.isStarted(LocalDateTime.now()) && !study.getStartDate().equals(request.getStartDate())) {
             throw new BusinessException(STUDY_ALREADY_STARTED);
         }
     }
@@ -250,9 +242,5 @@ public class StudyService {
 
     private boolean isImgExists(MultipartFile image) {
         return image != null && !image.isEmpty();
-    }
-
-    private int getActiveUnfinishedStudiesCount(Long userId) {
-        return studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
     }
 }

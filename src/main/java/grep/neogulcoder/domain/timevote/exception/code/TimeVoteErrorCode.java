@@ -17,6 +17,7 @@ public enum TimeVoteErrorCode implements ErrorCode {
   INVALID_TIME_VOTE_PERIOD("TVP_003", HttpStatus.BAD_REQUEST, "모일 일정 조율 기간은 최대 7일까지 설정할 수 있습니다."),
   TIME_VOTE_PERIOD_START_DATE_IN_PAST("TVP_004", HttpStatus.BAD_REQUEST, "투표 시작일은 현재 시각보다 이전일 수 없습니다."),
   TIME_VOTE_INVALID_DATE_RANGE("TVP_005", HttpStatus.BAD_REQUEST, "종료일은 시작일보다 이후여야 합니다."),
+  TIME_VOTE_DELETE_FAILED("TVP_006", HttpStatus.INTERNAL_SERVER_ERROR, "기존 투표 데이터 삭제 중 오류가 발생했습니다."),
 
   // Time Vote, Time Vote Stats (e.g. 투표 기간 관련)
   TIME_VOTE_OUT_OF_RANGE("TVAS_001", HttpStatus.BAD_REQUEST, "선택한 시간이 투표 기간을 벗어났습니다."),

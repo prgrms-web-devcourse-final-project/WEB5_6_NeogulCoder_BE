@@ -3,7 +3,6 @@ package grep.neogulcoder.domain.study.repository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import grep.neogulcoder.domain.study.QStudyMember;
 import grep.neogulcoder.domain.study.Study;

@@ -15,35 +15,35 @@ import java.util.List;
 public class StudyInfoResponse {
 
     @Schema(description = "대표 이미지", example = "http://localhost:8083/image.jpg")
-    private String imageUrl;
+    private final String imageUrl;
 
     @Schema(description = "스터디 이름", example = "자바 스터디")
-    private String name;
+    private final String name;
 
     @Schema(description = "카테고리", example = "IT")
-    private Category category;
+    private final Category category;
 
     @Schema(description = "인원수", example = "6")
-    private int capacity;
+    private final int capacity;
 
     @Schema(description = "타입", example = "ONLINE")
-    private StudyType studyType;
+    private final StudyType studyType;
 
     @Schema(description = "지역", example = "서울")
-    private String location;
+    private final String location;
 
     @Schema(description = "시작일", example = "2025-07-15")
-    private LocalDateTime startDate;
+    private final LocalDateTime startDate;
 
     @NotNull
     @Schema(description = "종료일", example = "2025-07-28")
-    private LocalDateTime endDate;
+    private final LocalDateTime endDate;
 
     @Schema(description = "스터디 소개", example = "자바 스터디입니다.")
-    private String introduction;
+    private final String introduction;
 
     @Schema(description = "스터디 멤버 목록")
-    private List<StudyMemberResponse> members;
+    private final List<StudyMemberResponse> members;
 
     @Builder
     private StudyInfoResponse(String imageUrl, String name, Category category, int capacity, StudyType studyType, String location,

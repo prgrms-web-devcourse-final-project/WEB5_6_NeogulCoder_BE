@@ -11,13 +11,13 @@ import java.util.List;
 public class StudyExtensionResponse {
 
     @Schema(description = "스터디 Id", example = "1")
-    private Long studyId;
+    private final Long studyId;
 
     @Schema(description = "연장 여부", example = "true")
-    private boolean extended;
+    private final boolean extended;
 
     @Schema(description = "연장 스터디 참여 여부 목록")
-    private List<ExtendParticipationResponse> members;
+    private final List<ExtendParticipationResponse> members;
 
     @Builder
     private StudyExtensionResponse(Long studyId, boolean extended, List<ExtendParticipationResponse> members) {

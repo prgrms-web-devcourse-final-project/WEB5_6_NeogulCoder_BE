@@ -18,4 +18,6 @@ public interface RecruitmentPostRepository extends JpaRepository<RecruitmentPost
     void deactivateByStudyId(@Param("studyId") Long studyId);
 
     Page<RecruitmentPost> findBySubjectContainingIgnoreCase(String subject, Pageable pageable);
+
+    Optional<RecruitmentPost> findByStudyIdAndActivatedTrue(Long studyId);
 }

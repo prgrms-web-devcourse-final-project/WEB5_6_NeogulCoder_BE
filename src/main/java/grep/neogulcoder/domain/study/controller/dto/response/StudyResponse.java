@@ -14,28 +14,28 @@ import java.util.List;
 public class StudyResponse {
 
     @Schema(description = "스터디 진행 일수", example = "45")
-    private int progressDays;
+    private final int progressDays;
 
     @Schema(description = "스터디 총 기간", example = "320")
-    private int totalDays;
+    private final int totalDays;
 
     @Schema(description = "정원", example = "4")
-    private int capacity;
+    private final int capacity;
 
     @Schema(description = "인원수", example = "3")
-    private int currentCount;
+    private final int currentCount;
 
     @Schema(description = "스터디 총 게시물 수", example = "10")
-    private int totalPostCount;
+    private final int totalPostCount;
 
     @Schema(description = "팀 달력")
-    private List<TeamCalendarResponse> teamCalendars;
+    private final List<TeamCalendarResponse> teamCalendars;
 
     @Schema(description = "스터디 공지글 2개")
-    private List<NoticePostInfo> noticePosts;
+    private final List<NoticePostInfo> noticePosts;
 
     @Schema(description = "스터디 자유글 3개")
-    private List<FreePostInfo> freePosts;
+    private final List<FreePostInfo> freePosts;
 
     @Builder
     private StudyResponse(int progressDays, int totalDays, int capacity, int currentCount, int totalPostCount,

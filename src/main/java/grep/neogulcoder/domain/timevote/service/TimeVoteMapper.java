@@ -42,4 +42,14 @@ public class TimeVoteMapper {
             .build())
         .collect(Collectors.toList());
   }
+
+  public List<TimeVote> toEntities(List<LocalDateTime> timeSlots, TimeVotePeriod period, Long studyMemberId) {
+    return timeSlots.stream()
+        .map(slot -> TimeVote.builder()
+            .period(period)
+            .studyMemberId(studyMemberId)
+            .timeSlot(slot)
+            .build())
+        .collect(Collectors.toList());
+  }
 }
