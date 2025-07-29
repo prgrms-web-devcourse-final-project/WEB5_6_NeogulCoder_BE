@@ -32,8 +32,7 @@ public class AttendanceService {
     private final StudyMemberRepository studyMemberRepository;
 
     public AttendanceInfoResponse getAttendances(Long studyId, Long userId) {
-        Study study = studyRepository.findByIdAndActivatedTrue(studyId)
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+        Study study = getStudyById(studyId);
 
         List<Attendance> attendances = attendanceRepository.findByStudyIdAndUserId(studyId, userId);
         List<AttendanceResponse> responses = attendances.stream()
@@ -47,9 +46,7 @@ public class AttendanceService {
 
     @Transactional
     public Long createAttendance(Long studyId, Long userId) {
-        Study study = studyRepository.findByIdAndActivatedTrue(studyId)
-            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
-
+        getStudyById(studyId);
         validateNotAlreadyChecked(studyId, userId);
 
         Attendance attendance = Attendance.create(studyId, userId);
@@ -57,13 +54,18 @@ public class AttendanceService {
         return attendance.getId();
     }
 
-    private int getAttendanceRate(Long studyId, Long userId, Study study, List<AttendanceResponse> responses) {
-        LocalDate start = study.getStartDate().toLocalDate();
-        LocalDate participated = studyMemberRepository.findCreatedDateByStudyIdAndUserId(studyId, userId).toLocalDate();
-        LocalDate attendanceStart = start.isAfter(participated) ? start : participated;
-        LocalDate end = study.getEndDate().toLocalDate();
+    private Study getStudyById(Long studyId) {
+        return studyRepository.findById(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+    }
 
-        int totalDays = (int) ChronoUnit.DAYS.between(attendanceStart, end) + 1;
+    private int getAttendanceRate(Long studyId, Long userId, Study study, List<AttendanceResponse> responses) {
+        LocalDate startDay = study.getStartDate().toLocalDate();
+        LocalDate participatedDay = studyMemberRepository.findCreatedDateByStudyIdAndUserId(studyId, userId).toLocalDate();
+        LocalDate attendanceStartDay = startDay.isAfter(participatedDay) ? startDay : participatedDay;
+        LocalDate endDay = study.getEndDate().toLocalDate();
+
+        int totalDays = (int) ChronoUnit.DAYS.between(attendanceStartDay, endDay) + 1;
         int attendDays = responses.size();
         int attendanceRate = totalDays == 0 ? 0 : Math.round(((float) attendDays / totalDays) * 100);
 

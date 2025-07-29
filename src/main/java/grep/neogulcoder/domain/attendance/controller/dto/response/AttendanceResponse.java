@@ -11,13 +11,13 @@ import java.time.LocalDate;
 public class AttendanceResponse {
 
     @Schema(description = "스터디 Id", example = "1")
-    private Long studyId;
+    private final Long studyId;
 
     @Schema(description = "유저 Id", example = "2")
-    private Long userId;
+    private final Long userId;
 
     @Schema(description = "출석일", example = "2025-07-10")
-    private LocalDate attendanceDate;
+    private final LocalDate attendanceDate;
 
     @Builder
     private AttendanceResponse(Long studyId, Long userId, LocalDate attendanceDate) {

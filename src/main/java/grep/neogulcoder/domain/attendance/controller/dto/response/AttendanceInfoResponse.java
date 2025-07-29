@@ -10,10 +10,10 @@ import java.util.List;
 public class AttendanceInfoResponse {
     
     @Schema(description = "출석일 목록")
-    private List<AttendanceResponse> attendances;
+    private final List<AttendanceResponse> attendances;
 
     @Schema(description = "출석률", example = "50")
-    private int attendanceRate;
+    private final int attendanceRate;
 
     @Builder
     private AttendanceInfoResponse(List<AttendanceResponse> attendances, int attendanceRate) {
