@@ -22,16 +22,16 @@ public class ReceivedApplicationPagingResponse {
             "\"applicationReason\": \"자바를 더 공부하고 싶어 지원합니다.\"" +
             "}]"
     )
-    private List<ReceivedApplicationResponse> receivedApplications;
+    private final List<ReceivedApplicationResponse> receivedApplications;
 
     @Schema(description = "총 페이지 수", example = "2")
-    private int totalPage;
+    private final int totalPage;
 
     @Schema(description = "총 요소 개수", example = "10")
-    private int totalElementCount;
+    private final int totalElementCount;
 
     @Schema(description = "다음 페이지 여부", example = "false")
-    private boolean hasNext;
+    private final boolean hasNext;
 
     @Builder
     private ReceivedApplicationPagingResponse(Page<ReceivedApplicationResponse> page) {

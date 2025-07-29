@@ -13,40 +13,40 @@ import java.time.LocalDateTime;
 public class MyApplicationResponse {
 
     @Schema(description = "모집글 번호", example = "1")
-    private Long recruitmentPostId;
+    private final Long recruitmentPostId;
 
     @Schema(description = "스터디 이름", example = "자바 스터디")
-    private String name;
+    private final String name;
 
     @Schema(description = "스터디장 닉네임", example = "너굴")
-    private String leaderNickname;
+    private final String leaderNickname;
 
     @Schema(description = "정원", example = "4")
-    private int capacity;
+    private final int capacity;
 
     @Schema(description = "인원수", example = "3")
-    private int currentCount;
+    private final int currentCount;
 
     @Schema(description = "시작일", example = "2025-07-15")
-    private LocalDateTime startDate;
+    private final LocalDateTime startDate;
 
     @Schema(description = "대표 이미지", example = "http://localhost:8083/image.jpg")
-    private String imageUrl;
+    private final String imageUrl;
 
     @Schema(description = "스터디 소개", example = "자바 스터디입니다.")
-    private String introduction;
+    private final String introduction;
 
     @Schema(description = "카테고리", example = "IT")
-    private Category category;
+    private final Category category;
 
     @Schema(description = "타입", example = "ONLINE")
-    private StudyType studyType;
+    final StudyType studyType;
 
     @Schema(description = "열람 여부", example = "true")
-    private boolean isRead;
+    private final boolean isRead;
 
     @Schema(description = "신청 상태", example = "PENDING")
-    private ApplicationStatus status;
+    private final ApplicationStatus status;
 
     @QueryProjection
     public MyApplicationResponse(Long recruitmentPostId, String name, String leaderNickname, int capacity, int currentCount, LocalDateTime startDate,
