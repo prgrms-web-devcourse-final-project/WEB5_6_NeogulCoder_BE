@@ -40,9 +40,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
-import static grep.neogulcoder.domain.study.enums.StudyMemberRole.LEADER;
+import static grep.neogulcoder.domain.study.enums.StudyMemberRole.*;
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
-import static grep.neogulcoder.domain.users.exception.code.UserErrorCode.USER_NOT_FOUND;
+import static grep.neogulcoder.domain.users.exception.code.UserErrorCode.*;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -184,8 +184,8 @@ public class StudyService {
     }
 
     private void validateStudyCreateLimit(Long userId) {
-        int count = studyRepository.countByUserIdAndActivatedTrueAndFinishedFalse(userId);
-        if (count >= 10) {
+        int joinedStudyCount = studyRepository.countByUserIdAndActivatedTrueAndFinishedFalse(userId);
+        if (Study.isOverJoinLimit(joinedStudyCount)) {
             throw new BusinessException(STUDY_CREATE_LIMIT_EXCEEDED);
         }
     }

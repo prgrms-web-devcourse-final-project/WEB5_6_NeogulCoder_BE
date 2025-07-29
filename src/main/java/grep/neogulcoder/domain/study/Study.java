@@ -50,6 +50,8 @@ public class Study extends BaseEntity {
     @Version
     private Long version;
 
+    private static final int MAX_JOINED_STUDY_COUNT = 10;
+
     protected Study() {
     }
 
@@ -121,5 +123,9 @@ public class Study extends BaseEntity {
 
         return (currentDateTime.isEqual(this.endDate) || currentDateTime.isAfter(this.endDate)) &&
                 (currentDateTime.isEqual(reviewableDateTime) || currentDateTime.isBefore(reviewableDateTime));
+    }
+
+    public static boolean isOverJoinLimit(int joinedStudyCount) {
+        return joinedStudyCount >= MAX_JOINED_STUDY_COUNT;
     }
 }
