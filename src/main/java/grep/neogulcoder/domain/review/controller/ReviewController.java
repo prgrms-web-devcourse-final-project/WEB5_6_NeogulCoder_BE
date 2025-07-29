@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,34 +26,34 @@ public class ReviewController implements ReviewSpecification {
     private final ReviewService reviewService;
 
     @GetMapping("/studies/{study-id}/targets")
-    public ApiResponse<ReviewTargetUsersInfo> getReviewTargetUsersInfo(@PathVariable("study-id") long studyId,
-                                                                       @AuthenticationPrincipal Principal userDetails) {
+    public ResponseEntity<ApiResponse<ReviewTargetUsersInfo>> getReviewTargetUsersInfo(@PathVariable("study-id") long studyId,
+                                                                                      @AuthenticationPrincipal Principal userDetails) {
         ReviewTargetUsersInfo response = reviewService.getReviewTargetUsersInfo(studyId, userDetails.getUserId());
-        return ApiResponse.success(response);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @GetMapping("/studies/me")
-    public ApiResponse<ReviewTargetStudiesInfo> getReviewTargetStudiesInfo(@AuthenticationPrincipal Principal userDetails) {
+    public ResponseEntity<ApiResponse<ReviewTargetStudiesInfo>> getReviewTargetStudiesInfo(@AuthenticationPrincipal Principal userDetails) {
         ReviewTargetStudiesInfo response = reviewService.getReviewTargetStudiesInfo(userDetails.getUserId(), LocalDateTime.now());
-        return ApiResponse.success(response);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @PostMapping
-    public ApiResponse<Long> save(@Valid @RequestBody ReviewSaveRequest request, @AuthenticationPrincipal Principal userDetails) {
+    public ResponseEntity<ApiResponse<Long>> save(@Valid @RequestBody ReviewSaveRequest request, @AuthenticationPrincipal Principal userDetails) {
         reviewService.save(request.toServiceRequest(), userDetails.getUserId());
-        return ApiResponse.noContent();
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 
     @GetMapping("/me/tags")
-    public ApiResponse<MyReviewTagsInfo> getMyReviewTags(@AuthenticationPrincipal Principal userDetails) {
+    public ResponseEntity<ApiResponse<MyReviewTagsInfo>> getMyReviewTags(@AuthenticationPrincipal Principal userDetails) {
         MyReviewTagsInfo response = reviewService.getMyReviewTags(userDetails.getUserId());
-        return ApiResponse.success(response);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @GetMapping("/me/contents")
-    public ApiResponse<ReviewContentsPagingInfo> getMyReviewContents(@PageableDefault(size = 4) Pageable pageable,
+    public ResponseEntity<ApiResponse<ReviewContentsPagingInfo>> getMyReviewContents(@PageableDefault(size = 4) Pageable pageable,
                                                                      @AuthenticationPrincipal Principal userDetails) {
         ReviewContentsPagingInfo response = reviewService.getMyReviewContents(pageable, userDetails.getUserId());
-        return ApiResponse.success(response);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 }
