@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum AlarmErrorCode implements ErrorCode {
 
-    ALARM_NOT_FOUND("A001",HttpStatus.NOT_FOUND,"알람을 찾을 수 없습니다.");
+    ALARM_NOT_FOUND("A001",HttpStatus.NOT_FOUND,"알람을 찾을 수 없습니다."),
+    ALREADY_CHECKED("A002",HttpStatus.BAD_REQUEST,"이미 읽은 알림입니다.");
 
     private final String code;
     private final HttpStatus status;

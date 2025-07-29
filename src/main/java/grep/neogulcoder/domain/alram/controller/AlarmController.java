@@ -41,7 +41,7 @@ public class AlarmController implements AlarmSpecification {
         if (accepted) {
             alarmService.acceptInvite(principal.getUserId(), alarmId);
         } else {
-            alarmService.rejectInvite(principal.getUserId());
+            alarmService.rejectInvite(principal.getUserId(), alarmId);
         }
 
         return ApiResponse.success(accepted ? "스터디 초대를 수락했습니다." : "스터디 초대를 거절했습니다.");
