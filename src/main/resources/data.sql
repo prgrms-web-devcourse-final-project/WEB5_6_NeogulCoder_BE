@@ -123,14 +123,14 @@ INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated) VALUES 
 
 -- [ alarm ]
 -- 1. 스터디 초대 알림
-INSERT INTO alarm (receiver_user_id, alarm_type, domain_type, domain_id, message, checked, activated) VALUES (101, 'INVITE', 'STUDY', 55, '[알고리즘 마스터즈 스터디] 에서 당신을 초대하고 싶어합니다.', false, TRUE);
+INSERT INTO alarm (receiver_user_id, alarm_type, domain_type, domain_id, message, checked, activated) VALUES (101, 'STUDY_INVITE', 'STUDY', 55, '[알고리즘 마스터즈 스터디] 에서 당신을 초대하고 싶어합니다.', false, TRUE);
 
 -- 2. 모임 일정 투표 요청 알림
 INSERT INTO alarm (receiver_user_id, alarm_type, domain_type, domain_id, message, checked, activated) VALUES (8, 'TIME_VOTE_REQUEST', 'TIME_VOTE', 6, '[mock) wibby 프로젝트] 스터디장이 모임 일정 조율을 위한 투표를 요청했습니다.', false, TRUE);
 INSERT INTO alarm (receiver_user_id, alarm_type, domain_type, domain_id, message, checked, activated) VALUES (9, 'TIME_VOTE_REQUEST', 'TIME_VOTE', 6, '[mock) wibby 프로젝트] 스터디장이 모임 일정 조율을 위한 투표를 요청했습니다.', false, TRUE);
 
 -- 3. 이미 확인된 알림
-INSERT INTO alarm (receiver_user_id, alarm_type, domain_type, domain_id, message, checked, activated) VALUES (103, 'INVITE', 'STUDY', 22, '[네트워크 기초반] 스터디에서 당신을 초대하고 싶어합니다.', true, TRUE);
+INSERT INTO alarm (receiver_user_id, alarm_type, domain_type, domain_id, message, checked, activated) VALUES (103, 'STUDY_INVITE', 'STUDY', 22, '[네트워크 기초반] 스터디에서 당신을 초대하고 싶어합니다.', true, TRUE);
 
 -- [ quiz ]
 INSERT INTO quiz (post_id, quiz_content, quiz_answer, activated) VALUES (1, 'Java에서 List는 인터페이스다.', TRUE, TRUE);
