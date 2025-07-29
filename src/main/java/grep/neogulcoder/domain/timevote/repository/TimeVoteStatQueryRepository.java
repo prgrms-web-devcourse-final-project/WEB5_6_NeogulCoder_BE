@@ -8,8 +8,10 @@ import grep.neogulcoder.domain.timevote.QTimeVote;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+@Slf4j
 @Repository
 public class TimeVoteStatQueryRepository {
 
@@ -33,6 +35,10 @@ public class TimeVoteStatQueryRepository {
         )
         .groupBy(timeVote.timeSlot)
         .fetch();
+
+    for (Tuple tuple : result) {
+      log.info(">>> 통계 디버깅: timeSlot={}, count={}", tuple.get(timeVote.timeSlot), tuple.get(timeVote.count()));
+    }
 
     return result.stream()
         .map(tuple -> TimeVoteStat.of(period, tuple.get(timeVote.timeSlot), tuple.get(timeVote.count())))
