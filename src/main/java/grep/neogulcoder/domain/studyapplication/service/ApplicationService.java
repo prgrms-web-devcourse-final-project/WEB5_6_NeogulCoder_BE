@@ -48,7 +48,7 @@ public class ApplicationService {
 
     @Transactional
     public ReceivedApplicationPagingResponse getReceivedApplicationsPaging(Long recruitmentPostId, Pageable pageable, Long userId) {
-        RecruitmentPost recruitmentPost = findValidRecruitmentPost(recruitmentPostId);
+        RecruitmentPost recruitmentPost = getRecruitmentPostById(recruitmentPostId);
 
         validateOwner(userId, recruitmentPost);
         applicationRepository.markAllAsReadByRecruitmentPostId(recruitmentPostId);
@@ -64,7 +64,7 @@ public class ApplicationService {
 
     @Transactional
     public Long createApplication(Long recruitmentPostId, ApplicationCreateRequest request, Long userId) {
-        RecruitmentPost recruitmentPost = findValidRecruitmentPost(recruitmentPostId);
+        RecruitmentPost recruitmentPost = getRecruitmentPostById(recruitmentPostId);
 
         validateNotLeaderApply(recruitmentPost, userId);
         validateNotAlreadyApplied(recruitmentPostId, userId);
@@ -80,9 +80,9 @@ public class ApplicationService {
 
     @Transactional
     public void approveApplication(Long applicationId, Long userId) {
-        StudyApplication application = findValidApplication(applicationId);
-        RecruitmentPost post = findValidRecruitmentPost(application.getRecruitmentPostId());
-        Study study = findValidStudy(post);
+        StudyApplication application = getApplicationById(applicationId);
+        RecruitmentPost post = getRecruitmentPostById(application.getRecruitmentPostId());
+        Study study = getStudyByRecruitmentPostId(post);
 
         validateOnlyLeaderCanApprove(study, userId);
         validateStatusIsApplying(application);
@@ -99,9 +99,9 @@ public class ApplicationService {
 
     @Transactional
     public void rejectApplication(Long applicationId, Long userId) {
-        StudyApplication application = findValidApplication(applicationId);
-        RecruitmentPost post = findValidRecruitmentPost(application.getRecruitmentPostId());
-        Study study = findValidStudy(post);
+        StudyApplication application = getApplicationById(applicationId);
+        RecruitmentPost post = getRecruitmentPostById(application.getRecruitmentPostId());
+        Study study = getStudyByRecruitmentPostId(post);
 
         validateOnlyLeaderCanReject(study, userId);
         validateStatusIsApplying(application);
@@ -111,22 +111,19 @@ public class ApplicationService {
         eventPublisher.publishEvent(new ApplicationStatusChangedEvent(applicationId, AlarmType.STUDY_APPLICATION_REJECTED));
     }
 
-    private Study findValidStudy(RecruitmentPost post) {
-        Study study = studyRepository.findByIdAndActivatedTrue(post.getStudyId())
+    private Study getStudyByRecruitmentPostId(RecruitmentPost post) {
+        return studyRepository.findByIdAndActivatedTrue(post.getStudyId())
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
-        return study;
     }
 
-    private StudyApplication findValidApplication(Long applicationId) {
-        StudyApplication application = applicationRepository.findById(applicationId)
+    private StudyApplication getApplicationById(Long applicationId) {
+        return applicationRepository.findById(applicationId)
             .orElseThrow(() -> new NotFoundException(APPLICATION_NOT_FOUND));
-        return application;
     }
 
-    private RecruitmentPost findValidRecruitmentPost(Long recruitmentPostId) {
-        RecruitmentPost post = recruitmentPostRepository.findByIdAndActivatedTrue(recruitmentPostId)
+    private RecruitmentPost getRecruitmentPostById(Long recruitmentPostId) {
+        return recruitmentPostRepository.findByIdAndActivatedTrue(recruitmentPostId)
             .orElseThrow(() -> new NotFoundException(NOT_FOUND));
-        return post;
     }
 
     private static void validateOwner(Long userId, RecruitmentPost recruitmentPost) {
