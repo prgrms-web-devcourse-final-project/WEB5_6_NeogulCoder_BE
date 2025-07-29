@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 @Tag(name = "GroupChat", description = "WebSocket 구조 설명용 Swagger 문서")
 public interface GroupChatSwaggerSpecification {
@@ -33,7 +34,7 @@ public interface GroupChatSwaggerSpecification {
         ** Swagger에서 이 API를 실행해도 실제 전송은 되지 않으며, 
         WebSocket 통신 구조를 이해하기 위한 문서 예시입니다.**
         """)
-    ApiResponse<GroupChatSwaggerResponse> sendMessage(GroupChatSwaggerRequest request);
+    ResponseEntity<ApiResponse<GroupChatSwaggerResponse>> sendMessage(GroupChatSwaggerRequest request);
 
     @Operation(summary = "채팅 메시지 수신 (WebSocket Sub)",
         description = """
@@ -64,5 +65,5 @@ public interface GroupChatSwaggerSpecification {
         ** Swagger에서는 WebSocket 구독을 테스트할 수 없으며,
         이 문서는 프론트엔드 구현 참고용입니다.**
         """)
-    ApiResponse<List<GroupChatSwaggerResponse>> getMessages(Long studyId);
+    ResponseEntity<ApiResponse<List<GroupChatSwaggerResponse>>> getMessages(Long studyId);
 }
