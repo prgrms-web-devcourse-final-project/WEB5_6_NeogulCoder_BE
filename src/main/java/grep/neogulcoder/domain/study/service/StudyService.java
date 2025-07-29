@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -212,7 +213,7 @@ public class StudyService {
     }
 
     private static void validateStudyStartDate(StudyUpdateRequest request, Study study) {
-        if (study.isStarted() && !study.getStartDate().equals(request.getStartDate())) {
+        if (study.isStarted(LocalDateTime.now()) && !study.getStartDate().equals(request.getStartDate())) {
             throw new BusinessException(STUDY_ALREADY_STARTED);
         }
     }
