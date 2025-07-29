@@ -18,6 +18,7 @@ import grep.neogulcoder.domain.study.event.StudyInviteEvent;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
+import grep.neogulcoder.domain.study.service.StudyManagementServiceFacade;
 import grep.neogulcoder.domain.studyapplication.StudyApplication;
 import grep.neogulcoder.domain.studyapplication.event.ApplicationEvent;
 import grep.neogulcoder.domain.studyapplication.event.ApplicationStatusChangedEvent;
@@ -37,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static grep.neogulcoder.domain.alram.exception.code.AlarmErrorCode.ALREADY_CHECKED;
 import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_LEADER_NOT_FOUND;
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
@@ -56,6 +58,7 @@ public class AlarmService {
     private final StudyMemberRepository studyMemberRepository;
     private final RecruitmentPostRepository recruitmentPostRepository;
     private final ApplicationRepository applicationRepository;
+    private final StudyManagementServiceFacade studyManagementServiceFacade;
 
     @Transactional
     public void saveAlarm(Long receiverId, AlarmType alarmType, DomainType domainType,
@@ -113,18 +116,28 @@ public class AlarmService {
     @Transactional
     public void acceptInvite(Long targetUserId, Long alarmId) {
 
+        if(isChecked(targetUserId, alarmId)){
+            throw new BusinessException(ALREADY_CHECKED);
+        }
+
         validateParticipantStudyLimit(targetUserId);
 
-        Alarm alarm = findValidAlarm(alarmId);
+        Alarm alarm = findValidAlarm(targetUserId, alarmId);
         Long studyId = alarm.getDomainId();
         Study study = findValidStudy(studyId);
         studyMemberRepository.save(StudyMember.createMember(study, targetUserId));
+        studyManagementServiceFacade.increaseMemberCount(study, targetUserId);
         alarm.checkAlarm();
     }
 
     @Transactional
-    public void rejectInvite(Long alarmId) {
-        Alarm alarm = findValidAlarm(alarmId);
+    public void rejectInvite(Long targetUserId,Long alarmId) {
+
+        if(isChecked(targetUserId, alarmId)){
+            throw new BusinessException(ALREADY_CHECKED);
+        }
+
+        Alarm alarm = findValidAlarm(targetUserId, alarmId);
         alarm.checkAlarm();
     }
 
@@ -248,9 +261,8 @@ public class AlarmService {
         );
     }
 
-    private Alarm findValidAlarm(Long alarmId) {
-        return alarmRepository.findById(alarmId)
-                .orElseThrow(() -> new NotFoundException(AlarmErrorCode.ALARM_NOT_FOUND));
+    private Alarm findValidAlarm(Long targetUserId, Long alarmId) {
+        return alarmRepository.findByReceiverUserIdAndId(targetUserId, alarmId).orElseThrow(() -> new NotFoundException(AlarmErrorCode.ALARM_NOT_FOUND));
     }
 
     private Study findValidStudy(Long studyId) {
@@ -263,5 +275,9 @@ public class AlarmService {
         if (count >= 10) {
             throw new BusinessException(APPLICATION_PARTICIPANT_LIMIT_EXCEEDED);
         }
+    }
+
+    private boolean isChecked(Long targetUserId, Long alarmId) {
+        return findValidAlarm(targetUserId, alarmId).isChecked();
     }
 }

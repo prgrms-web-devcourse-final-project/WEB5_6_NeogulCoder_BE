@@ -27,16 +27,16 @@ public class StudyItemPagingResponse {
             "\"finished\": false" +
             "}]"
     )
-    private List<StudyItemResponse> studies;
+    private final List<StudyItemResponse> studies;
 
     @Schema(description = "총 페이지 수", example = "2")
-    private int totalPage;
+    private final int totalPage;
 
     @Schema(description = "총 요소 개수", example = "10")
-    private int totalElementCount;
+    private final int totalElementCount;
 
     @Schema(example = "false", description = "다음 페이지 여부")
-    private boolean hasNext;
+    private final boolean hasNext;
 
     @Builder
     private StudyItemPagingResponse(Page<StudyItemResponse> page) {

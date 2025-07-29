@@ -10,16 +10,16 @@ import lombok.Getter;
 public class ExtendParticipationResponse {
 
     @Schema(description = "유저 Id", example = "1")
-    private Long userId;
+    private final Long userId;
 
     @Schema(description = "닉네임", example = "너굴")
-    private String nickname;
+    private final String nickname;
 
     @Schema(description = "역할", example = "LEADER")
-    private StudyMemberRole role;
+    private final StudyMemberRole role;
 
     @Schema(description = "참여 여부", example = "true")
-    private boolean participated;
+    private final boolean participated;
 
     @Builder
     public ExtendParticipationResponse(Long userId, String nickname, StudyMemberRole role, boolean participated) {
