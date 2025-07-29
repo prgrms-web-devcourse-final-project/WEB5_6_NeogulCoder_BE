@@ -84,7 +84,7 @@ public class StudyManagementService {
         }
 
         StudyMember currentLeader = getStudyMemberById(studyId, userId);
-        isLeader(currentLeader);
+        validateLeader(currentLeader);
 
         StudyMember newLeader = getStudyMemberById(studyId, newLeaderId);
 
@@ -121,7 +121,7 @@ public class StudyManagementService {
         Study originStudy = getStudyById(studyId);
 
         StudyMember leader = getStudyMemberById(studyId, userId);
-        isLeader(leader);
+        validateLeader(leader);
 
         validateStudyExtendable(originStudy, request.getNewEndDate());
 
@@ -191,7 +191,7 @@ public class StudyManagementService {
     }
 
     private void randomDelegateLeader(Long studyId, StudyMember currentLeader) {
-        isLeader(currentLeader);
+        validateLeader(currentLeader);
 
         List<StudyMember> studyMembers = studyMemberRepository.findAvailableNewLeaders(studyId);
 
@@ -205,7 +205,7 @@ public class StudyManagementService {
         newLeader.changeRoleLeader();
     }
 
-    private void isLeader(StudyMember studyMember) {
+    private void validateLeader(StudyMember studyMember) {
         if (!studyMember.isLeader()) {
             throw new BusinessException(NOT_STUDY_LEADER);
         }
