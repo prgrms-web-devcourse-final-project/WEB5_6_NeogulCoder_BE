@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,10 +69,10 @@ public interface StudyPostSpecification {
                     }
                     ```
                     """)
-    ApiResponse<MyStudyPostPagingResult> getMyPostSearch(long studyId, Pageable pageable, Category category, String keyword, Principal userDetails);
+    ResponseEntity<ApiResponse<MyStudyPostPagingResult>> getMyPostSearch(long studyId, Pageable pageable, Category category, String keyword, Principal userDetails);
 
     @Operation(summary = "게시글 생성", description = "스터디에 새로운 게시글을 작성합니다.")
-    ApiResponse<Long> create(long studyId, StudyPostSaveRequest request, Principal userDetails);
+    ResponseEntity<ApiResponse<Long>> create(long studyId, StudyPostSaveRequest request, Principal userDetails);
 
     @Operation(
             summary = "게시글 검색 페이징 조회",
@@ -124,7 +125,7 @@ public interface StudyPostSpecification {
                     ```
                     """
     )
-    ApiResponse<PostPagingResult> findPagingInfo(Long studyId, Pageable pageable, Category category, String keyword);
+    ResponseEntity<ApiResponse<PostPagingResult>> findPagingInfo(Long studyId, Pageable pageable, Category category, String keyword);
 
     @Operation(
             summary = "게시글 상세 조회",
@@ -170,21 +171,21 @@ public interface StudyPostSpecification {
                     ```
                     """
     )
-    ApiResponse<StudyPostDetailResponse> findOne(
+    ResponseEntity<ApiResponse<StudyPostDetailResponse>> findOne(
             @Parameter(description = "게시글 ID", example = "15") Long postId
     );
 
     @Operation(summary = "게시글 수정", description = "기존 게시글을 수정합니다.")
-    ApiResponse<Void> update(
+    ResponseEntity<ApiResponse<Void>> update(
             @Parameter(description = "게시글 ID", example = "15") Long postId,
             StudyPostUpdateRequest request,
             Principal userDetails
     );
 
     @Operation(summary = "게시글 삭제", description = "특정 게시글을 삭제합니다.")
-    ApiResponse<Void> delete(@Parameter(description = "게시글 ID", example = "15") Long postId,
+    ResponseEntity<ApiResponse<Void>> delete(@Parameter(description = "게시글 ID", example = "15") Long postId,
                              @AuthenticationPrincipal Principal userDetails);
 
     @Operation(summary = "스터디 게시글 이미지 등록", description = "게시글에 이미지를 등록 합니다.")
-    ApiResponse<String> uploadPostImage(MultipartFile file, Principal userDetails) throws IOException;
+    ResponseEntity<ApiResponse<String>> uploadPostImage(MultipartFile file, Principal userDetails) throws IOException;
 }
