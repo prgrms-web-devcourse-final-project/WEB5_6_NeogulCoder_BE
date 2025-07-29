@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,46 +28,46 @@ public class AdminController implements AdminSpecification {
     private final AdminService adminService;
 
     @GetMapping("/users")
-    public ApiResponse<Page<AdminUserResponse>> getUsers(
+    public ResponseEntity<ApiResponse<Page<AdminUserResponse>>> getUsers(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(required = false) String email) {
         int size = 10;
         Pageable pageable = PageRequest.of(page, size);
-        return ApiResponse.success(adminService.getAllUsers(pageable, email));
+        return ResponseEntity.ok(ApiResponse.success(adminService.getAllUsers(pageable, email)));
     }
 
     @GetMapping("/studies")
-    public ApiResponse<Page<AdminStudyResponse>> getStudies(
+    public ResponseEntity<ApiResponse<Page<AdminStudyResponse>>> getStudies(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(required = false) String name,
         @RequestParam(required = false) Category category) {
-        return ApiResponse.success(adminService.getAllStudies(page,name,category));
+        return ResponseEntity.ok(ApiResponse.success(adminService.getAllStudies(page,name,category)));
     }
 
     @GetMapping("/recruitment-posts")
-    public ApiResponse<Page<AdminRecruitmentPostResponse>> getRecruitmentPosts(
+    public ResponseEntity<ApiResponse<Page<AdminRecruitmentPostResponse>>> getRecruitmentPosts(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(required = false) String subject) {
 
-        return ApiResponse.success(adminService.getAllRecruitmentPosts(page, subject));
+        return ResponseEntity.ok(ApiResponse.success(adminService.getAllRecruitmentPosts(page, subject)));
     }
 
     @DeleteMapping("/users/{userId}")
-    public ApiResponse<Void> deleteUser(@PathVariable Long userId) {
+    public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long userId) {
         adminService.deleteUser(userId);
-        return ApiResponse.noContent();
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 
     @DeleteMapping("/studies/{studyId}")
-    public ApiResponse<Void> deleteStudy(@PathVariable Long studyId) {
+    public ResponseEntity<ApiResponse<Void>> deleteStudy(@PathVariable Long studyId) {
         adminService.deleteStudy(studyId);
-        return ApiResponse.noContent();
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 
     @DeleteMapping("/recruitment-posts/{postId}")
-    public ApiResponse<Void> deleteRecruitmentPost(@PathVariable Long postId) {
+    public ResponseEntity<ApiResponse<Void>> deleteRecruitmentPost(@PathVariable Long postId) {
         adminService.deleteRecruitmentPost(postId);
-        return ApiResponse.noContent();
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 
 }

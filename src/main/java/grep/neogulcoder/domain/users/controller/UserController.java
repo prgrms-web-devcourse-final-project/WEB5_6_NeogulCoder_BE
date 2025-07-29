@@ -5,7 +5,6 @@ import grep.neogulcoder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogulcoder.domain.users.controller.dto.request.UpdatePasswordRequest;
 import grep.neogulcoder.domain.users.controller.dto.response.AllUserResponse;
 import grep.neogulcoder.domain.users.controller.dto.response.UserResponse;
-import grep.neogulcoder.domain.users.entity.User;
 import grep.neogulcoder.domain.users.service.EmailVerificationService;
 import grep.neogulcoder.domain.users.service.UserService;
 import grep.neogulcoder.global.auth.Principal;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,7 +38,8 @@ public class UserController implements UserSpecification {
     private final EmailVerificationService verificationService;
 
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse<UserResponse>> get(@AuthenticationPrincipal Principal principal) {
+    public ResponseEntity<ApiResponse<UserResponse>> get(
+        @AuthenticationPrincipal Principal principal) {
         UserResponse userResponse = usersService.getUserResponse(principal.getUserId());
         return ResponseEntity.ok(ApiResponse.success(userResponse));
     }
@@ -68,7 +67,8 @@ public class UserController implements UserSpecification {
     }
 
     @PutMapping("/update/password")
-    public ResponseEntity<ApiResponse<Void>> updatePassword(@AuthenticationPrincipal Principal principal,
+    public ResponseEntity<ApiResponse<Void>> updatePassword(
+        @AuthenticationPrincipal Principal principal,
         @Valid @RequestBody UpdatePasswordRequest request) {
         usersService.updatePassword(principal.getUserId(), request.getPassword(),
             request.getNewPassword(), request.getNewPasswordCheck());
@@ -90,7 +90,7 @@ public class UserController implements UserSpecification {
     }
 
     @PostMapping("/mail/send")
-    public ResponseEntity<ApiResponse<Void>>sendCode(@RequestParam String email) {
+    public ResponseEntity<ApiResponse<Void>> sendCode(@RequestParam String email) {
         verificationService.sendVerificationEmail(email);
         return ResponseEntity.ok(ApiResponse.noContent());
     }
@@ -102,7 +102,7 @@ public class UserController implements UserSpecification {
     ) {
         boolean result = verificationService.verifyCode(email, code);
         return result ?
-            ResponseEntity.ok(ApiResponse.noContent()):
+            ResponseEntity.ok(ApiResponse.noContent()) :
             ResponseEntity.ok(ApiResponse.badRequest());
     }
 
