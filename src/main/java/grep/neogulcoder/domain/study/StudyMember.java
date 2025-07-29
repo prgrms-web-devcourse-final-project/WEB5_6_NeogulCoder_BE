@@ -72,10 +72,6 @@ public class StudyMember extends BaseEntity {
         this.role = StudyMemberRole.MEMBER;
     }
 
-    public boolean isParticipated() {
-        return this.participated;
-    }
-
     public void participate() {
         this.participated = true;
     }
