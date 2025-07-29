@@ -170,15 +170,15 @@ public class ApplicationService {
     }
 
     private void validateApplicantStudyLimit(Long userId) {
-        int count = studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
-        if (count >= 10) {
+        int joinedStudyCount = studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
+        if (Study.isOverJoinLimit(joinedStudyCount)) {
             throw new BusinessException(APPLICATION_PARTICIPATION_LIMIT_EXCEEDED);
         }
     }
 
     private void validateParticipantStudyLimit(Long userId) {
-        int count = studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
-        if (count >= 10) {
+        int joinedStudyCount = studyMemberQueryRepository.countActiveUnfinishedStudies(userId);
+        if (Study.isOverJoinLimit(joinedStudyCount)) {
             throw new BusinessException(APPLICATION_PARTICIPANT_LIMIT_EXCEEDED);
         }
     }
