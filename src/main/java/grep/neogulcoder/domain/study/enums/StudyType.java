@@ -1,10 +1,5 @@
 package grep.neogulcoder.domain.study.enums;
 
-import grep.neogulcoder.domain.recruitment.RecruitmentErrorCode;
-import grep.neogulcoder.global.exception.business.NotFoundException;
-
-import java.util.Arrays;
-
 public enum StudyType {
     ONLINE("온라인"), OFFLINE("오프라인"), HYBRID("병행");
 

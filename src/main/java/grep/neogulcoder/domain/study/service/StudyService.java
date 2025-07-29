@@ -11,7 +11,6 @@ import grep.neogulcoder.domain.study.controller.dto.request.StudyCreateRequest;
 import grep.neogulcoder.domain.study.controller.dto.request.StudyUpdateRequest;
 import grep.neogulcoder.domain.study.controller.dto.response.*;
 import grep.neogulcoder.domain.study.enums.StudyMemberRole;
-import grep.neogulcoder.domain.study.enums.StudyType;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyQueryRepository;
