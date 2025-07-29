@@ -32,23 +32,23 @@ public class PrTemplateController implements PrTemplateSpecification {
     }
 
     @GetMapping("/{userid}")
-    public ApiResponse<PrPageResponse> get(@PathVariable("userid") Long userId) {
+    public ResponseEntity<ApiResponse<PrPageResponse>> get(@PathVariable("userid") Long userId) {
         PrPageResponse prPageResponse = prTemplateService.toResponse(userId);
-        return ApiResponse.success(prPageResponse);
+        return ResponseEntity.ok(ApiResponse.success(prPageResponse));
     }
 
     @PutMapping("/update/template")
-    public ApiResponse<Void> update(@AuthenticationPrincipal Principal principal,
+    public ResponseEntity<ApiResponse<Void>> update(@AuthenticationPrincipal Principal principal,
         @RequestBody PrUpdateRequest request) {
         prTemplateService.update(principal.getUserId(), request.getLocation());
         linkService.update(principal.getUserId(), request.getPrUrls());
-        return ApiResponse.noContent();
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 
     @PutMapping("/update/introduction")
-    public ApiResponse<Void> updateIntroduction(@AuthenticationPrincipal Principal principal,
+    public ResponseEntity<ApiResponse<Void>> updateIntroduction(@AuthenticationPrincipal Principal principal,
         @RequestBody IntroductionUpdateRequest request) {
         prTemplateService.updateIntroduction(principal.getUserId(), request.getIntroduction());
-        return ApiResponse.noContent();
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 }
