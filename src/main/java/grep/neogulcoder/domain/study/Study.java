@@ -126,7 +126,7 @@ public class Study extends BaseEntity {
     }
 
     public boolean hasEndDateBefore(LocalDateTime dateTime) {
-        return this.endDate.isBefore(dateTime);
+        return this.endDate.toLocalDate().isBefore(dateTime.toLocalDate());
     }
 
     public static boolean isOverJoinLimit(int joinedStudyCount) {

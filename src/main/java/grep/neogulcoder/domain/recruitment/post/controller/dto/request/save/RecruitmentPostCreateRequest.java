@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -54,5 +55,9 @@ public class RecruitmentPostCreateRequest {
                 .recruitmentCount(this.recruitmentCount)
                 .expiredDate(this.expiredDate)
                 .build();
+    }
+
+    public boolean hasExpiredDateBefore(LocalDate date) {
+        return this.expiredDate.toLocalDate().isBefore(date);
     }
 }
