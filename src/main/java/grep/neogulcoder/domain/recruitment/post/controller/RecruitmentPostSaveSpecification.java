@@ -7,12 +7,13 @@ import grep.neogulcoder.global.auth.Principal;
 import grep.neogulcoder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 
 @Tag(name = "Recruitment-Post-Save", description = "모집글 저장 API")
 public interface RecruitmentPostSaveSpecification {
 
     @Operation(summary = "모집글 저장", description = "스터디 모집 글을 저장 합니다.")
-    ApiResponse<Long> save(RecruitmentPostCreateRequest request, Principal userDetails);
+    ResponseEntity<ApiResponse<Long>> save(RecruitmentPostCreateRequest request, Principal userDetails);
 
     @Operation(
             summary = "참여중인 스터디 목록 조회",
@@ -34,7 +35,7 @@ public interface RecruitmentPostSaveSpecification {
                     - `name`: 스터디 이름
                     """
     )
-    ApiResponse<JoinedStudiesInfo> getJoinedStudyInfo(Principal userDetails);
+    ResponseEntity<ApiResponse<JoinedStudiesInfo>> getJoinedStudyInfo(Principal userDetails);
 
     @Operation(
             summary = "참여 중인 스터디 정보 불러오기",
@@ -57,5 +58,5 @@ public interface RecruitmentPostSaveSpecification {
                     - `remainSlots`: 스터디 정원 - 스터디 참여 인원 
                     """
     )
-    ApiResponse<JoinedStudyLoadInfo> getJoinedStudyLoadInfo(long studyId, Principal userDetails);
+    ResponseEntity<ApiResponse<JoinedStudyLoadInfo>> getJoinedStudyLoadInfo(long studyId, Principal userDetails);
 }

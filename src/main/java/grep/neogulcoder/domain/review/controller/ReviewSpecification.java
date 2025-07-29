@@ -10,6 +10,7 @@ import grep.neogulcoder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 
@@ -35,7 +36,7 @@ public interface ReviewSpecification {
                     
                     """
     )
-    ApiResponse<ReviewTargetUsersInfo> getReviewTargetUsersInfo(long studyId, Principal userDetails);
+    ResponseEntity<ApiResponse<ReviewTargetUsersInfo>> getReviewTargetUsersInfo(long studyId, Principal userDetails);
 
     @Operation(
             summary = "리뷰 가능한 스터디 목록 조회",
@@ -54,10 +55,10 @@ public interface ReviewSpecification {
                     - `studyInfo`: 리뷰 가능한 스터디의 이름과 이미지 정보 리스트입니다.
                     """
     )
-    ApiResponse<ReviewTargetStudiesInfo> getReviewTargetStudiesInfo(Principal userDetails);
+    ResponseEntity<ApiResponse<ReviewTargetStudiesInfo>> getReviewTargetStudiesInfo(Principal userDetails);
 
     @Operation(summary = "리뷰 생성", description = "스터디에 대한 리뷰를 작성 합니다.")
-    ApiResponse<Long> save(ReviewSaveRequest request, Principal userDetails);
+    ResponseEntity<ApiResponse<Long>> save(ReviewSaveRequest request, Principal userDetails);
 
     @Operation(
             summary = "자신이 받은 리뷰 태그 조회",
@@ -85,7 +86,7 @@ public interface ReviewSpecification {
                     - 내부 반환 값은 Map<String, List<ReviewTagCountInfo>> 입니다.
                     """
     )
-    ApiResponse<MyReviewTagsInfo> getMyReviewTags(Principal userDetails);
+    ResponseEntity<ApiResponse<MyReviewTagsInfo>> getMyReviewTags(Principal userDetails);
 
     @Operation(summary = "자신이 받은 주관 리뷰들 조회",
             description = """
@@ -99,5 +100,5 @@ public interface ReviewSpecification {
                     ✅ 예시:
                     `/reviews/me/contents?page=0&size=5`
                     """)
-    ApiResponse<ReviewContentsPagingInfo> getMyReviewContents(Pageable pageable, Principal userDetails);
+    ResponseEntity<ApiResponse<ReviewContentsPagingInfo>> getMyReviewContents(Pageable pageable, Principal userDetails);
 }

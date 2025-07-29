@@ -150,12 +150,16 @@ INSERT INTO upload_image (origin_file_name, rename_file_name, file_url, save_pat
 INSERT INTO buddy_energy (user_id, level) VALUES (1, 50);
 INSERT INTO buddy_energy (user_id, level) VALUES (2, 53);
 INSERT INTO buddy_energy (user_id, level) VALUES (3, 49);
+INSERT INTO buddy_energy (user_id, level) VALUES (7, 50);
+INSERT INTO buddy_energy (user_id, level) VALUES (8, 50);
 
 -- [ buddy_log ]
 INSERT INTO buddy_log (reason, buddy_energy_id) VALUES ('SIGN_UP', 1);
 INSERT INTO buddy_log (reason, buddy_energy_id) VALUES ('STUDY_DONE', 2);
 INSERT INTO buddy_log (reason, buddy_energy_id) VALUES ('TEAM_LEADER_BONUS', 2);
 INSERT INTO buddy_log (reason, buddy_energy_id) VALUES ('NEGATIVE_REVIEW', 3);
+INSERT INTO buddy_log (reason, buddy_energy_id) VALUES ('SIGN_UP', 4);
+INSERT INTO buddy_log (reason, buddy_energy_id) VALUES ('SIGN_UP', 5);
 
 -- [ pr_template ]
 INSERT INTO pr_template (user_id, introduction, location, activated) VALUES (1, '함께 성장하는 백엔드 개발자입니다. 협업과 커뮤니케이션을 중요하게 생각하며, 문제 해결에 집중하는 개발 문화를 지향합니다.', '서울시 강남구', TRUE);
