@@ -6,13 +6,15 @@ import grep.neogulcoder.domain.recruitment.post.RecruitmentPost;
 import grep.neogulcoder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogulcoder.domain.studyapplication.StudyApplication;
 import grep.neogulcoder.domain.studyapplication.repository.ApplicationRepository;
+import grep.neogulcoder.global.exception.business.BusinessException;
 import grep.neogulcoder.global.exception.business.NotFoundException;
 import grep.neogulcoder.global.provider.MessageProvidable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
-import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.APPLICATION_NOT_FOUND;
+import static grep.neogulcoder.domain.alram.exception.code.AlarmErrorCode.*;
+import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.*;
+import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public class ApplicationApprovedMessageProvider implements MessageProvidable {
     @Override
     public String provideMessage(DomainType domainType, Long domainId) {
         if (domainType != DomainType.STUDY_APPLICATION) {
-            throw new IllegalArgumentException("스터디 신청 승인 알림은 STUDY_APPLICATION 도메인에만 해당됩니다.");
+            throw new BusinessException(INVALID_DOMAIN_TYPE_FOR_APPLICATION_APPROVED_ALARM);
         }
 
         StudyApplication application = applicationRepository.findByIdAndActivatedTrue(domainId)

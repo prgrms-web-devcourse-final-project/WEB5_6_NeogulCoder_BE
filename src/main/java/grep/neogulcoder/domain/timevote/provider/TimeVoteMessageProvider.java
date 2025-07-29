@@ -1,11 +1,13 @@
 package grep.neogulcoder.domain.timevote.provider;
 
-import static grep.neogulcoder.domain.timevote.exception.code.TimeVoteErrorCode.STUDY_NOT_FOUND;
+import static grep.neogulcoder.domain.alram.exception.code.AlarmErrorCode.*;
+import static grep.neogulcoder.domain.timevote.exception.code.TimeVoteErrorCode.*;
 
 import grep.neogulcoder.domain.alram.type.AlarmType;
 import grep.neogulcoder.domain.alram.type.DomainType;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
+import grep.neogulcoder.global.exception.business.BusinessException;
 import grep.neogulcoder.global.exception.business.NotFoundException;
 import grep.neogulcoder.global.provider.MessageProvidable;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,7 @@ public class TimeVoteMessageProvider implements MessageProvidable {
   @Override
   public String provideMessage(DomainType domainType, Long domainId) {
     if (domainType != DomainType.TIME_VOTE) {
-      throw new IllegalArgumentException("시간 투표 요청은 TIME_VOTE 도메인에만 해당됩니다.");
+      throw new BusinessException(INVALID_DOMAIN_TYPE_FOR_TIME_VOTE_ALARM);
     }
 
     Study study = studyRepository.findById(domainId)
