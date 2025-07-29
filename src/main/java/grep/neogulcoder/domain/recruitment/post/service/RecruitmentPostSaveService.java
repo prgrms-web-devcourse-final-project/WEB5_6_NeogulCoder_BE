@@ -36,7 +36,7 @@ public class RecruitmentPostSaveService {
             throw new BusinessException(NOT_STUDY_LEADER);
         }
 
-        if(isStudyAlreadyEndedDateTime(studyMember.getStudy(), request.getExpiredDate())){
+        if(studyMember.getStudy().hasEndDateBefore(request.getExpiredDate())){
             throw new BusinessException(END_DATE_ERROR);
         }
 
@@ -55,10 +55,6 @@ public class RecruitmentPostSaveService {
         long remainSlots = study.calculateRemainSlots(currentCount);
 
         return JoinedStudyLoadInfo.of(study, remainSlots);
-    }
-
-    private boolean isStudyAlreadyEndedDateTime(Study study, LocalDateTime expiredDateTime) {
-        return study.hasEndDateBefore(expiredDateTime);
     }
 
     private boolean isNotParticipated(StudyMember studyMember) {
