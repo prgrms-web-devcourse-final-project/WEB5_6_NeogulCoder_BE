@@ -5,10 +5,13 @@ import grep.neogulcoder.domain.alram.type.DomainType;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.exception.code.StudyErrorCode;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
+import grep.neogulcoder.global.exception.business.BusinessException;
 import grep.neogulcoder.global.exception.business.NotFoundException;
 import grep.neogulcoder.global.provider.MessageProvidable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import static grep.neogulcoder.domain.alram.exception.code.AlarmErrorCode.*;
 
 @Component
 @RequiredArgsConstructor
@@ -18,13 +21,13 @@ public class InviteMessageProvider implements MessageProvidable {
 
     @Override
     public boolean isSupport(AlarmType alarmType) {
-        return alarmType == AlarmType.INVITE;
+        return alarmType == AlarmType.STUDY_INVITE;
     }
 
     @Override
     public String provideMessage(DomainType domainType, Long domainId) {
         if (domainType != DomainType.STUDY) {
-            throw new IllegalArgumentException("초대 알림은 스터디 도메인에만 해당됩니다.");
+            throw new BusinessException(INVALID_DOMAIN_TYPE_FOR_STUDY_INVITE_ALARM);
         }
 
         String studyName = studyRepository.findById(domainId)

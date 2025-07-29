@@ -1,7 +1,7 @@
 package grep.neogulcoder.domain.alram.type;
 
 public enum AlarmType {
-    INVITE,
+    STUDY_INVITE,
     STUDY_EXTEND,
     STUDY_EXTENSION_REMINDER,
     STUDY_POST_COMMENT,

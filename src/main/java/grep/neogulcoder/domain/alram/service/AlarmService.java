@@ -99,7 +99,7 @@ public class AlarmService {
     public void checkAllAlarmWithoutInvite(Long receiverUserId) {
         List<Alarm> alarms = alarmRepository.findAllByReceiverUserIdAndCheckedFalse(receiverUserId);
         alarms.stream()
-                .filter(alarm -> alarm.getAlarmType() != AlarmType.INVITE)
+                .filter(alarm -> alarm.getAlarmType() != AlarmType.STUDY_INVITE)
                 .forEach(Alarm::checkAlarm);
     }
 
@@ -107,7 +107,7 @@ public class AlarmService {
     public void handleStudyInviteEvent(StudyInviteEvent event) {
         saveAlarm(
                 event.targetUserId(),
-                AlarmType.INVITE,
+                AlarmType.STUDY_INVITE,
                 DomainType.STUDY,
                 event.studyId()
         );
