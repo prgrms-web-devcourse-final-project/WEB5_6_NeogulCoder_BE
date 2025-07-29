@@ -8,6 +8,7 @@ import grep.neogulcoder.domain.prtemplate.service.PrTemplateService;
 import grep.neogulcoder.global.auth.Principal;
 import grep.neogulcoder.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,9 +26,9 @@ public class PrTemplateController implements PrTemplateSpecification {
     private final LinkService linkService;
 
     @GetMapping("/mine")
-    public ApiResponse<PrPageResponse> get(@AuthenticationPrincipal Principal principal) {
+    public ResponseEntity<ApiResponse<PrPageResponse>> get(@AuthenticationPrincipal Principal principal) {
         PrPageResponse prPageResponse = prTemplateService.toResponse(principal.getUserId());
-        return ApiResponse.success(prPageResponse);
+        return ResponseEntity.ok(ApiResponse.success(prPageResponse));
     }
 
     @GetMapping("/{userid}")

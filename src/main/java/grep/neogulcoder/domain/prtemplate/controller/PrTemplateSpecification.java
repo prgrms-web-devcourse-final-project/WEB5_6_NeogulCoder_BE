@@ -7,6 +7,7 @@ import grep.neogulcoder.global.auth.Principal;
 import grep.neogulcoder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface PrTemplateSpecification {
 
     @Operation(summary = "PR 템플릿 조회", description = "PR 템플릿을 조회합니다.")
-    ApiResponse<PrPageResponse> get(@AuthenticationPrincipal Principal principal);
+    ResponseEntity<ApiResponse<PrPageResponse>> get(@AuthenticationPrincipal Principal principal);
 
     @Operation(summary = "PR 정보 수정", description = "PR 정보를 수정합니다.")
     ApiResponse<Void> update(@AuthenticationPrincipal Principal principal, @RequestBody PrUpdateRequest request);
