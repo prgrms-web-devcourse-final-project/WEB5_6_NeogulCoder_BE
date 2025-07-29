@@ -56,6 +56,18 @@ public class StudyMemberQueryRepository {
                 .fetchOne();
     }
 
+    public StudyMember findMemberWithStudyBy(long studyId, long userId) {
+        return queryFactory.select(studyMember)
+                .from(studyMember)
+                .join(studyMember.study, study).fetchJoin()
+                .where(
+                        studyMember.study.id.eq(studyId),
+                        studyMember.userId.eq(userId),
+                        studyMember.activated.isTrue()
+                )
+                .fetchOne();
+    }
+
     public List<ExtendParticipationResponse> findExtendParticipation(Long studyId) {
         return queryFactory
             .select(Projections.constructor(

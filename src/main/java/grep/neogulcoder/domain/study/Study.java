@@ -125,6 +125,10 @@ public class Study extends BaseEntity {
                 (currentDateTime.isEqual(reviewableDateTime) || currentDateTime.isBefore(reviewableDateTime));
     }
 
+    public boolean hasEndDateBefore(LocalDateTime dateTime) {
+        return this.endDate.isBefore(dateTime);
+    }
+
     public static boolean isOverJoinLimit(int joinedStudyCount) {
         return joinedStudyCount >= MAX_JOINED_STUDY_COUNT;
     }
