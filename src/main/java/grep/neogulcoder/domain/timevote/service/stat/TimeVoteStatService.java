@@ -45,24 +45,6 @@ public class TimeVoteStatService {
     return TimeVoteStatResponse.from(context.period(), stats);
   }
 
-  public void incrementStats(Long periodId, List<LocalDateTime> timeSlots) {
-    log.info("[TimeVoteStatService] 투표 통계 계산 시작: periodId={}, timeSlots={}", periodId, timeSlots);
-    TimeVotePeriod period = timeVoteStatValidator.getValidTimeVotePeriodByPeriodId(periodId);
-
-    Map<LocalDateTime, Long> countMap = timeSlots.stream()
-        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-
-    try {
-      for (Map.Entry<LocalDateTime, Long> entry : countMap.entrySet()) {
-        timeVoteStatRepository.upsertVoteStat( period.getPeriodId(), entry.getKey(), entry.getValue());
-      }
-      log.info("[TimeVoteStatService] 투표 통계 반영 완료: periodId={}, 총 {}개의 슬롯", periodId, countMap.size());
-    } catch (Exception e) {
-      log.error("[TimeVoteStatService] 통계 반영 실패: periodId={}, 원인={}", periodId, e.getMessage(), e);
-      throw new BusinessException(TIME_VOTE_STAT_FATAL);
-    }
-  }
-
   public void recalculateStats(Long periodId) {
     log.info("[TimeVoteStatService] 투표 통계 재계산 시작: periodId={}", periodId);
     TimeVotePeriod period = timeVoteStatValidator.getValidTimeVotePeriodByPeriodId(periodId);
