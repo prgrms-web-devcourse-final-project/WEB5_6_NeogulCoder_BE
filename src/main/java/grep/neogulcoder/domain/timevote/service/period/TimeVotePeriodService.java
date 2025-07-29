@@ -1,5 +1,7 @@
 package grep.neogulcoder.domain.timevote.service.period;
 
+import static grep.neogulcoder.domain.timevote.exception.code.TimeVoteErrorCode.*;
+
 import grep.neogulcoder.domain.timevote.dto.request.TimeVotePeriodCreateRequest;
 import grep.neogulcoder.domain.timevote.dto.response.TimeVotePeriodResponse;
 import grep.neogulcoder.domain.timevote.TimeVotePeriod;
@@ -8,6 +10,7 @@ import grep.neogulcoder.domain.timevote.repository.TimeVotePeriodRepository;
 import grep.neogulcoder.domain.timevote.repository.TimeVoteRepository;
 import grep.neogulcoder.domain.timevote.repository.TimeVoteStatRepository;
 import grep.neogulcoder.domain.timevote.service.TimeVoteMapper;
+import grep.neogulcoder.global.exception.business.BusinessException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +39,14 @@ public class TimeVotePeriodService {
     timeVotePeriodValidator.validatePeriodCreateRequestAndReturnMember(request, studyId, userId);
     LocalDateTime adjustedEndDate = adjustEndDate(request.getEndDate());
 
-    if (timeVotePeriodRepository.existsByStudyIdAndActivatedTrue(studyId)) {
-      log.info("[TimeVotePeriod] 기존 투표 기간 존재, 전체 투표 데이터 삭제 진행");
-      deleteAllTimeVoteDate(studyId);
+    try {
+      if (timeVotePeriodRepository.existsByStudyIdAndActivatedTrue(studyId)) {
+        log.info("[TimeVotePeriod] 기존 투표 기간 존재, 전체 투표 데이터 삭제 진행");
+        deleteAllTimeVoteDate(studyId);
+      }
+    } catch (Exception e) {
+      log.error("[TimeVotePeriod] 기존 투표 삭제 중 오류 발생 - studyId={}, error={}", studyId, e.getMessage(), e);
+      throw new BusinessException(TIME_VOTE_DELETE_FAILED);
     }
 
     TimeVotePeriod savedPeriod = timeVotePeriodRepository.save(timeVoteMapper.toEntity(request, studyId, adjustedEndDate));
