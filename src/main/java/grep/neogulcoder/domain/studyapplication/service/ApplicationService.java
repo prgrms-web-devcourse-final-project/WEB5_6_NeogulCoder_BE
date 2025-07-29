@@ -9,6 +9,7 @@ import grep.neogulcoder.domain.study.enums.StudyMemberRole;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
+import grep.neogulcoder.domain.study.service.StudyManagementServiceFacade;
 import grep.neogulcoder.domain.studyapplication.ApplicationStatus;
 import grep.neogulcoder.domain.studyapplication.StudyApplication;
 import grep.neogulcoder.domain.studyapplication.controller.dto.request.ApplicationCreateRequest;
@@ -45,6 +46,7 @@ public class ApplicationService {
     private final StudyRepository studyRepository;
     private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final StudyManagementServiceFacade studyManagementServiceFacade;
 
     @Transactional
     public ReceivedApplicationPagingResponse getReceivedApplicationsPaging(Long recruitmentPostId, Pageable pageable, Long userId) {
@@ -92,7 +94,7 @@ public class ApplicationService {
 
         StudyMember studyMember = StudyMember.createMember(study, application.getUserId());
         studyMemberRepository.save(studyMember);
-        study.increaseMemberCount();
+        studyManagementServiceFacade.increaseMemberCount(study, userId);
 
         eventPublisher.publishEvent(new ApplicationStatusChangedEvent(applicationId, AlarmType.STUDY_APPLICATION_APPROVED));
     }
