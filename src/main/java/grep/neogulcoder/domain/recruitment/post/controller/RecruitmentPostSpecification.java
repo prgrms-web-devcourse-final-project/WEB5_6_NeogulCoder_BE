@@ -11,21 +11,22 @@ import grep.neogulcoder.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 @Tag(name = "Recruitment-Post", description = "모집 글 API")
 public interface RecruitmentPostSpecification {
 
     @Operation(summary = "모집 글 조회", description = "모집 글의 상세 내역을 조회 합니다.")
-    ApiResponse<RecruitmentPostInfo> get(long id);
+    ResponseEntity<ApiResponse<RecruitmentPostInfo>> get(long id);
 
     @Operation(summary = "모집 글 수정", description = "모집글을 수정 합니다.")
-    ApiResponse<Long> update(long recruitmentPostId, RecruitmentPostUpdateRequest request, Principal userDetails);
+    ResponseEntity<ApiResponse<Long>> update(long recruitmentPostId, RecruitmentPostUpdateRequest request, Principal userDetails);
 
     @Operation(summary = "모집 글 삭제", description = "모집글을 삭제 합니다.")
-    ApiResponse<Void> delete(long recruitmentPostId, Principal userDetails);
+    ResponseEntity<ApiResponse<Void>> delete(long recruitmentPostId, Principal userDetails);
 
     @Operation(summary = "모집 상태 변경", description = "모집글의 상태를 변경 합니다.")
-    ApiResponse<Long> changeStatus(long recruitmentPostId, RecruitmentPostStatusUpdateRequest request, Principal userDetails);
+    ResponseEntity<ApiResponse<Long>> changeStatus(long recruitmentPostId, RecruitmentPostStatusUpdateRequest request, Principal userDetails);
 
     @Operation(
             summary = "내가 등록한 모집글 페이징 조회",
@@ -83,7 +84,7 @@ public interface RecruitmentPostSpecification {
                     ```
                     """
     )
-    ApiResponse<RecruitmentPostPagingInfo> getMyPostPagingInfo(Pageable pageable, Category category, StudyType studyType,
+    ResponseEntity<ApiResponse<RecruitmentPostPagingInfo>> getMyPostPagingInfo(Pageable pageable, Category category, StudyType studyType,
                                                                String keyword, Principal userDetails);
 
     @Operation(
@@ -142,5 +143,5 @@ public interface RecruitmentPostSpecification {
                     ```
                     """
     )
-    ApiResponse<RecruitmentPostPagingInfo> getPagingInfo(Pageable pageable, Category category, StudyType studyType, String keyword);
+    ResponseEntity<ApiResponse<RecruitmentPostPagingInfo>> getPagingInfo(Pageable pageable, Category category, StudyType studyType, String keyword);
 }
