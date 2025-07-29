@@ -115,7 +115,7 @@ public class AlarmService {
 
         validateParticipantStudyLimit(targetUserId);
 
-        Alarm alarm = findValidAlarm(alarmId);
+        Alarm alarm = findValidAlarm(targetUserId, alarmId);
         Long studyId = alarm.getDomainId();
         Study study = findValidStudy(studyId);
         studyMemberRepository.save(StudyMember.createMember(study, targetUserId));
@@ -123,8 +123,8 @@ public class AlarmService {
     }
 
     @Transactional
-    public void rejectInvite(Long alarmId) {
-        Alarm alarm = findValidAlarm(alarmId);
+    public void rejectInvite(Long targetUserId,Long alarmId) {
+        Alarm alarm = findValidAlarm(targetUserId, alarmId);
         alarm.checkAlarm();
     }
 
@@ -248,9 +248,8 @@ public class AlarmService {
         );
     }
 
-    private Alarm findValidAlarm(Long alarmId) {
-        return alarmRepository.findById(alarmId)
-                .orElseThrow(() -> new NotFoundException(AlarmErrorCode.ALARM_NOT_FOUND));
+    private Alarm findValidAlarm(Long targetUserId, Long alarmId) {
+        return alarmRepository.findByReceiverUserIdAndId(targetUserId, alarmId).orElseThrow(() -> new NotFoundException(AlarmErrorCode.ALARM_NOT_FOUND));
     }
 
     private Study findValidStudy(Long studyId) {
