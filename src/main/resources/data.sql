@@ -36,9 +36,9 @@ INSERT INTO study_member (study_id, user_id, role, participated, activated) VALU
 INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (2, 5, 'LEADER', FALSE, TRUE);
 INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (3, 2, 'LEADER', FALSE, TRUE);
 INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (3, 1, 'MEMBER', FALSE, TRUE);
-INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (6, 7, 'LEADER', FALSE, TRUE);
+INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (6, 6, 'LEADER', FALSE, TRUE);
+INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (6, 7, 'MEMBER', FALSE, TRUE);
 INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (6, 8, 'MEMBER', FALSE, TRUE);
-INSERT INTO study_member (study_id, user_id, role, participated, activated) VALUES (6, 9, 'MEMBER', FALSE, TRUE);
 
 -- [ recruitment_post ]
 INSERT INTO recruitment_post (user_id, study_id, subject, content, recruitment_count, expired_date, status, activated, created_date) VALUES (3, 1, '자바 스터디 모집', '이펙티브 자바 공부하실분 구해요!!', 3, '2025-04-19', 'COMPLETE', true, '2025-08-02 12:00:00');
