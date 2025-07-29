@@ -18,6 +18,7 @@ import grep.neogulcoder.domain.study.event.StudyInviteEvent;
 import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
+import grep.neogulcoder.domain.study.service.StudyManagementServiceFacade;
 import grep.neogulcoder.domain.studyapplication.StudyApplication;
 import grep.neogulcoder.domain.studyapplication.event.ApplicationEvent;
 import grep.neogulcoder.domain.studyapplication.event.ApplicationStatusChangedEvent;
@@ -57,6 +58,7 @@ public class AlarmService {
     private final StudyMemberRepository studyMemberRepository;
     private final RecruitmentPostRepository recruitmentPostRepository;
     private final ApplicationRepository applicationRepository;
+    private final StudyManagementServiceFacade studyManagementServiceFacade;
 
     @Transactional
     public void saveAlarm(Long receiverId, AlarmType alarmType, DomainType domainType,
@@ -124,6 +126,7 @@ public class AlarmService {
         Long studyId = alarm.getDomainId();
         Study study = findValidStudy(studyId);
         studyMemberRepository.save(StudyMember.createMember(study, targetUserId));
+        studyManagementServiceFacade.increaseMemberCount(study, targetUserId);
         alarm.checkAlarm();
     }
 

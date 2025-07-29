@@ -9,7 +9,7 @@ import grep.neogulcoder.global.provider.MessageProvidable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
 
 @Component
 @RequiredArgsConstructor

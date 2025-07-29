@@ -12,40 +12,40 @@ import java.time.LocalDateTime;
 public class StudyItemResponse {
 
     @Schema(description = "스터디 번호", example = "3")
-    private Long studyId;
+    private final Long studyId;
 
     @Schema(description = "스터디 이름", example = "자바 스터디")
-    private String name;
+    private final String name;
 
     @Schema(description = "스터디장 닉네임", example = "너굴")
-    private String leaderNickname;
+    private final String leaderNickname;
 
     @Schema(description = "정원", example = "4")
-    private int capacity;
+    private final int capacity;
 
     @Schema(description = "인원수", example = "3")
-    private int currentCount;
+    private final int currentCount;
 
     @Schema(description = "시작일", example = "2025-07-15")
-    private LocalDateTime startDate;
+    private final LocalDateTime startDate;
 
     @Schema(description = "종료일", example = "2025-07-28")
-    private LocalDateTime endDate;
+    private final LocalDateTime endDate;
 
     @Schema(description = "대표 이미지", example = "http://localhost:8083/image.jpg")
-    private String imageUrl;
+    private final String imageUrl;
 
     @Schema(description = "스터디 소개", example = "자바 스터디입니다.")
-    private String introduction;
+    private final String introduction;
 
     @Schema(description = "카테고리", example = "IT")
-    private Category category;
+    private final Category category;
 
     @Schema(description = "타입", example = "ONLINE")
-    private StudyType studyType;
+    private final StudyType studyType;
 
     @Schema(description = "종료 여부", example = "false")
-    private boolean finished;
+    private final boolean finished;
 
     @QueryProjection
     public StudyItemResponse(Long studyId, String name, String leaderNickname, int capacity, int currentCount, LocalDateTime startDate,

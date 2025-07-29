@@ -84,8 +84,8 @@ public class Study extends BaseEntity {
         this.imageUrl = imageUrl;
     }
 
-    public boolean isStarted() {
-        return this.startDate.isBefore(LocalDateTime.now());
+    public boolean isStarted(LocalDateTime currentDateTime) {
+        return this.startDate.isBefore(currentDateTime);
     }
 
     public void delete() {
