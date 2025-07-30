@@ -100,7 +100,7 @@ public class StudyService {
                 .toList();
     }
 
-    public StudyInfoResponse getMyStudyContent(Long studyId, Long userId) {
+    public StudyInfoResponse getStudyInfo(Long studyId, Long userId) {
         Study study = getStudyById(studyId);
 
         validateStudyMember(studyId, userId);
