@@ -1,7 +1,7 @@
 package grep.neogulcoder.domain.recruitment.post.service;
 
-import grep.neogulcoder.domain.recruitment.post.controller.dto.response.save.JoinedStudyLoadInfo;
 import grep.neogulcoder.domain.recruitment.post.controller.dto.response.save.JoinedStudiesInfo;
+import grep.neogulcoder.domain.recruitment.post.controller.dto.response.save.JoinedStudyLoadInfo;
 import grep.neogulcoder.domain.recruitment.post.repository.RecruitmentPostRepository;
 import grep.neogulcoder.domain.recruitment.post.service.request.RecruitmentPostCreateServiceRequest;
 import grep.neogulcoder.domain.study.Study;
@@ -13,12 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.*;
-import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND_STUDY_MEMBER;
-import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_STUDY_LEADER;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -36,7 +33,7 @@ public class RecruitmentPostSaveService {
             throw new BusinessException(NOT_STUDY_LEADER);
         }
 
-        if(studyMember.getStudy().hasEndDateBefore(request.getExpiredDate())){
+        if (studyMember.getStudy().hasEndDateBefore(request.getExpiredDate())) {
             throw new BusinessException(END_DATE_ERROR);
         }
 
@@ -70,7 +67,7 @@ public class RecruitmentPostSaveService {
     private Study findValidStudy(long studyId, long userId) {
         StudyMember studyMember = studyMemberRepository.findByStudyIdAndUserId(studyId, userId);
 
-        if(isNotParticipated(studyMember)){
+        if (isNotParticipated(studyMember)) {
             throw new NotFoundException(NOT_FOUND_STUDY_MEMBER);
         }
         return studyMember.getStudy();

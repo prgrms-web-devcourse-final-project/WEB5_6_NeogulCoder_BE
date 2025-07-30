@@ -4,6 +4,7 @@ import grep.neogulcoder.domain.buddy.service.BuddyEnergyService;
 import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.StudyMember;
 import grep.neogulcoder.domain.study.event.StudyExtensionReminderEvent;
+import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class StudySchedulerService {
     private final BuddyEnergyService buddyEnergyService;
     private final StudyMemberRepository studyMemberRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final StudyMemberQueryRepository studyMemberQueryRepository;
 
     @Transactional
     public void findStudiesEndingIn7Days() {
@@ -43,14 +47,27 @@ public class StudySchedulerService {
         LocalDateTime now = LocalDateTime.now();
         List<Study> studiesToBeFinished = studyRepository.findStudiesToBeFinished(now);
 
+        Map<Long, List<StudyMember>> memberMap = getActivatedMemberMap(studiesToBeFinished);
+
         for (Study study : studiesToBeFinished) {
             study.finish();
 
             // 스터디 멤버들 조회 후 버디에너지 업데이트
-            List<StudyMember> members = studyMemberRepository.findFetchStudyByStudyId(study.getId());
+            List<StudyMember> members = memberMap.getOrDefault(study.getId(), List.of());
             for (StudyMember member : members) {
                 buddyEnergyService.updateEnergyByStudy(member.getUserId(), member.isLeader());
             }
         }
+    }
+
+    private Map<Long, List<StudyMember>> getActivatedMemberMap(List<Study> studies) {
+        List<Long> studyIds = studies.stream()
+            .map(Study::getId)
+            .toList();
+
+        List<StudyMember> allActivatedMembers = studyMemberQueryRepository.findActivatedMembersByStudyIds(studyIds);
+
+        return allActivatedMembers.stream()
+            .collect(Collectors.groupingBy(studyMember -> studyMember.getStudy().getId()));
     }
 }
