@@ -175,7 +175,7 @@ public class StudyManagementService {
     }
 
     private StudyMember getStudyMemberById(Long studyId, Long userId) {
-        return studyMemberRepository.findByStudyIdAndUserId(studyId, userId)
+        return studyMemberRepository.findByStudyIdAndUserIdAndActivatedTrue(studyId, userId)
             .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
     }
 

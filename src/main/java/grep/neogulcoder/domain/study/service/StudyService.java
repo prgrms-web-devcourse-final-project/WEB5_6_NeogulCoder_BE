@@ -38,11 +38,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 
-import static grep.neogulcoder.domain.study.enums.StudyMemberRole.*;
+import static grep.neogulcoder.domain.study.enums.StudyMemberRole.LEADER;
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
-import static grep.neogulcoder.domain.users.exception.code.UserErrorCode.*;
+import static grep.neogulcoder.domain.users.exception.code.UserErrorCode.USER_NOT_FOUND;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -179,7 +178,7 @@ public class StudyService {
     }
 
     private StudyMember getStudyMemberById(Long studyId, Long userId) {
-        return Optional.ofNullable(studyMemberQueryRepository.findByStudyIdAndUserId(studyId, userId))
+        return studyMemberRepository.findByStudyIdAndUserIdAndActivatedTrue(studyId, userId)
             .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
     }
 
