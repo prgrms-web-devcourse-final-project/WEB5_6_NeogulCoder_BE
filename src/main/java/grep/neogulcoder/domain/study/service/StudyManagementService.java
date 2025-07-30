@@ -169,6 +169,12 @@ public class StudyManagementService {
         eventPublisher.publishEvent(new StudyInviteEvent(studyId, userId, targetUser.getId()));
     }
 
+    @Transactional
+    public void reactiveStudy(Long studyId) {
+        Study study = getStudyById(studyId);
+        study.reactive();
+    }
+
     private Study getStudyById(Long studyId) {
         return studyRepository.findById(studyId)
             .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
@@ -240,5 +246,4 @@ public class StudyManagementService {
             throw new BusinessException(END_DATE_BEFORE_ORIGIN_STUDY);
         }
     }
-
 }
