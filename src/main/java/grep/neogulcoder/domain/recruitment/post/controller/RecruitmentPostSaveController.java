@@ -5,12 +5,17 @@ import grep.neogulcoder.domain.recruitment.post.controller.dto.response.save.Joi
 import grep.neogulcoder.domain.recruitment.post.controller.dto.response.save.JoinedStudyLoadInfo;
 import grep.neogulcoder.domain.recruitment.post.service.RecruitmentPostSaveService;
 import grep.neogulcoder.global.auth.Principal;
+import grep.neogulcoder.global.exception.validation.ValidationException;
 import grep.neogulcoder.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+
+import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.END_DATE_BEFORE_NOW_NOT_ALLOWED;
 
 @RequestMapping("/recruitment-posts")
 @RequiredArgsConstructor
@@ -22,6 +27,11 @@ public class RecruitmentPostSaveController implements RecruitmentPostSaveSpecifi
     @PostMapping
     public ResponseEntity<ApiResponse<Long>> save(@Valid @RequestBody RecruitmentPostCreateRequest request,
                                                   @AuthenticationPrincipal Principal userDetails) {
+
+        if (request.hasExpiredDateBefore(LocalDate.now())) {
+            throw new ValidationException(END_DATE_BEFORE_NOW_NOT_ALLOWED);
+        }
+
         long postId = recruitmentPostService.create(request.toServiceRequest(), userDetails.getUserId());
         return ResponseEntity.ok(ApiResponse.success(postId));
     }

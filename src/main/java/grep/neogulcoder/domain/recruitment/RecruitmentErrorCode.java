@@ -15,7 +15,8 @@ public enum RecruitmentErrorCode implements ErrorCode {
     NOT_FOUND_STUDY_MEMBER(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.name(), "스터디에 참여하고 있지 않은 회원 입니다."),
     NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.name(), "댓글을 찾지 못했습니다"),
     NOT_OWNER(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.name(), "모집글을 등록한 당사자가 아닙니다."),
-    END_DATE_ERROR(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.name(), "모집글은 스터디가 시작되고 종료될 때까지 작성 가능 합니다.");
+    END_DATE_ERROR(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.name(), "모집글은 스터디가 시작되고 종료될 때까지 작성 가능 합니다."),
+    END_DATE_BEFORE_NOW_NOT_ALLOWED(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.name(), "모집글 마감기간은 오늘 이전으로 선택은 불가능 합니다.");
 
     private static final String BASIC_MESSAGE = "RECRUITMENT";
     private final HttpStatus status;
