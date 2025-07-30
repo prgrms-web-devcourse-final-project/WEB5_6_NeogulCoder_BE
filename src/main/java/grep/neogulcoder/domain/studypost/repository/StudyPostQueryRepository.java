@@ -99,6 +99,7 @@ public class StudyPostQueryRepository {
                         equalsCategory(category)
                 )
                 .groupBy(studyPost.id)
+                .orderBy(studyPost.createdDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
 
