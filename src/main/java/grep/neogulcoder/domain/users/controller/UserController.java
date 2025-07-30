@@ -78,7 +78,7 @@ public class UserController implements UserSpecification {
     @DeleteMapping("/delete/me")
     public ResponseEntity<ApiResponse<Void>> delete(@AuthenticationPrincipal Principal principal,
         @RequestBody @Valid PasswordRequest request) {
-        usersService.deleteUser(principal.getUserId(), request.getPassword());
+        usersService.deleteUser(principal.getUserId(), request.getPassword(), request.getPasswordCheck());
         return ResponseEntity.ok(ApiResponse.noContent());
     }
 

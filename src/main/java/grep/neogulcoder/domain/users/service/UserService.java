@@ -126,11 +126,15 @@ public class UserService {
         user.updatePassword(encodedPassword);
     }
 
-    public void deleteUser(Long userId, String password) {
+    public void deleteUser(Long userId, String password, String passwordCheck) {
         User user = findUserById(userId);
 
         if (isNotMatchCurrentPassword(password, user.getPassword())) {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
+        }
+
+        if(isNotMatchPasswordCheck(password, passwordCheck)) {
+            throw new PasswordNotMatchException(UserErrorCode.PASSWORD_UNCHECKED);
         }
 
         studyManagementService.deleteUserFromStudies(userId);
