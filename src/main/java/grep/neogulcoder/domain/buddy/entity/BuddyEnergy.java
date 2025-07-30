@@ -43,9 +43,16 @@ public class BuddyEnergy {
     // 리뷰 타입 기반 에너지 변경 //
     public void updateEnergy(ReviewType reviewType) {
         if (reviewType == ReviewType.GOOD || reviewType == ReviewType.EXCELLENT) {
-            this.level += 1;
+            this.level += BuddyEnergyReason.POSITIVE_REVIEW.getPoint();
         } else if (reviewType == ReviewType.BAD) {
-            this.level -= 1;
+            this.level += BuddyEnergyReason.NEGATIVE_REVIEW.getPoint();
+        }
+    }
+
+    public void updateEnergy(boolean isLeader) {
+        this.level += BuddyEnergyReason.STUDY_DONE.getPoint();
+        if (isLeader) {
+            this.level += BuddyEnergyReason.TEAM_LEADER_BONUS.getPoint();
         }
     }
 

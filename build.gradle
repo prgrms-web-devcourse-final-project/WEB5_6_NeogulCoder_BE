@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.3'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'grep'
@@ -69,8 +70,8 @@ dependencies {
 
     //JWT 의존성
     implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
-    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
-    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
     // OAuth2 의존성
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -82,9 +83,8 @@ dependencies {
     implementation 'dev.langchain4j:langchain4j-spring-boot-starter:1.0.0-beta3'
     implementation 'dev.langchain4j:langchain4j-google-ai-gemini-spring-boot-starter:1.0.0-beta3'
 
-
     // 배포 관련 의존성
-//	 runtimeOnly 'org.postgresql:postgresql'
+//    runtimeOnly 'org.postgresql:postgresql'
     implementation 'org.springframework.boot:spring-boot-devtools'
     implementation 'com.google.cloud:spring-cloud-gcp-starter-secretmanager:4.9.1'
     implementation 'com.google.cloud:google-cloud-storage:2.38.0'
