@@ -91,10 +91,11 @@ public class StudyPostQueryRepository {
                         )
                 )
                 .from(studyPost)
-                .leftJoin(studyPostComment).on(studyPost.id.eq(studyPostComment.postId))
+                .leftJoin(studyPostComment)
+                .on(studyPost.id.eq(studyPostComment.postId)
+                        .and(studyPostComment.activated.isTrue()))
                 .where(
                         studyPost.activated.isTrue(),
-                        studyPostComment.activated.isTrue(),
                         studyPost.study.id.eq(studyId),
 
                         equalsUserId(userId),
