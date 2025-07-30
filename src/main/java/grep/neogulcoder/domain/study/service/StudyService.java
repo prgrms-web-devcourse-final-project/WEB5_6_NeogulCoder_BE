@@ -179,7 +179,7 @@ public class StudyService {
     }
 
     private StudyMember getStudyMemberById(Long studyId, Long userId) {
-        return Optional.ofNullable(studyMemberQueryRepository.findByStudyIdAndUserId(studyId, userId))
+        return studyMemberRepository.findByStudyIdAndUserIdAndActivatedTrue(studyId, userId)
             .orElseThrow(() -> new NotFoundException(STUDY_MEMBER_NOT_FOUND));
     }
 
