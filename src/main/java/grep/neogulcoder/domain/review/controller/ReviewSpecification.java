@@ -61,7 +61,7 @@ public interface ReviewSpecification {
     ResponseEntity<ApiResponse<Long>> save(ReviewSaveRequest request, Principal userDetails);
 
     @Operation(
-            summary = "자신이 받은 리뷰 태그 조회",
+            summary = "회원이 받은 리뷰 태그 조회",
             description = """
                     회원이 받은 리뷰 태그의 종류와 개수를 조회합니다.
                     
@@ -86,9 +86,9 @@ public interface ReviewSpecification {
                     - 내부 반환 값은 Map<String, List<ReviewTagCountInfo>> 입니다.
                     """
     )
-    ResponseEntity<ApiResponse<MyReviewTagsInfo>> getMyReviewTags(Principal userDetails);
+    ResponseEntity<ApiResponse<MyReviewTagsInfo>> getMyReviewTags(long userId);
 
-    @Operation(summary = "자신이 받은 주관 리뷰들 조회",
+    @Operation(summary = "회원이 받은 주관 리뷰들 페이징 조회",
             description = """
                     회원이 받은 **주관식 리뷰**를 페이징하여 조회합니다.
                     
@@ -100,5 +100,5 @@ public interface ReviewSpecification {
                     ✅ 예시:
                     `/reviews/me/contents?page=0&size=5`
                     """)
-    ResponseEntity<ApiResponse<ReviewContentsPagingInfo>> getMyReviewContents(Pageable pageable, Principal userDetails);
+    ResponseEntity<ApiResponse<ReviewContentsPagingInfo>> getMyReviewContents(Pageable pageable, long userId);
 }
