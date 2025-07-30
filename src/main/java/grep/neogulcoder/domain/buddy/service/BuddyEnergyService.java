@@ -46,23 +46,14 @@ public class BuddyEnergyService {
 
     // 스터디 종료 시 +1, 리더면 +2
     @Transactional
-    public BuddyEnergyResponse updateEnergyByStudy(Long userId, boolean isLeader) {
-        BuddyEnergy energy = buddyEnergyRepository.findByUserId(userId)
-            .orElseThrow(() -> new BuddyEnergyNotFoundException(BUDDY_ENERGY_NOT_FOUND));
+    public void updateEnergyByStudy(BuddyEnergy energy, boolean isLeader) {
+        energy.updateEnergy(isLeader);
 
-        int points = BuddyEnergyReason.STUDY_DONE.getPoint();
-        BuddyEnergyReason reason = BuddyEnergyReason.STUDY_DONE;
-
+        buddyEnergyLogRepository.save(BuddyLog.of(energy, BuddyEnergyReason.STUDY_DONE));
         if (isLeader) {
-            points += BuddyEnergyReason.TEAM_LEADER_BONUS.getPoint();
-            reason = BuddyEnergyReason.TEAM_LEADER_BONUS;
+            buddyEnergyLogRepository.save(BuddyLog.of(energy, BuddyEnergyReason.TEAM_LEADER_BONUS));
         }
-
-        energy.updateLevel(energy.getLevel() + points);
-        buddyEnergyLogRepository.save(BuddyLog.of(energy, reason));
-        buddyEnergyRepository.save(energy);
-
-        return BuddyEnergyResponse.from(energy);
+        BuddyEnergyResponse.from(energy);
     }
 
     // 회원가입 시 기본 에너지 생성
