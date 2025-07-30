@@ -74,7 +74,7 @@ public class StudyManagementService {
         }
 
         studyMember.delete();
-        studyManagementServiceFacade.decreaseMemberCount(study, userId);
+        studyManagementServiceFacade.decreaseMemberCount(studyId, userId);
     }
 
     @Transactional
@@ -112,7 +112,7 @@ public class StudyManagementService {
             }
 
             myMember.delete();
-            studyManagementServiceFacade.decreaseMemberCount(study, userId);
+            studyManagementServiceFacade.decreaseMemberCount(study.getId(), userId);
         }
     }
 
@@ -140,7 +140,7 @@ public class StudyManagementService {
 
     @Transactional
     public void registerExtensionParticipation(Long studyId, Long userId) {
-        Study study = getStudyById(studyId);
+        getStudyById(studyId);
         StudyMember studyMember = getStudyMemberById(studyId, userId);
 
         if (studyMember.isParticipated()) {
@@ -154,7 +154,7 @@ public class StudyManagementService {
 
         StudyMember extendMember = StudyMember.createMember(extendedStudy, userId);
         studyMemberRepository.save(extendMember);
-        studyManagementServiceFacade.increaseMemberCount(study, userId);
+        studyManagementServiceFacade.increaseMemberCount(studyId, userId);
     }
 
     @Transactional

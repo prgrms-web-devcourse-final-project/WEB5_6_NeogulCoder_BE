@@ -126,7 +126,7 @@ public class AlarmService {
         Long studyId = alarm.getDomainId();
         Study study = findValidStudy(studyId);
         studyMemberRepository.save(StudyMember.createMember(study, targetUserId));
-        studyManagementServiceFacade.increaseMemberCount(study, targetUserId);
+        studyManagementServiceFacade.increaseMemberCount(studyId, targetUserId);
         alarm.checkAlarm();
     }
 
