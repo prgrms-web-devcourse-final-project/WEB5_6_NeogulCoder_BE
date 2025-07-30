@@ -129,9 +129,11 @@ public class StudyMemberQueryRepository {
         return queryFactory
             .selectFrom(studyMember)
             .join(studyMember.study, study).fetchJoin()
+            .join(user).on(user.id.eq(studyMember.userId)).fetchJoin()
             .where(
                 studyMember.study.id.in(studyIds),
-                studyMember.activated.isTrue()
+                studyMember.activated.isTrue(),
+                user.activated.isTrue()
             )
             .fetch();
     }
