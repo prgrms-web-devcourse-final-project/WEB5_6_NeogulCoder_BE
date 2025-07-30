@@ -147,6 +147,7 @@ public class UserService {
     public void deleteUser(Long userId) {
         User user = findUserById(userId);
 
+        studyManagementService.deleteUserFromStudies(userId);
         prTemplateService.deleteByUserId(user.getId());
         linkService.deleteByUserId(userId);
 
@@ -183,6 +184,11 @@ public class UserService {
                 .build()
             )
             .toList();
+    }
+
+    public void reactiveUser(Long userId) {
+        User user = findUserById(userId);
+        user.reactive();
     }
 
     private String validateUpdateNickname(User user, String nickname) {

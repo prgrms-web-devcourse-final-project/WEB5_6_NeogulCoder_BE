@@ -75,4 +75,8 @@ public class User extends BaseEntity {
     public boolean isNotEqualsNickname(String nickname) {
         return !this.nickname.equals(nickname);
     }
+
+    public void reactive() {
+        this.activated = true;
+    }
 }

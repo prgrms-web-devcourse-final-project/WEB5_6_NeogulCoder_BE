@@ -63,4 +63,8 @@ public class RecruitmentPost extends BaseEntity {
     public void delete() {
         this.activated = false;
     }
+
+    public void reactive() {
+        this.activated = true;
+    }
 }

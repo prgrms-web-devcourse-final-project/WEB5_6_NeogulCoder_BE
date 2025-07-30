@@ -9,6 +9,7 @@ import grep.neogulcoder.domain.study.Study;
 import grep.neogulcoder.domain.study.enums.Category;
 import grep.neogulcoder.domain.study.repository.StudyQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
+import grep.neogulcoder.domain.users.entity.User;
 import grep.neogulcoder.domain.users.repository.UserRepository;
 import grep.neogulcoder.domain.users.service.UserService;
 import grep.neogulcoder.global.exception.business.NotFoundException;
