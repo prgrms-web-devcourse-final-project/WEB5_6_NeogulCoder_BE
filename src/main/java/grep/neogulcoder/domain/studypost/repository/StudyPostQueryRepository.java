@@ -110,8 +110,6 @@ public class StudyPostQueryRepository {
                 .filter(Objects::nonNull)
                 .forEach(query::orderBy);
 
-        query.orderBy(studyPost.createdDate.desc());
-
         Long count = queryFactory.select(studyPost.count())
                 .from(studyPost)
                 .where(
