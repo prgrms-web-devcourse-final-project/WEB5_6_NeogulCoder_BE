@@ -11,7 +11,6 @@ import grep.neogulcoder.domain.study.controller.dto.request.StudyCreateRequest;
 import grep.neogulcoder.domain.study.controller.dto.request.StudyUpdateRequest;
 import grep.neogulcoder.domain.study.controller.dto.response.*;
 import grep.neogulcoder.domain.study.enums.StudyMemberRole;
-import grep.neogulcoder.domain.study.repository.StudyMemberQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyMemberRepository;
 import grep.neogulcoder.domain.study.repository.StudyQueryRepository;
 import grep.neogulcoder.domain.study.repository.StudyRepository;
@@ -53,7 +52,6 @@ public class StudyService {
     private final StudyMemberRepository studyMemberRepository;
     private final StudyQueryRepository studyQueryRepository;
     private final RecruitmentPostRepository recruitmentPostRepository;
-    private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final UserRepository userRepository;
     private final StudyPostRepository studyPostRepository;
     private final StudyPostQueryRepository studyPostQueryRepository;
