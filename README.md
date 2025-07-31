@@ -9,3 +9,4 @@
 <img width="787" height="588" alt="image" src="https://github.com/user-attachments/assets/8c247cc3-0d78-4a2e-b71a-1b2cf69b3778" />
 
 ## ERD
+<img width="2780" height="1562" alt="WEB5_6_NeogulCoder_BE (8)" src="https://github.com/user-attachments/assets/5ad5ccad-fd23-4601-8e13-1b2b082e2b4a" />
