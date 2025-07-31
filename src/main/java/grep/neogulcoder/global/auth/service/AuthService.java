@@ -92,7 +92,12 @@ public class AuthService {
         String dummyPassword = UUID.randomUUID().toString();
 
         return usersRepository.findByEmail(email)
-            .map(user -> processTokenSignin(user.getEmail(), user.getRole().name()))
+            .map(user -> {
+                if (!user.isActivated()) {
+                    throw new UnActivatedUserException(UserErrorCode.UNACTIVATED_USER);
+                }
+                return processTokenSignin(user.getEmail(), user.getRole().name());
+            })
             .orElseGet(() -> {
                 User newUser = User.builder()
                     .email(email)
