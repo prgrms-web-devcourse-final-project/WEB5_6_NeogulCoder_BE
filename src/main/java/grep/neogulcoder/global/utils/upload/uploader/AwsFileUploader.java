@@ -28,6 +28,8 @@ public class AwsFileUploader extends AbstractFileManager {
     @Value("${cloud.aws.region}")
     private String region;
 
+    private static final String STORAGE_BASE_URL = "https://%s.s3.%s.amazonaws.com/%s";
+
     private S3Client createS3Client() {
         return S3Client.builder()
             .region(Region.of(region))
@@ -57,6 +59,6 @@ public class AwsFileUploader extends AbstractFileManager {
     @Override
     protected String generateFileUrl(String savePath, String renameFileName) {
         String key = buildFullPath(savePath, renameFileName);
-        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucket, region, key);
+        return String.format(STORAGE_BASE_URL, bucket, region, key);
     }
 }
