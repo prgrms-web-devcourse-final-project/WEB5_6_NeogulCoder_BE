@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
-@Profile("prod")
+@Profile("prod-gcp")
 @Slf4j
 public class GcpFileUploader extends AbstractFileManager {
 
