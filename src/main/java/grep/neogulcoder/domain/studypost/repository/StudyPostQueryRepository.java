@@ -22,7 +22,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static grep.neogulcoder.domain.studypost.Category.*;
+import static grep.neogulcoder.domain.studypost.Category.FREE;
+import static grep.neogulcoder.domain.studypost.Category.NOTICE;
 import static grep.neogulcoder.domain.studypost.StudyPostErrorCode.NOT_VALID_CONDITION;
 import static grep.neogulcoder.domain.studypost.comment.QStudyPostComment.studyPostComment;
 import static grep.neogulcoder.domain.users.entity.QUser.user;
@@ -90,10 +91,13 @@ public class StudyPostQueryRepository {
                         )
                 )
                 .from(studyPost)
-                .leftJoin(studyPostComment).on(studyPost.id.eq(studyPostComment.postId))
+                .leftJoin(studyPostComment)
+                .on(studyPost.id.eq(studyPostComment.postId)
+                        .and(studyPostComment.activated.isTrue()))
                 .where(
                         studyPost.activated.isTrue(),
                         studyPost.study.id.eq(studyId),
+
                         equalsUserId(userId),
                         likeContent(keyword),
                         equalsCategory(category)
@@ -142,22 +146,22 @@ public class StudyPostQueryRepository {
 
     public List<FreePostInfo> findLatestFreeInfoBy(Long studyId) {
         return queryFactory.select(
-                new QFreePostInfo(
-                    studyPost.id,
-                    studyPost.category,
-                    studyPost.title,
-                    studyPost.createdDate
+                        new QFreePostInfo(
+                                studyPost.id,
+                                studyPost.category,
+                                studyPost.title,
+                                studyPost.createdDate
+                        )
                 )
-            )
-            .from(studyPost)
-            .where(
-                studyPost.activated.isTrue(),
-                studyPost.study.id.eq(studyId),
-                studyPost.category.eq(FREE)
-            )
-            .orderBy(studyPost.createdDate.desc())
-            .limit(FREE_POST_LIMIT)
-            .fetch();
+                .from(studyPost)
+                .where(
+                        studyPost.activated.isTrue(),
+                        studyPost.study.id.eq(studyId),
+                        studyPost.category.eq(FREE)
+                )
+                .orderBy(studyPost.createdDate.desc())
+                .limit(FREE_POST_LIMIT)
+                .fetch();
     }
 
     private OrderSpecifier<?> resolveOrderSpecifier(String attributeName, Boolean isAsc) {

@@ -74,7 +74,7 @@ public class StudyManagementService {
         }
 
         studyMember.delete();
-        studyManagementServiceFacade.decreaseMemberCount(study, userId);
+        studyManagementServiceFacade.decreaseMemberCount(studyId, userId);
     }
 
     @Transactional
@@ -112,7 +112,7 @@ public class StudyManagementService {
             }
 
             myMember.delete();
-            studyManagementServiceFacade.decreaseMemberCount(study, userId);
+            studyManagementServiceFacade.decreaseMemberCount(study.getId(), userId);
         }
     }
 
@@ -140,7 +140,7 @@ public class StudyManagementService {
 
     @Transactional
     public void registerExtensionParticipation(Long studyId, Long userId) {
-        Study study = getStudyById(studyId);
+        getStudyById(studyId);
         StudyMember studyMember = getStudyMemberById(studyId, userId);
 
         if (studyMember.isParticipated()) {
@@ -154,7 +154,7 @@ public class StudyManagementService {
 
         StudyMember extendMember = StudyMember.createMember(extendedStudy, userId);
         studyMemberRepository.save(extendMember);
-        studyManagementServiceFacade.increaseMemberCount(study, userId);
+        studyManagementServiceFacade.increaseMemberCount(studyId, userId);
     }
 
     @Transactional
@@ -167,6 +167,12 @@ public class StudyManagementService {
                 UserErrorCode.USER_NOT_FOUND));
 
         eventPublisher.publishEvent(new StudyInviteEvent(studyId, userId, targetUser.getId()));
+    }
+
+    @Transactional
+    public void reactiveStudy(Long studyId) {
+        Study study = getStudyById(studyId);
+        study.reactive();
     }
 
     private Study getStudyById(Long studyId) {
@@ -240,5 +246,4 @@ public class StudyManagementService {
             throw new BusinessException(END_DATE_BEFORE_ORIGIN_STUDY);
         }
     }
-
 }

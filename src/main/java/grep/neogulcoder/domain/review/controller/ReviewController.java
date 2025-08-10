@@ -27,7 +27,7 @@ public class ReviewController implements ReviewSpecification {
 
     @GetMapping("/studies/{study-id}/targets")
     public ResponseEntity<ApiResponse<ReviewTargetUsersInfo>> getReviewTargetUsersInfo(@PathVariable("study-id") long studyId,
-                                                                                      @AuthenticationPrincipal Principal userDetails) {
+                                                                                       @AuthenticationPrincipal Principal userDetails) {
         ReviewTargetUsersInfo response = reviewService.getReviewTargetUsersInfo(studyId, userDetails.getUserId());
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -44,16 +44,16 @@ public class ReviewController implements ReviewSpecification {
         return ResponseEntity.ok(ApiResponse.noContent());
     }
 
-    @GetMapping("/me/tags")
-    public ResponseEntity<ApiResponse<MyReviewTagsInfo>> getMyReviewTags(@AuthenticationPrincipal Principal userDetails) {
-        MyReviewTagsInfo response = reviewService.getMyReviewTags(userDetails.getUserId());
+    @GetMapping("/users/{user-id}/tags")
+    public ResponseEntity<ApiResponse<MyReviewTagsInfo>> getMyReviewTags(@PathVariable("user-id") long userId) {
+        MyReviewTagsInfo response = reviewService.getMyReviewTags(userId);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    @GetMapping("/me/contents")
+    @GetMapping("/users/{user-id}/contents")
     public ResponseEntity<ApiResponse<ReviewContentsPagingInfo>> getMyReviewContents(@PageableDefault(size = 4) Pageable pageable,
-                                                                     @AuthenticationPrincipal Principal userDetails) {
-        ReviewContentsPagingInfo response = reviewService.getMyReviewContents(pageable, userDetails.getUserId());
+                                                                                     @PathVariable("user-id") long userId) {
+        ReviewContentsPagingInfo response = reviewService.getMyReviewContents(pageable, userId);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 }

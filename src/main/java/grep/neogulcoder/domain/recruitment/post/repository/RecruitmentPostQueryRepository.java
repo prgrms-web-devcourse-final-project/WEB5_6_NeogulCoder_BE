@@ -157,7 +157,7 @@ public class RecruitmentPostQueryRepository {
     }
 
     private BooleanBuilder likeContent(String content) {
-        return nullSafeBuilder(() -> recruitmentPost.content.contains(content));
+        return nullSafeBuilder(() -> recruitmentPost.content.contains(content).or(recruitmentPost.subject.contains(content)));
     }
 
     private BooleanBuilder nullSafeBuilder(Supplier<BooleanExpression> supplier) {

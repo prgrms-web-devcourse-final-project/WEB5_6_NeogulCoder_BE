@@ -99,6 +99,13 @@ public class RecruitmentPostService {
         recruitmentPost.delete();
     }
 
+    @Transactional
+    public void reactivePost(Long recruitmentPostId) {
+        RecruitmentPost recruitmentPost =  postRepository.findByIdAndActivatedTrue(recruitmentPostId)
+            .orElseThrow(() -> new NotFoundException(NOT_FOUND));
+        recruitmentPost.reactive();
+    }
+
     private List<CommentsWithWriterInfo> findCommentsWithWriterInfo(RecruitmentPost post) {
         List<CommentsWithWriterInfo> comments = commentQueryRepository.findCommentsWithWriterInfo(post.getId());
         List<CommentsWithWriterInfo> withdrawnUserComments = withdrawnUserChangeNameFrom(comments);

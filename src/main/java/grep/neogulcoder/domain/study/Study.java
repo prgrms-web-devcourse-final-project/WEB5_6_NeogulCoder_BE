@@ -118,6 +118,10 @@ public class Study extends BaseEntity {
         this.finished = true;
     }
 
+    public void reactive() {
+        this.activated = true;
+    }
+
     public boolean isReviewableAt(LocalDateTime currentDateTime) {
         LocalDateTime reviewableDateTime = this.endDate.plusDays(7);
 

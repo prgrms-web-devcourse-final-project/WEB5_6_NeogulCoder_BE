@@ -102,11 +102,15 @@ public class UserService {
         user.updatePassword(encodedPassword);
     }
 
-    public void deleteUser(Long userId, String password) {
+    public void deleteUser(Long userId, String password, String passwordCheck) {
         User user = findUserById(userId);
 
         if (isNotMatchCurrentPassword(password, user.getPassword())) {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
+        }
+
+        if(isNotMatchPasswordCheck(password, passwordCheck)) {
+            throw new PasswordNotMatchException(UserErrorCode.PASSWORD_UNCHECKED);
         }
 
         studyManagementService.deleteUserFromStudies(userId);
@@ -119,6 +123,7 @@ public class UserService {
     public void deleteUser(Long userId) {
         User user = findUserById(userId);
 
+        studyManagementService.deleteUserFromStudies(userId);
         prTemplateService.deleteByUserId(user.getId());
         linkService.deleteByUserId(userId);
 
@@ -155,6 +160,11 @@ public class UserService {
                 .build()
             )
             .toList();
+    }
+
+    public void reactiveUser(Long userId) {
+        User user = findUserById(userId);
+        user.reactive();
     }
 
     private String validateUpdateNickname(User user, String nickname) {
