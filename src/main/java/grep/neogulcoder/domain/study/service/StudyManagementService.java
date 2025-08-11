@@ -154,7 +154,7 @@ public class StudyManagementService {
 
         StudyMember extendMember = StudyMember.createMember(extendedStudy, userId);
         studyMemberRepository.save(extendMember);
-        studyManagementServiceFacade.increaseMemberCount(studyId, userId);
+        studyManagementServiceFacade.increaseMemberCount(extendedStudy.getId(), userId);
     }
 
     @Transactional
