@@ -1,4 +1,4 @@
-FROM openjdk:21-ea-oraclelinux8
+FROM openjdk:21-jdk-slim
 
 # 타임존 설정
 RUN ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime && \

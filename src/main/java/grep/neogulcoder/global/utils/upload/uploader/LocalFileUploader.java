@@ -19,7 +19,7 @@ public class LocalFileUploader extends AbstractFileManager {
 
     // 로컬 파일 시스템에 파일을 업로드
     @Override
-    protected void uploadFile(MultipartFile file, String fullPath) throws IOException {
+    protected void uploadFile(MultipartFile file, String fullPath) {
         File targetFile = new File(filePath + fullPath);
         File parentDir = targetFile.getParentFile();
 
@@ -37,6 +37,7 @@ public class LocalFileUploader extends AbstractFileManager {
     // 업로드된 파일의 접근 URL 을 생성
     @Override
     public String generateFileUrl(String savePath, String renameFileName) {
-        return "/upload/" + savePath + renameFileName;
+        String key = buildFullPath(savePath, renameFileName);
+        return "/upload/" + key;
     }
 }

@@ -15,7 +15,6 @@ public interface TimeVoteStatRepository extends JpaRepository<TimeVoteStat, Long
   @Query("UPDATE TimeVoteStat s SET s.activated = false WHERE s.period.studyId = :studyId")
   void deactivateAllByPeriod_StudyId(@Param("studyId") Long studyId);
 
-
   @Modifying
   @Query("UPDATE TimeVoteStat s SET s.activated = false WHERE s.period = :period")
   void softDeleteByPeriod(@Param("period") TimeVotePeriod period);
@@ -25,12 +24,10 @@ public interface TimeVoteStatRepository extends JpaRepository<TimeVoteStat, Long
 
   @Modifying(clearAutomatically = true)
   @Query(value = """
-
       INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, created_date, modified_date)
     VALUES (:periodId, :timeSlot, :count, true, now(), now())
-    ON CONFLICT (period_id, time_slot)
-    DO UPDATE SET
-      vote_count = time_vote_stat.vote_count + EXCLUDED.vote_count,
+    ON DUPLICATE KEY UPDATE
+      vote_count = vote_count + VALUES(vote_count),
       modified_date = now(),
       activated = true
     """, nativeQuery = true)
@@ -44,9 +41,8 @@ public interface TimeVoteStatRepository extends JpaRepository<TimeVoteStat, Long
   @Query(value = """
     INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, created_date, modified_date)
     VALUES (:periodId, :timeSlot, :voteCount, true, now(), now())
-    ON CONFLICT (period_id, time_slot)
-    DO UPDATE SET
-      vote_count = EXCLUDED.vote_count,
+    ON DUPLICATE KEY UPDATE
+      vote_count = VALUES(vote_count),
       modified_date = now(),
       activated = true
     """, nativeQuery = true)
