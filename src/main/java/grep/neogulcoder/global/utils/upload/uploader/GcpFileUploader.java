@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
-@Profile("prod")
+@Profile("prod-gcp")
 @Slf4j
 public class GcpFileUploader extends AbstractFileManager {
 
@@ -27,7 +27,7 @@ public class GcpFileUploader extends AbstractFileManager {
 
     // GCP Cloud Storage 에 파일을 업로드
     @Override
-    protected void uploadFile(MultipartFile file, String fullPath) throws IOException {
+    protected void uploadFile(MultipartFile file, String fullPath) {
         try (InputStream inputStream = file.getInputStream()) {
             Storage storage = StorageOptions.getDefaultInstance().getService();
             BlobId blobId = BlobId.of(bucket, fullPath);
@@ -45,6 +45,7 @@ public class GcpFileUploader extends AbstractFileManager {
     // 전체 파일 URL (https://storage.googleapis.com/bucket/경로/파일명)
     @Override
     public String generateFileUrl(String savePath, String renameFileName) {
-        return STORAGE_BASE_URL + bucket + "/" + savePath + "/" + renameFileName;
+        String key = buildFullPath(savePath, renameFileName);
+        return STORAGE_BASE_URL + bucket + key;
     }
 }

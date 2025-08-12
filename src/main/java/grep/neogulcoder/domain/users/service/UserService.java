@@ -12,32 +12,27 @@ import grep.neogulcoder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogulcoder.domain.users.controller.dto.response.AllUserResponse;
 import grep.neogulcoder.domain.users.controller.dto.response.UserResponse;
 import grep.neogulcoder.domain.users.entity.User;
-import grep.neogulcoder.domain.users.exception.EmailDuplicationException;
-import grep.neogulcoder.domain.users.exception.NicknameDuplicatedException;
-import grep.neogulcoder.domain.users.exception.NotVerifiedEmailException;
-import grep.neogulcoder.domain.users.exception.PasswordNotMatchException;
-import grep.neogulcoder.domain.users.exception.UserNotFoundException;
+import grep.neogulcoder.domain.users.exception.*;
 import grep.neogulcoder.domain.users.exception.code.UserErrorCode;
 import grep.neogulcoder.domain.users.repository.UserRepository;
+import grep.neogulcoder.global.utils.upload.AbstractFileManager;
 import grep.neogulcoder.global.utils.upload.FileUploadResponse;
 import grep.neogulcoder.global.utils.upload.FileUsageType;
-import grep.neogulcoder.global.utils.upload.uploader.GcpFileUploader;
-import grep.neogulcoder.global.utils.upload.uploader.LocalFileUploader;
-import java.io.IOException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @Transactional
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
+    private final AbstractFileManager fileUploader;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final PrTemplateRepository prTemplateRepository;
@@ -47,16 +42,6 @@ public class UserService {
     private final StudyManagementService studyManagementService;
     private final BuddyEnergyService buddyEnergyService;
     private final EmailVerificationService verificationService;
-
-    @Autowired(required = false)
-    private GcpFileUploader gcpFileUploader;
-
-    @Autowired(required = false)
-    private LocalFileUploader localFileUploader;
-
-    @Autowired
-    private Environment environment;
-
 
     @Transactional(readOnly = true)
     public User get(Long id) {
@@ -94,18 +79,9 @@ public class UserService {
         throws IOException {
 
         User user = findUserById(userId);
-
         String validatedNickname = validateUpdateNickname(user, nickname);
 
-        String uploadedImageUrl;
-        if (isProfileImgExists(profileImage)) {
-            FileUploadResponse response = isProductionEnvironment()
-                ? gcpFileUploader.upload(profileImage, userId, FileUsageType.PROFILE, userId)
-                : localFileUploader.upload(profileImage, userId, FileUsageType.PROFILE, userId);
-            uploadedImageUrl = response.getFileUrl();
-        } else {
-            uploadedImageUrl = user.getProfileImageUrl();
-        }
+        String uploadedImageUrl = updateImageUrl(userId, profileImage, user.getProfileImageUrl());
 
         user.updateProfile(validatedNickname, uploadedImageUrl);
     }
@@ -252,20 +228,15 @@ public class UserService {
         return !password.equals(passwordCheck);
     }
 
-    private boolean isProductionEnvironment() {
-        for (String profile : environment.getActiveProfiles()) {
-            if ("prod".equals(profile)) {
-                return true;
-            }
+    private String updateImageUrl(Long userId, MultipartFile image, String originalImageUrl) throws IOException {
+        if (isImgExists(image)) {
+            FileUploadResponse response = fileUploader.upload(image, userId, FileUsageType.PROFILE, userId);
+            return response.getFileUrl();
         }
-        return false;
+        return originalImageUrl;
     }
 
-    private boolean isProfileImgExists(MultipartFile profileImage) {
-        return profileImage != null && !profileImage.isEmpty();
+    private boolean isImgExists(MultipartFile image) {
+        return image != null && !image.isEmpty();
     }
 }
-
-
-
-

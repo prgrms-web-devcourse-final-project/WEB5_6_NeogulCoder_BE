@@ -14,6 +14,7 @@ public enum FileUploadErrorCode implements ErrorCode {
   FILE_NOT_FOUND("UPLOAD_005", HttpStatus.NOT_FOUND, "파일을 찾을 수 없습니다."),
 
   GCP_UPLOAD_FAIL("UPLOAD_GCP_001", HttpStatus.INTERNAL_SERVER_ERROR, "GCP 업로드 중 오류가 발생했습니다."),
+  AWS_UPLOAD_FAIL("UPLOAD_AWS_001", HttpStatus.INTERNAL_SERVER_ERROR, "AWS 업로드 중 오류가 발생했습니다."),
   LOCAL_UPLOAD_FAIL("UPLOAD_LOCAL_001", HttpStatus.INTERNAL_SERVER_ERROR, "로컬 업로드 중 오류가 발생했습니다.");
 
   private final String code;
