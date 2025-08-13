@@ -1,0 +1,93 @@
+name: PR CI (main)
+
+on:
+  pull_request:
+    branches: [ "main" ]               # main으로 향하는 PR만 검사
+    types: [ opened, synchronize, reopened, ready_for_review ]  # PR 열림/커밋추가/다시열기/드래프트해제 시 실행
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15                # CI가 너무 오래 걸릴 때 무한 대기 방지 (필요시 늘려도 됨)
+    strategy:
+      matrix:
+        dbmode: [ mysql, postgres ]    # DB 의존 로직 호환성 점검을 위해 H2를 두 모드로 테스트
+      fail-fast: false                 # 한 모드가 실패해도 나머지 모드는 계속 실행(진단에 유리)
+
+    steps:
+      # 1) 코드 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2) JDK 설치 (프로젝트 toolchain=21과 일치)
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle               # Gradle 캐시 자동화( wrapper/caches )
+
+      # 3) gradlew 실행권한 부여
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # 4) Gradle 래퍼 유효성 체크(선택이지만 문제 파악에 도움)
+      - name: Validate Gradle wrapper
+        run: ./gradlew --version
+
+      # 5) 테스트
+      - name: Run tests (H2 via ENV)
+        run: ./gradlew clean test --no-daemon --stacktrace --info
+        env:
+          # (스프링) test 프로필로 기동 — 실제 파일 없어도 ENV가 모든 값을 오버라이드
+          SPRING_PROFILES_ACTIVE: test
+
+          # (DB) H2 메모리 DB URL — dbmode 매트릭스 값에 따라 MySQL/Postgre 모드 전환
+          SPRING_DATASOURCE_URL: ${{ matrix.dbmode == 'mysql'
+            && 'jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE;DB_CLOSE_ON_EXIT=FALSE'
+            || 'jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE;DB_CLOSE_ON_EXIT=FALSE' }}
+          SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
+          SPRING_DATASOURCE_USERNAME: sa
+          SPRING_DATASOURCE_PASSWORD: ""
+
+          # (JPA) 테스트 중 스키마 자동 생성/삭제 — 외부 스키마 의존 제거
+          SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+          SPRING_SQL_INIT_MODE: never
+
+          # 외부 리소스 자동설정 차단(네트워크 시도 방지)
+          SPRING_AUTOCONFIGURE_EXCLUDE: >
+            org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration,
+            org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration,
+            org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration,
+            org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration,
+            org.springframework.boot.autoconfigure.session.SessionAutoConfiguration,
+            org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
+
+          # 세션 저장소 비활성화
+          SPRING_SESSION_STORE_TYPE: none
+
+          # GCP Secret Manager 무력화
+          SPRING_CLOUD_GCP_SECRET_MANAGER_ENABLED: "false"
+          SPRING_CONFIG_IMPORT: ""
+
+          # Gemini 더미 키 (자동설정 실패 방지)
+          GEMINI_API_KEY: "dummy"
+
+          # CI 로그 노이즈 감소 — 필요시 조정
+          SPRING_JPA_SHOW_SQL: "false"
+          SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: "false"
+          LOGGING_LEVEL_ROOT: "warn"
+          LOGGING_LEVEL_ORG_SPRINGFRAMEWORK: "warn"
+
+      # 6) 테스트 리포트 업로드 — 실패 시에도 항상 업로드하여 원인 파악
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report-${{ matrix.dbmode }}
+          path: |
+            build/reports/tests/test
+          retention-days: 30
