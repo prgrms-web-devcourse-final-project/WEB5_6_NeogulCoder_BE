@@ -84,8 +84,8 @@ public interface RecruitmentPostSpecification {
                     ```
                     """
     )
-    ResponseEntity<ApiResponse<RecruitmentPostPagingInfo>> getMyPostPagingInfo(Pageable pageable, Category category, StudyType studyType,
-                                                               String keyword, Principal userDetails);
+    ResponseEntity<ApiResponse<RecruitmentPostPagingInfo>> searchMyRecruitmentPost(Pageable pageable, Category category, StudyType studyType,
+                                                                                   String keyword, Principal userDetails);
 
     @Operation(
             summary = "모집글 페이징 조회",
@@ -143,5 +143,5 @@ public interface RecruitmentPostSpecification {
                     ```
                     """
     )
-    ResponseEntity<ApiResponse<RecruitmentPostPagingInfo>> getPagingInfo(Pageable pageable, Category category, StudyType studyType, String keyword);
+    ResponseEntity<ApiResponse<RecruitmentPostPagingInfo>> search(Pageable pageable, Category category, StudyType studyType, String keyword);
 }

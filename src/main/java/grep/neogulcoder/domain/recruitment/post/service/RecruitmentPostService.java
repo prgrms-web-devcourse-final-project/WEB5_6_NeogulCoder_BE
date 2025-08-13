@@ -56,8 +56,8 @@ public class RecruitmentPostService {
         return new RecruitmentPostInfo(postInfo, comments, applications.size());
     }
 
-    public RecruitmentPostPagingInfo getPagingInfo(Pageable pageable, Category category, StudyType studyType, String keyword, Long userId) {
-        Page<RecruitmentPost> pages = findPostsFilteredByUser(pageable, category, studyType, keyword, userId);
+    public RecruitmentPostPagingInfo search(Pageable pageable, Category category, StudyType studyType, String keyword, Long userId) {
+        Page<RecruitmentPost> pages = searchRecruitmentPost(pageable, category, studyType, keyword, userId);
         List<RecruitmentPost> content = pages.getContent();
         List<Long> recruitmentPostIds = extractId(content);
 
@@ -105,12 +105,12 @@ public class RecruitmentPostService {
         return applyWithdrawnUserNameChanges(comments, withdrawnUserComments);
     }
 
-    private Page<RecruitmentPost> findPostsFilteredByUser(Pageable pageable, Category category, StudyType studyType,
-                                                          String keyword, Long userId) {
+    private Page<RecruitmentPost> searchRecruitmentPost(Pageable pageable, Category category, StudyType studyType,
+                                                        String keyword, Long userId) {
         if (userId == null) {
-            return postQueryRepository.findAllByFilter(pageable, category, studyType, keyword);
+            return postQueryRepository.search(pageable, category, studyType, keyword);
         }
-        return postQueryRepository.findAllByFilter(pageable, category, studyType, keyword, userId);
+        return postQueryRepository.search(pageable, category, studyType, keyword, userId);
     }
 
     private List<CommentsWithWriterInfo> withdrawnUserChangeNameFrom(List<CommentsWithWriterInfo> comments) {

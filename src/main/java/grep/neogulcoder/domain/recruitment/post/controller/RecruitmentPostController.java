@@ -25,23 +25,23 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
     private final RecruitmentPostService recruitmentPostService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<RecruitmentPostPagingInfo>> getPagingInfo(@PageableDefault(size = 10) Pageable pageable,
-                                                                               @RequestParam(value = "category", required = false) Category category,
-                                                                               @RequestParam(value = "studyType", required = false) StudyType studyType,
-                                                                               @RequestParam(value = "keyword", required = false) String keyword) {
-        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(
+    public ResponseEntity<ApiResponse<RecruitmentPostPagingInfo>> search(@PageableDefault(size = 10) Pageable pageable,
+                                                                         @RequestParam(value = "category", required = false) Category category,
+                                                                         @RequestParam(value = "studyType", required = false) StudyType studyType,
+                                                                         @RequestParam(value = "keyword", required = false) String keyword) {
+        RecruitmentPostPagingInfo response = recruitmentPostService.search(
                 pageable, category, studyType, keyword, null
         );
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse<RecruitmentPostPagingInfo>> getMyPostPagingInfo(@PageableDefault(size = 10) Pageable pageable,
-                                                                      @RequestParam(value = "category", required = false) Category category,
-                                                                      @RequestParam(value = "studyType", required = false) StudyType studyType,
-                                                                      @RequestParam(value = "keyword", required = false) String keyword,
-                                                                      @AuthenticationPrincipal Principal userDetails) {
-        RecruitmentPostPagingInfo response = recruitmentPostService.getPagingInfo(
+    public ResponseEntity<ApiResponse<RecruitmentPostPagingInfo>> searchMyRecruitmentPost(@PageableDefault(size = 10) Pageable pageable,
+                                                                                          @RequestParam(value = "category", required = false) Category category,
+                                                                                          @RequestParam(value = "studyType", required = false) StudyType studyType,
+                                                                                          @RequestParam(value = "keyword", required = false) String keyword,
+                                                                                          @AuthenticationPrincipal Principal userDetails) {
+        RecruitmentPostPagingInfo response = recruitmentPostService.search(
                 pageable, category, studyType,
                 keyword, userDetails.getUserId()
         );
@@ -56,23 +56,23 @@ public class RecruitmentPostController implements RecruitmentPostSpecification {
 
     @PutMapping("/{recruitment-post-id}")
     public ResponseEntity<ApiResponse<Long>> update(@PathVariable("recruitment-post-id") long recruitmentPostId,
-                                    @Valid @RequestBody RecruitmentPostUpdateRequest request,
-                                    @AuthenticationPrincipal Principal userDetails) {
+                                                    @Valid @RequestBody RecruitmentPostUpdateRequest request,
+                                                    @AuthenticationPrincipal Principal userDetails) {
         long postId = recruitmentPostService.update(request.toServiceRequest(), recruitmentPostId, userDetails.getUserId());
         return ResponseEntity.ok(ApiResponse.success(postId));
     }
 
     @DeleteMapping("/{recruitment-post-id}")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable("recruitment-post-id") long recruitmentPostId,
-                                    @AuthenticationPrincipal Principal userDetails) {
+                                                    @AuthenticationPrincipal Principal userDetails) {
         recruitmentPostService.delete(recruitmentPostId, userDetails.getUserId());
         return ResponseEntity.ok(ApiResponse.noContent());
     }
 
     @PutMapping("/{recruitment-post-id}/status")
     public ResponseEntity<ApiResponse<Long>> changeStatus(@PathVariable("recruitment-post-id") long recruitmentPostId,
-                                          @RequestBody RecruitmentPostStatusUpdateRequest request,
-                                          @AuthenticationPrincipal Principal userDetails) {
+                                                          @RequestBody RecruitmentPostStatusUpdateRequest request,
+                                                          @AuthenticationPrincipal Principal userDetails) {
         long postId = recruitmentPostService.updateStatus(request.toServiceRequest(), recruitmentPostId, userDetails.getUserId());
         return ResponseEntity.ok(ApiResponse.success(postId));
     }
