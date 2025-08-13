@@ -156,7 +156,7 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
     }
 
 
-    @DisplayName("모집글과 관련된 정보들을 페이징 조회 합니다.")
+    @DisplayName("모집글을 검색 합니다.")
     @Test
     void search() {
         //given
@@ -188,7 +188,7 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
                 );
     }
 
-    @DisplayName("내가 작성한 모집글과 관련된 정보들을 페이징 조회 합니다.")
+    @DisplayName("내가 작성한 모집글을 검색 합니다.")
     @Test
     void search_WhenWrittenByUser() {
         //given
