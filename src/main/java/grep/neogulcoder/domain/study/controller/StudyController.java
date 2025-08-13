@@ -58,38 +58,38 @@ public class StudyController implements StudySpecification {
 
     @GetMapping("/{studyId}/info")
     public ResponseEntity<ApiResponse<StudyInfoResponse>> getStudyInfo(@PathVariable("studyId") Long studyId,
-                                                       @AuthenticationPrincipal Principal userDetails) {
+                                                                       @AuthenticationPrincipal Principal userDetails) {
         Long userId = userDetails.getUserId();
         return ResponseEntity.ok(ApiResponse.success(studyService.getMyStudyContent(studyId, userId)));
     }
 
     @GetMapping("/{studyId}/me")
     public ResponseEntity<ApiResponse<StudyMemberInfoResponse>> getMyStudyMemberInfo(@PathVariable("studyId") Long studyId,
-                                                                     @AuthenticationPrincipal Principal userDetails) {
+                                                                                     @AuthenticationPrincipal Principal userDetails) {
         Long userId = userDetails.getUserId();
         return ResponseEntity.ok(ApiResponse.success(studyService.getMyStudyMemberInfo(studyId, userId)));
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<Long>> createStudy(@RequestPart("request") @Valid StudyCreateRequest request,
-                                         @RequestPart(value = "image", required = false) MultipartFile image,
-                                         @AuthenticationPrincipal Principal userDetails) throws IOException {
+                                                         @RequestPart(value = "image", required = false) MultipartFile image,
+                                                         @AuthenticationPrincipal Principal userDetails) throws IOException {
         Long id = studyService.createStudy(request, userDetails.getUserId(), image);
         return ResponseEntity.ok(ApiResponse.success(id));
     }
 
     @PutMapping(value = "/{studyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<Void>> updateStudy(@PathVariable("studyId") Long studyId,
-                                         @RequestPart @Valid StudyUpdateRequest request,
-                                         @RequestPart(value = "image", required = false) MultipartFile image,
-                                         @AuthenticationPrincipal Principal userDetails) throws IOException {
+                                                         @RequestPart @Valid StudyUpdateRequest request,
+                                                         @RequestPart(value = "image", required = false) MultipartFile image,
+                                                         @AuthenticationPrincipal Principal userDetails) throws IOException {
         studyService.updateStudy(studyId, request, userDetails.getUserId(), image);
         return ResponseEntity.ok(ApiResponse.noContent());
     }
 
     @DeleteMapping("/{studyId}")
     public ResponseEntity<ApiResponse<Void>> deleteStudy(@PathVariable("studyId") Long studyId,
-                                         @AuthenticationPrincipal Principal userDetails) {
+                                                         @AuthenticationPrincipal Principal userDetails) {
         studyService.deleteStudy(studyId, userDetails.getUserId());
         return ResponseEntity.ok(ApiResponse.noContent());
     }
