@@ -91,7 +91,7 @@ public abstract class AbstractFileManager {
 
   // 전체 저장 경로(폴더+파일명)를 반환
   protected String buildFullPath(String savePath, String renameFileName) {
-    return savePath + "/" + renameFileName;
+    return savePath + renameFileName;
   }
 
   // MIME 타입 허용 목록 (이미지 파일만 허용)
