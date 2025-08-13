@@ -89,7 +89,6 @@ application-local.properties
 application-prod.properties
 application-prod-aws.properties
 application-prod-gcp.properties
-*.env
 
 # === 기타 ===
 HELP.md
