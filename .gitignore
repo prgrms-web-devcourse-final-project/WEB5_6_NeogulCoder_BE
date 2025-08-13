@@ -83,9 +83,13 @@ $RECYCLE.BIN/
 hs_err_pid*
 replay_pid*
 
-# === Spring Boot 환경설정 파일 ===
+# === Spring Boot 환경설정 파일 (필요시 추가하기) ===
 application.properties
-application-*.properties
+application-local.properties
+application-test.properties
+application-prod.properties
+application-prod-aws.properties
+application-prod-gcp.properties
 
 # === 기타 ===
 HELP.md
