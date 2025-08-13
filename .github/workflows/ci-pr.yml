@@ -9,7 +9,7 @@ on:
       - 'docs/**'
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
     timeout-minutes: 15                # CI가 너무 오래 걸릴 때 무한 대기 방지 (필요시 늘려도 됨)
     strategy:
