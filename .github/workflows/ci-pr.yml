@@ -2,7 +2,7 @@ name: PR CI (main)
 
 on:
   pull_request:
-    branches: [ "main" ]               # main으로 향하는 PR만 검사
+    branches: [ "main" ]             # main으로 향하는 PR만 검사
     types: [ opened, synchronize, reopened, ready_for_review ]  # PR 열림/커밋추가/다시열기/드래프트해제 시 실행
     paths-ignore:
       - '**.md'
