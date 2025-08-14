@@ -156,9 +156,9 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
     }
 
 
-    @DisplayName("모집글과 관련된 정보들을 페이징 조회 합니다.")
+    @DisplayName("모집글을 검색 합니다.")
     @Test
-    void getPagingInfo() {
+    void search() {
         //given
         Study study1 = createStudy("자바 스터디", Category.IT, ONLINE);
         Study study2 = createStudy("클라이밍 동아리", Category.HOBBY, OFFLINE);
@@ -176,7 +176,7 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
         commentRepository.saveAll(comments);
 
         //when
-        RecruitmentPostPagingInfo result = recruitmentPostService.getPagingInfo(PageRequest.of(0, 2),
+        RecruitmentPostPagingInfo result = recruitmentPostService.search(PageRequest.of(0, 2),
                 Category.IT, ONLINE, null, null);
         System.out.println("result = " + result);
 
@@ -188,9 +188,9 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
                 );
     }
 
-    @DisplayName("내가 작성한 모집글과 관련된 정보들을 페이징 조회 합니다.")
+    @DisplayName("내가 작성한 모집글을 검색 합니다.")
     @Test
-    void getPagingInfo_WhenWrittenByUser() {
+    void search_WhenWrittenByUser() {
         //given
         User myUser = createUser("myNickname");
         User user2 = createUser("회원");
@@ -213,7 +213,7 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
         commentRepository.saveAll(comments);
 
         //when
-        RecruitmentPostPagingInfo result = recruitmentPostService.getPagingInfo(PageRequest.of(0, 2),
+        RecruitmentPostPagingInfo result = recruitmentPostService.search(PageRequest.of(0, 2),
                 Category.HOBBY, OFFLINE, null, myUser.getId());
         System.out.println("result = " + result);
 

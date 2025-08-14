@@ -62,7 +62,7 @@ public class RecruitmentPostQueryRepository {
                 ).fetchOne();
     }
 
-    public Page<RecruitmentPost> findAllByFilter(Pageable pageable, Category category, StudyType studyType, String keyword) {
+    public Page<RecruitmentPost> search(Pageable pageable, Category category, StudyType studyType, String keyword) {
         List<RecruitmentPost> content = queryFactory.select(recruitmentPost)
                 .from(recruitmentPost)
                 .join(study).on(recruitmentPost.studyId.eq(study.id))
@@ -93,7 +93,7 @@ public class RecruitmentPostQueryRepository {
         return new PageImpl<>(content, pageable, count == null ? 0 : count);
     }
 
-    public Page<RecruitmentPost> findAllByFilter(Pageable pageable, Category category, StudyType studyType, String keyword, Long userId) {
+    public Page<RecruitmentPost> search(Pageable pageable, Category category, StudyType studyType, String keyword, Long userId) {
         List<RecruitmentPost> content = queryFactory.select(recruitmentPost)
                 .from(recruitmentPost)
                 .join(study).on(recruitmentPost.studyId.eq(study.id))
@@ -125,17 +125,6 @@ public class RecruitmentPostQueryRepository {
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, count == null ? 0 : count);
-    }
-
-    public Optional<RecruitmentPost> findMyPostBy(long postId, long userId) {
-        RecruitmentPost findRecruitmentPost = queryFactory.selectFrom(recruitmentPost)
-                .where(
-                        recruitmentPost.activated.isTrue(),
-                        recruitmentPost.userId.eq(userId),
-                        recruitmentPost.id.eq(postId)
-                )
-                .fetchOne();
-        return Optional.ofNullable(findRecruitmentPost);
     }
 
     public Optional<RecruitmentPost> findPostBy(long postId) {
