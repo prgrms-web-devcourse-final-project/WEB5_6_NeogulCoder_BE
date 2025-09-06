@@ -1,7 +1,5 @@
 package grep.neogulcoder.domain.study.service;
 
-import grep.neogulcoder.domain.alram.service.AlarmService;
-import grep.neogulcoder.domain.studyapplication.service.ApplicationService;
 import grep.neogulcoder.global.exception.business.BusinessException;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +10,7 @@ import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_MEMBER_COUNT_UPDATE_FAILED;
 
 @Slf4j
 @Service
