@@ -57,13 +57,13 @@ public class StudyManagementServiceFacade {
 
     @Recover
     public void recover(OptimisticLockException e, Long studyId, Long userId) {
-        log.warn("스터디 currentCount 증가 실패 (studyId={}, userId={})", studyId, userId, e);
+        log.warn("스터디 currentCount 증감 실패 (studyId={}, userId={})", studyId, userId, e);
         throw new BusinessException(STUDY_MEMBER_COUNT_UPDATE_FAILED);
     }
 
     @Recover
     public void recover(ObjectOptimisticLockingFailureException e, Long studyId, Long userId) {
-        log.warn("스터디 currentCount 증가 실패 (studyId={}, userId={})", studyId, userId, e);
+        log.warn("스터디 currentCount 증감 실패 (studyId={}, userId={})", studyId, userId, e);
         throw new BusinessException(STUDY_MEMBER_COUNT_UPDATE_FAILED);
     }
 }
