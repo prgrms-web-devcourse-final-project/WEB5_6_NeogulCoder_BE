@@ -1,7 +1,9 @@
 package grep.neogulcoder.domain.study.repository;
 
 import grep.neogulcoder.domain.study.Study;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +30,8 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     List<Study> findStudiesToBeFinished(@Param("now") LocalDateTime now);
 
     int countByUserIdAndActivatedTrueAndFinishedFalse(Long userId);
+
+    @Lock(LockModeType.OPTIMISTIC)
+    @Query("SELECT s FROM Study s WHERE s.id = :id")
+    Optional<Study> findByIdWithLock(@Param("id") Long id);
 }

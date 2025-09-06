@@ -8,6 +8,7 @@ import grep.neogulcoder.domain.prtemplate.repository.PrTemplateRepository;
 import grep.neogulcoder.domain.prtemplate.service.LinkService;
 import grep.neogulcoder.domain.prtemplate.service.PrTemplateService;
 import grep.neogulcoder.domain.study.service.StudyManagementService;
+import grep.neogulcoder.domain.study.service.StudyManagementServiceFacade;
 import grep.neogulcoder.domain.users.controller.dto.request.SignUpRequest;
 import grep.neogulcoder.domain.users.controller.dto.response.AllUserResponse;
 import grep.neogulcoder.domain.users.controller.dto.response.UserResponse;
@@ -42,6 +43,7 @@ public class UserService {
     private final StudyManagementService studyManagementService;
     private final BuddyEnergyService buddyEnergyService;
     private final EmailVerificationService verificationService;
+    private final StudyManagementServiceFacade studyManagementServiceFacade;
 
     @Transactional(readOnly = true)
     public User get(Long id) {
@@ -113,7 +115,7 @@ public class UserService {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_UNCHECKED);
         }
 
-        studyManagementService.deleteUserFromStudies(userId);
+        studyManagementServiceFacade.deleteUserFromStudiesWithRetry(userId);
         prTemplateService.deleteByUserId(user.getId());
         linkService.deleteByUserId(userId);
 

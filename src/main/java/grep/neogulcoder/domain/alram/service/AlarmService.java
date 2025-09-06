@@ -40,10 +40,8 @@ import java.util.List;
 
 import static grep.neogulcoder.domain.alram.exception.code.AlarmErrorCode.ALREADY_CHECKED;
 import static grep.neogulcoder.domain.recruitment.RecruitmentErrorCode.NOT_FOUND;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_LEADER_NOT_FOUND;
-import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_NOT_FOUND;
-import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.APPLICATION_NOT_FOUND;
-import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.APPLICATION_PARTICIPANT_LIMIT_EXCEEDED;
+import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.*;
+import static grep.neogulcoder.domain.studyapplication.exception.code.ApplicationErrorCode.*;
 
 @Service
 @RequiredArgsConstructor

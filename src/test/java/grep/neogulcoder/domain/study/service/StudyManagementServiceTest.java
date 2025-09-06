@@ -42,6 +42,9 @@ class StudyManagementServiceTest extends IntegrationTestSupport {
     @Autowired
     private StudyManagementService studyManagementService;
 
+    @Autowired
+    private StudyManagementServiceFacade studyManagementServiceFacade;
+
     private Long userId1;
     private Long userId2;
     private Long userId3;
@@ -89,7 +92,7 @@ class StudyManagementServiceTest extends IntegrationTestSupport {
         for (Long targetUserId : targetUserIds) {
             executorService.submit(() -> {
                 try {
-                    studyManagementService.leaveStudy(studyId, targetUserId);
+                    studyManagementServiceFacade.leaveStudyWithRetry(studyId, targetUserId);
                 } finally {
                     countDownLatch.countDown();
                 }

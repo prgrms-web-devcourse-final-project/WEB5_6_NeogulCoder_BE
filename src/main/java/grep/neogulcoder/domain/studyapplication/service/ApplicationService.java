@@ -95,7 +95,7 @@ public class ApplicationService {
 
         StudyMember studyMember = StudyMember.createMember(study, application.getUserId());
         studyMemberRepository.save(studyMember);
-        studyManagementServiceFacade.increaseMemberCount(study.getId(), userId);
+        studyManagementServiceFacade.increaseMemberCount(study.getId(), application.getUserId());
 
         eventPublisher.publishEvent(new ApplicationStatusChangedEvent(applicationId, AlarmType.STUDY_APPLICATION_APPROVED));
     }

@@ -5,6 +5,7 @@ import grep.neogulcoder.domain.study.controller.dto.request.ExtendStudyRequest;
 import grep.neogulcoder.domain.study.controller.dto.response.ExtendParticipationResponse;
 import grep.neogulcoder.domain.study.controller.dto.response.StudyExtensionResponse;
 import grep.neogulcoder.domain.study.service.StudyManagementService;
+import grep.neogulcoder.domain.study.service.StudyManagementServiceFacade;
 import grep.neogulcoder.global.auth.Principal;
 import grep.neogulcoder.global.response.ApiResponse;
 import jakarta.validation.Valid;
@@ -21,6 +22,7 @@ import java.util.List;
 public class StudyManagementController implements StudyManagementSpecification {
 
     private final StudyManagementService studyManagementService;
+    private final StudyManagementServiceFacade studyManagementServiceFacade;
 
     @GetMapping("/extension")
     public ResponseEntity<ApiResponse<StudyExtensionResponse>> getStudyExtension(@PathVariable("studyId") Long studyId) {
@@ -37,7 +39,7 @@ public class StudyManagementController implements StudyManagementSpecification {
     @DeleteMapping("/me")
     public ResponseEntity<ApiResponse<Void>> leaveStudy(@PathVariable("studyId") Long studyId,
                                         @AuthenticationPrincipal Principal userDetails) {
-        studyManagementService.leaveStudy(studyId, userDetails.getUserId());
+        studyManagementServiceFacade.leaveStudyWithRetry(studyId, userDetails.getUserId());
         return ResponseEntity.ok(ApiResponse.noContent());
     }
 
@@ -60,7 +62,7 @@ public class StudyManagementController implements StudyManagementSpecification {
     @PostMapping("/extension/participations")
     public ResponseEntity<ApiResponse<Void>> registerExtensionParticipation(@PathVariable("studyId") Long studyId,
                                                             @AuthenticationPrincipal Principal userDetails) {
-        studyManagementService.registerExtensionParticipation(studyId, userDetails.getUserId());
+        studyManagementServiceFacade.registerExtensionParticipationWithRetry(studyId, userDetails.getUserId());
         return ResponseEntity.ok(ApiResponse.noContent());
     }
 

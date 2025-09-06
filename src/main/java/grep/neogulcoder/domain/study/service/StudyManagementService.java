@@ -20,6 +20,7 @@ import grep.neogulcoder.global.exception.business.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -41,7 +42,6 @@ public class StudyManagementService {
     private final StudyMemberQueryRepository studyMemberQueryRepository;
     private final UserRepository userRepository;
     private final ApplicationEventPublisher eventPublisher;
-    private final StudyManagementServiceFacade studyManagementServiceFacade;
     private final RecruitmentPostRepository recruitmentPostRepository;
 
     public StudyExtensionResponse getStudyExtension(Long studyId) {
@@ -59,7 +59,8 @@ public class StudyManagementService {
 
     @Transactional
     public void leaveStudy(Long studyId, Long userId) {
-        Study study = getStudyById(studyId);
+        Study study = studyRepository.findByIdWithLock(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
         StudyMember studyMember = getStudyMemberById(studyId, userId);
 
         if (isLastMember(study)) {
@@ -74,7 +75,7 @@ public class StudyManagementService {
         }
 
         studyMember.delete();
-        studyManagementServiceFacade.decreaseMemberCount(studyId, userId);
+        study.decreaseMemberCount();
     }
 
     @Transactional
@@ -112,7 +113,7 @@ public class StudyManagementService {
             }
 
             myMember.delete();
-            studyManagementServiceFacade.decreaseMemberCount(study.getId(), userId);
+            study.decreaseMemberCount();
         }
     }
 
@@ -140,7 +141,8 @@ public class StudyManagementService {
 
     @Transactional
     public void registerExtensionParticipation(Long studyId, Long userId) {
-        getStudyById(studyId);
+        Study study = studyRepository.findByIdWithLock(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
         StudyMember studyMember = getStudyMemberById(studyId, userId);
 
         if (studyMember.isParticipated()) {
@@ -154,7 +156,7 @@ public class StudyManagementService {
 
         StudyMember extendMember = StudyMember.createMember(extendedStudy, userId);
         studyMemberRepository.save(extendMember);
-        studyManagementServiceFacade.increaseMemberCount(extendedStudy.getId(), userId);
+        study.decreaseMemberCount();
     }
 
     @Transactional
@@ -173,6 +175,14 @@ public class StudyManagementService {
     public void reactiveStudy(Long studyId) {
         Study study = getStudyById(studyId);
         study.reactive();
+    }
+
+    @Transactional
+    public void increaseMemberCount(Long studyId, Long userId) {
+        Study study = studyRepository.findByIdWithLock(studyId)
+            .orElseThrow(() -> new NotFoundException(STUDY_NOT_FOUND));
+
+        study.increaseMemberCount();
     }
 
     private Study getStudyById(Long studyId) {
