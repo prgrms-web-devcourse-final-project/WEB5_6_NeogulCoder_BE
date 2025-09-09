@@ -21,6 +21,7 @@ public class StudyManagementServiceFacade {
 
     @Retryable(
         retryFor = {OptimisticLockException.class, ObjectOptimisticLockingFailureException.class},
+        maxAttempts = 3,
         backoff = @Backoff(delay = 50)
     )
     public void increaseMemberCount(Long studyId, Long userId) {
@@ -29,14 +30,17 @@ public class StudyManagementServiceFacade {
 
     @Retryable(
         retryFor = {OptimisticLockException.class, ObjectOptimisticLockingFailureException.class},
+        maxAttempts = 3,
         backoff = @Backoff(delay = 50)
     )
     public void leaveStudyWithRetry(Long studyId, Long userId) {
         studyManagementService.leaveStudy(studyId, userId);
+        System.out.println("leaveStudyWithRetry 실행 (studyId={}, userId={})");
     }
 
     @Retryable(
         retryFor = {OptimisticLockException.class, ObjectOptimisticLockingFailureException.class},
+        maxAttempts = 3,
         backoff = @Backoff(delay = 50)
     )
     public void deleteUserFromStudiesWithRetry(Long userId) {
@@ -45,6 +49,7 @@ public class StudyManagementServiceFacade {
 
     @Retryable(
         retryFor = {OptimisticLockException.class, ObjectOptimisticLockingFailureException.class},
+        maxAttempts = 3,
         backoff = @Backoff(delay = 50)
     )
     public void registerExtensionParticipationWithRetry(Long studyId, Long userId) {
