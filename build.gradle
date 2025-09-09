@@ -97,10 +97,6 @@ dependencies {
 
     // s3
     implementation 'software.amazon.awssdk:s3:2.25.61'
-
-    // aop
-    implementation 'org.springframework.retry:spring-retry'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
 tasks.named('test') {
