@@ -32,7 +32,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public static User UserInit(String email, String password, String nickname) {
+    public static User create(String email, String password, String nickname) {
         return User.builder()
                 .email(email)
                 .password(password)

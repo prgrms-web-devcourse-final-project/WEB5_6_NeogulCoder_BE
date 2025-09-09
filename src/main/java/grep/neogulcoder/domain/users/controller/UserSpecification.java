@@ -52,7 +52,7 @@ public interface UserSpecification {
     );
 
     @Operation(summary = "이메일 인증 코드 검증", description = "사용자가 입력한 인증 코드가 올바른지 검증합니다.")
-    ResponseEntity<ApiResponse<Void>> verifyCode(
+    ResponseEntity<ApiResponse<Boolean>> verifyCode(
         @Parameter(description = "인증 요청한 이메일 주소", required = true, example = "user@example.com")
         @RequestParam String email,
 
