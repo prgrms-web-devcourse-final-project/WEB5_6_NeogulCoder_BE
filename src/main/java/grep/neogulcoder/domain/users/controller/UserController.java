@@ -1,8 +1,6 @@
 package grep.neogulcoder.domain.users.controller;
 
-import grep.neogulcoder.domain.users.controller.dto.request.PasswordRequest;
-import grep.neogulcoder.domain.users.controller.dto.request.SignUpRequest;
-import grep.neogulcoder.domain.users.controller.dto.request.UpdatePasswordRequest;
+import grep.neogulcoder.domain.users.controller.dto.request.*;
 import grep.neogulcoder.domain.users.controller.dto.response.AllUserResponse;
 import grep.neogulcoder.domain.users.controller.dto.response.UserResponse;
 import grep.neogulcoder.domain.users.exception.PasswordNotMatchException;
@@ -87,16 +85,16 @@ public class UserController implements UserSpecification {
     }
 
     @PostMapping("/mail/send")
-    public ResponseEntity<ApiResponse<Void>> sendCode(@RequestParam("email") String email) {
+    public ResponseEntity<ApiResponse<Void>> sendCode(@Valid @RequestBody SendCodeToEmailRequest request) {
         LocalDateTime currentDateTime = LocalDateTime.now();
-        mailService.sendCodeTo(email, currentDateTime);
+        mailService.sendCodeTo(request.getEmail(), currentDateTime);
         return ResponseEntity.ok(ApiResponse.noContent());
     }
 
     @PostMapping("/mail/verify")
-    public ResponseEntity<ApiResponse<Boolean>> verifyCode(@RequestParam("email") String email, @RequestParam("code") String code) {
+    public ResponseEntity<ApiResponse<Boolean>> verifyCode(@Valid @RequestBody EmailVerifyRequest request) {
         LocalDateTime currentDateTime = LocalDateTime.now();
-        boolean verified = mailService.verifyEmailCode(email, currentDateTime);
+        boolean verified = mailService.verifyEmailCode(request.getEmail(), currentDateTime);
         return ResponseEntity.ok(ApiResponse.success(verified));
     }
 

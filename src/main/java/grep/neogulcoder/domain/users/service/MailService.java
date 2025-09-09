@@ -36,7 +36,7 @@ public class MailService {
     private static final int VERIFY_LIMIT_MINUTE = 5;
 
     @Scheduled(cron = "0 0 0 * * * ")
-    public void clearStores(){
+    public void clearStores() {
         emailExpiredTimeMap.clear();
         verifiedEmailSet.clear();
         log.info("회원 인증 코드 저장 Map, Set Clear");
@@ -59,7 +59,6 @@ public class MailService {
 
         boolean isVerify = currentDateTime.isBefore(expiredTime);
         if (isVerify) {
-            emailExpiredTimeMap.remove(email);
             verifiedEmailSet.add(email);
         }
         return isVerify;
