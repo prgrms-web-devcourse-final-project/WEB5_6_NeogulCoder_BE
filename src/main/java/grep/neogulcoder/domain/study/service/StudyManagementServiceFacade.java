@@ -5,6 +5,9 @@ import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_MEMBER_COUNT_UPDATE_FAILED;
@@ -15,93 +18,48 @@ import static grep.neogulcoder.domain.study.exception.code.StudyErrorCode.STUDY_
 public class StudyManagementServiceFacade {
 
     private final StudyManagementService studyManagementService;
-    private static final int MAX_RETRY = 3;
 
+    @Retryable(
+        retryFor = {OptimisticLockException.class, ObjectOptimisticLockingFailureException.class},
+        backoff = @Backoff(delay = 50)
+    )
     public void increaseMemberCount(Long studyId, Long userId) {
-        int retry = 0;
-        while (retry < MAX_RETRY) {
-            try {
-                studyManagementService.increaseMemberCount(studyId, userId);
-                return;
-            } catch (OptimisticLockException | ObjectOptimisticLockingFailureException e) {
-                retry++;
-
-                try {
-                    Thread.sleep(30);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        }
-
-        log.warn("스터디 currentCount 증가 실패 (studyId={}, userId={})", studyId, userId);
-        throw new BusinessException(STUDY_MEMBER_COUNT_UPDATE_FAILED);
+        studyManagementService.increaseMemberCount(studyId, userId);
     }
 
+    @Retryable(
+        retryFor = {OptimisticLockException.class, ObjectOptimisticLockingFailureException.class},
+        backoff = @Backoff(delay = 50)
+    )
     public void leaveStudyWithRetry(Long studyId, Long userId) {
-        int retry = 0;
-        while (retry < MAX_RETRY) {
-            try {
-                studyManagementService.leaveStudy(studyId, userId);
-                return;
-            } catch (OptimisticLockException | ObjectOptimisticLockingFailureException e) {
-                retry++;
-
-                try {
-                    Thread.sleep(30);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        }
-
-        log.warn("스터디 currentCount 감소 실패 (studyId={}, userId={})", studyId, userId);
-        throw new BusinessException(STUDY_MEMBER_COUNT_UPDATE_FAILED);
+        studyManagementService.leaveStudy(studyId, userId);
     }
 
+    @Retryable(
+        retryFor = {OptimisticLockException.class, ObjectOptimisticLockingFailureException.class},
+        backoff = @Backoff(delay = 50)
+    )
     public void deleteUserFromStudiesWithRetry(Long userId) {
-        int retry = 0;
-        while (retry < MAX_RETRY) {
-            try {
-                studyManagementService.deleteUserFromStudies(userId);
-                return;
-            } catch (OptimisticLockException | ObjectOptimisticLockingFailureException e) {
-                retry++;
+        studyManagementService.deleteUserFromStudies(userId);
+    }
 
-                try {
-                    Thread.sleep(30);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        }
+    @Retryable(
+        retryFor = {OptimisticLockException.class, ObjectOptimisticLockingFailureException.class},
+        backoff = @Backoff(delay = 50)
+    )
+    public void registerExtensionParticipationWithRetry(Long studyId, Long userId) {
+        studyManagementService.registerExtensionParticipation(studyId, userId);
+    }
 
-        log.warn("스터디 currentCount 감소 실패 (userId={})", userId);
+    @Recover
+    public void recover(OptimisticLockException e, Long studyId, Long userId) {
+        log.warn("스터디 currentCount 증감 실패 (studyId={}, userId={})", studyId, userId, e);
         throw new BusinessException(STUDY_MEMBER_COUNT_UPDATE_FAILED);
     }
 
-    public void registerExtensionParticipationWithRetry(Long studyId, Long userId) {
-        int retry = 0;
-        while (retry < MAX_RETRY) {
-            try {
-                studyManagementService.registerExtensionParticipation(studyId, userId);
-                return;
-            } catch (OptimisticLockException | ObjectOptimisticLockingFailureException e) {
-                retry++;
-
-                try {
-                    Thread.sleep(30);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        }
-
-        log.warn("스터디 currentCount 감소 실패 (studyId={}, userId={})", studyId, userId);
+    @Recover
+    public void recover(ObjectOptimisticLockingFailureException e, Long studyId, Long userId) {
+        log.warn("스터디 currentCount 증감 실패 (studyId={}, userId={})", studyId, userId, e);
         throw new BusinessException(STUDY_MEMBER_COUNT_UPDATE_FAILED);
     }
 }
