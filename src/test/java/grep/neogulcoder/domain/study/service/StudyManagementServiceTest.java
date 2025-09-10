@@ -12,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,8 @@ import static grep.neogulcoder.domain.study.enums.StudyMemberRole.LEADER;
 import static grep.neogulcoder.domain.study.enums.StudyMemberRole.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles("test")
+@SpringBootTest
 class StudyManagementServiceTest extends IntegrationTestSupport {
 
     @Autowired
@@ -45,10 +49,6 @@ class StudyManagementServiceTest extends IntegrationTestSupport {
     @Autowired
     private StudyManagementServiceFacade studyManagementServiceFacade;
 
-    private Long userId1;
-    private Long userId2;
-    private Long userId3;
-    private Study study;
     private Long studyId;
 
     @BeforeEach
@@ -57,24 +57,19 @@ class StudyManagementServiceTest extends IntegrationTestSupport {
         User user2 = createUser("test2");
         User user3 = createUser("test3");
         userRepository.saveAll(List.of(user1, user2, user3));
-        userId1 = user1.getId();
-        userId2 = user2.getId();
-        userId3 = user3.getId();
 
-        study = createStudy("스터디", LocalDateTime.parse("2025-09-05T20:20:20"), LocalDateTime.parse("2025-09-28T20:20:20"));
+        Study study = createStudy("스터디", LocalDateTime.parse("2025-09-05T20:20:20"), LocalDateTime.parse("2025-09-28T20:20:20"));
         studyRepository.save(study);
         studyId = study.getId();
 
-        StudyMember studyLeader = createStudyLeader(study, userId1);
-        StudyMember studyMember1 = createStudyMember(study, userId2);
+        StudyMember member1 = createStudyLeader(study, user1.getId());
+        StudyMember member2 = createStudyMember(study, user2.getId());
         study.increaseMemberCount();
-        StudyMember studyMember2 = createStudyMember(study, userId3);
+        StudyMember member3 = createStudyMember(study, user3.getId());
         study.increaseMemberCount();
 
-        studyMemberRepository.saveAll(List.of(studyLeader, studyMember1, studyMember2));
         studyRepository.save(study);
-
-        em.clear();
+        studyMemberRepository.saveAll(List.of(member1, member2, member3));
     }
 
     @DisplayName("2명의 멤버가 스터디를 동시에 탈퇴합니다.")
@@ -82,14 +77,21 @@ class StudyManagementServiceTest extends IntegrationTestSupport {
     @Test
     void leaveStudy() throws InterruptedException {
         // given
-        final int threads = 2;
+        Study study = studyRepository.findById(studyId)
+            .orElseThrow();
+        System.out.println(study.getCurrentCount());
+
+        int threads = 2;
         ExecutorService executorService = Executors.newFixedThreadPool(threads);
         CountDownLatch countDownLatch = new CountDownLatch(threads);
 
-        List<Long> targetUserIds = List.of(userId2, userId3);
+        List<Long> memberIds = studyMemberRepository.findFetchStudyByStudyId(studyId)
+            .stream().filter(studyMember -> studyMember.getRole().equals(MEMBER))
+            .map(StudyMember::getUserId)
+            .toList();
 
         // when
-        for (Long targetUserId : targetUserIds) {
+        for (Long targetUserId : memberIds) {
             executorService.submit(() -> {
                 try {
                     studyManagementServiceFacade.leaveStudyWithRetry(studyId, targetUserId);
@@ -105,6 +107,8 @@ class StudyManagementServiceTest extends IntegrationTestSupport {
 
         //then
         Study findStudy = studyRepository.findById(studyId).orElseThrow();
+        System.out.println(findStudy.getCurrentCount());
+        System.out.println("leaveStudyWithRetry 실행 (studyId={}, userId={})");
         assertThat(findStudy.getCurrentCount()).isEqualTo(1);
     }
 
