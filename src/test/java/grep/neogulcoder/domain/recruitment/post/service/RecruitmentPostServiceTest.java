@@ -164,8 +164,12 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
         Study study2 = createStudy("클라이밍 동아리", Category.HOBBY, OFFLINE);
         studyRepository.saveAll(List.of(study1, study2));
 
-        RecruitmentPost post1 = createRecruitmentPost(study1.getId(), userId, "모집글 제목1", "내용1", IN_PROGRESS);
-        RecruitmentPost post2 = createRecruitmentPost(study2.getId(), userId, "모집글 제목2", "내용2", IN_PROGRESS);
+        RecruitmentPost post1 = createRecruitmentPost(
+                study1.getId(), userId, "모집글 제목1", "내용1", IN_PROGRESS
+        );
+        RecruitmentPost post2 = createRecruitmentPost(
+                study2.getId(), userId, "모집글 제목2", "내용2", IN_PROGRESS
+        );
         recruitmentPostRepository.saveAll(List.of(post1, post2));
 
         List<RecruitmentPostComment> comments = List.of(
@@ -176,8 +180,12 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
         commentRepository.saveAll(comments);
 
         //when
-        RecruitmentPostPagingInfo result = recruitmentPostService.search(PageRequest.of(0, 2),
-                Category.IT, ONLINE, null, null);
+        RecruitmentPostPagingInfo result = recruitmentPostService.search(
+                PageRequest.of(0, 2),
+                Category.IT, ONLINE,
+                null,
+                null
+        );
         System.out.println("result = " + result);
 
         //then
@@ -213,8 +221,13 @@ class RecruitmentPostServiceTest extends IntegrationTestSupport {
         commentRepository.saveAll(comments);
 
         //when
-        RecruitmentPostPagingInfo result = recruitmentPostService.search(PageRequest.of(0, 2),
-                Category.HOBBY, OFFLINE, null, myUser.getId());
+        RecruitmentPostPagingInfo result = recruitmentPostService.search(
+                PageRequest.of(0, 2),
+                Category.HOBBY,
+                OFFLINE,
+                null,
+                myUser.getId()
+        );
         System.out.println("result = " + result);
 
         //then

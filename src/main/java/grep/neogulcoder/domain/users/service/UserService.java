@@ -33,6 +33,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final MailService mailService;
     private final AbstractFileManager fileUploader;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -56,25 +57,24 @@ public class UserService {
     }
 
     public void signUp(SignUpRequest request) {
+        String email = request.getEmail();
+        String nickname = request.getNickname();
 
-        duplicationCheck(request.getEmail(), request.getNickname());
+        if (isDuplicateEmail(email)) {
+            throw new EmailDuplicationException(UserErrorCode.IS_DUPLICATED_MALI);
+        }
 
-        if (verificationService.isNotEmailVerified(request.getEmail())) {
+        if (isDuplicateNickname(nickname)) {
+            throw new NicknameDuplicatedException(UserErrorCode.IS_DUPLICATED_NICKNAME);
+        }
+
+        if(mailService.confirmNotVerifiedEmail(email)){
             throw new NotVerifiedEmailException(UserErrorCode.NOT_VERIFIED_EMAIL);
         }
 
-        if (isNotMatchPasswordCheck(request.getPassword(), request.getPasswordCheck())) {
-            throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
-        }
-
-        String encodedPassword = encodingPassword(request.getPassword());
-        userRepository.save(
-            User.UserInit(request.getEmail(), encodedPassword, request.getNickname()));
-
-        User user = findUserByEmail(request.getEmail());
-        initializeUserData(user.getId());
-
-        verificationService.clearVerifiedStatus(request.getEmail());
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        User user = userRepository.save(User.create(email, encodedPassword, nickname));
+        saveBasicUserData(user.getId());
     }
 
     public void updateProfile(Long userId, String nickname, MultipartFile profileImage)
@@ -96,7 +96,7 @@ public class UserService {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
 
-        if (isNotMatchPasswordCheck(newPassword, newPasswordCheck)) {
+        if (isNotMatchPassword(newPassword, newPasswordCheck)) {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_UNCHECKED);
         }
 
@@ -111,7 +111,7 @@ public class UserService {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_MISMATCH);
         }
 
-        if(isNotMatchPasswordCheck(password, passwordCheck)) {
+        if(isNotMatchPassword(password, passwordCheck)) {
             throw new PasswordNotMatchException(UserErrorCode.PASSWORD_UNCHECKED);
         }
 
@@ -132,7 +132,7 @@ public class UserService {
         user.delete();
     }
 
-    public void initializeUserData(Long userId) {
+    public void saveBasicUserData(Long userId) {
         prTemplateRepository.save(PrTemplate.PrTemplateInit(userId, null, null));
         linkRepository.save(Link.LinkInit(userId, null, null));
         linkRepository.save(Link.LinkInit(userId, null, null));
@@ -194,16 +194,6 @@ public class UserService {
                 () -> new UserNotFoundException(UserErrorCode.USER_NOT_FOUND));
     }
 
-    private void duplicationCheck(String email, String nickname) {
-        if (isDuplicateEmail(email)) {
-            throw new EmailDuplicationException(UserErrorCode.IS_DUPLICATED_MALI);
-        }
-
-        if (isDuplicateNickname(nickname)) {
-            throw new NicknameDuplicatedException(UserErrorCode.IS_DUPLICATED_NICKNAME);
-        }
-    }
-
     private void nickNameDuplicationCheck(String nickname){
         if(isDuplicateNickname(nickname)){
             throw new NicknameDuplicatedException(UserErrorCode.IS_DUPLICATED_NICKNAME);
@@ -226,7 +216,7 @@ public class UserService {
         return !passwordEncoder.matches(inputPassword, storedPassword);
     }
 
-    private boolean isNotMatchPasswordCheck(String password, String passwordCheck) {
+    private boolean isNotMatchPassword(String password, String passwordCheck) {
         return !password.equals(passwordCheck);
     }
 
