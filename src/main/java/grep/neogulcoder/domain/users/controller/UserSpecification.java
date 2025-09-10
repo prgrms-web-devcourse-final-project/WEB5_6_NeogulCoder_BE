@@ -1,8 +1,6 @@
 package grep.neogulcoder.domain.users.controller;
 
-import grep.neogulcoder.domain.users.controller.dto.request.PasswordRequest;
-import grep.neogulcoder.domain.users.controller.dto.request.SignUpRequest;
-import grep.neogulcoder.domain.users.controller.dto.request.UpdatePasswordRequest;
+import grep.neogulcoder.domain.users.controller.dto.request.*;
 import grep.neogulcoder.domain.users.controller.dto.response.AllUserResponse;
 import grep.neogulcoder.domain.users.controller.dto.response.UserResponse;
 import grep.neogulcoder.global.auth.Principal;
@@ -48,15 +46,12 @@ public interface UserSpecification {
     @Operation(summary = "이메일 인증 코드 발송", description = "입력한 이메일 주소로 인증 코드를 발송합니다.")
     ResponseEntity<ApiResponse<Void>> sendCode(
         @Parameter(description = "인증 코드를 보낼 이메일 주소", required = true, example = "user@example.com")
-        @RequestParam String email
+        SendCodeToEmailRequest request
     );
 
     @Operation(summary = "이메일 인증 코드 검증", description = "사용자가 입력한 인증 코드가 올바른지 검증합니다.")
-    ResponseEntity<ApiResponse<Void>> verifyCode(
+    ResponseEntity<ApiResponse<Boolean>> verifyCode(
         @Parameter(description = "인증 요청한 이메일 주소", required = true, example = "user@example.com")
-        @RequestParam String email,
-
-        @Parameter(description = "사용자가 입력한 인증 코드", required = true, example = "123456")
-        @RequestParam String code
+        EmailVerifyRequest request
     );
 }
