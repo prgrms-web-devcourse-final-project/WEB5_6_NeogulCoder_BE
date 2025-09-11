@@ -25,6 +25,10 @@ public class ApiResponse<T> {
         return new ApiResponse<>(CommonCode.BAD_REQUEST.getCode(), message, null);
     }
 
+    public static <T> ApiResponse<T> success(String message, T data) {
+        return ApiResponse.of(CommonCode.OK.getCode(), message, data);
+    }
+
     public static <T> ApiResponse<T> success(T data) {
         return ApiResponse.of(CommonCode.OK.getCode(), CommonCode.OK.getMessage(), data);
     }
@@ -33,20 +37,12 @@ public class ApiResponse<T> {
         return ApiResponse.of(CommonCode.OK.getCode(), message, null);
     }
 
-    public static <T> ApiResponse<T> successWithCode(T data){
-        return ApiResponse.of(CommonCode.OK.getCode(), CommonCode.OK.getMessage(), data);
-    }
-
     public static <T> ApiResponse<T> noContent(){
         return ApiResponse.of(CommonCode.NO_CONTENT.getCode(), CommonCode.NO_CONTENT.getMessage(), null);
     }
 
     public static <T> ApiResponse<T> create(){
         return ApiResponse.of(CommonCode.CREATED.getCode(), CommonCode.CREATED.getMessage(), null);
-    }
-
-    public static <T> ApiResponse<T> badRequest() {
-        return ApiResponse.of(CommonCode.BAD_REQUEST.getCode(), CommonCode.BAD_REQUEST.getMessage(), null);
     }
 
     public static <T> ApiResponse<T> errorWithoutData(Code code) {
