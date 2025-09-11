@@ -1,6 +1,7 @@
 package grep.neogulcoder.domain.users.service;
 
 import grep.neogulcoder.domain.IntegrationTestSupport;
+import grep.neogulcoder.domain.users.controller.dto.request.EmailVerifyRequest;
 import grep.neogulcoder.domain.users.repository.UserRepository;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Stream;
@@ -43,7 +45,7 @@ class MailServiceTest extends IntegrationTestSupport {
         //given
         JavaMailSender spyMailSender = spy(mailSender);
         doNothing().when(spyMailSender).send(any(MimeMessage.class));
-        MailService spyMailService = new MailService(spyMailSender, userRepository);
+        MailService spyMailService = new MailService(spyMailSender);
 
         String testEmail = "test@test.com";
         LocalDateTime dateTime = LocalDateTime.of(2025, 9, 7, 16, 30);
@@ -66,19 +68,20 @@ class MailServiceTest extends IntegrationTestSupport {
 
     @DisplayName("회원의 이메일로 전송된 인증 코드는 5분 이내 검증 가능 하다.")
     @Test
-    void verifyEmailCode() {
+    void verifyEmailCode() throws ExecutionException, InterruptedException {
         //given
         JavaMailSender spyMailSender = spy(mailSender);
         doNothing().when(spyMailSender).send(any(MimeMessage.class));
-        MailService spyMailService = new MailService(spyMailSender, userRepository);
+        MailService spyMailService = new MailService(spyMailSender);
 
         String testEmail = "test@test.com";
         LocalDateTime requestDateTime = LocalDateTime.of(2025, 9, 7, 16, 30);
         LocalDateTime verifyDateTime = LocalDateTime.of(2025, 9, 7, 16, 34, 59);
 
         //when
-        spyMailService.sendCodeTo(testEmail, requestDateTime);
-        boolean isVerify = spyMailService.verifyEmailCode(testEmail, verifyDateTime);
+        String code = spyMailService.sendCodeTo(testEmail, requestDateTime).get();
+        EmailVerifyRequest request = EmailVerifyRequest.of(testEmail, code);
+        boolean isVerify = spyMailService.verifyEmailCode(request, verifyDateTime);
 
         //then
         assertThat(isVerify).isTrue();
@@ -86,19 +89,20 @@ class MailServiceTest extends IntegrationTestSupport {
 
     @DisplayName("회원의 이메일로 전송된 인증 코드는 5분 이후 검증 시 실패 한다.")
     @Test
-    void verifyEmailCode_WhenExpired_ThenFailed() {
+    void verifyEmailCode_WhenExpired_ThenFailed() throws ExecutionException, InterruptedException {
         //given
         JavaMailSender spyMailSender = spy(mailSender);
         doNothing().when(spyMailSender).send(any(MimeMessage.class));
-        MailService spyMailService = new MailService(spyMailSender, userRepository);
+        MailService spyMailService = new MailService(spyMailSender);
 
         String testEmail = "test@test.com";
         LocalDateTime requestDateTime = LocalDateTime.of(2025, 9, 7, 16, 30);
         LocalDateTime verifyDateTime = LocalDateTime.of(2025, 9, 7, 16, 35);
 
         //when
-        spyMailService.sendCodeTo(testEmail, requestDateTime);
-        boolean isVerify = spyMailService.verifyEmailCode(testEmail, verifyDateTime);
+        String code = spyMailService.sendCodeTo(testEmail, requestDateTime).get();
+        EmailVerifyRequest request = EmailVerifyRequest.of(testEmail, code);
+        boolean isVerify = spyMailService.verifyEmailCode(request, verifyDateTime);
 
         //then
         assertThat(isVerify).isFalse();

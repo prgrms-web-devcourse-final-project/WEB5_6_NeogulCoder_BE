@@ -1,10 +1,8 @@
 package grep.neogulcoder.domain.users.service;
 
-import grep.neogulcoder.domain.users.exception.EmailDuplicationException;
+import grep.neogulcoder.domain.users.controller.dto.request.EmailVerifyRequest;
 import grep.neogulcoder.domain.users.exception.MailSendException;
-import grep.neogulcoder.domain.users.exception.NotVerifiedEmailException;
 import grep.neogulcoder.domain.users.exception.code.UserErrorCode;
-import grep.neogulcoder.domain.users.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
@@ -28,34 +27,42 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class MailService {
 
-    private final ConcurrentHashMap<String, LocalDateTime> emailExpiredTimeMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<EmailVerification, LocalDateTime> verificationExpiredTimeMap = new ConcurrentHashMap<>();
     private final Set<String> verifiedEmailSet = ConcurrentHashMap.newKeySet();
     private final JavaMailSender mailSender;
-    private final UserRepository userRepository;
 
     private static final int VERIFY_LIMIT_MINUTE = 5;
 
     @Scheduled(cron = "0 0 0 * * * ")
     public void clearStores() {
-        emailExpiredTimeMap.clear();
+        verificationExpiredTimeMap.clear();
         verifiedEmailSet.clear();
         log.info("회원 인증 코드 저장 Map, Set Clear");
     }
 
     @Async("mailExecutor")
-    public void sendCodeTo(String email, LocalDateTime currentDateTime) {
+    public CompletableFuture<String> sendCodeTo(String email, LocalDateTime currentDateTime) {
         LocalDateTime expiredDateTime = currentDateTime.plusMinutes(VERIFY_LIMIT_MINUTE);
-        emailExpiredTimeMap.put(email, expiredDateTime);
-        sendCodeTo(email);
+        String code = generateRandomIntCode();
+
+        verificationExpiredTimeMap.put(new EmailVerification(email, code), expiredDateTime);
+        sendCodeTo(email, code);
+        return CompletableFuture.completedFuture(code);
     }
 
-    public boolean verifyEmailCode(String email, LocalDateTime currentDateTime) {
-        LocalDateTime expiredTime = Optional.ofNullable(emailExpiredTimeMap.get(email))
-                .orElseThrow(() -> new NotVerifiedEmailException(UserErrorCode.NOT_VERIFIED_EMAIL));
+    public boolean verifyEmailCode(EmailVerifyRequest request, LocalDateTime currentDateTime) {
+        String email = request.getEmail();
+        String code = request.getCode();
+        EmailVerification emailVerification = new EmailVerification(email, code);
+
+        LocalDateTime expiredTime = verificationExpiredTimeMap.get(emailVerification);
+        if (expiredTime == null) {
+            return false;
+        }
 
         boolean isVerify = currentDateTime.isBefore(expiredTime);
         if (isVerify) {
-            verifiedEmailSet.add(email);
+            verifiedEmailSet.add(request.getEmail());
         }
         return isVerify;
     }
@@ -64,15 +71,9 @@ public class MailService {
         return !verifiedEmailSet.contains(email);
     }
 
-    private boolean isDuplicateEmail(String email) {
-        return userRepository.findByEmail(email).isPresent();
-    }
-
-    private void sendCodeTo(String email) {
-        String code = generateRandomIntCode();
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-
+    private void sendCodeTo(String email, String code) {
         try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             helper.setTo(email);
             helper.setSubject("[wibby] 이메일 인증 코드");
@@ -104,5 +105,27 @@ public class MailService {
                 + "    </div>"
                 + "    <p style='font-size:12px;color:#888;'>이 코드는 5분간 유효합니다.</p>"
                 + "</div>";
+    }
+
+    private static class EmailVerification {
+        private String email;
+        private String code;
+
+        private EmailVerification(String email, String code) {
+            this.email = email;
+            this.code = code;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass()) return false;
+            EmailVerification that = (EmailVerification) o;
+            return Objects.equals(email, that.email) && Objects.equals(code, that.code);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(email, code);
+        }
     }
 }
