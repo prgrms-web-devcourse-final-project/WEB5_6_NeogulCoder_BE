@@ -44,9 +44,6 @@ class StudyManagementServiceTest extends IntegrationTestSupport {
     private StudyMemberRepository studyMemberRepository;
 
     @Autowired
-    private StudyManagementService studyManagementService;
-
-    @Autowired
     private StudyManagementServiceFacade studyManagementServiceFacade;
 
     private Long studyId;
