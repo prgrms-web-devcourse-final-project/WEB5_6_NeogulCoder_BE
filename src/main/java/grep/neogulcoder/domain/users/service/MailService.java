@@ -44,10 +44,6 @@ public class MailService {
 
     @Async("mailExecutor")
     public void sendCodeTo(String email, LocalDateTime currentDateTime) {
-        if (isDuplicateEmail(email)) {
-            throw new EmailDuplicationException(UserErrorCode.IS_DUPLICATED_MALI);
-        }
-
         LocalDateTime expiredDateTime = currentDateTime.plusMinutes(VERIFY_LIMIT_MINUTE);
         emailExpiredTimeMap.put(email, expiredDateTime);
         sendCodeTo(email);
