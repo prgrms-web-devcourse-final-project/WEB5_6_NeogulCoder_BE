@@ -94,8 +94,8 @@ public class UserController implements UserSpecification {
     @PostMapping("/mail/verify")
     public ResponseEntity<ApiResponse<Boolean>> verifyCode(@Valid @RequestBody EmailVerifyRequest request) {
         LocalDateTime currentDateTime = LocalDateTime.now();
-        boolean verified = mailService.verifyEmailCode(request.getEmail(), currentDateTime);
-        return ResponseEntity.ok(ApiResponse.success(verified));
+        boolean verified = mailService.verifyEmailCode(request, currentDateTime);
+        return ResponseEntity.ok(ApiResponse.success("인증 성공 여부", verified));
     }
 
     private boolean isNotMatchPassword(String password, String passwordCheck) {
