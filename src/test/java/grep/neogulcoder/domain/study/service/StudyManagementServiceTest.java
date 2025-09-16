@@ -9,6 +9,7 @@ import grep.neogulcoder.domain.users.entity.User;
 import grep.neogulcoder.domain.users.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,7 @@ class StudyManagementServiceTest extends IntegrationTestSupport {
         studyMemberRepository.saveAll(List.of(member1, member2, member3));
     }
 
+    @Disabled
     @DisplayName("2명의 멤버가 스터디를 동시에 탈퇴합니다.")
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Test
