@@ -2,6 +2,7 @@ package grep.neogulcoder.domain.recruitment.post.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import grep.neogulcoder.domain.recruitment.post.RecruitmentPost;
 import grep.neogulcoder.domain.recruitment.post.controller.dto.response.QRecruitmentPostWithStudyInfo;
@@ -71,14 +72,14 @@ public class RecruitmentPostQueryRepository {
 
                         equalsStudyCategory(category),
                         equalsStudyType(studyType),
-                        likeContent(keyword)
+                        likeContentFullText(keyword)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(recruitmentPost.createdDate.desc())
                 .fetch();
 
-        Long count = queryFactory.select(recruitmentPost.count())
+        Long count = queryFactory.select(recruitmentPost.id.count())
                 .from(recruitmentPost)
                 .join(study).on(recruitmentPost.studyId.eq(study.id))
                 .where(
@@ -86,7 +87,7 @@ public class RecruitmentPostQueryRepository {
 
                         equalsStudyCategory(category),
                         equalsStudyType(studyType),
-                        likeContent(keyword)
+                        likeContentFullText(keyword)
                 )
                 .fetchOne();
 
@@ -103,7 +104,7 @@ public class RecruitmentPostQueryRepository {
 
                         equalsStudyCategory(category),
                         equalsStudyType(studyType),
-                        likeContent(keyword)
+                        likeContentFullText(keyword)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -111,7 +112,7 @@ public class RecruitmentPostQueryRepository {
                 .fetch();
 
 
-        Long count = queryFactory.select(recruitmentPost.count())
+        Long count = queryFactory.select(recruitmentPost.id.count())
                 .from(recruitmentPost)
                 .join(study).on(recruitmentPost.studyId.eq(study.id))
                 .where(
@@ -120,7 +121,7 @@ public class RecruitmentPostQueryRepository {
 
                         equalsStudyCategory(category),
                         equalsStudyType(studyType),
-                        likeContent(keyword)
+                        likeContentFullText(keyword)
                 )
                 .fetchOne();
 
@@ -145,8 +146,19 @@ public class RecruitmentPostQueryRepository {
         return nullSafeBuilder(() -> study.category.eq(category));
     }
 
-    private BooleanBuilder likeContent(String content) {
-        return nullSafeBuilder(() -> recruitmentPost.content.contains(content).or(recruitmentPost.subject.contains(content)));
+    private BooleanBuilder likeContentFullText(String content) {
+        return nullSafeBuilder(() -> {
+            if (content == null || content.isBlank()) {
+                return null;
+            }
+
+            return Expressions.booleanTemplate(
+                    "function('match', {0}, {1}, {2}) > 0",
+                    recruitmentPost.content,
+                    recruitmentPost.subject,
+                    content
+            );
+        });
     }
 
     private BooleanBuilder nullSafeBuilder(Supplier<BooleanExpression> supplier) {
