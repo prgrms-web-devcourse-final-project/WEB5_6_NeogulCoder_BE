@@ -76,7 +76,6 @@ public class RecruitmentPostQueryRepository {
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(recruitmentPost.createdDate.desc())
                 .fetch();
 
         Long count = queryFactory.select(recruitmentPost.id.count())
@@ -108,7 +107,6 @@ public class RecruitmentPostQueryRepository {
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(recruitmentPost.createdDate.desc())
                 .fetch();
 
 
