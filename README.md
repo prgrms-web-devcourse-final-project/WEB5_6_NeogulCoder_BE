@@ -23,7 +23,7 @@ Wibby는 스터디 모집부터 운영·종료까지 **스터디 운영 전반�
 |:------:|:------:|:------:|:------:|:------:|
 | <img src="https://avatars.githubusercontent.com/u/203729461?v=4" alt="박현서" width="130"> | <img src="https://avatars.githubusercontent.com/u/84299665?v=" alt="조희제" width="130"> | <img src="https://avatars.githubusercontent.com/u/90251939?v=4" alt="김도연" width="130"> | <img src="https://avatars.githubusercontent.com/u/169157532?v=4" alt="류이서" width="130"> | <img src="https://avatars.githubusercontent.com/u/203761008?v=4" alt="유강현" width="130"> |
 | [박현서](https://github.com/hyeunS-P) | [조희제](https://github.com/Tokwasp) | [김도연](https://github.com/pia01190) | [류이서](https://github.com/endorsement0912) |  [유강현](https://github.com/dbrkdgus00) |
-| 회원, 관리자, PR 템플릿 | 모집글, 게시글, 리뷰 | 스터디, 신청, 출석, 배포 | 일정 조율 | 채팅, 캘린더, 버디에너지 |
+| 회원, 관리자, <br> PR 템플릿 | 모집글, 게시글, <br> 리뷰 | 스터디, 신청, 출석, <br> 배포 | 일정 조율 | 채팅, 캘린더, <br> 버디에너지 |
 
 <br/>
 
@@ -47,7 +47,7 @@ Wibby는 스터디 모집부터 운영·종료까지 **스터디 운영 전반�
 <img src="https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white">
 <img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=for-the-badge&logo=Amazon%20EC2&logoColor=white">
 <img src="https://img.shields.io/badge/Amazon%20S3-569A31?style=for-the-badge&logo=Amazon%20S3&logoColor=white">
-<img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white"/>
+<img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white">
 <img src="https://img.shields.io/badge/GitHub Actions-2088FF?style=for-the-badge&logo=GitHub Actions&logoColor=white">
 </p>
 <p>
@@ -121,7 +121,4 @@ Wibby는 스터디 모집부터 운영·종료까지 **스터디 운영 전반�
 
 # 🎁 시연 영상
 ### [[ Youtube 링크 ]](https://www.youtube.com/watch?v=5JFlIuPFft0)
-![Image](https://github.com/user-attachments/assets/1b1a0d11-773b-4b06-9260-e54add12b74f)
-
-<br>
 + 배포 최적화로 인해 서버 속도가 영상보다 향상되었습니다.
