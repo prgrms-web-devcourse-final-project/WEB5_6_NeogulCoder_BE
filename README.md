@@ -120,8 +120,8 @@ Wibby는 스터디 모집부터 운영·종료까지 **스터디 운영 전반�
 <br>
 
 # 🎁 시연 영상
-[Youtube 링크](https://www.youtube.com/watch?v=5JFlIuPFft0)
-https://github.com/user-attachments/assets/1b1a0d11-773b-4b06-9260-e54add12b74f
+### [[ Youtube 링크 ]](https://www.youtube.com/watch?v=5JFlIuPFft0)
+![Image](https://github.com/user-attachments/assets/1b1a0d11-773b-4b06-9260-e54add12b74f)
 
 <br>
 + 배포 최적화로 인해 서버 속도가 영상보다 향상되었습니다.
