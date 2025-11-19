@@ -1,8 +1,6 @@
 package grep.neogulcoder.domain.timevote.service;
 
-import grep.neogulcoder.domain.timevote.dto.request.TimeVoteCreateRequest;
 import grep.neogulcoder.domain.timevote.dto.request.TimeVotePeriodCreateRequest;
-import grep.neogulcoder.domain.timevote.dto.request.TimeVoteUpdateRequest;
 import grep.neogulcoder.domain.timevote.TimeVote;
 import grep.neogulcoder.domain.timevote.TimeVotePeriod;
 import java.time.LocalDateTime;
@@ -21,26 +19,6 @@ public class TimeVoteMapper {
         .startDate(request.getStartDate())
         .endDate(adjustedEndDate)
         .build();
-  }
-
-  public List<TimeVote> toEntities(TimeVoteCreateRequest request, TimeVotePeriod period, Long studyMemberId) {
-    return request.getTimeSlots().stream()
-        .map(slot -> TimeVote.builder()
-            .period(period)
-            .studyMemberId(studyMemberId)
-            .timeSlot(slot)
-            .build())
-        .collect(Collectors.toList());
-  }
-
-  public List<TimeVote> toEntities(TimeVoteUpdateRequest request, TimeVotePeriod period, Long studyMemberId) {
-    return request.getTimeSlots().stream()
-        .map(slot -> TimeVote.builder()
-            .period(period)
-            .studyMemberId(studyMemberId)
-            .timeSlot(slot)
-            .build())
-        .collect(Collectors.toList());
   }
 
   public List<TimeVote> toEntities(List<LocalDateTime> timeSlots, TimeVotePeriod period, Long studyMemberId) {
