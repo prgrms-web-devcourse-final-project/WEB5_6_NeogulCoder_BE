@@ -6,3 +6,12 @@ CREATE UNIQUE INDEX uq_time_vote_stat_period_slot ON time_vote_stat (period_id, 
 -- 사용자 기준 삭제 성능 향상을 위해 추가
 -- getSubmissionStatusList() 쿼리의 성능 최적화 목적
 CREATE INDEX idx_time_vote_period_member ON time_vote (period_id, study_member_id);
+
+-- 스터디별 활성화된 투표 기간 조회/삭제 최적화
+CREATE INDEX idx_time_vote_period_study_activated ON time_vote_period (study_id, activated);
+
+-- 기간/활성화 상태 기준의 투표 데이터 조회/삭제 최적화
+CREATE INDEX idx_time_vote_period_activated ON time_vote (period_id, activated);
+
+-- 기간/활성화 상태 기준의 통계 조회/삭제 최적화
+CREATE INDEX idx_time_vote_stat_period_activated ON time_vote_stat (period_id, activated);

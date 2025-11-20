@@ -12,7 +12,13 @@ import org.springframework.data.repository.query.Param;
 public interface TimeVoteStatRepository extends JpaRepository<TimeVoteStat, Long> {
 
   @Modifying
-  @Query("UPDATE TimeVoteStat s SET s.activated = false WHERE s.period.studyId = :studyId")
+  @Query(
+      value =
+          "UPDATE time_vote_stat tvs "
+              + "JOIN time_vote_period p ON p.period_id = tvs.period_id "
+              + "SET tvs.activated = false "
+              + "WHERE p.study_id = :studyId",
+      nativeQuery = true)
   void deactivateAllByPeriod_StudyId(@Param("studyId") Long studyId);
 
   @Modifying

@@ -28,6 +28,7 @@ public enum TimeVoteErrorCode implements ErrorCode {
   TIME_VOTE_DUPLICATED_TIME_SLOT("TV_003", HttpStatus.BAD_REQUEST, "중복된 시간이 포함되어 있습니다."),
   TIME_VOTE_PERIOD_EXPIRED("TV_004", HttpStatus.BAD_REQUEST, "투표 기간이 만료되었습니다."),
   TIME_VOTE_EMPTY("TV_005", HttpStatus.BAD_REQUEST, "한 개 이상의 시간을 선택해주세요."),
+  TIME_VOTE_INVALID_TIME_MASK("TV_006", HttpStatus.BAD_REQUEST, "시간 비트마스크 값이 유효하지 않습니다."),
 
   // Time Vote Stats (e.g. 통계 충돌 등)
   TIME_VOTE_STAT_CONFLICT("TVS_001", HttpStatus.CONFLICT, "투표 통계 저장 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."),

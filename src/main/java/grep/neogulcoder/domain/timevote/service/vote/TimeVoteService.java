@@ -45,13 +45,15 @@ public class TimeVoteService {
   }
 
   public TimeVoteResponse submitVotes(TimeVoteCreateRequest request, Long studyId, Long userId) {
-    TimeVoteContext context = timeVoteValidator.getSubmitContext(studyId, userId, request.getTimeSlots());
-    return executeVoteSubmission(context, request.getTimeSlots());
+    List<LocalDateTime> timeSlots = request.toTimeSlots();
+    TimeVoteContext context = timeVoteValidator.getSubmitContext(studyId, userId, timeSlots);
+    return executeVoteSubmission(context, timeSlots);
   }
 
   public TimeVoteResponse updateVotes(TimeVoteUpdateRequest request, Long studyId, Long userId) {
-    TimeVoteContext context = timeVoteValidator.getUpdateContext(studyId, userId, request.getTimeSlots());
-    return executeVoteSubmission(context, request.getTimeSlots());
+    List<LocalDateTime> timeSlots = request.toTimeSlots();
+    TimeVoteContext context = timeVoteValidator.getUpdateContext(studyId, userId, timeSlots);
+    return executeVoteSubmission(context, timeSlots);
   }
 
   public void deleteAllVotes(Long studyId, Long userId) {
