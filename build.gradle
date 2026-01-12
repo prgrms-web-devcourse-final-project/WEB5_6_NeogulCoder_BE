@@ -49,6 +49,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 
     // 롬복
     compileOnly 'org.projectlombok:lombok:1.18.30'
@@ -84,7 +86,7 @@ dependencies {
     implementation 'dev.langchain4j:langchain4j-google-ai-gemini-spring-boot-starter:1.0.0-beta3'
 
     // 배포 관련 의존성
-//    runtimeOnly 'org.postgresql:postgresql'
+    // runtimeOnly 'org.postgresql:postgresql'
     implementation 'org.springframework.boot:spring-boot-devtools'
     implementation 'com.google.cloud:spring-cloud-gcp-starter-secretmanager:4.9.1'
     implementation 'com.google.cloud:google-cloud-storage:2.38.0'
@@ -120,15 +122,11 @@ dependencyManagement {
 // 환경별 application.properties 포함/제외 설정
 def activeProfile = project.hasProperty("profile") ? project.getProperty("profile") : "local"
 
-//processResources {
-//	filesMatching("**/application.properties") {
-//		expand(profile: activeProfile)
-//	}
-//
-//	// 환경에 따라 불필요한 설정 파일 제외
-//	if (activeProfile == "local") {
-//		exclude("application-prod.properties")
-//	} else if (activeProfile == "prod") {
-//		exclude("application-local.properties")
-//	}
-//}
+processResources {
+	// 환경에 따라 불필요한 설정 파일 제외
+	// if (activeProfile == "local") {
+	// 	exclude("**/application-prod.properties")
+	// } else if (activeProfile == "prod") {
+	// 	exclude("**/application-local.properties")
+	// }
+}
