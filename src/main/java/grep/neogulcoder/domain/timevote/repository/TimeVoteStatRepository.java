@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 public interface TimeVoteStatRepository extends JpaRepository<TimeVoteStat, Long> {
 
   @Modifying
+  // MySQL
   @Query(
       value =
           "UPDATE time_vote_stat tvs "
@@ -19,6 +20,16 @@ public interface TimeVoteStatRepository extends JpaRepository<TimeVoteStat, Long
               + "SET tvs.activated = false "
               + "WHERE p.study_id = :studyId",
       nativeQuery = true)
+
+// PostgreSQL
+//   @Query(
+//       value =
+//           "UPDATE time_vote_stat tvs "
+//               + "SET activated = false "
+//               + "FROM time_vote_period p "
+//               + "WHERE p.period_id = tvs.period_id "
+//               + "AND p.study_id = :studyId",
+//       nativeQuery = true)
   void deactivateAllByPeriod_StudyId(@Param("studyId") Long studyId);
 
   @Modifying
@@ -29,6 +40,7 @@ public interface TimeVoteStatRepository extends JpaRepository<TimeVoteStat, Long
   List<TimeVoteStat> findAllByPeriodId(@Param("periodId") Long periodId);
 
   @Modifying(clearAutomatically = true)
+  // MySQL
   @Query(value = """
       INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, created_date, modified_date)
     VALUES (:periodId, :timeSlot, :count, true, now(), now())
@@ -37,6 +49,17 @@ public interface TimeVoteStatRepository extends JpaRepository<TimeVoteStat, Long
       modified_date = now(),
       activated = true
     """, nativeQuery = true)
+
+// PostgreSQL
+//   @Query(value = """
+//     INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, created_date, modified_date)
+//    VALUES (:periodId, :timeSlot, :count, true, now(), now())
+//   ON CONFLICT (period_id, time_slot) DO UPDATE SET
+//     vote_count = time_vote_stat.vote_count + EXCLUDED.vote_count,
+//     modified_date = now(),
+//     activated = true
+//   """, nativeQuery = true)
+
   void upsertVoteStat(
       @Param("periodId") Long periodId,
       @Param("timeSlot") LocalDateTime timeSlot,
@@ -44,6 +67,7 @@ public interface TimeVoteStatRepository extends JpaRepository<TimeVoteStat, Long
   );
 
   @Modifying(clearAutomatically = true)
+  // MySQL
   @Query(value = """
     INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, created_date, modified_date)
     VALUES (:periodId, :timeSlot, :voteCount, true, now(), now())
@@ -52,6 +76,17 @@ public interface TimeVoteStatRepository extends JpaRepository<TimeVoteStat, Long
       modified_date = now(),
       activated = true
     """, nativeQuery = true)
+
+// PostgreSQL
+//   @Query(value = """
+//    INSERT INTO time_vote_stat (period_id, time_slot, vote_count, activated, created_date, modified_date)
+//    VALUES (:periodId, :timeSlot, :voteCount, true, now(), now())
+//   ON CONFLICT (period_id, time_slot) DO UPDATE SET
+//     vote_count = EXCLUDED.vote_count,
+//     modified_date = now(),
+//     activated = true
+//   """, nativeQuery = true)
+
   void bulkUpsertStat(
       @Param("periodId") Long periodId,
       @Param("timeSlot") LocalDateTime timeSlot,

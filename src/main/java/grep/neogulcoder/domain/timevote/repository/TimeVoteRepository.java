@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 public interface TimeVoteRepository extends JpaRepository<TimeVote, Long> {
 
   @Modifying(clearAutomatically = true)
+  // MySQL
   @Query(
       value =
           "UPDATE time_vote tv "
@@ -18,6 +19,17 @@ public interface TimeVoteRepository extends JpaRepository<TimeVote, Long> {
               + "SET tv.activated = false "
               + "WHERE p.study_id = :studyId",
       nativeQuery = true)
+
+  // PostgreSQL
+  // @Query(
+  //     value =
+  //         "UPDATE time_vote tv "
+  //             + "SET activated = false "
+  //             + "FROM time_vote_period p "
+  //             + "WHERE p.period_id = tv.period_id "
+  //             + "AND p.study_id = :studyId",
+  //     nativeQuery = true)
+  
   void deactivateAllByPeriod_StudyId(@Param("studyId") Long studyId);
 
   List<TimeVote> findByPeriodAndStudyMemberIdAndActivatedTrue(TimeVotePeriod period, Long studyMemberId);
