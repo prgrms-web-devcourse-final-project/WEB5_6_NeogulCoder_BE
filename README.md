@@ -23,7 +23,7 @@ Wibby는 스터디 모집부터 운영·종료까지 **스터디 운영 전반�
 |:------:|:------:|:------:|:------:|:------:|
 | <img src="https://avatars.githubusercontent.com/u/203729461?v=4" alt="박현서" width="130"> | <img src="https://avatars.githubusercontent.com/u/84299665?v=" alt="조희제" width="130"> | <img src="https://avatars.githubusercontent.com/u/90251939?v=4" alt="김도연" width="130"> | <img src="https://avatars.githubusercontent.com/u/169157532?v=4" alt="류이서" width="130"> | <img src="https://avatars.githubusercontent.com/u/203761008?v=4" alt="유강현" width="130"> |
 | [박현서](https://github.com/hyeunS-P) | [조희제](https://github.com/Tokwasp) | [김도연](https://github.com/pia01190) | [류이서](https://github.com/endorsement0912) |  [유강현](https://github.com/dbrkdgus00) |
-| 회원, 관리자, <br> PR 템플릿 | 모집글, 게시글, <br> 리뷰 | 스터디, 신청, 출석, <br> 배포 | 일정 조율, <br> 배포 | 채팅, 캘린더, <br> 버디에너지 |
+| 회원, 관리자, <br> PR 템플릿 | 모집글, 게시글, <br> 리뷰 | 스터디, 신청, 출석, <br> 배포 | 일정 조율, <br> 파일 업로드, 배포 | 채팅, 캘린더, <br> 버디에너지 |
 
 <br/>
 
